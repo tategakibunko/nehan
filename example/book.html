@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles/nehan.css">
+    <style>
+      .pager{
+	margin:1em;
+      }
+      .pager>button{
+	width:150px;
+	padding:0.5em;
+	font-size:1em;
+	border-radius:5px;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+	transition:.3s;
+	outline:none;
+      }
+      #nombre{
+	width:100px;
+	padding:0 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>book style</h1>
+    <div class="pager">
+      <button id="prev">&lt; Prev</button>
+      <span id="nombre"></span>
+      <button id="next">Next &gt;</button>
+    </div>
+    <div id="result"></div>
+
+    <h2>outline</h2>
+    <div id="outline"></div>
+    <script src="./scripts/book.js"></script>
+  </body>
+</html>

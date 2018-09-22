@@ -1,0 +1,57 @@
+{
+  "name": "nehan",
+  "version": "0.0.1",
+  "description": "Html layout engine for paged-media written in Typescript",
+  "main": "dist/index.js",
+  "types": "dist/indx.d.ts",
+  "scripts": {
+    "build": "make -f Makefile.public",
+    "test": "jest"
+  },
+  "style":[
+    "./css/nehan.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tategakibunko/nehan.git"
+  },
+  "keywords": [
+    "nehan",
+    "html",
+    "layout-engine",
+    "paged-media",
+    "typescript"
+  ],
+  "jest": {
+    "verbose": true,
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "src/tsconfig.json"
+      }
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "author": "Watanabe Masaki",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^22.1.1",
+    "jest": "^23.5.0",
+    "jest-cli": "^22.4.4",
+    "node-sass": "^4.9.3",
+    "ts-jest": "^23.1.4",
+    "ts-loader": "^5.0.0",
+    "typescript": "^2.9.2"
+  }
+}

@@ -1,0 +1,108 @@
+import {
+  HtmlElement,
+  ILayoutContext, getContextName,
+  FlowContext,
+  LayoutCounter,
+  LayoutStatus,
+  LayoutValue,
+  BoxEnv,
+  Config
+} from "./public-api";
+
+export class ConstantContext implements ILayoutContext {
+  public name: string;
+  public element: HtmlElement;
+  public env: BoxEnv;
+  public parent: FlowContext; // not null
+  protected counter: LayoutCounter;
+  protected status: LayoutStatus;
+
+  constructor(element: HtmlElement, parent: FlowContext){
+    this.name = getContextName(element, "const");
+    this.element = element;
+    this.env = new BoxEnv(element, parent.env);
+    this.parent = parent;
+    this.counter = new LayoutCounter();
+    this.status = new LayoutStatus();
+  }
+
+  public isStatusNormal(): boolean {
+    return this.status.isNormal();
+  }
+
+  public getValues(): LayoutValue [] {
+    throw new Error("must be overrided");
+  }
+
+  public updateStyle(){
+    throw new Error("must be overrided");
+  }
+
+  public updateLead(){
+    throw new Error("must be overrided");
+  }
+
+  public isFloat(): boolean {
+    return this.env.isFloat();
+  }
+
+  public isPositionAbsolute(): boolean {
+    return this.env.isPositionAbsolute();
+  }
+
+  public isBlockLevel(): boolean {
+    return this.env.isBlockLevel();
+  }
+
+  public isLayout(): boolean {
+    throw new Error("must be override");
+  }
+
+  public isFirstOutput(): boolean {
+    return true;
+  }
+
+  public isFinalOutput(): boolean {
+    return true;
+  }
+
+  public resume(){
+    this.status.setNormal();
+  }
+
+  public pause(){
+    this.status.setPause();
+  }
+
+  public abort(){
+    console.warn("[%s] aborted", this.name);
+    this.status.setAbort();
+  }
+
+  public commit(){
+    this.counter.incYield();
+    this.counter.resetRollback();
+    if(Config.debugLayout){
+      console.log("[%s] is commited!", this.name);
+    }
+  }
+
+  public rollback(){
+    this.counter.resetYield();
+    this.counter.incRollback();
+    if(Config.debugLayout){
+      console.log("[%s] is rollbacked!", this.name);
+    }
+  }
+
+  public hasNext(): boolean {
+    if(this.status.isAbort()){
+      return false;
+    }
+    return this.counter.isNotYielded(); // output only once.
+  }
+
+  public getNext(): IteratorResult<LayoutValue []> {
+    throw new Error("not implemented.");
+  }
+}
