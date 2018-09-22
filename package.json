@@ -1,6 +1,6 @@
 {
   "name": "nehan",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Html layout engine for paged-media written in Typescript",
   "main": "dist/index.js",
   "types": "dist/indx.d.ts",
@@ -8,7 +8,7 @@
     "build": "make -f Makefile.public",
     "test": "jest"
   },
-  "style":[
+  "style": [
     "./css/nehan.css"
   ],
   "repository": {
