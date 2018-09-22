@@ -1,4 +1,4 @@
-import * as Nehan from "../../dist";
+import * as Nehan from "nehan";
 
 export let create = (html:string, opt?: any): Nehan.PageReader => {
   opt = opt || {

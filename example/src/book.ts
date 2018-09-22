@@ -1,4 +1,3 @@
-//import * as Nehan from "../../dist";
 import * as Nehan from "nehan";
 import * as SampleReader from "./sample-reader";
 
