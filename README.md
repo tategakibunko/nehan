@@ -1,4 +1,4 @@
-# nehan.ts
+# nehan
 
 ## Introduction
 
