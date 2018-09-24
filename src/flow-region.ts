@@ -303,7 +303,7 @@ export class FlowRegion {
     // floating or flow-root
     if(this.context.isShrinkToFit()){
       size.measure = fixed_measure || this.flowRootMeasure;
-      size.extent = this.flowRootExtent;
+      size.extent = fixed_extent || this.flowRootExtent;
     }
     if(this.content.isEmptyBoxBlock()){
       size.extent = 0;
