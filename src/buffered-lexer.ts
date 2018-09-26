@@ -65,6 +65,6 @@ export class BufferedLexer<T> extends Lexer {
   }
 
   public setPos(pos: number){
-    this.pos = pos;
+    this.pos = Math.max(0, pos);
   }
 }

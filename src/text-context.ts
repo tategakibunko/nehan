@@ -233,7 +233,7 @@ export class TextContext implements ILayoutContext {
 
   public pushBack(){
     let pos = this.lexer.getPos();
-    this.lexer.setPos(Math.max(0, pos - 1));
+    this.lexer.setPos(pos - 1);
   }
 
   public rollback(){
