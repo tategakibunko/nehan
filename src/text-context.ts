@@ -354,12 +354,4 @@ export class TextContext implements ILayoutContext {
     }
     return 0;
   }
-
-  public get pos(): number{
-    return this.lexer.getPos();
-  }
-
-  public set pos(pos: number){
-    this.lexer.setPos(pos);
-  }
 }
