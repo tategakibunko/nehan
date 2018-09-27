@@ -360,7 +360,6 @@ export class FlowContext implements ILayoutContext {
       if(Config.debugLayout){
 	console.error("float block over!:", err);
       }
-      //this.region.restartFloatRegion();
       this.region.clear();
       this.childGens.rollback();
       return true;
@@ -370,7 +369,6 @@ export class FlowContext implements ILayoutContext {
   // full-filled line and br just after it causes double line-break, so skip it.
   public removeBrAfterLine(){
     let next_element = this.getNextElement();
-    //if(this.childGens.hasNextOfActive() === false &&
     if(this.childGens.hasNextActive() === false &&
        next_element && next_element.tagName === "br"){
       this.element.removeChild(next_element);
