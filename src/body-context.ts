@@ -1,4 +1,5 @@
 import {
+  Anchor,
   FlowRootContext,
   HtmlElement,
   LayoutOutlineCallbacks
@@ -7,6 +8,10 @@ import {
 export class BodyContext extends FlowRootContext {
   constructor(element: HtmlElement){
     super(element);
+  }
+
+  public getAnchor(anchor_name: string): Anchor | null {
+    return this.outline.getAnchor(anchor_name);
   }
 
   public isTooManyPages(): boolean {

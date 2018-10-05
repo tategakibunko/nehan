@@ -8,6 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 6.0.2, 2018/09/24
 ==========================
+o Add PageReader::getAnchorPage.
 * Add "dist" directory to npm packages.
 
 version 6.0.1, 2018/09/22

@@ -53,6 +53,17 @@ export class PageReader {
     return page;
   }
 
+  public getAnchorPage(anchor_name: string): LogicalPage | null {
+    if(!this.generator){
+      return null;
+    }
+    let anchor = this.generator.getAnchor(anchor_name);
+    if(!anchor){
+      return null;
+    }
+    return this.getPage(anchor.pageIndex);
+  }
+
   public createOutlineElement(callbacks: LayoutOutlineCallbacks): HTMLElement {
     if(!this.generator){
       throw new Error("generator is not created yet");

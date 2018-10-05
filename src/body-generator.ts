@@ -1,4 +1,5 @@
 import {
+  Anchor,
   FlowGenerator,
   BodyContext,
   LayoutOutlineCallbacks,
@@ -18,6 +19,10 @@ export class BodyGenerator extends FlowGenerator {
   public createEvaluator(): LayoutEvaluator {
     return this.context.isTextVertical()?
       new VertLayoutEvaluator(this.context) : new HoriLayoutEvaluator(this.context);
+  }
+
+  public getAnchor(anchor_name: string): Anchor | null {
+    return this.context.getAnchor(anchor_name);
   }
 
   protected onYields(values: LayoutValue []): LayoutValue [] {

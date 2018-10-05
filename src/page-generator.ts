@@ -1,4 +1,5 @@
 import {
+  Anchor,
   HtmlDocument,
   BodyGenerator,
   LayoutEvaluator,
@@ -26,6 +27,10 @@ export class PageGenerator {
       next.value.dom = this.evalPageBox(next.value.box);
     }
     return next;
+  }
+
+  public getAnchor(anchor_name: string): Anchor | null {
+    return this.generator.getAnchor(anchor_name);
   }
 
   public createOutlineElement(callbacks?: LayoutOutlineCallbacks): HTMLElement {
