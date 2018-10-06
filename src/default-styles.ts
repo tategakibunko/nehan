@@ -68,6 +68,7 @@ export let DefaultStyles: CssRules = {
     "display":"block",
     "text-align":"justify",
     "font-size":"16px",
+    "overflow-wrap":"break-word",
     "measure":Config.defaultBodyMeasure + "px",
     "extent":Config.defaultBodyExtent + "px",
     "margin":"0"
