@@ -12,6 +12,25 @@ export enum PageBreakValue {
   RIGHT = "right",
   AVOID = "avoid"
 }
+
+export class PageBreakAfter {
+  public value: string;
+  static values: string [] = Utils.Enum.toValueArray(PageBreakValue);
+
+  constructor(value: PageBreakValue){
+    this.value = DefaultCss.selectOrDefault("page-break-after", value, PageBreakAfter.values);
+  }
+
+  public isAlways(): boolean {
+    return this.value === PageBreakValue.ALWAYS;
+  }
+
+  static load(element: HtmlElement): PageBreakAfter {
+    let value = CssCascade.getValue(element, "page-break-after");
+    return new PageBreakAfter(value as PageBreakValue);
+  }
+}
+
 export class PageBreakBefore {
   public value: string;
   static values: string [] = Utils.Enum.toValueArray(PageBreakValue);

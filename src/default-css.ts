@@ -128,6 +128,14 @@ let  defaults = {
     initial:"0",
     inherit:false
   },
+  "break-after":{
+    initial:"auto",
+    inherit:false
+  },
+  "break-before":{
+    initial:"auto",
+    inherit:false
+  },
   "caption-side":{
     initial:"before",
     inherit:true
