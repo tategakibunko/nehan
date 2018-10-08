@@ -9,7 +9,6 @@ export class LayoutCounter {
   public line: number;
   public inlineChar: number;
   public blockChar: number;
-  public pageBreak: number;
   public emptyBox: number;
 
   constructor(){
@@ -19,7 +18,6 @@ export class LayoutCounter {
     this.inlineChar = 0;
     this.blockChar = 0;
     this.line = 0;
-    this.pageBreak = 0;
     this.emptyBox = 0;
   }
 
@@ -51,20 +49,12 @@ export class LayoutCounter {
     return this.yield > 0;
   }
 
-  public isNotPageBroken(){
-    return this.pageBreak === 0;
-  }
-
   public isLineYielded(){
     return this.line > 0;
   }
 
   public isFirstLine(){
     return this.yield === 0 && this.line === 0;
-  }
-
-  public incPageBreak(){
-    this.pageBreak++;
   }
 
   public incRollback(){
@@ -115,6 +105,5 @@ export class LayoutCounter {
     this.inlineChar = 0;
     this.blockChar = 0;
     this.line = 0;
-    this.pageBreak = 0;
   }
 }

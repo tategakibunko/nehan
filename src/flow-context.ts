@@ -246,9 +246,6 @@ export class FlowContext implements ILayoutContext {
     if(control.isGeneratorValue){
       this.childGens.commit();
     }
-    if(control.isPageBreak()){
-      this.incPageBreak();
-    }
   }
 
   public shiftInlineLevel(obj: BoxContent): boolean {
@@ -382,10 +379,6 @@ export class FlowContext implements ILayoutContext {
     this.region.clearFloat(clear);
   }
 
-  public incPageBreak(){
-    this.counter.incPageBreak();
-  }
-
   public setRegionMarginAuto(element: HtmlElement){
     this.region.setMarginAuto(element);
   }
@@ -471,10 +464,6 @@ export class FlowContext implements ILayoutContext {
 
   public isTextUpright(): boolean {
     return this.env.textOrientation.isUpright();
-  }
-
-  public isNotPageBroken(): boolean {
-    return this.counter.isNotPageBroken();
   }
 
   public isLineYielded(): boolean {

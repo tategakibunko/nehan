@@ -17,6 +17,11 @@ export interface SemanticStyleCreateOptions {
 let pageBreak: CssRules = {
   ".page.break.before":{
     "page-break-before":"always"
+  },
+  "hr.page.break.before":{
+    "border-width":"0",
+    "extent":"0",
+    "margin":"0"
   }
 };
 

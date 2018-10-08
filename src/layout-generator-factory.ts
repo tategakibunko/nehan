@@ -61,7 +61,7 @@ export class LayoutGeneratorFactory {
       parent_ctx.setRegionMarginAuto(element);
     }
     let page_break_before = PageBreakBefore.load(element);
-    if(page_break_before.isAlways() && parent_ctx.isNotPageBroken()){
+    if(page_break_before.isAlways()){
       return this.createPageBreakBeforeGenerator(parent_ctx, element);
     }
     let clear = LogicalClear.load(element);
@@ -144,7 +144,7 @@ export class LayoutGeneratorFactory {
 
   static createPageBreakBeforeElement(element: HtmlElement): HtmlElement {
     let hr = element.root.createElement("hr");
-    hr.setAttribute("style", "page-break-before:always; extent:0; margin:0; border:0");
+    hr.setAttribute("style", "display:none");
     if(element.parent){
       element.parent.insertBefore(hr, element);
     }
@@ -156,9 +156,11 @@ export class LayoutGeneratorFactory {
 
   static createPageBreakBeforeGenerator(parent_ctx: FlowContext, element: HtmlElement):
   ConstantGenerator {
-    let break_element = this.createPageBreakBeforeElement(element);
     let page_break = LayoutControl.createPageBreak();
+    let break_element = this.createPageBreakBeforeElement(element);
     let context = new ControlContext(break_element, parent_ctx, page_break);
+    // page is already broken, so remove.
+    element.computedStyle.setProperty("page-break-before", "auto");
     return new ConstantGenerator(context);
   }
 
