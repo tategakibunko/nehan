@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.4, 2018/10/08
+==========================
+* Fix page-break-before trouble.
+
 version 6.0.3, 2018/10/05
 ==========================
 o Add PageReader::getAnchorPage.

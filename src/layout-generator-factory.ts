@@ -156,7 +156,6 @@ export class LayoutGeneratorFactory {
 
   static createPageBreakBeforeGenerator(parent_ctx: FlowContext, element: HtmlElement):
   ConstantGenerator {
-    parent_ctx.incPageBreak(); // to block infinite loop
     let break_element = this.createPageBreakBeforeElement(element);
     let page_break = LayoutControl.createPageBreak();
     let context = new ControlContext(break_element, parent_ctx, page_break);

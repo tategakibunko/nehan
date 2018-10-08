@@ -246,6 +246,9 @@ export class FlowContext implements ILayoutContext {
     if(control.isGeneratorValue){
       this.childGens.commit();
     }
+    if(control.isPageBreak()){
+      this.incPageBreak();
+    }
   }
 
   public shiftInlineLevel(obj: BoxContent): boolean {

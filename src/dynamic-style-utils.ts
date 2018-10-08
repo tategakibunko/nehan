@@ -6,15 +6,16 @@ import {
 
 export class DynamicStyleUtils {
   // page break before if rest extent is smaller than [size].
-  static requiredExtent(size: number): DynamicStyleCallback {
+  static requiredExtent(required_extent: number): DynamicStyleCallback {
     return (ctx: DynamicStyleContext): CssDeclarationBlock => {
       if(!ctx.parentContext){
 	return {};
       }
-      if(ctx.parentContext.region.restContextBoxExtent < size){
+      let rest_extent = ctx.parentContext.region.restContextBoxExtent;
+      if(rest_extent < required_extent){
 	return {"page-break-before":"always"};
       }
-      return {};
+      return {"page-break-before":"auto"};
     };
   }
 

@@ -55,6 +55,7 @@ export class ComputedStyle {
       this.setExtent(element);
       this.setPosition(element, parent_ctx);
     }
+    this.setPageBreakBefore(element);
 
     this.setValue(element, "font-family");
     this.setValue(element, "font-style");
@@ -77,7 +78,6 @@ export class ComputedStyle {
     this.setValue(element, "word-break");
     this.setValue(element, "overflow-wrap");
     this.setValue(element, "white-space");
-    this.setValue(element, "page-break-before");
     this.setValue(element, "background-position");
   }
 
@@ -118,6 +118,17 @@ export class ComputedStyle {
   static getBorderWidth(element: HtmlElement, prop: string): number {
     let value = CssCascade.getValue(element, prop);
     return new CssBorderWidth(value, prop).computeSize(element);
+  }
+
+  // [element1.page-break-before(before page broken)]  <- always
+  // [====== page is broken ===============]
+  // [element1.page-break-before(after page broken)] <- must be 'auto'(page is already broken)
+  //
+  // page-break-before is obtained more than once by same element,
+  // and it's value must change by context, so we always clear the previous value.
+  static setPageBreakBefore(element: HtmlElement){
+    element.computedStyle.removeProperty("page-break-before");
+    this.setValue(element, "page-break-before");
   }
 
   static setPadding(element: HtmlElement){
