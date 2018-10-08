@@ -6,6 +6,7 @@ import {
   LogicalFloat,
   LogicalClear,
   PseudoElement,
+  PageBreakAfter,
   PageBreakBefore,
   ReplacedElement,
   Content,
@@ -59,6 +60,11 @@ export class LayoutGeneratorFactory {
     let float = LogicalFloat.load(element);
     if(float.isNone()){
       parent_ctx.setRegionMarginAuto(element);
+    }
+    let page_break_after = PageBreakAfter.load(element);
+    if(page_break_after.isAlways()){
+      let break_element = this.createPageBreakAfterElement(element);
+      parent_ctx.element.insertBefore(break_element, element.nextSibling);
     }
     let page_break_before = PageBreakBefore.load(element);
     if(page_break_before.isAlways()){
@@ -140,6 +146,12 @@ export class LayoutGeneratorFactory {
   ConstantGenerator {
     let context = new EmptyBoxContext(element, parent_ctx);
     return new ConstantGenerator(context);
+  }
+
+  static createPageBreakAfterElement(element: HtmlElement): HtmlElement {
+    let hr = element.root.createElement("hr");
+    hr.className = "page break before";
+    return hr;
   }
 
   static createPageBreakBeforeElement(element: HtmlElement): HtmlElement {

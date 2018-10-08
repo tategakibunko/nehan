@@ -15,6 +15,9 @@ export interface SemanticStyleCreateOptions {
 }
 
 let pageBreak: CssRules = {
+  ".page.break.after":{
+    "page-break-after":"always"
+  },
   ".page.break.before":{
     "page-break-before":"always"
   },
