@@ -1,25 +1,28 @@
 import {
   FlowChildGenerators,
   FlowContext,
-  FlowGenerator,
   TableCellGenerator,
   TableCellContext,
   LayoutValue,
 } from "./public-api";
 
 export class TableRowChildGenerators extends FlowChildGenerators {
-  protected cellGenerators: FlowGenerator [];
+  protected cellGenerators: TableCellGenerator [];
   protected curGeneratorIndex: number;
 
   constructor(parent: FlowContext){
     super(parent);
-    this.cellGenerators = this.parent.element.querySelectorAll("td")
-      .concat(this.parent.element.querySelectorAll("th"))
-      .filter(cell => cell.parent === parent.element)
-      .map(cell => new TableCellGenerator(new TableCellContext(cell, this.parent)));
+    this.cellGenerators = this.createCellGenerators(parent);
     this.lead = this.cellGenerators[0];
     this.active = this.lead;
     this.curGeneratorIndex = 0;
+  }
+
+  public createCellGenerators(parent: FlowContext): TableCellGenerator [] {
+    return this.parent.element.querySelectorAll("td")
+      .concat(this.parent.element.querySelectorAll("th"))
+      .filter(cell => cell.parent === parent.element)
+      .map(cell => new TableCellGenerator(new TableCellContext(cell, this.parent)));
   }
 
   public getNext(): IteratorResult<LayoutValue []> {
