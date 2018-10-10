@@ -31,26 +31,6 @@ export class TableCellRegion extends FlowRootRegion {
     return size - this.contextEdgeMeasure;
   }
 
-  protected get parentEdgeAfter(): number {
-    let size = 0, parent = this.context.parent;
-    while(parent){
-      size += parent.edge.after;
-      parent = parent.parent;
-    }
-    return size;
-  }
-
-  public get maxContextBoxExtent(): number {
-    let max = super.maxContextBoxExtent;
-    // If last output of last cell of last row, extent size is subtracted by parent edge.
-    // So we must add the edge size to last cell to make all cells same region size.
-    if(this.context.parent && this.context.parent.hasNext() === false){
-      let plus = this.parentEdgeAfter;
-      max += plus;
-    }
-    return max;
-  }
-
   public get maxContextBoxMeasure(): number {
     return this.cellMeasure;
   }

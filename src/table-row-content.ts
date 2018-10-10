@@ -11,6 +11,10 @@ export class TableRowContent extends FlowContent {
     return this.inlines.length >= count;
   }
 
+  protected isBlockBreak(): boolean {
+    return this.inlines.some(box => (box as LogicalBox).blockBreak);
+  }
+
   protected getMaxCellTotalExtent(): number {
     return this.inlines.reduce((max, cell) => {
       return Math.max(max, (cell as LogicalBox).totalExtent);
@@ -45,6 +49,7 @@ export class TableRowContent extends FlowContent {
     let size = this.createTableRowBoxSize(overflow, rest_size);
     let box = new LogicalBox(env, BoxType.TABLE_ROW, size);
     box.addChildren(this.inlines);
+    box.blockBreak = this.isBlockBreak();
     return box;
   }
 }

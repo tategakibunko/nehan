@@ -158,7 +158,9 @@ export class FlowRegion {
     return is_over;
   }
 
-  // add normal flow block, return true if region is filled.
+  // add normal flow block, return true if
+  // 1. region is filled(this.cursor.before >= max)
+  // 2. block.blockBreak flag is already set.
   public addBlock(block: LogicalBox): boolean {
     let delta = block.totalExtent, max = this.maxContextBoxExtent;
     let prev = this.cursor.before, next = prev + delta;
@@ -171,7 +173,7 @@ export class FlowRegion {
 	this.name, block.toString(), prev, next, max, block.blockPos
       );
     }
-    return this.cursor.before >= max;
+    return this.cursor.before >= max || block.blockBreak;
   }
 
   public addAbsBlock(block: LogicalBox){
@@ -316,6 +318,7 @@ export class FlowRegion {
     let box = this.content.createBlockBox(env, size, box_type);
     box.autoSize = this.createBlockAutoSize();
     box.contextEdge = this.createBlockEdge();
+    box.blockBreak = overflow;
     return box;
   }
 
@@ -324,6 +327,7 @@ export class FlowRegion {
     let box = this.content.createBlockBox(env, size, box_type);
     box.contextEdge = this.createBlockEdge();
     box.autoSize = this.createInlineBlockAutoSize();
+    box.blockBreak = overflow;
     return box;
   }
 

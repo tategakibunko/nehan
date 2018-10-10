@@ -35,6 +35,7 @@ export class LogicalBox {
   public pageIndex: number;
   public localPageIndex: number;
   public lineBreak: boolean;
+  public blockBreak: boolean;
   public hasNext: boolean;
   protected children: BoxContent [];
 
@@ -52,6 +53,7 @@ export class LogicalBox {
     this.localPageIndex = 0;
     this.children = [];
     this.lineBreak = false;
+    this.blockBreak = false;
     this.hasNext = false;
   }
 

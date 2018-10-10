@@ -27,6 +27,10 @@ export class TableRowContext extends FlowContext {
     return this.childGens.cellCount;
   }
 
+  public isLastRow(): boolean {
+    return this.element.isLastElementChild();
+  }
+
   public getNext(): IteratorResult<LayoutValue []> {
     return this.childGens.getNext();
   }

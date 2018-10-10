@@ -1,5 +1,6 @@
 import {
   FlowRegion,
+  TableRowContext,
   TableRowContent,
   LogicalBox,
   LogicalSize,
@@ -8,6 +9,7 @@ import {
 } from "./public-api";
 
 export class TableRowRegion extends FlowRegion {
+  protected context: TableRowContext;
   protected content: TableRowContent;
 
   public isCellFilled(cell_count: number): boolean {
@@ -19,6 +21,28 @@ export class TableRowRegion extends FlowRegion {
     cell.blockPos = new LogicalCursorPos({before:0, start:this.cursor.start});
     this.content.addInline(cell);
     this.cursor.start += delta;
+  }
+
+  protected get parentEdgeAfter(): number {
+    let size = 0, parent = this.context.parent;
+    while(parent){
+      size += parent.edge.after;
+      if(!parent.parent || parent.element.tagName === "table"){
+	break;
+      }
+      parent = parent.parent;
+    }
+    return size;
+  }
+
+  // If last row, force enable parent after edge to make all cells having same rest-extent.
+  public get maxContextBoxExtent(): number {
+    let max = super.maxContextBoxExtent;
+    if(!this.context.isLastRow()){
+      return max;
+    }
+    let minus = this.parentEdgeAfter;
+    return max - minus;
   }
 
   public createTableRowBox(env: BoxEnv, overflow: boolean): LogicalBox {
