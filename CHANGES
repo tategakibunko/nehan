@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.5
+==========================
+* Fix bug of table layouting.
+
 version 6.0.4, 2018/10/08
 ==========================
 o Support 'page-break-after:always'.
