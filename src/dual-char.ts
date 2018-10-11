@@ -11,7 +11,6 @@ import {
 export class DualChar implements ICharacter {
   public text: string;
   public size: LogicalSize;
-  public pos: number;
   public hasEmphasis: boolean;
   public info: DualCharInfo;
   public kerning: boolean;
@@ -19,7 +18,6 @@ export class DualChar implements ICharacter {
 
   public constructor(str: string){
     this.text = str;
-    this.pos = -1;
     this.size = new LogicalSize({measure:0, extent:0});
     this.hasEmphasis = false;
     this.info = DualCharTable.load(str);

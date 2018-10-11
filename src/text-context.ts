@@ -205,7 +205,6 @@ export class TextContext implements ILayoutContext {
   public getNext(): IteratorResult<LayoutValue []> {
     let prev = this.lexer.peek(-1);
     let text = this.lexer.getNext();
-    text.pos = this.lexer.getPos();
     if((text instanceof DualChar && text.isKernEnable()) &&
        (prev instanceof DualChar && prev.isKernEnable())){
       text.setKerning(this.env, true);

@@ -10,14 +10,12 @@ import {
 export class HalfChar implements ICharacter {
   public text: string;
   public size: LogicalSize;
-  public pos: number;
   public hasEmphasis: boolean;
   public kerning: boolean;
   public spacing: number;
 
   public constructor(str: string){
     this.text = str;
-    this.pos = -1;
     this.size = new LogicalSize({measure:0, extent:0});
     this.hasEmphasis = false;
     this.kerning = false;

@@ -15,7 +15,6 @@ import {
 export interface ICharacter {
   text: string,
   size: LogicalSize,
-  pos: number,
   charCount: number,
   hasEmphasis: boolean,
   kerning: boolean,
