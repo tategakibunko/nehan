@@ -359,7 +359,7 @@ export class FlowRegion {
 
   protected createInlineSize(env: BoxEnv, overflow: boolean): LogicalSize {
     return new LogicalSize({
-      measure:overflow? this.maxContextBoxMeasure : this.cursor.start,
+      measure:this.cursor.start,
       extent:this.lineExtent
     });
   }

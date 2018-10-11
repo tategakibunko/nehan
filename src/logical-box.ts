@@ -219,12 +219,11 @@ export class LogicalBox {
   public justify(baseline: LogicalBox){
     let chars = baseline.getDirectCharacters();
     let total_gap = baseline.restSpaceMeasure;
-    let max_total_gap = Math.floor(this.fontSize * 2.5);
-    if(total_gap > max_total_gap){
+    if(total_gap === 0){
       return;
     }
     let unit_gap = total_gap / chars.length;
-    let max_unit_gap = Math.floor(this.fontSize / 3);
+    let max_unit_gap = this.fontSize / 8;
     if(unit_gap > max_unit_gap){
       return;
     }
