@@ -26,8 +26,11 @@ export class TableRowRegion extends FlowRegion {
   protected get parentEdgeAfter(): number {
     let size = 0, parent = this.context.parent;
     while(parent){
+      if(parent.element.tagName === "body"){
+	break;
+      }
       size += parent.edge.after;
-      if(!parent.parent || parent.element.tagName === "table"){
+      if(!parent.parent){
 	break;
       }
       parent = parent.parent;
