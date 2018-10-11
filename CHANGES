@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.6
+==========================
+* Fix wrong space size for justify.
+
 version 6.0.5, 2018/10/10
 ==========================
 * Fix bug of table layouting.
