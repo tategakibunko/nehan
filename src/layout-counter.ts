@@ -4,6 +4,7 @@ import {
 
 export class LayoutCounter {
   public page: number;
+  public percent: number;
   public yield: number;
   public rollback: number;
   public line: number;
@@ -12,6 +13,7 @@ export class LayoutCounter {
   public emptyBox: number;
 
   constructor(){
+    this.percent = 0;
     this.yield = 0;
     this.rollback = 0;
     this.page = 0;
