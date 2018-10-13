@@ -51,6 +51,7 @@ export class TableRowContext extends FlowContext {
 
   public shiftTableCell(box: LogicalBox): boolean {
     this.region.addTableCell(box);
+    this.counter.incBlockChar(box.charCount);
     this.childGens.commit();
     return this.region.isCellFilled(this.cellCount);
   }
@@ -75,7 +76,7 @@ export class TableRowContext extends FlowContext {
     box.pageIndex = this.bodyPageIndex;
     box.localPageIndex = this.pageIndex;
     box.hasNext = this.hasNext();
-    box.charCount = this.counter.inlineChar;
+    box.charCount = this.counter.blockChar;
     this.region.clearInlines(); // table-cell is stacked to this.inlines.
     this.region.resetInlineCursor();
     this.counter.resetInlineCounter();
