@@ -54,6 +54,7 @@ export class PageGenerator {
 	let box = boxes[i];
 	let page: LogicalPage = {
 	  index:index,
+	  progress:this.generator.progress,
 	  charCount:box.charCount,
 	  box:box,
 	  dom:null

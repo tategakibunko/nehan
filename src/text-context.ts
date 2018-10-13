@@ -43,6 +43,10 @@ export class TextContext implements ILayoutContext {
     this.brokenWord = null;
   }
 
+  public get progress(): number {
+    return this.lexer.progress;
+  }
+
   public isStatusNormal(): boolean {
     return this.status.isNormal();
   }

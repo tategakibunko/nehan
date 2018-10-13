@@ -3,8 +3,9 @@ import {
 } from "./public-api";
 
 export interface LogicalPage {
-  index: number,
-  charCount: number,
-  box: LogicalBox,
-  dom: HTMLElement | null,
+  index: number;
+  progress: number;
+  charCount: number;
+  box: LogicalBox;
+  dom: HTMLElement | null;
 }

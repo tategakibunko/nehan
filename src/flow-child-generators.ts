@@ -24,6 +24,13 @@ export class FlowChildGenerators {
     this.resumedGenerators = new ResumedGenerators(parent.element.toString() + "@resume");
   }
 
+  public getProgress(parent_unit_progress: number): number {
+    if(!this.active){
+      return 0;
+    }
+    return parent_unit_progress * (this.active.element.index + this.active.progress);
+  }
+
   public hasNext(): boolean {
     if(this.hasNextActive()){
       return true;

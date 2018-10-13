@@ -12,6 +12,7 @@ import {
 export class ConstantContext implements ILayoutContext {
   public name: string;
   public element: HtmlElement;
+  public progress: number;
   public env: BoxEnv;
   public parent: FlowContext; // not null
   protected counter: LayoutCounter;
@@ -20,6 +21,7 @@ export class ConstantContext implements ILayoutContext {
   constructor(element: HtmlElement, parent: FlowContext){
     this.name = getContextName(element, "const");
     this.element = element;
+    this.progress = 1;
     this.env = new BoxEnv(element, parent.env);
     this.parent = parent;
     this.counter = new LayoutCounter();

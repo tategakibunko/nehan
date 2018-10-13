@@ -166,6 +166,14 @@ export class FlowContext implements ILayoutContext {
     return false;
   }
 
+  public get progress(): number {
+    if(!this.hasNext()){
+      return 1;
+    }
+    let unit = 1 / this.element.childNodes.length;
+    return this.childGens.getProgress(unit);
+  }
+
   public pause(){
     this.status.setPause();
     if(Config.debugLayout){

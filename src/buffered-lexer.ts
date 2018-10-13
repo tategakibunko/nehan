@@ -17,6 +17,13 @@ export class BufferedLexer<T> extends Lexer {
     return this.tokens.length;
   }
 
+  public get progress(): number {
+    if(this.tokens.length === 0){
+      return 1;
+    }
+    return this.pos / this.tokens.length;
+  }
+
   public hasNext(): boolean {
     let has_next = this.pos < this.tokens.length;
     return has_next;

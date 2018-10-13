@@ -18,6 +18,10 @@ export class LayoutGenerator implements ILayoutContext {
     this.iterator = this.createIterator();
   }
 
+  public get progress(): number {
+    return this.context.progress;
+  }
+
   public pause(){
     this.context.pause();
   }

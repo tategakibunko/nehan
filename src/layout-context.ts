@@ -16,6 +16,9 @@ export interface ILayoutContext {
   // html element of context
   element: HtmlElement;
 
+  // local progress(0.0 to 1.0)
+  progress: number;
+
   // called by 'parent' generator if yielded layout is accepted by parent generator.
   commit: () => void;
 
