@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.7, 2018/10/13
+==========================
+o Add progress value(0.0 ~ 1.0) to LocalPage.
+
 version 6.0.6, 2018/10/11
 ==========================
 * Fix wrong space size for justify.
