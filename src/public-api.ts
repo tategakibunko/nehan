@@ -1,4 +1,3 @@
-export * from "./version"
 export * from "./config"
 export * from "./utils"
 export * from "./prefix"
