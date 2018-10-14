@@ -216,10 +216,23 @@
 // ----------------------------------------------------
 // environment
 // ----------------------------------------------------
-// for MS Edge brosser
+// for older MS Edge
 @supports (-ms-accelerator:true) {
   .nehan-i-vert-glyph {
     height:1;
+    max-height:1em;
+  }
+  .nehan-i-word {
+    max-height:1em;
+  }
+}
+// for newer MS Edge
+@supports (-ms-ime-align:auto) {
+  .nehan-i-vert-glyph {
+    height:1;
+    max-height:1em;
+  }
+  .nehan-i-word {
     max-height:1em;
   }
 }

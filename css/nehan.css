@@ -188,4 +188,13 @@
 @supports (-ms-accelerator: true) {
   .nehan-i-vert-glyph {
     height: 1;
+    max-height: 1em; }
+  .nehan-i-word {
+    max-height: 1em; } }
+
+@supports (-ms-ime-align: auto) {
+  .nehan-i-vert-glyph {
+    height: 1;
+    max-height: 1em; }
+  .nehan-i-word {
     max-height: 1em; } }
