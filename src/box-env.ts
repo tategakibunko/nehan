@@ -51,7 +51,6 @@ export class BoxEnv {
   public whiteSpace: WhiteSpace;
   public pageBreakBefore: PageBreakBefore;
   public backgroundPos: LogicalBackgroundPos;
-  public lineExtent: number;
 
   constructor(element: HtmlElement, parent?: BoxEnv){
     this.element = element;
@@ -77,7 +76,6 @@ export class BoxEnv {
     this.whiteSpace = WhiteSpace.load(element);
     this.pageBreakBefore = PageBreakBefore.load(element);
     this.backgroundPos = LogicalBackgroundPos.load(element);
-    this.lineExtent = this.getLineExtent();
   }
 
   protected loadDisplay(element: HtmlElement, float: LogicalFloat): Display {
@@ -124,6 +122,10 @@ export class BoxEnv {
     return this.display.isBlockLevel();
   }
 
+  public isLineRoot(): boolean {
+    return this.display.isBlockLevel() || this.display.isFlowRoot();
+  }
+
   public get contentValue(): string {
     return this.content.value;
   }
@@ -136,9 +138,9 @@ export class BoxEnv {
     return this.display.boxType;
   }
 
-  public getLineExtent(): number {
+  public getLineExtent(max_inline_extent: number): number {
     if(this.font.lineHeight.indexOf("px") < 0){
-      return Math.floor(this.font.size * parseFloat(this.font.lineHeight));
+      return Math.floor(max_inline_extent * parseFloat(this.font.lineHeight));
     }
     return Utils.atoi(this.font.lineHeight, 10);
   }

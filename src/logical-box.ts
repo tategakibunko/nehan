@@ -396,10 +396,6 @@ export class LogicalBox {
     return this.env.whiteSpace;
   }
 
-  public get lineExtent(): number {
-    return this.env.lineExtent;
-  }
-
   public get restSpaceMeasure(): number {
     return this.size.measure - this.autoSize.measure;
   }

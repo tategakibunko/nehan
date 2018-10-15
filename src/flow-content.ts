@@ -22,34 +22,47 @@ export class FlowContent {
     return Math.min(count, Math.max(0, this.inlines.length - 1));
   }
 
-  public getLineExtent(env: BoxEnv): number {
-    if(this.isEmptyBoxInline()){
-      return 0;
-    }
+  protected getMaxInlineExtent(): number {
     return this.inlines.reduce((max_extent, item) => {
-      if(item instanceof LogicalBox){
-	return Math.max(max_extent, item.totalExtent);
-      } else if(item instanceof Ruby){
+      if(item instanceof LogicalBox || item instanceof Ruby){
 	return Math.max(max_extent, item.totalExtent);
       } else {
 	return Math.max(max_extent, item.size.extent);
       }
-    }, env.lineExtent);
+    }, 0);
+  }
+
+  protected getMaxInlineFontSize(env: BoxEnv): number {
+    return this.inlines.reduce((max_extent, item) => {
+      if(item instanceof LogicalBox || item instanceof Ruby){
+	return Math.max(max_extent, item.fontSize);
+      } else {
+	return Math.max(max_extent, item.size.extent);
+      }
+    }, env.fontSize);
+  }
+
+  public getRootLineExtent(env: BoxEnv): number {
+    if(this.isEmptyBoxInline()){
+      return 0;
+    }
+    let max_inline_font_size = this.getMaxInlineFontSize(env);
+    let max_inline_extent = this.getMaxInlineExtent();
+    return Math.max(max_inline_extent, env.getLineExtent(max_inline_font_size));
+  }
+
+  public getLineExtent(env: BoxEnv): number {
+    if(this.isEmptyBoxInline()){
+      return 0;
+    }
+    return this.getMaxInlineExtent();
   }
 
   public getLineTextExtent(env: BoxEnv): number {
     if(this.isEmptyBoxInline()){
       return 0;
     }
-    return this.inlines.reduce((max_extent, item) => {
-      if(item instanceof LogicalBox){
-	return Math.max(max_extent, item.fontSize);
-      } else if(item instanceof Ruby){
-	return item.fontSize;
-      } else {
-	return Math.max(max_extent, item.size.extent);
-      }
-    }, env.fontSize);
+    return this.getMaxInlineFontSize(env);
   }
 
   // Find max measure from it's block children.

@@ -375,9 +375,12 @@ export class FlowRegion {
   protected createLineSize(env: BoxEnv): LogicalSize {
     let is_white_space_only = this.content.isWhiteSpaceOnly();
     let is_empty_line = this.content.isInlineEmpty() || is_white_space_only;
+    let is_root_line = env.isLineRoot();
+    let extent = is_empty_line? this.lineTextExtent :
+      (is_root_line? this.rootLineExtent : this.lineExtent);
     let size = new LogicalSize({
       measure:this.maxSpaceMeasure,
-      extent:is_empty_line? this.lineTextExtent : this.lineExtent
+      extent:extent
     });
     if(this.context.isShrinkToFit()){
       size.measure = this.cursor.start;
@@ -593,12 +596,23 @@ export class FlowRegion {
     return this.maxEdgedBoxExtent - this.cursor.before;
   }
 
+  protected get rootLineExtent(): number {
+    let root_line_extent = this.content.getRootLineExtent(this.context.env);
+    let fixed_extent = this.fixedExtent;
+    if(fixed_extent){
+      root_line_extent = Math.min(root_line_extent, fixed_extent);
+    }
+    //console.warn("[%s] rootLineExtent = %d", this.context.name, root_line_extent);
+    return root_line_extent;
+  }
+
   protected get lineExtent(): number {
     let line_extent = this.content.getLineExtent(this.context.env);
     let fixed_extent = this.fixedExtent;
     if(fixed_extent){
-      return Math.min(line_extent, fixed_extent);
+      line_extent = Math.min(line_extent, fixed_extent);
     }
+    //console.warn("[%s] lineExtent = %d", this.context.name, line_extent);
     return line_extent;
   }
 
@@ -606,8 +620,9 @@ export class FlowRegion {
     let line_text_extent = this.content.getLineTextExtent(this.context.env);
     let fixed_extent = this.fixedExtent;
     if(fixed_extent){
-      return Math.min(line_text_extent, fixed_extent);
+      line_text_extent = Math.min(line_text_extent, fixed_extent);
     }
+    //console.warn("[%s] lineTextExtent = %d", this.context.name, line_text_extent);
     return line_text_extent;
   }
 
