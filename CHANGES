@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.9
+==========================
+* Revice baseline.
+
 version 6.0.8, 2018/10/13
 ==========================
 * Fix char count of table element.
