@@ -138,23 +138,32 @@ export class CssParser {
       let obj_value = declr_block[prop];
       let css_prop = new CssProp(prop);
 
+      // [example]
       // "color":"red"
       if(typeof obj_value === "string"){
 	return acm.setProperty(css_prop.value, obj_value);
       }
+      // [example]
+      // "line-height":1.6
+      if(typeof obj_value === "number"){
+	return acm.setProperty(css_prop.value, String(obj_value));
+      }
       if(typeof obj_value === "function"){ // macro or dynamic style.
+	// [example]
 	// "!dynamic": function(ctx) => { ... }
 	if(css_prop.isDynamicStyleProp()){
 	  let name = css_prop.getDynamicStylePropName();
 	  let callback = obj_value as DynamicStyleCallback;
 	  return acm.addDynamicStyle(new DynamicStyle(selector, name, callback));
 	}
+	// [example]
 	// "@oncreate": function(ctx) => { ... }
 	if(css_prop.isDomCallback()){
 	  let name = css_prop.getDomCallbackName();
 	  let callback = obj_value as DomCallbackValue;
 	  return acm.addDomCallback(new DomCallback(selector, name, callback));
 	}
+	// [example]
 	// "font-size": function(ctx) => { return "1.5em" }
 	// If macro, just call and set.
 	let macro = new CssMacro(obj_value as CssMacroValue);
