@@ -25,7 +25,7 @@ import {
   TextEmphasis
 } from "./public-api";
 
-export type CssValue = string | CssMacroValue | DynamicStyleCallback | DomCallbackValue;
+export type CssValue = string | number | CssMacroValue | DynamicStyleCallback | DomCallbackValue;
 export type CssDeclaration = {prop: string, value: CssValue}; // PropValue<string, CssValue>
 export type CssDeclarationBlockItem = {[prop: string]: CssValue};
 export type CssDeclarationBlock = Partial<CssDeclarationBlockItem>; // allow {} by Partial
