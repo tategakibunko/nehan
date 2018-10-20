@@ -2,12 +2,19 @@ import {
   Anchor,
   FlowRootContext,
   HtmlElement,
+  CssLoader,
   LayoutOutlineCallbacks
 } from "./public-api";
 
 export class BodyContext extends FlowRootContext {
   constructor(element: HtmlElement){
     super(element);
+  }
+
+  public updateStyle(){
+    if(CssLoader.loadDynamic(this.element, this.parent)){
+      super.updateStyle();
+    }
   }
 
   public getAnchor(anchor_name: string): Anchor | null {

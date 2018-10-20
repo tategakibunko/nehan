@@ -1,6 +1,7 @@
 import {
   FlowContext,
   FlowRootContext,
+  TableRowContext,
   TableCellRegion,
   BoxType,
   LogicalBox,
@@ -11,7 +12,11 @@ export class TableCellContext extends FlowRootContext {
   public region: TableCellRegion;
 
   protected createRegion(): TableCellRegion {
-    return new TableCellRegion(this);
+    let region = new TableCellRegion(this);
+    if(this.parent instanceof TableRowContext){
+      this.env.measure = region.cellMeasure;
+    }
+    return region;
   }
 
   public createInlineBlockBox(overflow: boolean, box_type = BoxType.TABLE_CELL): LogicalBox {
