@@ -206,12 +206,26 @@ export class TextContext implements ILayoutContext {
     return this.shiftCharacter(word_head);
   }
 
+  protected setKerning(cur: DualChar, prev: DualChar){
+    if(prev.isKernEnable() === false){
+      return;
+    }
+    if(prev.isOpenParen() && cur.isCloseParen()){
+      return;
+    }
+    if(prev.isCloseParen() && cur.isOpenParen()){
+      return;
+    }
+    cur.setKerning(this.env, true);
+  }
+
   public getNext(): IteratorResult<LayoutValue []> {
-    let prev = this.lexer.peek(-1);
-    let text = this.lexer.getNext();
-    if((text instanceof DualChar && text.isKernEnable()) &&
-       (prev instanceof DualChar && prev.isKernEnable())){
-      text.setKerning(this.env, true);
+    let text = this.lexer.getNext(); // lexer pos += 1
+    if(text instanceof DualChar && text.isKernEnable()){
+      let prev = this.lexer.peek(-2); // lexer pos is already added by getNext, so get prev of prev.
+      if(prev instanceof DualChar){
+	this.setKerning(text, prev);
+      }
     }
     // If text is not word and metrics is already calculated, skip calling setMetrics.
     // Note that word token should be called setMetrics always,

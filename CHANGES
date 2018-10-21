@@ -10,6 +10,7 @@ version 6.0.11
 ==========================
 o Config.isTcyWord is added.
 * Fix bug of dynamically updated style for table cell.
+* Fix kerning for some parenthesis pattern.
 
 version 6.0.10, 2018/10/17
 ==========================

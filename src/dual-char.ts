@@ -4,6 +4,7 @@ import {
   LogicalSize,
   DualCharTable,
   DualCharInfo,
+  ParenType,
   KinsokuPos
 } from "./public-api";
 
@@ -27,6 +28,14 @@ export class DualChar implements ICharacter {
 
   public get charCount(): number {
     return 1;
+  }
+
+  public isOpenParen(): boolean {
+    return this.info.parenType === ParenType.OPEN;
+  }
+
+  public isCloseParen(): boolean {
+    return this.info.parenType === ParenType.CLOSE;
   }
 
   public isTailNg(): boolean {
