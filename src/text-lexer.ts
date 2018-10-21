@@ -31,7 +31,7 @@ export class TextLexer extends BufferedLexer<Character>{
     return RefChar.softHyphen;
   }
 
-  private getWord(): Word | null {
+  private getWordOrTcy(): Word | Tcy | null {
     let word = "";
     while(this.hasNextBuff()){
       let word_match = Config.rexWord.exec(this.buff);
@@ -49,6 +49,9 @@ export class TextLexer extends BufferedLexer<Character>{
     }
     if(word === ""){
       return null;
+    }
+    if(Config.isTcyWord(word)){
+      return new Tcy(word);
     }
     return new Word(word);
   }
@@ -144,9 +147,9 @@ export class TextLexer extends BufferedLexer<Character>{
     if(tcy !== null){
       return tcy;
     }
-    let word = this.getWord();
-    if(word !== null){
-      return word;
+    let word_or_tcy = this.getWordOrTcy();
+    if(word_or_tcy !== null){
+      return word_or_tcy;
     }
     let space_char = this.getSpaceChar();
     if(space_char !== null){

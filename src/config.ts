@@ -118,6 +118,15 @@ export namespace Config {
   // tate-chu-yoko pattern
   export let rexTcy: RegExp = /^[!?]{1,2}(?![!?])/;
 
+  // return true if word string is treated as tcy.
+  // @example
+  // Config.isTcyWord = (word: string): boolean => {
+  //   return word.length <= 2 && word.match(/^\d{1,2}$/) !== null;
+  // }
+  export let isTcyWord = (word: string): boolean => {
+    return false;
+  }
+
   // half width kana
   // \uFF66 = HALFWITH KATAKANA LETTER A
   // \uFF70 = HALFWIDTH KATAKANA-HIRAGANA PROLONGED SOUND MARK (not included)
