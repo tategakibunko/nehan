@@ -2,7 +2,6 @@ import {
   ICharacter,
   BoxEnv,
   LogicalSize,
-  DualCharTable,
   DualCharInfo,
   ParenType,
   KinsokuPos
@@ -17,11 +16,11 @@ export class DualChar implements ICharacter {
   public kerning: boolean;
   public spacing: number;
 
-  public constructor(str: string){
+  public constructor(str: string, info: DualCharInfo){
     this.text = str;
     this.size = new LogicalSize({measure:0, extent:0});
     this.hasEmphasis = false;
-    this.info = DualCharTable.load(str);
+    this.info = info;
     this.kerning = false;
     this.spacing = 0;
   }

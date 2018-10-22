@@ -10,6 +10,7 @@ import {
   SmpUniChar,
   MixChar,
   DualChar,
+  DualCharTable,
   Tcy,
 } from "./public-api";
 
@@ -135,11 +136,11 @@ export class TextLexer extends BufferedLexer<Character>{
   }
 
   private getDualChar(c1: string): DualChar | null {
-    try {
-      return new DualChar(c1);
-    } catch(err){
+    let info = DualCharTable.load(c1);
+    if(!info){
       return null;
     }
+    return new DualChar(c1, info);
   }
 
   protected createToken(): Character {

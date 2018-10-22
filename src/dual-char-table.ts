@@ -209,12 +209,9 @@ let dual_char_table: {[_:string]: DualCharInfo} = {
 };
 
 export class DualCharTable {
-  static load(str: string): DualCharInfo {
+  static load(str: string): DualCharInfo | null {
     let prop = Utils.String.getUnicodeProp(str);
     let info = dual_char_table[prop];
-    if(!info){
-      throw new Error("DualChar(" + prop + ") not exists.");
-    }
-    return info;
+    return info || null;
   }
 }
