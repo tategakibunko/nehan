@@ -6,16 +6,18 @@ import {
 } from "./public-api";
 
 export class LayoutGenerator implements ILayoutContext {
-  public name: string;
   public element: HtmlElement;
   protected context: ILayoutContext;
   protected iterator: IterableIterator<LayoutValue []>;
 
   constructor(context: ILayoutContext){
-    this.name = context.name;
     this.element = context.element;
     this.context = context;
     this.iterator = this.createIterator();
+  }
+
+  public get name(): string {
+    return this.context.name;
   }
 
   public get progress(): number {

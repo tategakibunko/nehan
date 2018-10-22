@@ -6,9 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 6.0.12
+version 6.0.12, 2018/10/22
 ==========================
 o Improve performance of TextLexer.
+o Improve performance(avoid calling getContextName if it's not debug mode).
 
 version 6.0.11, 2018/10/22
 ==========================

@@ -24,7 +24,6 @@ import {
 } from "./public-api";
 
 export class FlowContext implements ILayoutContext {
-  public name: string;
   public parent?: FlowContext;
   public body: FlowContext;
   public sectionRoot: FlowContext;
@@ -37,7 +36,6 @@ export class FlowContext implements ILayoutContext {
   protected status: LayoutStatus;
 
   constructor(element: HtmlElement, parent?: FlowContext){
-    this.name = getContextName(element);
     this.env = this.createEnv(element, parent);
     this.parent = parent;
     this.body = (!this.parent)? this : this.parent.body;
@@ -47,6 +45,10 @@ export class FlowContext implements ILayoutContext {
     this.status = new LayoutStatus();
     this.region = this.createRegion();
     this.childGens = this.createChildGenerators();
+  }
+
+  public get name(): string {
+    return getContextName(this.element);
   }
 
   public openElement(){

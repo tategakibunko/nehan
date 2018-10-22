@@ -21,7 +21,6 @@ import {
 } from "./public-api";
 
 export class TextContext implements ILayoutContext {
-  public name: string;
   public parent: FlowContext;
   public element: HtmlElement;
   protected status: LayoutStatus;
@@ -33,7 +32,6 @@ export class TextContext implements ILayoutContext {
   
   constructor(element: HtmlElement, parent: FlowContext){
     this.element = element;
-    this.name = getContextName(element);
     this.parent = parent;
     this.counter = new LayoutCounter();
     this.region = new TextRegion(parent);
@@ -41,6 +39,10 @@ export class TextContext implements ILayoutContext {
     this.lexer = this.createLexer(element, parent);
     this.backupPos = 0;
     this.brokenWord = null;
+  }
+
+  public get name(): string {
+    return getContextName(this.element);
   }
 
   public get progress(): number {

@@ -18,18 +18,20 @@ import {
 } from "./public-api";
 
 export class FlowRegion {
-  public name: string;
   protected content: FlowContent;
   protected context: FlowContext;
   protected cursor: LogicalCursorPos;
   protected floatRegion: FloatRegion | null;
 
   constructor(context: FlowContext, content = new FlowContent()){
-    this.name = context.name;
     this.context = context;
     this.cursor = LogicalCursorPos.zero;
     this.floatRegion = null;
     this.content = content;
+  }
+
+  public get name(): string {
+    return this.context.name;
   }
 
   public clear(){
