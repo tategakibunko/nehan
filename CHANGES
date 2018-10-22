@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.13
+==========================
+* Fix body box position.
+
 version 6.0.12, 2018/10/22
 ==========================
 o Improve performance of TextLexer.

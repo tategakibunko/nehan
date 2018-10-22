@@ -129,7 +129,7 @@ export class LogicalBox {
       this.env.absPos.getCss(this).mergeTo(css);
     } else if(this.blockPos){
       this.getCssCursorPos(parent, this.blockPos).mergeTo(css);
-    } else if(is_vert && this.contextEdge && this.contextEdge.padding.isZero() === false){
+    } else if(is_vert && this.contextEdge && !this.contextEdge.padding.isZero() && this.parent){
       // if vertical inline without blockpos but padding value is enable
       // (example: <div>foo <a style='padding:10px'>bar</a> baz</div>),
       // fix block level padding offset.
