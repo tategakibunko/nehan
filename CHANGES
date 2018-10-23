@@ -8,7 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 6.0.14
 ==========================
-o Improve performance of CssText::normalize.
+o Improved performance.
 
 version 6.0.13, 2018/10/23
 ==========================
