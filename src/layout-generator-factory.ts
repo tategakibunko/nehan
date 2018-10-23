@@ -67,6 +67,9 @@ export class LayoutGeneratorFactory {
     if(display.isFlowRuby()){
       return new RubyGenerator(new RubyContext(element, parent_ctx));
     }
+    if(display.isRubyBase() || display.isRubyText()){
+      return new FlowGenerator(new FlowContext(element, parent_ctx));
+    }
     let fixed_size = LogicalSize.load(element);
     if(fixed_size && fixed_size.isZero()){
       if(Config.debugLayout){
