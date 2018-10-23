@@ -65,12 +65,18 @@ export namespace Config {
   ]
 
   // Tags with no css.
-  export let NonLayoutTags = [
+  export let nonLayoutTags = [
     "br"
   ]
 
+  // Tags with only font-size settings. Empty by default.
+  // Use this settings to speed up your layout engine.
+  // For example, normally some kind of tags (ruby, rt, rb etc) requires only font-size.
+  export let fontSizeOnlyTags: string [] = [
+  ]
+
   // Tags with no edge(margin/border/padding).
-  export let EdgeSkipTags = [
+  export let edgeSkipTags = [
     "rb",
     "rt",
     "rp",
@@ -78,7 +84,7 @@ export namespace Config {
   ]
 
   // Tags with no fiexed size.
-  export let BoxSizeSkipTags = [
+  export let boxSizeSkipTags = [
     "b",
     "em",
     "rb",

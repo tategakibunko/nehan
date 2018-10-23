@@ -29,7 +29,7 @@ export class ComputedStyle {
       return;
     }
     // if non layout control tags(br), skip
-    if(Config.NonLayoutTags.indexOf(element.tagName) >= 0){
+    if(Config.nonLayoutTags.indexOf(element.tagName) >= 0){
       return;
     }
 
@@ -41,7 +41,12 @@ export class ComputedStyle {
     // if line-height:2.0, calculated as 20px, and children inherit line-height '2.0'.
     element.computedStyle.setProperty("line-height", this.getLineHeightString(element));
 
-    if(Config.EdgeSkipTags.indexOf(element.tagName) < 0){
+    // if defined as font size only, skip other css value.
+    if(Config.fontSizeOnlyTags.indexOf(element.tagName) >= 0){
+      return;
+    }
+
+    if(Config.edgeSkipTags.indexOf(element.tagName) < 0){
       this.setPadding(element);
       this.setBorderWidth(element);
       this.setBorderStyle(element);
@@ -49,7 +54,7 @@ export class ComputedStyle {
       this.setBorderRadius(element);
     }
 
-    if(Config.BoxSizeSkipTags.indexOf(element.tagName) < 0){
+    if(Config.boxSizeSkipTags.indexOf(element.tagName) < 0){
       this.setMargin(element);
       this.setMeasure(element, parent_ctx);
       this.setExtent(element);

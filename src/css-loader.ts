@@ -39,7 +39,7 @@ export class CssLoader {
     ComputedStyle.setComputedValue(element, parent_ctx);
 
     // set collapse value
-    if(Config.EdgeSkipTags.indexOf(element.tagName) < 0){
+    if(Config.edgeSkipTags.indexOf(element.tagName) < 0){
       MarginCollapse.collapse(element);
     }
   }
