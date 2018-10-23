@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 6.0.14
+version 6.0.14, 2018/10/23
 ==========================
 o Improved performance.
 o Added Config.fontSizeOnlyTags.
