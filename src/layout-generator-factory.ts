@@ -64,6 +64,9 @@ export class LayoutGeneratorFactory {
       }
       return this.createEmptyBoxGenerator(parent_ctx, element);
     }
+    if(display.isFlowRuby()){
+      return new RubyGenerator(new RubyContext(element, parent_ctx));
+    }
     let fixed_size = LogicalSize.load(element);
     if(fixed_size && fixed_size.isZero()){
       if(Config.debugLayout){
@@ -106,9 +109,6 @@ export class LayoutGeneratorFactory {
       return new ConstantGenerator(new HrContext(element, parent_ctx));
     case "img":
       return this.createImageGenerator(parent_ctx, element);
-    }
-    if(display.isFlowRuby()){
-      return new RubyGenerator(new RubyContext(element, parent_ctx));
     }
     if(display.isListItem()){
       if(parent_ctx.isListItem() === false){
