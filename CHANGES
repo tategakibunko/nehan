@@ -9,7 +9,7 @@ Mark "!": change that can break compatibility with older version
 version 6.0.14
 ==========================
 o Improved performance.
-o Added Config.FontSizeOnlyTags.
+o Added Config.fontSizeOnlyTags.
 
 version 6.0.13, 2018/10/23
 ==========================
