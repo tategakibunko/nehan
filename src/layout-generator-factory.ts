@@ -42,6 +42,20 @@ import {
 
 export class LayoutGeneratorFactory {
   static createGenerator(parent_ctx: FlowContext, element: HtmlElement): LayoutGenerator {
+    if(element.isTextElement()){
+      // white space element
+      if(element.isOnlyChild() && WhiteSpace.isWhiteSpaceElement(element)){
+	if(Config.debugLayout){
+	  console.log("empty box:[%s], white-space only", element.toString());
+	}
+	return this.createEmptyBoxGenerator(parent_ctx, element);
+      }
+      return new TextGenerator(new TextContext(element, parent_ctx));
+    }
+    if(element.tagName === "br"){
+      let line_break = LayoutControl.createLineBreak();
+      return new ConstantGenerator(new ControlContext(element, parent_ctx, line_break));
+    }
     CssLoader.load(element, parent_ctx);
     let display = Display.load(element);
     if(display.isNone()){
@@ -75,8 +89,7 @@ export class LayoutGeneratorFactory {
       parent_ctx.clearRegionFloat(clear);
     }
     // element of empty content except text or replaced-element.
-    if(element.isTextElement() === false &&
-       ReplacedElement.isReplacedElement(element) === false &&
+    if(ReplacedElement.isReplacedElement(element) === false &&
        element.tagName !== "hr" &&
        element.firstChild === null &&
        Content.load(element).isEmpty()){
@@ -85,24 +98,10 @@ export class LayoutGeneratorFactory {
       }
       return this.createEmptyBoxGenerator(parent_ctx, element);
     }
-    // white space element
-    if(element.isTextElement() &&
-       element.isOnlyChild() &&
-       WhiteSpace.isWhiteSpaceElement(element)){
-      if(Config.debugLayout){
-	console.log("empty box:[%s], white-space only", element.toString());
-      }
-      return this.createEmptyBoxGenerator(parent_ctx, element);
-    }
     if(PseudoElement.isFirstLine(element)){
       return new FlowGenerator(new FirstLineContext(element, parent_ctx));
     }
     switch(element.tagName){
-    case "(text)":
-      return new TextGenerator(new TextContext(element, parent_ctx));
-    case "br":
-      let line_break = LayoutControl.createLineBreak();
-      return new ConstantGenerator(new ControlContext(element, parent_ctx, line_break));
     case "hr":
       return new ConstantGenerator(new HrContext(element, parent_ctx));
     case "img":
@@ -113,7 +112,6 @@ export class LayoutGeneratorFactory {
     }
     if(display.isListItem()){
       if(parent_ctx.isListItem() === false){
-	//let marker = PseudoElement.addMarker(element);
 	PseudoElement.addMarker(element);
       }
       return new FlowGenerator(new ListItemContext(element, parent_ctx));

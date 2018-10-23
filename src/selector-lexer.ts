@@ -17,9 +17,7 @@ export class SelectorLexer extends BufferedLexer<SelectorToken> {
   protected normalize(source: string): string{
     let norm = source.trim();
     norm = Utils.String.multiSpaceToSingle(source);
-    norm = ["=", ">", "~", "\\+"].reduce((ret, symbol) => {
-      return Utils.String.cutSpaceAround(ret, symbol);
-    }, norm);
+    norm = norm.replace(/\s*([=>~+])\s*/g, "$1");
     return norm;
   }
 

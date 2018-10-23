@@ -105,19 +105,6 @@ export namespace Utils {
       );
     }
 
-    // compress spaces to single space without \n
-    static multiSpaceToSingle3(str: string){
-      return str.replace(
-	/[\u0020\f\r\t\v\u00A0\u1680\u180e\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]+/gm,
-	" ");
-    }
-
-    static cutSpaceAround(str: string, symbol: string){
-      return str
-	.replace(new RegExp("\\s*(" + symbol + ")\\s*", "g"), "$1")
-      ;
-    }
-
     static capitalize(str: string): string{
       if(str === ""){
 	return "";

@@ -19,7 +19,7 @@ export class SelectorText {
 
   private normalize(str: string): string {
     let norm = str.trim();
-    norm = Utils.String.cutSpaceAround(norm, ",");
+    norm = norm.replace(/\s*,\s*/g, ",");
     norm = Utils.String.multiSpaceToSingle(norm);
     return norm;
   }

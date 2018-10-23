@@ -25,11 +25,10 @@ export class CssText {
   static normalize(str: string){
     let norm = str.trim();
     norm = norm.replace(/[\n\t]/g, "");
-    norm = norm.replace(/!important/g, ""); // !important is supported by dynamic style.
+    // note that !important is alternatively supported by dynamic style callback.
+    norm = norm.replace(/!important/g, "");
     norm = Utils.String.multiSpaceToSingle(norm);
-    norm = Utils.String.cutSpaceAround(norm, ",");
-    norm = Utils.String.cutSpaceAround(norm, "/");
-    norm = Utils.String.cutSpaceAround(norm, ";"); // for inline style text
+    norm = norm.replace(/\s*([,/;])\s*/g, "$1");
     return norm;
   }
 
