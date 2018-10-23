@@ -68,7 +68,7 @@ export class ComputedStyle {
     this.setValue(element, "text-emphasis-style");
     this.setValue(element, "text-emphasis-color");
     this.setValue(element, "text-align");
-    //this.setValue(element, "text-justify");
+    //this.setValue(element, "text-justify"); // use 'text-align:justify' instead.
     this.setValue(element, "vertical-align");
     this.setValue(element, "list-style-type");
     this.setValue(element, "list-style-position");
