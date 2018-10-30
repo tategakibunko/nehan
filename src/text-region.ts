@@ -2,7 +2,6 @@ import {
   ICharacter,
   FlowRegion,
   Word,
-  BoxContent,
   BoxEnv,
   LogicalSize,
   LogicalBox
@@ -14,8 +13,8 @@ export class TextRegion extends FlowRegion {
     return this.addInline(word, delta);
   }
 
-  public popText(): BoxContent | undefined {
-    return this.content.popInline();
+  public popText(): ICharacter | undefined {
+    return this.content.popInline() as ICharacter;
   }
 
   public pushText(char: ICharacter){
