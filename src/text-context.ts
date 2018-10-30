@@ -185,6 +185,7 @@ export class TextContext implements ILayoutContext {
       }
       // retry at new line.
       this.pushBack();
+      this.hyphenate();
       return true;
     }
     return this.addInline(word);
