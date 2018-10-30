@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 6.0.15
+version 6.0.15, 2018/10/30
 ==========================
 * Fix hyphenation bug.
 
