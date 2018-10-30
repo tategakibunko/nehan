@@ -1,12 +1,25 @@
 import {
+  ICharacter,
   FlowRegion,
   Word,
+  BoxContent,
+  BoxEnv,
+  LogicalSize,
+  LogicalBox
 } from "./public-api";
 
 export class TextRegion extends FlowRegion {
   public addOverflowWord(word: Word): boolean {
     let delta = this.restContextBoxMeasure; // use rest measure inside.
     return this.addInline(word, delta);
+  }
+
+  public popText(): BoxContent | undefined {
+    return this.content.popInline();
+  }
+
+  public pushText(char: ICharacter){
+    this.content.addInline(char);
   }
 
   public roundHyphenationPopCount(pop_count: number): number {
@@ -19,6 +32,18 @@ export class TextRegion extends FlowRegion {
     word_head.setMetrics(this.context.env);
     word_head.size.measure = rest_measure; // force set measure(just size to fit line-max).
     return word_head;
+  }
+
+  public createTextBoxSize(overflow: boolean): LogicalSize {
+    return new LogicalSize({
+      measure:this.cursor.start,
+      extent:this.context.env.fontSize
+    });
+  }
+
+  public createTextBox(env: BoxEnv, overflow: boolean): LogicalBox {
+    let size = this.createTextBoxSize(overflow);
+    return this.content.createTextBox(env, size);
   }
 
   public get restContextBoxMeasure(): number {

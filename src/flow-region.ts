@@ -333,18 +333,6 @@ export class FlowRegion {
     return box;
   }
 
-  public createTextBoxSize(overflow: boolean): LogicalSize {
-    return new LogicalSize({
-      measure:this.cursor.start,
-      extent:this.context.env.fontSize
-    });
-  }
-
-  public createTextBox(env: BoxEnv, overflow: boolean): LogicalBox {
-    let size = this.createTextBoxSize(overflow);
-    return this.content.createTextBox(env, size);
-  }
-
   protected createEmptyLineSize(env: BoxEnv): LogicalSize {
     return new LogicalSize({
       measure:this.maxSpaceMeasure,
@@ -445,14 +433,6 @@ export class FlowRegion {
 
   public getFloatRegion(): FloatRegion | null {
     return this.rootRegion.getFloatRegion();
-  }
-
-  public popInline(): BoxContent | undefined {
-    return this.content.popInline();
-  }
-
-  public pushInline(obj: BoxContent){
-    this.content.addInline(obj);
   }
 
   public clearInlines(){

@@ -281,6 +281,9 @@ export class FlowContext implements ILayoutContext {
     }
     // if single text can't be afford to yield, it' line limit.
     if(text.totalMeasure === 0){
+      // text can be added with zero size if it is BURA-SAGARI text for hyphenation.
+      // so add inline if it's zero size.
+      this.addInline(text);
       return true;
     }
     return this.addInline(text);
