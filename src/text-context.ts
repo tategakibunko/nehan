@@ -303,7 +303,7 @@ export class TextContext implements ILayoutContext {
       pop_count = this.region.roundHyphenationPopCount(pop_count);
       for(var i = 0; i < pop_count; i++){
 	//let char = this.region.popInline();
-	this.region.popText();
+	this.region.popCharacter();
 	this.pushBack();
       }
     }
@@ -314,7 +314,7 @@ export class TextContext implements ILayoutContext {
       }
       let push_count = offset;
       for(var i = 0; i < push_count; i++){
-	this.region.pushText(this.lexer.getNext());
+	this.region.pushCharacter(this.lexer.getNext());
       }
     }
   }

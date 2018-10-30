@@ -13,11 +13,11 @@ export class TextRegion extends FlowRegion {
     return this.addInline(word, delta);
   }
 
-  public popText(): ICharacter | undefined {
+  public popCharacter(): ICharacter | undefined {
     return this.content.popInline() as ICharacter;
   }
 
-  public pushText(char: ICharacter){
+  public pushCharacter(char: ICharacter){
     this.content.addInline(char);
   }
 
