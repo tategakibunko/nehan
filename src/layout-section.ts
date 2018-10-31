@@ -17,6 +17,10 @@ export class LayoutSection {
     this.pageIndex = 0;
   }
 
+  public isRoot(): boolean {
+    return !!!this.parent;
+  }
+
   public isNode(): boolean {
     return this.children.length > 0;
   }

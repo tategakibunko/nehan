@@ -6,7 +6,7 @@ import {
 export class LayoutOutlineParser {
   static parseSection(section: LayoutSection, callbacks?: LayoutOutlineCallbacks): HTMLElement {
     callbacks = callbacks || {};
-    if(!section.parent){
+    if(section.isRoot()){
       return this.parseSectionRoot(section, callbacks);
     }
     if(section.isNode()){
