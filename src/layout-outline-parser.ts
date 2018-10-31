@@ -9,27 +9,39 @@ export class LayoutOutlineParser {
     if(!section.parent){
       return this.parseSectionRoot(section, callbacks);
     }
-    return this.parseSubSection(section, callbacks);
+    if(section.isNode()){
+      return this.parseSectionNode(section, callbacks);
+    }
+    return this.parseSectionLeaf(section, callbacks);
   }
 
   static parseSectionRoot(section: LayoutSection, callbacks: LayoutOutlineCallbacks): HTMLElement {
     let root = callbacks.onRoot?
       callbacks.onRoot() :
-      document.createElement("div");
+      document.createElement("ul");
     this.appendSectionChildren(root, section.children, callbacks);
     return root;
   }
 
-  static parseSubSection(section: LayoutSection, callbacks: LayoutOutlineCallbacks): HTMLElement {
+  static parseSectionNode(section: LayoutSection, callbacks: LayoutOutlineCallbacks): HTMLElement {
+    let li = document.createElement("li");
     let ul = document.createElement("ul");
+    let title = callbacks.onSection?
+      callbacks.onSection(section) :
+      document.createTextNode(section.title);
+    li.appendChild(title);
+    this.appendSectionChildren(ul, section.children, callbacks);
+    li.appendChild(ul);
+    return li;
+  }
+
+  static parseSectionLeaf(section: LayoutSection, callbacks: LayoutOutlineCallbacks): HTMLElement {
     let li = document.createElement("li");
     let title = callbacks.onSection?
       callbacks.onSection(section) :
       document.createTextNode(section.title);
     li.appendChild(title);
-    this.appendSectionChildren(li, section.children, callbacks);
-    ul.appendChild(li);
-    return ul;
+    return li;
   }
 
   static appendSectionChildren(

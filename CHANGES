@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.17, 2018/10/31
+==========================
+* Fix redundant list structure of outline element.
+
 version 6.0.16, 2018/10/31
 ==========================
 * Fix hyphenation bug(hyphenation was not available for overflow word).
