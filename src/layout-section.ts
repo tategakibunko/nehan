@@ -17,6 +17,14 @@ export class LayoutSection {
     this.pageIndex = 0;
   }
 
+  public isNode(): boolean {
+    return this.children.length > 0;
+  }
+
+  public isLeaf(): boolean {
+    return this.children.length === 0;
+  }
+
   public setHeader(header: HtmlElement){
     if(!this.header){
       this.header = header;
