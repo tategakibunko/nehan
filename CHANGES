@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.18
+==========================
+* Fix dynamically loaded style.
+
 version 6.0.17, 2018/10/31
 ==========================
 * Fix redundant list structure of outline element.

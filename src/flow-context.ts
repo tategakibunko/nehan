@@ -21,6 +21,7 @@ import {
   LayoutCounter,
   LayoutStatus,
   FlowChildGenerators,
+  CssLoader
 } from "./public-api";
 
 export class FlowContext implements ILayoutContext {
@@ -197,6 +198,7 @@ export class FlowContext implements ILayoutContext {
     if(Config.debugLayout){
       console.warn("[%s] style is dynamically updated!", this.element.getNodeName());
     }
+    CssLoader.loadDynamic(this.element, this.parent);
     this.env = this.createEnv(this.element, this.parent);
     this.region = this.createRegion();
     if(this.childGens){
