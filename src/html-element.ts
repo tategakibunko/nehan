@@ -32,17 +32,10 @@ export class HtmlElement {
     this.classList = this.createClassList();
     this.nextSibling = null;
     this.previousSibling = null;
-
-    if(node instanceof HTMLElement){
-      for(let i = 0; i < node.childNodes.length; i++){
-	let child = node.childNodes.item(i);
-	let child_element = this.root.createElementFromDOM(child);
-	this.appendChild(child_element);
-      }
-    }
+    this.setupChildren(node, root);
   }
 
-  public createClassList(): DomTokenList {
+  protected createClassList(): DomTokenList {
     if(this.$node instanceof HTMLElement){
       let items: string [] = [];
       // classList.values() is not defined in typescript signature...?
@@ -55,6 +48,16 @@ export class HtmlElement {
       return new DomTokenList(items);
     }
     return new DomTokenList([] as string []);
+  }
+
+  protected setupChildren(node: Node, root: HtmlDocument){
+    if(node instanceof HTMLElement){
+      for(let i = 0; i < node.childNodes.length; i++){
+	let child = node.childNodes.item(i);
+	let child_element = root.createElementFromDOM(child);
+	this.appendChild(child_element);
+      }
+    }
   }
 
   public get className(): string {
