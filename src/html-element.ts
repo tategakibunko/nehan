@@ -17,7 +17,6 @@ export class HtmlElement {
   public style: CssStyleDeclaration;
   public computedStyle: CssStyleDeclaration;
   public classList: DomTokenList;
-
   public nextSibling: HtmlElement | null;
   public previousSibling: HtmlElement | null;
 
