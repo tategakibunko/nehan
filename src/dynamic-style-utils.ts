@@ -1,7 +1,8 @@
 import {
   DynamicStyleContext,
   DynamicStyleCallback,
-  CssDeclarationBlock
+  CssDeclarationBlock,
+  HtmlElement
 } from "./public-api";
 
 export class DynamicStyleUtils {
@@ -46,6 +47,24 @@ export class DynamicStyleUtils {
   static breakPoint(ctx: DynamicStyleContext): CssDeclarationBlock {
     debugger;
     return {};
+  }
+
+  static replaceContent(fn_replace: (content: string, ctx: DynamicStyleContext) => string):
+  (ctx: DynamicStyleContext) => CssDeclarationBlock {
+    return (ctx: DynamicStyleContext) => {
+      let old_content = ctx.element.textContent;
+      let new_content = fn_replace(old_content, ctx);
+      let doc = new DOMParser().parseFromString(new_content, "text/html");
+      if(!doc.body){
+	return {};
+      }
+      ctx.element.childNodes = [];
+      let children = doc.body.childNodes, root = ctx.element.root;
+      for(let i = 0; i < children.length; i++){
+	ctx.element.appendChild(new HtmlElement(children[i], root));
+      }
+      return {};
+    };
   }
 }
 
