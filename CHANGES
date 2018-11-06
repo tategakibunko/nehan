@@ -9,6 +9,7 @@ Mark "!": change that can break compatibility with older version
 version 6.0.19
 ==========================
 o Added DynamicStyletils::replaceContent.
+* Fix box css of horizontal inline.
 
 version 6.0.18, 2018/11/01
 ==========================

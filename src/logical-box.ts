@@ -117,7 +117,7 @@ export class LogicalBox {
     return pos.translate(offset).getCss(this);
   }
 
-  public getCssBox(parent: LayoutParent): NativeStyleMap {
+  protected getCssBox(parent: LayoutParent): NativeStyleMap {
     let css = new NativeStyleMap();
     let is_vert = this.writingMode.isTextVertical();
     this.env.font.getCss(parent, this).mergeTo(css);
@@ -190,6 +190,11 @@ export class LogicalBox {
 
   public getCssInline(parent: LayoutParent): NativeStyleMap {
     let css = this.getCssBox(parent);
+    // if horizonta, inline box size is not required.
+    if(!this.isTextVertical()){
+      css.delete("height");
+      css.delete("width");
+    }
     if(parent &&
        parent.boxType === BoxType.BASELINE &&
        parent.isTextVertical() &&
