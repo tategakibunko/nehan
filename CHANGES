@@ -6,10 +6,11 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 6.0.19
+version 6.0.19, 2018/11/07
 ==========================
 o Added DynamicStyletils::replaceContent.
 * Fix box css of horizontal inline.
+* Fix horizontal baseline for some case.
 
 version 6.0.18, 2018/11/01
 ==========================
