@@ -20,6 +20,7 @@ import {
   TextCombineUpright,
   ListStyle,
   WhiteSpace,
+  Ruby,
 } from "./public-api";
 
 export class LogicalBox {
@@ -426,5 +427,26 @@ export class LogicalBox {
 
   public get totalExtent(){
     return this.size.extent + this.edgeExtent;
+  }
+
+  public get maxExtent(): number {
+    return this.children.reduce((max, child) => {
+      if(child instanceof LogicalBox){
+	return Math.max(max, child.maxExtent);
+      }
+      if(child instanceof Ruby){
+	return Math.max(max, child.totalExtent);
+      }
+      return Math.max(max, child.size.extent);
+    }, this.totalExtent);
+  }
+
+  public get maxFontSize(): number {
+    return this.children.reduce((max, child) => {
+      if(child instanceof LogicalBox || child instanceof Ruby){
+	return Math.max(max, child.fontSize);
+      }
+      return max;
+    }, this.fontSize);
   }
 }

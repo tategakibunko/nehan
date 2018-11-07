@@ -24,21 +24,25 @@ export class FlowContent {
 
   protected getMaxInlineExtent(): number {
     return this.inlines.reduce((max_extent, item) => {
-      if(item instanceof LogicalBox || item instanceof Ruby){
-	return Math.max(max_extent, item.totalExtent);
-      } else {
-	return Math.max(max_extent, item.size.extent);
+      if(item instanceof LogicalBox){
+	return Math.max(max_extent, item.maxExtent);
       }
+      if(item instanceof Ruby){
+	return Math.max(max_extent, item.totalExtent);
+      }
+      return Math.max(max_extent, item.size.extent);
     }, 0);
   }
 
   protected getMaxInlineFontSize(env: BoxEnv): number {
     return this.inlines.reduce((max_extent, item) => {
-      if(item instanceof LogicalBox || item instanceof Ruby){
-	return Math.max(max_extent, item.fontSize);
-      } else {
-	return Math.max(max_extent, item.size.extent);
+      if(item instanceof LogicalBox){
+	return Math.max(max_extent, item.maxFontSize);
       }
+      if(item instanceof Ruby){
+	return Math.max(max_extent, item.fontSize);
+      }
+      return Math.max(max_extent, item.size.extent);
     }, env.fontSize);
   }
 
