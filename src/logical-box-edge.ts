@@ -26,10 +26,14 @@ export class LogicalBoxEdge {
   }
 
   static load(element: HtmlElement): LogicalBoxEdge {
+    // If body, ignore border and margin.
+    // Because target of nehan layouting is 'inside' of body content.
+    // And margin and border for body are not targets of nehan layouting.
+    let is_body = element.tagName === "body";
     return new LogicalBoxEdge({
       padding:LogicalPadding.load(element),
-      border:LogicalBorder.load(element),
-      margin:LogicalMargin.load(element)
+      border:is_body? LogicalBorder.none : LogicalBorder.load(element),
+      margin:is_body? LogicalMargin.none : LogicalMargin.load(element)
     });
   }
 
@@ -107,9 +111,10 @@ export class LogicalBoxEdge {
   public getCss(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
     this.padding.getCss(box).mergeTo(css);
-    this.border.getCss(box).mergeTo(css);
-    // root margin is out of nehan layouting(in other words, use native css instead)
+    // margin and border of root layout(<body> in general) are not targets of nehan layout.
+    // In other words, use native css.
     if(!box.isRootBox()){
+      this.border.getCss(box).mergeTo(css);
       this.margin.getCss(box).mergeTo(css);
     }
     return css;
