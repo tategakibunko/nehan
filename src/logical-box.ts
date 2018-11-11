@@ -287,6 +287,10 @@ export class LogicalBox {
     ].join("");
   }
 
+  public isRootBox(): boolean {
+    return this.parent === null;
+  }
+
   public isBlockLevel(): boolean {
     return this.env.isBlockLevel();
   }

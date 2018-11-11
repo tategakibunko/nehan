@@ -108,7 +108,10 @@ export class LogicalBoxEdge {
     let css = new NativeStyleMap();
     this.padding.getCss(box).mergeTo(css);
     this.border.getCss(box).mergeTo(css);
-    this.margin.getCss(box).mergeTo(css);
+    // root margin is out of nehan layouting(in other words, use native css instead)
+    if(!box.isRootBox()){
+      this.margin.getCss(box).mergeTo(css);
+    }
     return css;
   }
 }
