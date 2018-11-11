@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.20, 2018/11/11
+==========================
+! If root box(<body> in general), ignore logical margin. In other words, use native css instead.
+
 version 6.0.19, 2018/11/07
 ==========================
 o Added DynamicStyletils::replaceContent.
