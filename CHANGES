@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.22, 2019/01/01
+==========================
+* Fix hyphenation bug for some case.
+
 version 6.0.21, 2018/11/11
 ==========================
 * Ignore margin and border for root layout(<body> in general)

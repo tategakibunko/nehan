@@ -144,6 +144,13 @@ export class TextLexer extends BufferedLexer<Character>{
   }
 
   protected createToken(): Character {
+    // try to parse dual-char to prevent treating half-size dual-char(like U+0029) as word.
+    let p1 = this.peekChar();
+    let half_dual_char = this.getDualChar(p1);
+    if(half_dual_char !== null){
+      this.stepBuff(1);
+      return half_dual_char;
+    }
     let tcy = this.getTcy();
     if(tcy !== null){
       return tcy;
