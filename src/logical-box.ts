@@ -229,8 +229,7 @@ export class LogicalBox {
       return;
     }
     let unit_gap = total_gap / chars.length;
-    let max_unit_gap = this.fontSize / 8;
-    if(unit_gap > max_unit_gap){
+    if(unit_gap > Config.maxJustifyGap){
       return;
     }
     chars.forEach(char => char.spacing = unit_gap);

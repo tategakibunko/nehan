@@ -22,6 +22,10 @@ export namespace Config {
   export let maxEmptyBoxCount = 100; // block with too many empty box -> abort.
   export let maxFlowLoopCount = -1; // if count > 0, force restrict loop count of flow-generator.
 
+  // text-align: justify
+  // max allowed spacing size for text-align:justify.
+  export let maxJustifyGap = 1.5;
+
   // debug log settings.
   export let debugElementByClick = false; // debug output on click for each evaluated dom.
   export let debugResourceLoader = false; // debug pre-loading process for resources.
