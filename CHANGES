@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 6.0.24
+version 6.0.24, 2019/02/19
 ==========================
 * Fix line break bug for some cases.
 
