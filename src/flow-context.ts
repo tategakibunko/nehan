@@ -385,6 +385,9 @@ export class FlowContext implements ILayoutContext {
     let next_element = this.getNextElement();
     if(this.childGens.hasNextActive() === false &&
        next_element && next_element.tagName === "br"){
+      if(Config.debugLayout){
+	console.log("remove br!");
+      }
       this.element.removeChild(next_element);
     }
   }
