@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.24
+==========================
+* Fix line break bug for some cases.
+
 version 6.0.23, 2019/01/30
 ==========================
 o Added [maxJustifyGap] to configuration.
