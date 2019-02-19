@@ -35,7 +35,7 @@ export class TextRegion extends FlowRegion {
 
   public createTextBoxSize(overflow: boolean): LogicalSize {
     return new LogicalSize({
-      measure:this.cursor.start,
+      measure: this.cursor.start,
       extent:this.context.env.fontSize
     });
   }
