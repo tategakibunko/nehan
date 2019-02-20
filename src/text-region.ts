@@ -33,15 +33,19 @@ export class TextRegion extends FlowRegion {
     return word_head;
   }
 
-  public createTextBoxSize(overflow: boolean): LogicalSize {
+  // If brasagari is set by hyphenation, force use parent max measure
+  // and enable skipping of continuous <br> to avoid double line-break.
+  // See 'FlowContext::removeBrAfterLine'.
+  public createTextBoxSize(overflow: boolean, brasagari: boolean): LogicalSize {
+    const measure = brasagari ? this.maxSpaceMeasure : this.cursor.start;
     return new LogicalSize({
-      measure: this.cursor.start,
-      extent:this.context.env.fontSize
+      measure,
+      extent: this.context.env.fontSize
     });
   }
 
-  public createTextBox(env: BoxEnv, overflow: boolean): LogicalBox {
-    let size = this.createTextBoxSize(overflow);
+  public createTextBox(env: BoxEnv, overflow: boolean, brasagari: boolean): LogicalBox {
+    let size = this.createTextBoxSize(overflow, brasagari);
     return this.content.createTextBox(env, size);
   }
 

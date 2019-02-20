@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.25, 2019/02/20
+==========================
+* Fix line break bug when brasagari(hyphenation) is executed.
+
 version 6.0.24, 2019/02/19
 ==========================
 * Fix line break bug for some cases.
