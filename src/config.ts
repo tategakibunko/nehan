@@ -24,7 +24,7 @@ export namespace Config {
 
   // text-align: justify
   // max allowed spacing size for text-align:justify.
-  export let maxJustifyGap = 1.5;
+  export let maxJustifyGap = 1.0;
 
   // debug log settings.
   export let debugElementByClick = false; // debug output on click for each evaluated dom.
