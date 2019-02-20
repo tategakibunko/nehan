@@ -29,6 +29,7 @@ export class TextContext implements ILayoutContext {
   protected lexer: TextLexer;
   protected backupPos: number;
   protected brokenWord: Word | null;
+  protected brasagari: boolean;
   
   constructor(element: HtmlElement, parent: FlowContext){
     this.element = element;
@@ -39,6 +40,7 @@ export class TextContext implements ILayoutContext {
     this.lexer = this.createLexer(element, parent);
     this.backupPos = 0;
     this.brokenWord = null;
+    this.brasagari = false;
   }
 
   public get name(): string {
@@ -280,12 +282,13 @@ export class TextContext implements ILayoutContext {
   }
 
   public createTextBox(overflow: boolean): LogicalBox {
-    let box = this.region.createTextBox(this.env, overflow);
+    let box = this.region.createTextBox(this.env, overflow, this.brasagari);
     box.lineBreak = overflow;
     box.charCount = this.counter.inlineChar;
     this.region.clearInlines();
     this.region.resetInlineCursor();
     this.counter.resetInlineCounter();
+    this.brasagari = false;
     if(Config.debugLayout){
       console.log("[%s] createTextBox[%s]:%o", this.name, box.text, box);
     }
@@ -310,8 +313,9 @@ export class TextContext implements ILayoutContext {
     }
     // if offst is plus, it's 'BURA-SAGARI'.
     else if(offset > 0){
+      this.brasagari = true;
       if(Config.debugLayout){
-	console.log("BURA=SAGARI:", offset);
+	console.log("BURA-SAGARI:", offset);
       }
       let push_count = offset;
       for(var i = 0; i < push_count; i++){
