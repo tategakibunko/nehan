@@ -109,10 +109,10 @@ let normal: DualCharInfo = {
 let dual_char_table: {[_:string]: DualCharInfo} = {
   "U+0028":kakkoStart, // LEFT PARENTHESIS
   "U+0029":kakkoEnd, // RIGHT PARENTHESIS
-  "U+002C":kutouten, // COMMA
+  "U+002C":kutoutenHalf, // COMMA
   "U+002D":dash, // HYPHEN-MINUS
-  "U+002E":kutouten, // FULL STOP
-  "U+003A":kutouten, // COLON
+  "U+002E":kutoutenHalf, // FULL STOP
+  "U+003A":kutoutenHalf, // COLON
   "U+003D":normal, // EQUALS SIGN
   "U+005B":kakkoStart, // LEFT SQUARE BRACKET
   "U+005D":kakkoEnd, // RIGHT SQUARE BRACKET

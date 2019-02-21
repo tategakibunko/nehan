@@ -6,6 +6,11 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.26, 2019/02/21
+==========================
+* Fix kerning trouble about half size character.
+o Update default value of Config.maxJustifyGap.
+
 version 6.0.25, 2019/02/20
 ==========================
 * Fix line break bug when brasagari(hyphenation) is executed.
