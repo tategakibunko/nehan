@@ -2,6 +2,7 @@ import {
   LayoutGenerator,
   LayoutGeneratorFactory,
   FlowContext,
+  RubyChildGenerators,
   HtmlElement,
   Ruby,
   RubyRegion,
@@ -20,6 +21,11 @@ export class RubyContext extends FlowContext {
 
   public createRegion(): RubyRegion {
     return new RubyRegion(this);
+  }
+
+  public createChildGenerators(): RubyChildGenerators {
+    let first_generator = this.createFirstGenerator();
+    return new RubyChildGenerators(this, first_generator);
   }
 
   public rollback(){

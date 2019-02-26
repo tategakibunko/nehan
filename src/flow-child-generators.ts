@@ -11,6 +11,7 @@ import {
 // but children are LayoutGenerator (FlowGenerator | TextGenerator | ConstantGenerator)
 export class FlowChildGenerators {
   protected parent: FlowContext;
+  protected first?: LayoutGenerator;
   protected active?: LayoutGenerator;
   protected lead?: LayoutGenerator; // active generator at lead-pos(curMeasure=0)
   protected resumedGenerators: ResumedGenerators;
@@ -18,6 +19,7 @@ export class FlowChildGenerators {
   constructor(parent: FlowContext, first_gen?: LayoutGenerator){
     this.parent = parent;
     if(first_gen){
+      this.first = first_gen;
       this.updateActive(first_gen);
       this.updateLead(first_gen);
     }
