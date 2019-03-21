@@ -42,7 +42,7 @@ export class TableRowRegion extends FlowRegion {
   public get maxContextBoxExtent(): number {
     // [workaround]
     // [https://github.com/Microsoft/TypeScript/issues/338]
-    // In es5, public property via super isn't supported in Typescript.
+    // In es5, public property via super isn't supported.
     // Disable this code after googlebot supports es6.
     let max = <FlowRegion['maxContextBoxExtent']>Reflect.get(FlowRegion.prototype, 'maxContextBoxExtent', this);
     // let max = super.maxContextBoxExtent;

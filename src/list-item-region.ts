@@ -29,7 +29,7 @@ export class ListItemRegion extends FlowRegion {
   public get maxContextBoxMeasure(): number {
     // [workaround]
     // url: https://github.com/Microsoft/TypeScript/issues/338
-    // In es5, public property via super isn't supported in Typescript.
+    // In es5, public property via super isn't supported.
     // Disable this code after googlebot supports es6.
     let max = <FlowRegion['maxContextBoxMeasure']>Reflect.get(FlowRegion.prototype, 'maxContextBoxMeasure', this);
 
