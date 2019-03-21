@@ -27,10 +27,18 @@ export class ListItemRegion extends FlowRegion {
   }
 
   public get maxContextBoxMeasure(): number {
+    // [workaround]
+    // url: https://github.com/Microsoft/TypeScript/issues/338
+    // In es5, public property via super isn't supported in Typescript.
+    // Disable this code after googlebot supports es6.
+    let max = <FlowRegion['maxContextBoxMeasure']>Reflect.get(FlowRegion.prototype, 'maxContextBoxMeasure', this);
+
     // if first line, marker size is already added to this.cursor.start
     if(this.context.isFirstLine()){
-      return super.maxContextBoxMeasure;
+      // return super.maxContextBoxMeasure;
+      return max;
     }
-    return super.maxContextBoxMeasure - this.outsideMarkerMeasure;
+    // return super.maxContextBoxMeasure - this.outsideMarkerMeasure;
+    return max - this.outsideMarkerMeasure;
   }
 }

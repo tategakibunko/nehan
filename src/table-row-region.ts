@@ -40,7 +40,12 @@ export class TableRowRegion extends FlowRegion {
 
   // If last row, force enable parent after edge to make all cells having same rest-extent.
   public get maxContextBoxExtent(): number {
-    let max = super.maxContextBoxExtent;
+    // [workaround]
+    // [https://github.com/Microsoft/TypeScript/issues/338]
+    // In es5, public property via super isn't supported in Typescript.
+    // Disable this code after googlebot supports es6.
+    let max = <FlowRegion['maxContextBoxExtent']>Reflect.get(FlowRegion.prototype, 'maxContextBoxExtent', this);
+    // let max = super.maxContextBoxExtent;
     if(!this.context.isLastRow()){
       return max;
     }
