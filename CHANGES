@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.28, 2019/03/21
+==========================
+* Added workaround for es5 environments(like googlebot with Chrome41).
+
 version 6.0.27, 2019/02/26
 ==========================
 * Fix rollback bug of ruby generator.
