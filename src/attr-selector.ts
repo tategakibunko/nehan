@@ -76,7 +76,7 @@ export class AttrSelector extends Selector {
     return attr.indexOf(this.right) >= 0;
   }
 
-  // a[href^="https"] => an element stats with 'https'.
+  // a[href^="https"] => an element starts with 'https'.
   private testCaretEqual(element: HtmlElement): boolean {
     let attr = element.getAttribute(this.left);
     if(!attr || !this.right){
