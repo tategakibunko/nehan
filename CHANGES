@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+verision 6.0.29, 2019/06/08
+===========================
+* Fix kerning trouble for half size parenthesis(U+0028, U+0029, U+005B, U+005D, U+007B, U+007D).
+
 version 6.0.28, 2019/03/21
 ==========================
 * Added workaround for es5 environments(like googlebot with Chrome41).

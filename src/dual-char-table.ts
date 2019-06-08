@@ -107,17 +107,17 @@ let normal: DualCharInfo = {
 };
 
 let dual_char_table: {[_:string]: DualCharInfo} = {
-  "U+0028":kakkoStart, // LEFT PARENTHESIS
-  "U+0029":kakkoEnd, // RIGHT PARENTHESIS
+  "U+0028":kakkoStartHalf, // LEFT PARENTHESIS
+  "U+0029":kakkoEndHalf, // RIGHT PARENTHESIS
   "U+002C":kutoutenHalf, // COMMA
   "U+002D":dash, // HYPHEN-MINUS
   "U+002E":kutoutenHalf, // FULL STOP
   "U+003A":kutoutenHalf, // COLON
   "U+003D":normal, // EQUALS SIGN
-  "U+005B":kakkoStart, // LEFT SQUARE BRACKET
-  "U+005D":kakkoEnd, // RIGHT SQUARE BRACKET
-  "U+007B":kakkoStart, // LEFT CURLY BRACKET
-  "U+007D":kakkoEnd, // RIGHT CURLY BRACKET
+  "U+005B":kakkoStartHalf, // LEFT SQUARE BRACKET
+  "U+005D":kakkoEndHalf, // RIGHT SQUARE BRACKET
+  "U+007B":kakkoStartHalf, // LEFT CURLY BRACKET
+  "U+007D":kakkoEndHalf, // RIGHT CURLY BRACKET
   "U+2014":dash, // EM DASH
   "U+2015":dash, // HORIZONTAL BAR
   "U+201C":kakkoStart, // LEFT DOUBLE QUOTATION MARK
