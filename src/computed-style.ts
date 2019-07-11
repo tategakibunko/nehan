@@ -57,7 +57,7 @@ export class ComputedStyle {
     if(Config.boxSizeSkipTags.indexOf(element.tagName) < 0){
       this.setMargin(element);
       this.setMeasure(element, parent_ctx);
-      this.setExtent(element);
+      this.setExtent(element, parent_ctx);
       this.setPosition(element, parent_ctx);
     }
 
@@ -182,10 +182,10 @@ export class ComputedStyle {
     }
   }
 
-  static setExtent(element: HtmlElement){
+  static setExtent(element: HtmlElement, parent_ctx?: FlowContext){
     let value = CssCascade.getValue(element, "extent");
     if(value !== "auto"){
-      let size = new CssBoxExtent(value).computeSize(element);
+      let size = new CssBoxExtent(value).computeSize(element, parent_ctx);
       element.computedStyle.setProperty("extent", size + "px");
     }
   }
