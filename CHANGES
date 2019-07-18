@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.31, 2019/07/18
+==========================
+* Call dom-callback when img element is created.
+
 version 6.0.30, 2019/07/11
 ==========================
 * Fixed bug of computed extent size(parent context was not passed for 'extent' property).

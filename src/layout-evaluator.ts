@@ -175,6 +175,7 @@ export class LayoutEvaluator {
       element.classList.add(Prefix.addInternal("inline"));
     }
     e_classes.forEach(klass => element.classList.add(klass));
+    image.element.style.callDomCallbacks(image, element);
     return element;
   }
 
