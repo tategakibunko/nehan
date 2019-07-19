@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.32, 2019/07/19
+==========================
+* Fix path of `main`, `types` of package.json.
+
 version 6.0.31, 2019/07/18
 ==========================
 * Call dom-callback when img element is created.
