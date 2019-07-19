@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.33, 2019/07/19
+==========================
+* Added index.js, index.d.ts to project root.
+
 version 6.0.32, 2019/07/19
 ==========================
 * Fix path of `main`, `types` of package.json.
