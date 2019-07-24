@@ -13,12 +13,14 @@ export class PageGenerator {
   protected generator: BodyGenerator;
   protected evaluator: LayoutEvaluator;
   protected iterator: IterableIterator<LogicalPage>;
+  private acmCharCount: number;
 
   constructor(document: HtmlDocument){
     this.document = document;
     this.generator = this.document.createBodyGenerator();
     this.evaluator = this.generator.createEvaluator();
     this.iterator = this.createIterator();
+    this.acmCharCount = 0;
   }
 
   public getNext(evaluate = false): IteratorResult<LogicalPage> {
@@ -56,11 +58,13 @@ export class PageGenerator {
 	  index:index,
 	  progress:this.generator.progress,
 	  charCount:box.charCount,
+	  acmCharCount: this.acmCharCount,
 	  box:box,
 	  dom:null
 	};
 	yield page;
 	index++;
+	this.acmCharCount += box.charCount;
       }
     }
   }
