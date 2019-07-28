@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.35, 2019/07/29
+==========================
+o Just updated versions of devDependencies.
+
 version 6.0.34, 2019/07/25
 ==========================
 o Added acmCharCount for LogicalPage.
