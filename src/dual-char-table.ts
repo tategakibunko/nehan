@@ -161,7 +161,7 @@ let dual_char_table: {[_:string]: DualCharInfo} = {
   "U+301C":dash, // WAVE DASH
   "U+301D":kakkoStart, // REVERSED DOUBLE PRIME QUOTATION MARK
   "U+301E":kakkoEnd, // DOUBLE PRIME QUOTATION MARK
-  "U+301F":smallKana, // LOW DOUBLE PRIME QUOTATION MARK
+  "U+301F":kakkoEnd, // LOW DOUBLE PRIME QUOTATION MARK
   "U+3041":smallKana, // HIRAGANA LETTER SMALL A
   "U+3043":smallKana, // HIRAGANA LETTER SMALL I
   "U+3045":smallKana, // HIRAGANA LETTER SMALL U

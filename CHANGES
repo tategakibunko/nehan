@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.36, 2019/08/01
+==========================
+* Treat U+301F(LOW DOUBLE PRIME QUOTATION MARK) as kakkoEnd.
+
 version 6.0.35, 2019/07/29
 ==========================
 o Just updated versions of devDependencies.
