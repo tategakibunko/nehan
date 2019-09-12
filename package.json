@@ -60,8 +60,8 @@
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
     "node-sass": "^4.12.0",
-    "ts-jest": "^24.0.2",
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.6.2"
+    "ts-jest": "^24.1.0",
+    "ts-loader": "^6.1.0",
+    "typescript": "^3.6.3"
   }
 }
