@@ -17,6 +17,7 @@ export class SpaceChar implements ICharacter {
   public info: SpaceCharInfo;
   public kerning: boolean;
   public spacing: number;
+  public charCount: number;
 
   static zeroWidthSpace: string = "\u200B";
   static enSpace: string = "\u2002";
@@ -42,6 +43,7 @@ export class SpaceChar implements ICharacter {
     this.info = SpaceCharTable.load(str);
     this.kerning = false;
     this.spacing = 0;
+    this.charCount = 0; // not count as normal character.
   }
 
   protected normalize(str: string): string {
@@ -49,11 +51,6 @@ export class SpaceChar implements ICharacter {
       return SpaceChar.charRefToStr(str);
     }
     return str;
-  }
-
-  // not count as normal character.
-  public get charCount(): number {
-    return 0;
   }
 
   public getCssVert(): NativeStyleMap {

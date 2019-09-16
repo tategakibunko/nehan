@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.0.38, 2019/09/16
+==========================
+* Avoid getter for ICharacter::charCount when it's fixed value.
+
 version 6.0.37, 2019/08/01
 ==========================
 * Release miss. Reupload.

@@ -11,6 +11,7 @@ export class SmpUniChar implements ICharacter {
   public hasEmphasis: boolean;
   public kerning: boolean;
   public spacing: number;
+  public charCount: number;
 
   public constructor(str: string){
     this.text = str;
@@ -18,10 +19,7 @@ export class SmpUniChar implements ICharacter {
     this.hasEmphasis = false;
     this.kerning = false;
     this.spacing = 0;
-  }
-
-  public get charCount(): number {
-    return 1;
+    this.charCount = 1;
   }
 
   public setMetrics(env: BoxEnv){

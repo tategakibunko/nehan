@@ -15,6 +15,7 @@ export class DualChar implements ICharacter {
   public info: DualCharInfo;
   public kerning: boolean;
   public spacing: number;
+  public charCount: number;
 
   public constructor(str: string, info: DualCharInfo){
     this.text = str;
@@ -23,10 +24,7 @@ export class DualChar implements ICharacter {
     this.info = info;
     this.kerning = false;
     this.spacing = 0;
-  }
-
-  public get charCount(): number {
-    return 1;
+    this.charCount = 1;
   }
 
   public isOpenParen(): boolean {
