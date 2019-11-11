@@ -1,9 +1,9 @@
 {
   "name": "nehan",
-  "version": "6.0.38",
+  "version": "6.0.39",
   "description": "Html layout engine for paged-media written in Typescript",
   "main": "./dist/index.js",
-  "types": "./dist/indx.d.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "make -f Makefile.public",
     "test": "jest"
@@ -45,16 +45,6 @@
   },
   "author": "Watanabe Masaki",
   "license": "MIT",
-  "files": [
-    "LICENSE",
-    "CHANGES",
-    "Makefile.public",
-    "README.md",
-    "css",
-    "dist",
-    "src",
-    "tests"
-  ],
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "jest": "^24.9.0",

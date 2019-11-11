@@ -6,7 +6,11 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 6.0.39
+version 6.0.40, 2019/11/11
+==========================
+* Fix npm package.
+
+version 6.0.39, 2019/09/16
 ==========================
 * Avoid getter for Tcy::charCount.
 
