@@ -9,29 +9,29 @@ import {
 } from "./public-api";
 
 export class TableRowRegion extends FlowRegion {
-  protected context: TableRowContext;
-  protected content: TableRowContent;
+  protected context!: TableRowContext;
+  protected content!: TableRowContent;
 
   public isCellFilled(cell_count: number): boolean {
     return this.content.inlineCountGte(cell_count);
   }
 
-  public addTableCell(cell: LogicalBox){
+  public addTableCell(cell: LogicalBox) {
     let delta = cell.totalMeasure;
-    cell.blockPos = new LogicalCursorPos({before:0, start:this.cursor.start});
+    cell.blockPos = new LogicalCursorPos({ before: 0, start: this.cursor.start });
     this.content.addInline(cell);
     this.cursor.start += delta;
   }
 
   protected get parentEdgeAfter(): number {
     let size = 0, parent = this.context.parent;
-    while(parent){
-      if(parent.element.tagName === "body"){
-	break;
+    while (parent) {
+      if (parent.element.tagName === "body") {
+        break;
       }
       size += parent.edge.after;
-      if(!parent.parent){
-	break;
+      if (!parent.parent) {
+        break;
       }
       parent = parent.parent;
     }
@@ -46,7 +46,7 @@ export class TableRowRegion extends FlowRegion {
     // Disable this code after googlebot supports es6.
     let max = <FlowRegion['maxContextBoxExtent']>Reflect.get(FlowRegion.prototype, 'maxContextBoxExtent', this);
     // let max = super.maxContextBoxExtent;
-    if(!this.context.isLastRow()){
+    if (!this.context.isLastRow()) {
       return max;
     }
     let minus = this.parentEdgeAfter;
@@ -55,8 +55,8 @@ export class TableRowRegion extends FlowRegion {
 
   public createTableRowBox(env: BoxEnv, overflow: boolean): LogicalBox {
     let rest_size = new LogicalSize({
-      measure:this.maxContextBoxMeasure,
-      extent:this.restContextBoxExtent
+      measure: this.maxContextBoxMeasure,
+      extent: this.restContextBoxExtent
     });
     let box = this.content.createTableRowBox(env, overflow, rest_size);
     box.contextEdge = this.createBlockEdge();

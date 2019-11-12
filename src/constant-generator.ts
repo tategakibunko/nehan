@@ -5,10 +5,10 @@ import {
 } from "./public-api";
 
 export class ConstantGenerator extends LayoutGenerator {
-  protected context: ConstantContext;
+  protected context!: ConstantContext;
 
-  protected* createIterator(): IterableIterator<LayoutValue []> {
-    while(this.context.hasNext()){
+  protected * createIterator(): IterableIterator<LayoutValue[]> {
+    while (this.context.hasNext()) {
       yield this.context.getValues();
     }
   }

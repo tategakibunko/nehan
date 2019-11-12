@@ -6,8 +6,8 @@ import {
 } from "./public-api";
 
 export class ListItemContext extends FlowContext {
-  public parent: FlowContext; // not null
-  public region: ListItemRegion;
+  public parent!: FlowContext; // not null
+  public region!: ListItemRegion;
 
   public get listStyle(): ListStyle {
     return this.env.listStyle;
@@ -23,7 +23,7 @@ export class ListItemContext extends FlowContext {
 
   public shiftInlineLevel(inline: LogicalBox): boolean {
     //console.log("[%s] shiftInlineLevel(marker):", this.name, inline);
-    if(inline.tagName === "::marker" && this.listStyle.isPositionOutside()){
+    if (inline.tagName === "::marker" && this.listStyle.isPositionOutside()) {
       this.region.setOutsideListMarker(inline);
     }
     return super.shiftInlineLevel(inline);
@@ -31,7 +31,7 @@ export class ListItemContext extends FlowContext {
 
   public createLineBox(): LogicalBox {
     let line = super.createLineBox();
-    if(this.counter.isYielded() || this.counter.isLineYielded()){
+    if (this.counter.isYielded() || this.counter.isLineYielded()) {
       this.region.addInlineOffset(line);
     }
     return line;

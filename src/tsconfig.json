@@ -1,29 +1,23 @@
 {
-  "compilerOptions":{
+  "compilerOptions": {
     // "target":"es6", // To enable IteratorResult, Map, for ~ of syntax(in generators).
-    "target":"es5",
+    "target": "es5",
     "lib": [
       "es2017",
       "dom",
     ],
-    "module":"commonjs",
+    "module": "commonjs",
     "sourceMap": true,
     "declaration": true,
-    "outDir":"../dist",
-    //"strict": true, // strict initializer for class(prevent TS2564 error).
-    "strictNullChecks":true,
-    "noImplicitAny":true,
-    "noImplicitThis":true,
-    "noImplicitReturns":true,
-    "noUnusedLocals":true,
-    //"noUnusedParameters":true,
-    "preserveConstEnums":true,
-    "pretty":false,
-    "removeComments":true,
+    "outDir": "../dist",
+    "strict": true,
+    "preserveConstEnums": true,
+    "pretty": false,
+    "removeComments": true,
     "esModuleInterop": true,
   },
-  "exclude":[
+  "exclude": [
     "node_modules",
-    "dist"
+    "dist",
   ]
 }

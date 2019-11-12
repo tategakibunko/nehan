@@ -9,9 +9,9 @@ import {
 } from "./public-api";
 
 export class ListStyle {
-  public position: ListStylePosition;
-  public type_: ListStyleType; // keyword 'type' is reserved.
-  public image: string;
+  public position!: ListStylePosition;
+  public type_!: ListStyleType; // keyword 'type' is reserved.
+  public image!: string;
 
   public isPositionOutside(): boolean {
     return this.position.isOutside();
@@ -52,31 +52,31 @@ export class ListStyle {
   static loadImage(element: HtmlElement): string {
     return CssCascade.getValue(element, "list-style-image");
   }
-  
+
   static inferProp(value: string): string {
-    if(value.indexOf("url(") >= 0){
+    if (value.indexOf("url(") >= 0) {
       return "list-style-image";
     }
-    switch(value){
-    case "inside":
-    case "outside":
-      return "list-style-position";
+    switch (value) {
+      case "inside":
+      case "outside":
+        return "list-style-position";
     }
     return "list-style-type";
   }
 
-  static parseShorthand(css_text: CssText): PropValue<string, string> [] {
-    let declr: {[keyword: string]: string} = {
-      "list-style-image":"none",
-      "list-style-type":"none",
-      "list-style-position":"outside"
+  static parseShorthand(css_text: CssText): PropValue<string, string>[] {
+    let declr: { [keyword: string]: string } = {
+      "list-style-image": "none",
+      "list-style-type": "none",
+      "list-style-position": "outside"
     };
     css_text.split().forEach((value) => {
       let prop = ListStyle.inferProp(value);
       declr[prop] = value;
     });
     return Object.keys(declr).map((prop) => {
-      return {prop:prop, value:declr[prop]};
+      return { prop: prop, value: declr[prop] };
     });
   }
 }

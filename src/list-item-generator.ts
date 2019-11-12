@@ -4,5 +4,5 @@ import {
 } from "./public-api";
 
 export class ListItemGenerator extends FlowGenerator {
-  protected context: ListItemContext;
+  protected context!: ListItemContext;
 }

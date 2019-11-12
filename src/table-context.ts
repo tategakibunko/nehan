@@ -9,8 +9,8 @@ import {
 } from "./public-api";
 
 export class TableContext extends FlowContext {
-  public parent: FlowContext; // not null
-  public region: TableRegion;
+  public parent!: FlowContext; // not null
+  public region!: TableRegion;
 
   protected createRegion(): TableRegion {
     return new TableRegion(this);
@@ -25,19 +25,19 @@ export class TableContext extends FlowContext {
     // table <-> tgroup, tgroup <-> tr, tr <-> cell
     // are disabled.
     let border_collapse = BorderCollapse.load(this.element);
-    if(border_collapse.isCollapse()){
+    if (border_collapse.isCollapse()) {
       BorderCollapse.disableEdge(this.element);
     }
 
     // all css is required to calc table sizing.
     CssLoader.loadAll(this.element);
 
-    if(border_collapse.isCollapse()){
+    if (border_collapse.isCollapse()) {
       BorderCollapse.collapse(this.element);
     }
     // re-separate cell using css settings.
     this.region.separateCell();
-    if(this.region.isBadSeparation()){
+    if (this.region.isBadSeparation()) {
       console.error("[%s] table invalid separation(too deep), can't display.", this.name);
       this.abort();
     }

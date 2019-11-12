@@ -11,10 +11,10 @@ import {
 } from "./public-api";
 
 export class RubyContext extends FlowContext {
-  public parent: FlowContext; // not null unlike FlowContext.
-  public region: RubyRegion;
+  public parent!: FlowContext; // not null unlike FlowContext.
+  public region!: RubyRegion;
 
-  constructor(element: HtmlElement, parent: FlowContext){
+  constructor(element: HtmlElement, parent: FlowContext) {
     super(element, parent);
     this.element.childNodes = this.element.childNodes.filter(child => child.tagName !== "rp");
   }
@@ -28,7 +28,7 @@ export class RubyContext extends FlowContext {
     return new RubyChildGenerators(this, first_generator);
   }
 
-  public rollback(){
+  public rollback() {
     this.region.clear();
     super.rollback();
   }
@@ -38,15 +38,15 @@ export class RubyContext extends FlowContext {
   }
 
   public shiftInline(box: LogicalBox): boolean {
-    switch(box.element.tagName){
-    case "rb":
-      this.region.addRb(box);
-      break;
-    case "rt":
-      this.region.addRt(box);
-      break;
-    default:
-      throw new Error("unsupported element(" + box.element.tagName + ") inside ruby");
+    switch (box.element.tagName) {
+      case "rb":
+        this.region.addRb(box);
+        break;
+      case "rt":
+        this.region.addRt(box);
+        break;
+      default:
+        throw new Error("unsupported element(" + box.element.tagName + ") inside ruby");
     }
     this.childGens.commit();
     return this.isRubyReady();
@@ -58,14 +58,14 @@ export class RubyContext extends FlowContext {
 
   protected createGenerator(element: HtmlElement): LayoutGenerator {
     // text element is treated as <rb>.
-    if(element.isTextElement()){
+    if (element.isTextElement()) {
       let doc = this.element.root;
       let rb = doc.createElement("rb");
       let text = doc.createTextNode(element.textContent);
       rb.parent = this.element;
       rb.appendChild(text);
-      if(element.parent){
-	element.parent.replaceChild(rb, element);
+      if (element.parent) {
+        element.parent.replaceChild(rb, element);
       }
       return LayoutGeneratorFactory.createGenerator(this, rb);
     }

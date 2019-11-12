@@ -10,9 +10,9 @@ import {
 } from "./public-api";
 
 export class TableRowContext extends FlowContext {
-  public parent: FlowContext; // not null
-  public region: TableRowRegion;
-  public childGens: TableRowChildGenerators;
+  public parent!: FlowContext; // not null
+  public region!: TableRowRegion;
+  public childGens!: TableRowChildGenerators;
 
   // note that all of td styles are already loaded by table-generator.
   protected createChildGenerators(): TableRowChildGenerators {
@@ -31,19 +31,19 @@ export class TableRowContext extends FlowContext {
     return this.element.isLastElementChild();
   }
 
-  public getNext(): IteratorResult<LayoutValue []> {
+  public getNext(): IteratorResult<LayoutValue[]> {
     return this.childGens.getNext();
   }
 
   public hasNext(): boolean {
-    if(!this.childGens){
+    if (!this.childGens) {
       return true; // before child gens is created.
     }
     return this.childGens.hasNext();
   }
 
-  public rollback(){
-    if(Config.debugLayout){
+  public rollback() {
+    if (Config.debugLayout) {
       console.log("[%s] rollback", this.name);
     }
     this.childGens.rollback();
@@ -58,10 +58,10 @@ export class TableRowContext extends FlowContext {
 
   protected get tableContext(): TableContext {
     let cont: FlowContext | undefined = this.parent;
-    while(cont && cont instanceof TableContext === false){
+    while (cont && cont instanceof TableContext === false) {
       cont = cont.parent;
     }
-    if(!cont){
+    if (!cont) {
       throw new Error("table context not found!");
     }
     return cont as TableContext;
@@ -81,7 +81,7 @@ export class TableRowContext extends FlowContext {
     this.region.resetInlineCursor();
     this.counter.resetInlineCounter();
     this.childGens.setLeadAsActive(); // restart from first cell.
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] createTableRowBox:", this.name, box);
     }
     return box;
