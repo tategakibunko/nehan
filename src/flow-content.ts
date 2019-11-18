@@ -9,10 +9,10 @@ import {
 } from "./public-api";
 
 export class FlowContent {
-  protected inlines: BoxContent [];
-  protected blocks: LogicalBox [];
+  protected inlines: BoxContent[];
+  protected blocks: LogicalBox[];
 
-  constructor(){
+  constructor() {
     this.inlines = [];
     this.blocks = [];
   }
@@ -24,11 +24,11 @@ export class FlowContent {
 
   protected getMaxInlineExtent(): number {
     return this.inlines.reduce((max_extent, item) => {
-      if(item instanceof LogicalBox){
-	return Math.max(max_extent, item.maxExtent);
+      if (item instanceof LogicalBox) {
+        return Math.max(max_extent, item.maxExtent);
       }
-      if(item instanceof Ruby){
-	return Math.max(max_extent, item.totalExtent);
+      if (item instanceof Ruby) {
+        return Math.max(max_extent, item.totalExtent);
       }
       return Math.max(max_extent, item.size.extent);
     }, 0);
@@ -36,18 +36,18 @@ export class FlowContent {
 
   protected getMaxInlineFontSize(env: BoxEnv): number {
     return this.inlines.reduce((max_extent, item) => {
-      if(item instanceof LogicalBox){
-	return Math.max(max_extent, item.maxFontSize);
+      if (item instanceof LogicalBox) {
+        return Math.max(max_extent, item.maxFontSize);
       }
-      if(item instanceof Ruby){
-	return Math.max(max_extent, item.fontSize);
+      if (item instanceof Ruby) {
+        return Math.max(max_extent, item.fontSize);
       }
       return Math.max(max_extent, item.size.extent);
     }, env.fontSize);
   }
 
   public getRootLineExtent(env: BoxEnv): number {
-    if(this.isEmptyBoxInline()){
+    if (this.isEmptyBoxInline()) {
       return 0;
     }
     let max_inline_font_size = this.getMaxInlineFontSize(env);
@@ -56,14 +56,14 @@ export class FlowContent {
   }
 
   public getLineExtent(env: BoxEnv): number {
-    if(this.isEmptyBoxInline()){
+    if (this.isEmptyBoxInline()) {
       return 0;
     }
     return this.getMaxInlineExtent();
   }
 
   public getLineTextExtent(env: BoxEnv): number {
-    if(this.isEmptyBoxInline()){
+    if (this.isEmptyBoxInline()) {
       return 0;
     }
     return this.getMaxInlineFontSize(env);
@@ -75,8 +75,8 @@ export class FlowContent {
   // but the box itself(shrink to fit size).
   public get flowRootMeasure(): number {
     return this.blocks.reduce((max, block) => {
-      if(block.isPositionAbsolute()){
-	return max;
+      if (block.isPositionAbsolute()) {
+        return max;
       }
       return Math.max(block.totalMeasure, max);
     }, 0);
@@ -84,8 +84,8 @@ export class FlowContent {
 
   public get flowRootExtent(): number {
     return this.blocks.reduce((sum, block) => {
-      if(block.isPositionAbsolute()){
-	return sum;
+      if (block.isPositionAbsolute()) {
+        return sum;
       }
       return sum + block.totalExtent;
     }, 0);
@@ -111,8 +111,8 @@ export class FlowContent {
     return this.blocks.length === 0;
   }
 
-  public addInline(cont: BoxContent){
-    if(cont instanceof LogicalBox && cont.isText()){
+  public addInline(cont: BoxContent) {
+    if (cont instanceof LogicalBox && cont.isText()) {
       this.addTextBox(cont);
     } else {
       this.inlines.push(cont);
@@ -120,19 +120,19 @@ export class FlowContent {
   }
 
   // inlining characters in text-box.
-  protected addTextBox(text: LogicalBox){
+  protected addTextBox(text: LogicalBox) {
     this.inlines = this.inlines.concat(text.getChildren());
   }
 
-  public addBlock(block: LogicalBox){
+  public addBlock(block: LogicalBox) {
     this.blocks.push(block);
   }
 
-  public clearInlines(){
+  public clearInlines() {
     this.inlines = [];
   }
 
-  public clearBlocks(){
+  public clearBlocks() {
     this.blocks = [];
   }
 
@@ -153,7 +153,7 @@ export class FlowContent {
   public createInlineBox(env: BoxEnv, size: LogicalSize): LogicalBox {
     let box = new LogicalBox(env, BoxType.INLINE, size);
     // note that if inline element accepts line(block) from child gen, blocks are not empty.
-    let children = (this.blocks.length > 0)? this.blocks : this.inlines;
+    let children = (this.blocks.length > 0) ? this.blocks : this.inlines;
     box.addChildren(children);
     return box;
   }

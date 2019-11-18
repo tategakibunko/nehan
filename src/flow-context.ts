@@ -36,10 +36,10 @@ export class FlowContext implements ILayoutContext {
   protected childGens: FlowChildGenerators;
   protected status: LayoutStatus;
 
-  constructor(element: HtmlElement, parent?: FlowContext){
+  constructor(element: HtmlElement, parent?: FlowContext) {
     this.env = this.createEnv(element, parent);
     this.parent = parent;
-    this.body = (!this.parent)? this : this.parent.body;
+    this.body = (!this.parent) ? this : this.parent.body;
     this.sectionRoot = this.getSectionRootContext();
     this.outline = this.createOutline(this.sectionRoot);
     this.counter = new LayoutCounter();
@@ -52,100 +52,100 @@ export class FlowContext implements ILayoutContext {
     return getContextName(this.element);
   }
 
-  public openElement(){
+  public openElement() {
     this.section = this.sectionRoot.outline.openElement(this, this.element);
   }
 
-  public closeElement(){
-    if(this.hasNext() === false){
+  public closeElement() {
+    if (this.hasNext() === false) {
       this.sectionRoot.outline.closeSection(this, this.element);
     }
   }
 
   public getSectionRootContext(): FlowContext {
-    if(!this.parent || this.isSectionRoot()){
+    if (!this.parent || this.isSectionRoot()) {
       return this;
     }
     return this.parent.getSectionRootContext();
   }
 
   public getNextElement(): HtmlElement | null {
-    if(!this.childGens){
+    if (!this.childGens) {
       return null;
     }
     let next = this.childGens.getNextSibling();
 
     // skip white-space after current tag
-    if(next && WhiteSpace.isWhiteSpaceElement(next)){
-      if(Config.debugLayout){
-	console.log("[%s] skip white space:", this.name, next);
+    if (next && WhiteSpace.isWhiteSpaceElement(next)) {
+      if (Config.debugLayout) {
+        console.log("[%s] skip white space:", this.name, next);
       }
       next = next.nextSibling;
     }
-    if(!next){
+    if (!next) {
       return null;
     }
     return next;
   }
 
-  public getNext(): IteratorResult<LayoutValue []> {
-    if(this.childGens.hasNext()){
+  public getNext(): IteratorResult<LayoutValue[]> {
+    if (this.childGens.hasNext()) {
       return this.childGens.getNext();
     }
     return this.getNextChildLayout();
   }
 
-  protected getNextChildLayout(): IteratorResult<LayoutValue []> {
+  protected getNextChildLayout(): IteratorResult<LayoutValue[]> {
     let next_element = this.getNextElement();
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] nextElement:", this.name, next_element);
     }
     // Note that if we output done:true at this point, it is propagated to root layout,
     // and whole generator is aborted, so we have to send 'skip' to parent gen temporary,
     // and parent will stop because 'hasNext()' will be false in next loop.
-    if(!next_element){
+    if (!next_element) {
       // this error occurs when we tried to get layout from child gen,
       // but nothing yielded because of layout error(too large image, or empty element etc).
       console.error("[%s] no more next element:%o -> abort", this.name, this);
       this.abort();
       let skip = LayoutControl.createSkip();
-      return {done:false, value:[new LayoutValue(skip)]};
+      return { done: false, value: [new LayoutValue(skip)] };
     }
 
     let next_generator = this.createGenerator(next_element);
 
-    if((next_generator.isBlockLevel() || next_generator.isFloat()) &&
-       this.region.isInlineEmpty() === false){
+    if ((next_generator.isBlockLevel() || next_generator.isFloat()) &&
+      this.region.isInlineEmpty() === false) {
       // If inline level is interrupted by block level, split them. For example,
       // <span>foo<p>bar</p>baz</span> is devided into
       // [<span>foo</span><br>, <span><p>bar</p></span>, <span>baz</span>]
       // by <p>bar</p>. Note that <br> after <span> is inserted to split inline level.
-      if(this.isInlineFlow()){
-	// Control command 'inline-break' leads generator to close current inline context,
-	// and yield <br> to make current inline-box separated to next block level.
-	// As a result, parent generator will accept [line-box, line-break] as LayoutValue [].
-	if(Config.debugLayout){
-	  console.log("[%s] inline level is splited by block!", this.name);
-	}
-	let inline_split = LayoutControl.createInlineSplit();
-	return {done:false, value:[new LayoutValue(inline_split)]};
+      if (this.isInlineFlow()) {
+        // Control command 'inline-break' leads generator to close current inline context,
+        // and yield <br> to make current inline-box separated to next block level.
+        // As a result, parent generator will accept [line-box, line-break] as LayoutValue [].
+        if (Config.debugLayout) {
+          console.log("[%s] inline level is splited by block!", this.name);
+        }
+        let inline_split = LayoutControl.createInlineSplit();
+        return { done: false, value: [new LayoutValue(inline_split)] };
       }
       // If block level is divided by some inline elements, sweep out line before next block.
       // But if line is white-space only, ignore it.
       let line = this.createLineBox();
-      if(line.isWhiteSpaceLine()){
-	if(Config.debugLayout){
-	  console.log("[%s] skip white-space line before block", this.name);
-	}
-	let skip = LayoutControl.createSkip();
-	return {done:false, value:[new LayoutValue(skip)]};
+      if (line.isWhiteSpaceLine()) {
+        if (Config.debugLayout) {
+          console.log("[%s] skip white-space line before block", this.name);
+        }
+        let skip = LayoutControl.createSkip();
+        return { done: false, value: [new LayoutValue(skip)] };
       }
-      return {done:false, value:[new LayoutValue(line)]};
+      return { done: false, value: [new LayoutValue(line)] };
     }
 
     this.childGens.updateActive(next_generator);
 
-    if(this.region.isLineHead() && next_generator.isFloat() === false){
+    if (this.region.isLineHead() && next_generator.isFloat() === false) {
       this.childGens.updateLead(next_generator);
     }
 
@@ -153,82 +153,82 @@ export class FlowContext implements ILayoutContext {
   }
 
   public hasNext(): boolean {
-    if(this.status.isAbort() || this.status.isPause()){
-      if(Config.debugLayout){
-	console.log("[%s] %s, hasNext = false", this.name, this.status.toString());
+    if (this.status.isAbort() || this.status.isPause()) {
+      if (Config.debugLayout) {
+        console.log("[%s] %s, hasNext = false", this.name, this.status.toString());
       }
       return false;
     }
-    if(this.childGens && this.childGens.hasNext()){
+    if (this.childGens && this.childGens.hasNext()) {
       return true;
     }
-    if(this.getNextElement() !== null){
+    if (this.getNextElement() !== null) {
       return true;
     }
     return false;
   }
 
   public get progress(): number {
-    if(!this.hasNext()){
+    if (!this.hasNext()) {
       return 1;
     }
     let unit = 1 / this.element.childNodes.length;
     return this.childGens.getProgress(unit);
   }
 
-  public pause(){
+  public pause() {
     this.status.setPause();
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] paused.", this.name);
     }
   }
 
-  public abort(){
+  public abort() {
     let page_index = this.bodyPageIndex;
     console.warn("[%s] aborted. page=%d, element:", this.name, page_index, this.element);
     this.status.setAbort();
   }
 
-  public resume(){
+  public resume() {
     this.status.setNormal();
     this.childGens.resume();
   }
 
-  public updateStyle(){
-    if(CssLoader.loadDynamic(this.element, this.parent)){
-      if(Config.debugLayout){
-	console.warn("[%s] style is dynamically updated!", this.element.getNodeName());
+  public updateStyle() {
+    if (CssLoader.loadDynamic(this.element, this.parent)) {
+      if (Config.debugLayout) {
+        console.warn("[%s] style is dynamically updated!", this.element.getNodeName());
       }
       this.env = this.createEnv(this.element, this.parent);
       this.region = this.createRegion();
     }
-    if(this.childGens){
+    if (this.childGens) {
       this.childGens.updateStyle();
     }
   }
 
-  public updateLead(){
+  public updateLead() {
     this.childGens.setActiveAsLead();
   }
 
   // called from parent generator
-  public commit(){
-    if(this.isFirstOutput() && this.section){
+  public commit() {
+    if (this.isFirstOutput() && this.section) {
       this.section.pageIndex = this.sectionRoot.pageIndex;
     }
     this.counter.incYield();
     this.counter.resetRollback();
-    if(this.region.isLineHead()){
+    if (this.region.isLineHead()) {
       this.updateLead();
     }
     this.region.resetInlineCursor(); // 'after' update lead, set cursor to line head.
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] commit", this.name);
     }
   }
 
-  public rollback(){
-    if(Config.debugLayout){
+  public rollback() {
+    if (Config.debugLayout) {
       console.log("[%s]: rollback", this.name);
     }
     this.region.resetInlineCursor();
@@ -237,7 +237,7 @@ export class FlowContext implements ILayoutContext {
     // If it's rollbacked too many, abort generator to avoid infinite loop.
     // But we exclude body-gen because there is no parent committer for body-gen,
     // so counter.rollback of body-gen is not cleared.
-    if(this.isBody() === false && this.counter.isError()){
+    if (this.isBody() === false && this.counter.isError()) {
       console.error("[%s] counter error! -> abort.", this.name);
       console.warn("aborted element:%o, child-gens:%o", this.element, this.childGens);
       this.abort();
@@ -253,23 +253,23 @@ export class FlowContext implements ILayoutContext {
     return is_filled;
   }
 
-  public shiftControl(control: LayoutControl){
-    if(control.isGeneratorValue){
+  public shiftControl(control: LayoutControl) {
+    if (control.isGeneratorValue) {
       this.childGens.commit();
     }
   }
 
   public shiftInlineLevel(obj: BoxContent): boolean {
-    if(this.region.isInlineError(obj)){
+    if (this.region.isInlineError(obj)) {
       console.error("[%s] inline error at %d", this.name, this.bodyPageIndex);
       return true;
     }
-    if(obj instanceof Ruby){
+    if (obj instanceof Ruby) {
       return this.shiftRuby(obj as Ruby);
     }
     let box = obj as LogicalBox;
     //console.assert(obj instanceof LogicalBox);
-    if(box.isText()){
+    if (box.isText()) {
       return this.shiftText(box);
     }
     return this.shiftInlineBox(box);
@@ -278,12 +278,12 @@ export class FlowContext implements ILayoutContext {
   protected shiftText(text: LogicalBox): boolean {
     // if region over, it's bug of text-region.
     // maybe size of inline max space is not shared by parent layout.
-    if(this.region.isInlineOver(text)){
+    if (this.region.isInlineOver(text)) {
       console.error("region error:%o(text.m=%d)", this.region, text.totalMeasure);
       return true;
     }
     // if single text can't be afford to yield, it' line limit.
-    if(text.totalMeasure === 0){
+    if (text.totalMeasure === 0) {
       // text can be added with zero size if it is BURA-SAGARI text for hyphenation.
       // so add inline if it's zero size.
       this.addInline(text);
@@ -293,7 +293,7 @@ export class FlowContext implements ILayoutContext {
   }
 
   protected shiftInlineBox(box: LogicalBox): boolean {
-    if(this.region.isInlineOver(box)){
+    if (this.region.isInlineOver(box)) {
       this.childGens.rollbackActive();
       return true;
     }
@@ -301,7 +301,7 @@ export class FlowContext implements ILayoutContext {
   }
 
   protected shiftRuby(ruby: Ruby): boolean {
-    if(this.region.isInlineOver(ruby)){
+    if (this.region.isInlineOver(ruby)) {
       this.childGens.rollbackActive();
       return true;
     }
@@ -311,19 +311,19 @@ export class FlowContext implements ILayoutContext {
   // normal block but inserted into float rest space.
   public shiftFloatSpaceBlock(block: LogicalBox): boolean {
     let delta = block.totalExtent;
-    if(delta === 0){
+    if (delta === 0) {
       this.counter.incEmptyBox();
     }
-    if(this.region.isFloatSpaceOver(block)){
+    if (this.region.isFloatSpaceOver(block)) {
       this.rollback();
       return true;
     }
     let is_filled = this.region.addFloatSpaceBlock(block);
-    if(block.isLine()){
+    if (block.isLine()) {
       this.counter.incLine();
       this.removeBrAfterLine(block);
       this.updateLead(); // active <- lead
-    } else if(block.blockPos){
+    } else if (block.blockPos) {
       // inline offset pos is only available to anonymous line box.
       block.blockPos.start = 0;
     }
@@ -334,21 +334,21 @@ export class FlowContext implements ILayoutContext {
   // normal flow blocks.
   public shiftBlockLevel(block: LogicalBox): boolean {
     let delta = block.totalExtent;
-    if(delta === 0){
+    if (delta === 0) {
       this.counter.incEmptyBox();
     }
     let is_over = this.region.isBlockOver(block);
-    if(is_over){
+    if (is_over) {
       // If we rollback by empty-line(generated by <br> gen),
       // lead-gen before <br> is rollbacked instead,
       // because control-generator(like <br> gen) can't be lead-gen.
       // So we prevent rollback when block is empty-line(generated by <br> gen).
-      if(!block.isEmptyLine()){
-	this.rollback();
+      if (!block.isEmptyLine()) {
+        this.rollback();
       }
       return true;
     }
-    if(block.isLine()){
+    if (block.isLine()) {
       this.counter.incLine();
       this.removeBrAfterLine(block);
       this.updateLead(); // active <- lead
@@ -370,9 +370,9 @@ export class FlowContext implements ILayoutContext {
       this.region.addFloatBlock(block);
       this.childGens.commit();
       return false;
-    } catch(err){
-      if(Config.debugLayout){
-	console.error("float block over!:", err);
+    } catch (err) {
+      if (Config.debugLayout) {
+        console.error("float block over!:", err);
       }
       this.region.clear();
       this.childGens.rollback();
@@ -381,29 +381,29 @@ export class FlowContext implements ILayoutContext {
   }
 
   // if line is full-filled and it's followed by br, it causes double line-break, so skip it.
-  public removeBrAfterLine(line: LogicalBox){
+  public removeBrAfterLine(line: LogicalBox) {
     let baseline = line.getChild(0) as LogicalBox;
-    if(!baseline){
+    if (!baseline) {
       return; // empty line generated by <br>.
     }
     // If line is not full-filled, ignore.
-    if(baseline.autoSize && baseline.autoSize.measure < line.size.measure){
+    if (baseline.autoSize && baseline.autoSize.measure < line.size.measure) {
       return;
     }
     // It's full-filled line(line.size.measure === baseline.size.measure),
     // so remove <br> just after it.
     let next_element = this.getNextElement();
-    if(this.childGens.hasNextActive() === false &&
-       next_element && next_element.tagName === "br"){
+    if (this.childGens.hasNextActive() === false &&
+      next_element && next_element.tagName === "br") {
       this.element.removeChild(next_element);
     }
   }
 
-  public clearRegionFloat(clear: LogicalClear){
+  public clearRegionFloat(clear: LogicalClear) {
     this.region.clearFloat(clear);
   }
 
-  public setRegionMarginAuto(element: HtmlElement){
+  public setRegionMarginAuto(element: HtmlElement) {
     this.region.setMarginAuto(element);
   }
 
@@ -416,7 +416,7 @@ export class FlowContext implements ILayoutContext {
   }
 
   public isFloatClient(): boolean {
-    if(this.isFloat()){
+    if (this.isFloat()) {
       return false;
     }
     return this.region.isFloatEnable();
@@ -535,7 +535,7 @@ export class FlowContext implements ILayoutContext {
   }
 
   protected createEnv(element: HtmlElement, parent?: FlowContext): BoxEnv {
-    if(parent){
+    if (parent) {
       return parent.createChildEnv(element);
     }
     return new BoxEnv(element);
@@ -546,7 +546,7 @@ export class FlowContext implements ILayoutContext {
   }
 
   protected createOutline(section_root_context: FlowContext): LayoutOutline {
-    if(this.isSectionRoot()){
+    if (this.isSectionRoot()) {
       return new LayoutOutline();
     }
     return section_root_context.outline;
@@ -559,11 +559,11 @@ export class FlowContext implements ILayoutContext {
 
   protected createFirstElement(): HtmlElement {
     let first_child = this.element.firstChild;
-    if(first_child && WhiteSpace.isWhiteSpaceElement(first_child)){
+    if (first_child && WhiteSpace.isWhiteSpaceElement(first_child)) {
       first_child = first_child.nextSibling;
     }
     // If empty node, use 'content' value if defined.
-    if(!first_child){
+    if (!first_child) {
       let content = this.env.contentValue;
       first_child = this.element.root.createTextNode(content);
       this.element.replaceChild(first_child, this.element.firstChild);
@@ -589,7 +589,7 @@ export class FlowContext implements ILayoutContext {
     this.region.clearInlines();
     this.region.clearBlocks();
     this.counter.resetInlineCounter();
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] createInlineBox[%s]:%o", this.name, box.text, box);
     }
     return box;
@@ -603,7 +603,7 @@ export class FlowContext implements ILayoutContext {
     this.region.resetInlineCursor();
     this.counter.resetInlineCounter();
     this.region.clearInlines();
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] createEmptyLineBox:%o", this.name, box);
     }
     return box;
@@ -617,13 +617,13 @@ export class FlowContext implements ILayoutContext {
     let baseline = this.createBaselineBox(box);
     box.addChild(baseline);
     box.charCount = this.counter.inlineChar;
-    if(this.env.isTextJustify()){
+    if (this.env.isTextJustify()) {
       box.justify(baseline);
     }
     this.region.resetInlineCursor();
     this.region.clearInlines();
     this.counter.resetInlineCounter();
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] createLineBox[%s]:%o", this.name, box.text, box);
     }
     return box;
@@ -635,7 +635,7 @@ export class FlowContext implements ILayoutContext {
     box.localPageIndex = this.pageIndex;
     box.hasNext = line_box.hasNext;
     box.charCount = this.counter.inlineChar;
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] createBaselineBox:", this.name, box);
     }
     return box;
@@ -651,11 +651,11 @@ export class FlowContext implements ILayoutContext {
     this.counter.resetBlockCounter();
     this.region.resetBlockCursor();
     this.region.clearBlocks();
-    if(this.isFlowRoot()){
+    if (this.isFlowRoot()) {
       this.region.clearFloatRegion();
     }
     this.resume(); // re-activate resumed generators after closing current block.
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] createBlockBox[%s:%s]:%o", this.name, box.boxType, box.text, box);
     }
     return box;
@@ -671,7 +671,7 @@ export class FlowContext implements ILayoutContext {
     this.counter.resetBlockCounter();
     this.region.resetBlockCursor();
     this.region.clearBlocks();
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] createInlineBlockBox[%s]:", this.name, box.text, box);
     }
     return box;
@@ -680,17 +680,17 @@ export class FlowContext implements ILayoutContext {
   public createPageBreakBeforeElement(element: HtmlElement): HtmlElement {
     let hr = element.root.createElement("hr");
     hr.setAttribute("style", "page-break-before:always; extent:0; margin:0; border:0");
-    if(element.parent){
+    if (element.parent) {
       element.parent.insertBefore(hr, element);
     }
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("inserted dynamic page-break before [%s]", element.toString());
     }
     return hr;
   }
 
   public createEmptyInlineControl(overflow: boolean, size: number): LayoutControl {
-    if(overflow && !this.region.isInlineMaxBoxOver(size)){
+    if (overflow && !this.region.isInlineMaxBoxOver(size)) {
       return LayoutControl.createLineBreak();
     }
     this.childGens.abortActive();
