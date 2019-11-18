@@ -53,12 +53,12 @@ export class FlowContext implements ILayoutContext {
   }
 
   public openElement() {
-    this.section = this.sectionRoot.outline.openElement(this, this.element);
+    this.section = this.sectionRoot.outline.openElement(this.element, this.bodyPageIndex);
   }
 
   public closeElement() {
     if (this.hasNext() === false) {
-      this.sectionRoot.outline.closeSection(this, this.element);
+      this.sectionRoot.outline.closeSection(this.element);
     }
   }
 
