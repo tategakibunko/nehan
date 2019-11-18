@@ -15,7 +15,7 @@ export class PageGenerator {
   protected iterator: IterableIterator<LogicalPage>;
   private acmCharCount: number;
 
-  constructor(document: HtmlDocument){
+  constructor(document: HtmlDocument) {
     this.document = document;
     this.generator = this.document.createBodyGenerator();
     this.evaluator = this.generator.createEvaluator();
@@ -25,7 +25,7 @@ export class PageGenerator {
 
   public getNext(evaluate = false): IteratorResult<LogicalPage> {
     let next = this.iterator.next();
-    if(!next.done && next.value && evaluate === true){
+    if (!next.done && next.value && evaluate === true) {
       next.value.dom = this.evalPageBox(next.value.box);
     }
     return next;
@@ -43,28 +43,28 @@ export class PageGenerator {
     return this.evaluator.eval(box);
   }
 
-  protected* createIterator(): IterableIterator<LogicalPage> {
+  protected * createIterator(): IterableIterator<LogicalPage> {
     let index = 0;
-    while(this.generator.hasNext()){
+    while (this.generator.hasNext()) {
       let next = this.generator.getNext();
-      if(next.done || !next.value){
-	break;
+      if (next.done || !next.value) {
+        break;
       }
       let values = next.value;
-      let boxes: LogicalBox [] = values.filter(val => val.isBox()).map(val => val.getAsBox());
-      for(let i = 0; i < boxes.length; i++){
-	let box = boxes[i];
-	let page: LogicalPage = {
-	  index:index,
-	  progress:this.generator.progress,
-	  charCount:box.charCount,
-	  acmCharCount: this.acmCharCount,
-	  box:box,
-	  dom:null
-	};
-	yield page;
-	index++;
-	this.acmCharCount += box.charCount;
+      let boxes: LogicalBox[] = values.filter(val => val.isBox()).map(val => val.getAsBox());
+      for (let i = 0; i < boxes.length; i++) {
+        let box = boxes[i];
+        let page: LogicalPage = {
+          index: index,
+          progress: this.generator.progress,
+          charCount: box.charCount,
+          acmCharCount: this.acmCharCount,
+          box: box,
+          dom: null
+        };
+        yield page;
+        index++;
+        this.acmCharCount += box.charCount;
       }
     }
   }
