@@ -29,7 +29,7 @@ export class LayoutOutline {
       return this.openSectionRoot(element, pageIndex);
     }
     if (LayoutSection.isSectioningElement(element)) {
-      return this.openSection(element, pageIndex);
+      return this.openSection(pageIndex);
     }
     if (LayoutSection.isHeaderElement(element)) {
       return this.openHeader(element, pageIndex);
@@ -37,7 +37,7 @@ export class LayoutOutline {
     if (element.tagName === "a") {
       let anchor_name = element.getAttribute("name") || "";
       if (anchor_name) {
-        this.addAnchor(element, anchor_name, pageIndex);
+        this.addAnchor(anchor_name, pageIndex);
       }
     }
     return undefined;
@@ -54,10 +54,10 @@ export class LayoutOutline {
     }
     this.rootElement = element;
     //console.log("set section root:", element.tagName);
-    return this.openSection(element, pageIndex);
+    return this.openSection(pageIndex);
   }
 
-  public openSection(element: HtmlElement, pageIndex: number): LayoutSection {
+  public openSection(pageIndex: number): LayoutSection {
     // <sect> <- cur(already closed)
     //   content
     // </sect>
@@ -86,7 +86,7 @@ export class LayoutOutline {
     return this.curSection;
   }
 
-  protected addAnchor(element: HtmlElement, anchor_name: string, pageIndex: number) {
+  protected addAnchor(anchor_name: string, pageIndex: number) {
     this.anchor[anchor_name] = {
       name: anchor_name,
       pageIndex,
