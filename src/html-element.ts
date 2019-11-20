@@ -34,6 +34,10 @@ export class HtmlElement {
     this.setupChildren(node, root);
   }
 
+  public clone(deep = false): HtmlElement {
+    return this.ownerDocument.createElementFromDOM(this.$node.cloneNode(deep));
+  }
+
   protected createClassList(): DomTokenList {
     if (this.$node instanceof HTMLElement) {
       let items: string[] = [];
