@@ -3,10 +3,10 @@ import {
 } from "./public-api";
 
 export class BufferedLexer<T> extends Lexer {
-  public tokens: T [];
-  public pos : number;
+  public tokens: T[];
+  public pos: number;
 
-  constructor(str: string, args = {}){
+  constructor(str: string, args = {}) {
     super(str);
     this.pos = 0;
     this.tokens = [];
@@ -18,7 +18,7 @@ export class BufferedLexer<T> extends Lexer {
   }
 
   public get progress(): number {
-    if(this.tokens.length === 0){
+    if (this.tokens.length === 0) {
       return 1;
     }
     return this.pos / this.tokens.length;
@@ -34,22 +34,22 @@ export class BufferedLexer<T> extends Lexer {
     return token;
   }
 
-  protected setupTokens(args: any) : T [] {
-    while(this.hasNextBuff()){
+  protected setupTokens(args: any): T[] {
+    while (this.hasNextBuff()) {
       this.addToken(this.createToken(args));
     }
     return this.tokens;
   }
 
-  protected addToken(token: T){
+  protected addToken(token: T) {
     this.tokens.push(token);
   }
 
-  protected createToken(args: any) : T {
+  protected createToken(args: any): T {
     throw new Error("BufferedLexer.createToken must be overrided");
   }
 
-  protected hasNextBuff() : boolean {
+  protected hasNextBuff(): boolean {
     let has_next = this.buff !== "";
     return has_next;
   }
@@ -63,15 +63,15 @@ export class BufferedLexer<T> extends Lexer {
     return this.pos;
   }
 
-  public pushBack(){
+  public pushBack() {
     this.pos--;
   }
 
-  public getPos(): number{
+  public getPos(): number {
     return this.pos;
   }
 
-  public setPos(pos: number){
+  public setPos(pos: number) {
     this.pos = Math.max(0, pos);
   }
 }
