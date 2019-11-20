@@ -38,15 +38,15 @@ export class LogicalBox {
   public lineBreak: boolean;
   public blockBreak: boolean;
   public hasNext: boolean;
-  protected children: BoxContent [];
+  protected children: BoxContent[];
 
-  constructor(env: BoxEnv, box_type: BoxType, size: LogicalSize){
+  constructor(env: BoxEnv, box_type: BoxType, size: LogicalSize) {
     this.tagName = env.element.tagName;
     this.parent = null;
     this.env = env;
     this.boxType = box_type;
     this.size = size;
-    this.autoSize = new LogicalSize({measure:0, extent:0});
+    this.autoSize = new LogicalSize({ measure: 0, extent: 0 });
     this.contextEdge = null;
     this.blockPos = null;
     this.charCount = 0;
@@ -58,7 +58,7 @@ export class LogicalBox {
     this.hasNext = false;
   }
 
-  public clearChildren(){
+  public clearChildren() {
     this.children = [];
   }
 
@@ -66,55 +66,55 @@ export class LogicalBox {
     return this.children[index];
   }
 
-  public getChildren(): BoxContent [] {
+  public getChildren(): BoxContent[] {
     return this.children;
   }
 
-  public getDirectCharacters(): ICharacter [] {
-    return this.children.filter(isCharacter) as ICharacter [];
+  public getDirectCharacters(): ICharacter[] {
+    return this.children.filter(isCharacter) as ICharacter[];
   }
 
-  public getCharacters(): ICharacter [] {
+  public getCharacters(): ICharacter[] {
     return this.children.reduce((acm, cont) => {
-      if(isCharacter(cont)){
-	return acm.concat(cont as ICharacter);
-      } else if(cont instanceof LogicalBox){
-	return acm.concat(cont.getCharacters());
+      if (isCharacter(cont)) {
+        return acm.concat(cont as ICharacter);
+      } else if (cont instanceof LogicalBox) {
+        return acm.concat(cont.getCharacters());
       }
       return acm;
-    }, [] as ICharacter []);
+    }, [] as ICharacter[]);
   }
 
-  public addChild(child: BoxContent){
-    if(child instanceof LogicalBox){
+  public addChild(child: BoxContent) {
+    if (child instanceof LogicalBox) {
       child.parent = this;
     }
     this.children.push(child);
   }
 
-  public addChildren(children: BoxContent []){
+  public addChildren(children: BoxContent[]) {
     children.forEach(child => this.addChild(child));
   }
 
   public getRootLine(): LogicalBox | null {
-    if(this.isLine()){
+    if (this.isLine()) {
       return this;
     }
-    return this.parent? this.parent.getRootLine() : null;
+    return this.parent ? this.parent.getRootLine() : null;
   }
 
   public getRootTextLine(): LogicalBox | null {
     let root_line = this.getRootLine();
-    if(root_line){
+    if (root_line) {
       let first_child = root_line.getChild(0) || null;
-      return first_child? first_child as LogicalBox : null;
+      return first_child ? first_child as LogicalBox : null;
     }
     return null;
   }
 
   public getCssCursorPos(parent: LayoutParent, pos: LogicalCursorPos): NativeStyleMap {
-    let edge = parent? parent.contextEdge : null;
-    let offset = edge? edge.getInnerBoxOffset() : LogicalCursorPos.zeroValue;
+    let edge = parent ? parent.contextEdge : null;
+    let offset = edge ? edge.getInnerBoxOffset() : LogicalCursorPos.zeroValue;
     return pos.translate(offset).getCss(this);
   }
 
@@ -123,14 +123,14 @@ export class LogicalBox {
     let is_vert = this.writingMode.isTextVertical();
     this.env.font.getCss(parent, this).mergeTo(css);
     this.size.getCss(is_vert).mergeTo(css);
-    if(this.contextEdge){
+    if (this.contextEdge) {
       this.contextEdge.getCss(this).mergeTo(css);
     }
-    if(this.isPositionAbsolute() && this.env.absPos.hasValue()){
+    if (this.isPositionAbsolute() && this.env.absPos.hasValue()) {
       this.env.absPos.getCss(this).mergeTo(css);
-    } else if(this.blockPos){
+    } else if (this.blockPos) {
       this.getCssCursorPos(parent, this.blockPos).mergeTo(css);
-    } else if(is_vert && this.contextEdge && !this.contextEdge.padding.isZero() && this.parent){
+    } else if (is_vert && this.contextEdge && !this.contextEdge.padding.isZero() && this.parent) {
       // if vertical inline without blockpos but padding value is enable
       // (example: <div>foo <a style='padding:10px'>bar</a> baz</div>),
       // fix block level padding offset.
@@ -140,17 +140,17 @@ export class LogicalBox {
       css.set("position", "relative");
     }
     // floating block has higher z-index than float-space box.
-    if(this.isFloat()){
+    if (this.isFloat()) {
       css.set("z-index", "10");
     }
     // native line-height for vertical-line is already used to separate each character by <br>.
-    if(!is_vert){
+    if (!is_vert) {
       css.set("line-height", this.env.font.lineHeight);
     }
     Config.unmanagedCssProps.forEach(prop => {
       let value = this.element.style.getPropertyValue(prop);
-      if(value){
-	css.set(prop, value);
+      if (value) {
+        css.set(prop, value);
       }
     });
     return css;
@@ -164,14 +164,14 @@ export class LogicalBox {
 
   public getCssBlockRe(parent: LayoutParent): NativeStyleMap {
     let css = new NativeStyleMap();
-    if(this.blockPos){
+    if (this.blockPos) {
       this.getCssCursorPos(parent, this.blockPos).mergeTo(css);
     }
-    if(this.contextEdge){
+    if (this.contextEdge) {
       this.contextEdge.getCss(this).mergeTo(css);
     }
     // floating block has higher z-index than float-space box.
-    if(this.isFloat()){
+    if (this.isFloat()) {
       css.set("z-index", "10");
     }
     return css;
@@ -181,7 +181,7 @@ export class LogicalBox {
   public getCssInlineVertRe(parent: LayoutParent): NativeStyleMap {
     let css = new NativeStyleMap();
     let root_text = this.getRootTextLine();
-    if(root_text && root_text.totalExtent < this.totalExtent){
+    if (root_text && root_text.totalExtent < this.totalExtent) {
       let gap = Math.floor((root_text.totalExtent - this.totalExtent) / 2);
       css.set("margin-left", gap + "px");
     }
@@ -192,19 +192,19 @@ export class LogicalBox {
   public getCssInline(parent: LayoutParent): NativeStyleMap {
     let css = this.getCssBox(parent);
     // if horizonta, inline box size is not required.
-    if(!this.isTextVertical()){
+    if (!this.isTextVertical()) {
       css.delete("height");
       css.delete("width");
     }
-    if(parent &&
-       parent.boxType === BoxType.BASELINE &&
-       parent.isTextVertical() &&
-       this.element.tagName !== "rt" && // because 'parent' is not real parent of rb, rt.
-       this.element.tagName !== "rb"){
+    if (parent &&
+      parent.boxType === BoxType.BASELINE &&
+      parent.isTextVertical() &&
+      this.element.tagName !== "rt" && // because 'parent' is not real parent of rb, rt.
+      this.element.tagName !== "rb") {
       // fix gap of base font-size
-      if(parent.fontSize !== this.fontSize || this.env.isTextEmphasized()){
-	let gap = Math.floor((parent.fontSize - this.fontSize) / 2);
-	css.set("margin-left", gap + "px");
+      if (parent.fontSize !== this.fontSize || this.env.isTextEmphasized()) {
+        let gap = Math.floor((parent.fontSize - this.fontSize) / 2);
+        css.set("margin-left", gap + "px");
       }
     }
     return css;
@@ -212,24 +212,24 @@ export class LogicalBox {
 
   public getCssInlineBlock(parent: LayoutParent): NativeStyleMap {
     let css = this.getCssBox(parent);
-    if(parent && parent.isTextVertical()){
+    if (parent && parent.isTextVertical()) {
       // if inline-block is larger than extent of parent text-box, fix the gap.
       let gap = Math.floor((parent.totalExtent - this.totalExtent) / 2)
-      if(gap < 0){
-	css.set("margin-left", String(gap) + "px");
+      if (gap < 0) {
+        css.set("margin-left", String(gap) + "px");
       }
     }
     return css;
   }
 
-  public justify(baseline: LogicalBox){
+  public justify(baseline: LogicalBox) {
     let chars = baseline.getDirectCharacters();
     let total_gap = baseline.restSpaceMeasure;
-    if(total_gap === 0){
+    if (total_gap === 0) {
       return;
     }
     let unit_gap = total_gap / chars.length;
-    if(unit_gap > Config.maxJustifyGap){
+    if (unit_gap > Config.maxJustifyGap) {
       return;
     }
     chars.forEach(char => char.spacing = unit_gap);
@@ -238,10 +238,10 @@ export class LogicalBox {
   public getCssLine(parent: LayoutParent): NativeStyleMap {
     let css = new NativeStyleMap();
     let is_vert = this.writingMode.isTextVertical();
-    if(this.blockPos){
+    if (this.blockPos) {
       this.getCssCursorPos(parent, this.blockPos).mergeTo(css);
     }
-    if(this.contextEdge){
+    if (this.contextEdge) {
       this.contextEdge.getCss(this).mergeTo(css);
     }
     this.size.getCss(is_vert).mergeTo(css);
@@ -281,7 +281,7 @@ export class LogicalBox {
       `<${name}:${btype}>`,
       `(${measure}x${extent}):`,
       `total=(${this.totalMeasure}, ${this.totalExtent}):`,
-      (this.blockPos? this.blockPos.toString() : ""),
+      (this.blockPos ? this.blockPos.toString() : ""),
       `${this.text}`,
     ].join("");
   }
@@ -364,9 +364,9 @@ export class LogicalBox {
   }
 
   public get text(): string {
-    switch(this.tagName){
-    case "img": case "video":
-      return `(${this.tagName})`;
+    switch (this.tagName) {
+      case "img": case "video":
+        return `(${this.tagName})`;
     }
     return this.children.reduce((acm, child) => {
       return acm + child.text;
@@ -410,17 +410,17 @@ export class LogicalBox {
   }
 
   public get edgeMeasure(): number {
-    return this.contextEdge? this.contextEdge.measure : 0;
+    return this.contextEdge ? this.contextEdge.measure : 0;
   }
 
   public get edgeExtent(): number {
-    return this.contextEdge? this.contextEdge.extent : 0;
+    return this.contextEdge ? this.contextEdge.extent : 0;
   }
 
   public get totalSize(): LogicalSize {
     return new LogicalSize({
-      measure:this.totalMeasure,
-      extent:this.totalExtent
+      measure: this.totalMeasure,
+      extent: this.totalExtent
     });
   }
 
@@ -428,17 +428,17 @@ export class LogicalBox {
     return this.size.measure + this.edgeMeasure;
   }
 
-  public get totalExtent(){
+  public get totalExtent() {
     return this.size.extent + this.edgeExtent;
   }
 
   public get maxExtent(): number {
     return this.children.reduce((max, child) => {
-      if(child instanceof LogicalBox){
-	return Math.max(max, child.maxExtent);
+      if (child instanceof LogicalBox) {
+        return Math.max(max, child.maxExtent);
       }
-      if(child instanceof Ruby){
-	return Math.max(max, child.totalExtent);
+      if (child instanceof Ruby) {
+        return Math.max(max, child.totalExtent);
       }
       return Math.max(max, child.size.extent);
     }, this.totalExtent);
@@ -446,8 +446,8 @@ export class LogicalBox {
 
   public get maxFontSize(): number {
     return this.children.reduce((max, child) => {
-      if(child instanceof LogicalBox || child instanceof Ruby){
-	return Math.max(max, child.fontSize);
+      if (child instanceof LogicalBox || child instanceof Ruby) {
+        return Math.max(max, child.fontSize);
       }
       return max;
     }, this.fontSize);
