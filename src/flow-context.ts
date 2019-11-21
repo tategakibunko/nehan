@@ -116,22 +116,6 @@ export class FlowContext implements ILayoutContext {
 
     if ((next_generator.isBlockLevel() || next_generator.isFloat()) &&
       this.region.isInlineEmpty() === false) {
-      // If inline level is interrupted by block level, split them. For example,
-      // <span>foo<p>bar</p>baz</span> is devided into
-      // [<span>foo</span><br>, <span><p>bar</p></span>, <span>baz</span>]
-      // by <p>bar</p>. Note that <br> after <span> is inserted to split inline level.
-      /*
-      if (this.isInlineFlow()) {
-        // Control command 'inline-break' leads generator to close current inline context,
-        // and yield <br> to make current inline-box separated to next block level.
-        // As a result, parent generator will accept [line-box, line-break] as LayoutValue [].
-        if (Config.debugLayout) {
-          console.log("[%s] inline level is splited by block!", this.name);
-        }
-        let inline_split = LayoutControl.createInlineSplit();
-        return { done: false, value: [new LayoutValue(inline_split)] };
-      }
-      */
       // If some inline elements remains before next block, sweep it out as a line.
       // But if line is white-space only, ignore it.
       let line = this.createLineBox();
