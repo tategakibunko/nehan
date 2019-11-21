@@ -46,6 +46,8 @@ import {
       text1
       <p>foo</p>
       text2
+      <p>bar</p>
+      text3
     </span>
   </div>
 
@@ -55,6 +57,8 @@ import {
     <span>text1</span>
     <p>foo</p>
     <span>text2</span>
+    <p>bar</p>
+    <span>text3</span>
   </div>
 */
 function splitInlineBreak(element: HtmlElement): HtmlElement {
@@ -65,7 +69,7 @@ function splitInlineBreak(element: HtmlElement): HtmlElement {
       const headChildren = element.childNodes.slice(0, index);
       const restChildren = element.childNodes.slice(index + 1);
       element.childNodes = headChildren;
-      headChildren[headChildren.length - 1].nextSibling = null;
+      // headChildren[headChildren.length - 1].nextSibling = null;
       // console.log('%s is sweep out to parent element(%s)!', child.tagName, element.parent.tagName);
       element.parent.insertBefore(child, next);
       let restNode = element.clone();

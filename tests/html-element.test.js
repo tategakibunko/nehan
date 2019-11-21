@@ -4,7 +4,7 @@ let doc = new Nehan.HtmlDocument("");
 let div = doc.createElement("div");
 doc.body.appendChild(div);
 
-["zero", "one", "two", "three", "four"].forEach(function(name){
+["zero", "one", "two", "three", "four"].forEach(function (name) {
   div.appendChild(doc.createElement(name));
 });
 
@@ -26,7 +26,7 @@ test("getNodeName", () => {
 });
 
 test("className(set/get)", () => {
-  let node  = doc.createElement("div");
+  let node = doc.createElement("div");
   node.className = "  foo   bar baz  ";
   expect(node.classList.length).toBe(3);
   expect(node.className).toBe("foo bar baz");

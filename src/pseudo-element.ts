@@ -17,7 +17,7 @@ export let PseudoElementTagNames = Utils.Enum.toValueArray(PseudoElementTagName)
 
 export class PseudoElement {
   static isPseudoElement(element: HtmlElement): boolean {
-    return element.tagName.substring(0,2) === "::";
+    return element.tagName.substring(0, 2) === "::";
   }
 
   static isFirstLine(element: HtmlElement): boolean {
@@ -26,10 +26,10 @@ export class PseudoElement {
 
   static findMarkerParent(element: HtmlElement): HtmlElement {
     let first_child = element.firstChild;
-    if(!first_child || first_child.isTextElement()){
+    if (!first_child || first_child.isTextElement()) {
       return element;
     }
-    if(first_child.tagName === "img"){
+    if (first_child.tagName === "img") {
       return element;
     }
     return this.findMarkerParent(first_child);
@@ -40,18 +40,18 @@ export class PseudoElement {
     // Even if li::marker is not defined in stylesheet,
     // list-item-context try to add marker element before layouting.
     // So if it's already inserted by css, just return it.
-    if(element.firstChild && element.firstChild.tagName === PseudoElementTagName.MARKER){
+    if (element.firstChild && element.firstChild.tagName === PseudoElementTagName.MARKER) {
       return element.firstChild;
     }
     let list_style = ListStyle.load(element); // this value is inherited from parent(li).
     let index = element.indexOfType;
     let marker_element = element.root.createElement("::marker");
     let marker_text = list_style.getMarkerText(index);
-    if(element.querySelectorAll("li").length  > 0){
+    if (element.querySelectorAll("li").length > 0) {
       marker_text = SpaceChar.markerSpace;
     }
     let marker_parent = this.findMarkerParent(element);
-    if(marker_parent.tagName === "::marker"){
+    if (marker_parent.tagName === "::marker") {
       //console.warn("marker is already created");
       return marker_parent; // already created!
     }
@@ -77,11 +77,11 @@ export class PseudoElement {
   static addFirstLine(element: HtmlElement): HtmlElement | null {
     let first_line = element.root.createElement(PseudoElementTagName.FIRST_LINE);
     let first_text_node = element.firstTextElement;
-    if(!first_text_node){
+    if (!first_text_node) {
       return null;
     }
     let target_parent = first_text_node.parent;
-    if(!target_parent){
+    if (!target_parent) {
       return null;
     }
     first_line.appendChild(first_text_node);
@@ -91,17 +91,17 @@ export class PseudoElement {
 
   static addFirstLetter(element: HtmlElement): HtmlElement | null {
     let first_text_node = element.firstTextElement;
-    if(!first_text_node){
+    if (!first_text_node) {
       return null;
     }
     let target_parent = first_text_node.parent;
-    if(!target_parent){
+    if (!target_parent) {
       return null;
     }
     let text = first_text_node.textContent;
     let trim_text = text.trim();
-    let target_text = (trim_text.length > 1)? trim_text : text;
-    let first_text = target_text.substring(0,1);
+    let target_text = (trim_text.length > 1) ? trim_text : text;
+    let first_text = target_text.substring(0, 1);
     let next_text = text.substring(1);
     let first_letter = element.root.createElement(PseudoElementTagName.FIRST_LETTER);
     first_letter.appendChild(element.root.createTextNode(first_text));
@@ -115,17 +115,17 @@ export class PseudoElement {
   }
 
   static addElement(element: HtmlElement, pe_tag_name: string): HtmlElement | null {
-    switch(pe_tag_name){
-    case PseudoElementTagName.MARKER:
-      return PseudoElement.addMarker(element);
-    case PseudoElementTagName.BEFORE:
-      return PseudoElement.addBefore(element);
-    case PseudoElementTagName.AFTER:
-      return PseudoElement.addAfter(element);
-    case PseudoElementTagName.FIRST_LETTER:
-      return PseudoElement.addFirstLetter(element);
-    case PseudoElementTagName.FIRST_LINE:
-      return PseudoElement.addFirstLine(element);
+    switch (pe_tag_name) {
+      case PseudoElementTagName.MARKER:
+        return PseudoElement.addMarker(element);
+      case PseudoElementTagName.BEFORE:
+        return PseudoElement.addBefore(element);
+      case PseudoElementTagName.AFTER:
+        return PseudoElement.addAfter(element);
+      case PseudoElementTagName.FIRST_LETTER:
+        return PseudoElement.addFirstLetter(element);
+      case PseudoElementTagName.FIRST_LINE:
+        return PseudoElement.addFirstLine(element);
     }
     throw new Error("undefined pseudo element:" + pe_tag_name);
   }

@@ -17,8 +17,6 @@ export class HtmlElement {
   public style: CssStyleDeclaration;
   public computedStyle: CssStyleDeclaration;
   public classList: DomTokenList;
-  public nextSibling: HtmlElement | null;
-  public previousSibling: HtmlElement | null;
 
   constructor(node: Node, root: HtmlDocument) {
     this.$node = node;
@@ -29,9 +27,23 @@ export class HtmlElement {
     this.style = new CssStyleDeclaration();
     this.computedStyle = new CssStyleDeclaration();
     this.classList = this.createClassList();
-    this.nextSibling = null;
-    this.previousSibling = null;
     this.setupChildren(node, root);
+  }
+
+  public get nextSibling(): HtmlElement | null {
+    if (!this.parent) {
+      return null;
+    }
+    const index = this.parent.childNodes.indexOf(this);
+    return (index < 0 || index + 1 >= this.parent.childNodes.length) ? null : this.parent.childNodes[index + 1];
+  }
+
+  public get previousSibling(): HtmlElement | null {
+    if (!this.parent) {
+      return null;
+    }
+    const index = this.parent.childNodes.indexOf(this);
+    return (index > 0) ? this.parent.childNodes[index - 1] : null;
   }
 
   public clone(deep = false): HtmlElement {
@@ -186,49 +198,25 @@ export class HtmlElement {
 
   public appendChild(element: HtmlElement): HtmlElement {
     element.parent = this;
-    let prev = this.lastChild;
-    if (prev) {
-      element.previousSibling = prev;
-      prev.nextSibling = element;
-    }
     this.childNodes.push(element);
     return this;
   }
 
   public replaceChild(new_child: HtmlElement, old_child: HtmlElement | null): HtmlElement {
-    for (let i = 0; i < this.childNodes.length; i++) {
-      if (this.childNodes[i] === old_child) {
+    if (old_child) {
+      const index = this.childNodes.indexOf(old_child);
+      if (index >= 0) {
         new_child.parent = this;
-        this.childNodes[i] = new_child;
-        if (i > 0) {
-          let prev = this.childNodes[i - 1];
-          new_child.previousSibling = prev;
-          prev.nextSibling = new_child;
-        }
-        if (i < this.childNodes.length - 1) {
-          let next = this.childNodes[i + 1];
-          new_child.nextSibling = next;
-          next.previousSibling = new_child;
-        }
-        break;
+        this.childNodes[index] = new_child;
       }
     }
     return new_child;
   }
 
   public removeChild(target_child: HtmlElement): HtmlElement {
-    for (let i = 0; i < this.childNodes.length; i++) {
-      let child = this.childNodes[i];
-      if (child === target_child) {
-        if (child.previousSibling) {
-          child.previousSibling.nextSibling = child.nextSibling;
-        }
-        if (child.nextSibling) {
-          child.nextSibling.previousSibling = child.previousSibling;
-        }
-        this.childNodes.splice(i, 1);
-        break;
-      }
+    const index = this.childNodes.indexOf(target_child);
+    if (index >= 0) {
+      this.childNodes.splice(index, 1);
     }
     return target_child;
   }
@@ -242,18 +230,9 @@ export class HtmlElement {
       throw new Error("reference node is not included in this element");
     }
     new_node.parent = this;
-    for (let i = 0; i < this.childNodes.length; i++) {
-      let child = this.childNodes[i];
-      if (child === ref_node) {
-        if (ref_node.previousSibling) {
-          ref_node.previousSibling.nextSibling = new_node;
-          new_node.previousSibling = ref_node.previousSibling;
-        }
-        new_node.nextSibling = ref_node;
-        ref_node.previousSibling = new_node;
-        this.childNodes.splice(i, 0, new_node);
-        break;
-      }
+    const index = this.childNodes.indexOf(ref_node);
+    if (index >= 0) {
+      this.childNodes.splice(index, 0, new_node);
     }
     return ref_node.nextSibling ? new_node : null;
   }

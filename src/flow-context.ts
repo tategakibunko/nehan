@@ -120,6 +120,7 @@ export class FlowContext implements ILayoutContext {
       // <span>foo<p>bar</p>baz</span> is devided into
       // [<span>foo</span><br>, <span><p>bar</p></span>, <span>baz</span>]
       // by <p>bar</p>. Note that <br> after <span> is inserted to split inline level.
+      /*
       if (this.isInlineFlow()) {
         // Control command 'inline-break' leads generator to close current inline context,
         // and yield <br> to make current inline-box separated to next block level.
@@ -130,7 +131,8 @@ export class FlowContext implements ILayoutContext {
         let inline_split = LayoutControl.createInlineSplit();
         return { done: false, value: [new LayoutValue(inline_split)] };
       }
-      // If block level is divided by some inline elements, sweep out line before next block.
+      */
+      // If some inline elements remains before next block, sweep it out as a line.
       // But if line is white-space only, ignore it.
       let line = this.createLineBox();
       if (line.isWhiteSpaceLine()) {
