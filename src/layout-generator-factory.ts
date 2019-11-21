@@ -62,23 +62,23 @@ import {
   </div>
 */
 function splitInlineBreak(element: HtmlElement): HtmlElement {
-  element.childNodes.forEach((child, index) => {
+  const children = element.childNodes;
+  for (let i = 0; i < element.childNodes.length; i++) {
+    const child = element.childNodes[i];
     if (Display.load(child).isBlockLevel() && element.parent) {
-      // console.log('split inline break!');
       const next = element.nextSibling;
-      const headChildren = element.childNodes.slice(0, index);
-      const restChildren = element.childNodes.slice(index + 1);
+      const headChildren = children.slice(0, i);
+      const restChildren = children.slice(i + 1);
       element.childNodes = headChildren;
-      // headChildren[headChildren.length - 1].nextSibling = null;
-      // console.log('%s is sweep out to parent element(%s)!', child.tagName, element.parent.tagName);
       element.parent.insertBefore(child, next);
       let restNode = element.clone();
+      restNode.parent = element.parent;
       restChildren.forEach(child => restNode.appendChild(child));
-      // console.log('clone node(%s) with children count = %d', restNode.tagName, restNode.childNodes.length);
       restNode = splitInlineBreak(restNode);
       element.parent.insertBefore(restNode, next);
+      break;
     }
-  });
+  }
   return element;
 }
 
