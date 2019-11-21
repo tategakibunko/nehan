@@ -61,7 +61,7 @@ import {
     <span>text3</span>
   </div>
 */
-function splitInlineBreak(element: HtmlElement): HtmlElement {
+function sweepOutBlocksFromInlineChildren(element: HtmlElement): HtmlElement {
   const children = element.childNodes;
   for (let i = 0; i < element.childNodes.length; i++) {
     const child = element.childNodes[i];
@@ -74,7 +74,7 @@ function splitInlineBreak(element: HtmlElement): HtmlElement {
       let restNode = element.clone();
       restNode.parent = element.parent;
       restChildren.forEach(child => restNode.appendChild(child));
-      restNode = splitInlineBreak(restNode);
+      restNode = sweepOutBlocksFromInlineChildren(restNode);
       element.parent.insertBefore(restNode, next);
       break;
     }
@@ -102,7 +102,7 @@ export class LayoutGeneratorFactory {
     CssLoader.loadDynamic(element, parent_ctx);
     let display = Display.load(element);
     if (display.isInlineLevel()) {
-      element = splitInlineBreak(element);
+      element = sweepOutBlocksFromInlineChildren(element);
     }
     if (display.isNone()) {
       if (Config.debugLayout) {
