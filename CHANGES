@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 6.1.0
+==========================
+o Added HtmlElement::clone.
+
 version 6.0.40, 2019/11/11
 ==========================
 * Fix npm package.
