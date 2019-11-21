@@ -9,6 +9,7 @@ Mark "!": change that can break compatibility with older version
 version 6.1.0
 ==========================
 o Added HtmlElement::clone.
+o Sweep out block elements from children of inline element.
 
 version 6.0.40, 2019/11/11
 ==========================
