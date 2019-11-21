@@ -3,6 +3,7 @@ import {
   CssStyleDeclaration,
   DomTokenList,
   SelectorParser,
+  Display,
 } from "./public-api";
 
 // For performance reason, we use this [HtmlElement] class for both [Node] and [HTMLElement].
@@ -35,7 +36,10 @@ export class HtmlElement {
   }
 
   public clone(deep = false): HtmlElement {
-    return this.ownerDocument.createElementFromDOM(this.$node.cloneNode(deep));
+    const element = this.ownerDocument.createElementFromDOM(this.$node.cloneNode(deep));
+    element.style = this.style;
+    element.computedStyle = this.computedStyle;
+    return element;
   }
 
   protected createClassList(): DomTokenList {

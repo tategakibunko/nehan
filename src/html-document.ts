@@ -12,11 +12,11 @@ import {
 } from "./public-api";
 
 export interface HtmlDocumentOptions {
-  styleSheets?: CssStyleSheet []
+  styleSheets?: CssStyleSheet[]
 }
 
 let defaultOptions: HtmlDocumentOptions = {
-  styleSheets:[]
+  styleSheets: []
 };
 
 export class HtmlDocument {
@@ -24,11 +24,11 @@ export class HtmlDocument {
   public $document: HTMLDocument;
   public documentElement: HtmlElement;
   public body: HtmlElement;
-  public styleSheets: CssStyleSheet [];
+  public styleSheets: CssStyleSheet[];
   public specStyleSheet: CssStyleSheet; // specificity sorted stylesheet.
   protected selectorCache: SelectorCache;
 
-  constructor(source: string, options: HtmlDocumentOptions = defaultOptions){
+  constructor(source: string, options: HtmlDocumentOptions = defaultOptions) {
     this.source = Config.normalizeHtml(source);
     this.styleSheets = [
       new CssStyleSheet(DefaultStyles)
@@ -43,7 +43,7 @@ export class HtmlDocument {
     this.$document = new DOMParser().parseFromString(this.source, "text/html");
     this.documentElement = this.createElementFromDOM(this.$document.documentElement);
     let body = this.documentElement.querySelector("body");
-    if(!body){
+    if (!body) {
       throw new Error("body not found");
     }
     this.body = body;
@@ -52,7 +52,11 @@ export class HtmlDocument {
 
     // At this point, load styles of body only, because loading of each styles are heavy task.
     // So styles of children are dynamically loaded when it's required by layout generator.
-    CssLoader.load(this.body);
+    // CssLoader.load(this.body);
+
+    // console.time("CssLoader.loadAll");
+    CssLoader.loadAll(this.body);
+    // console.timeEnd("CssLoader.loadAll");
   }
 
   // Load all styles of document at once.
@@ -75,7 +79,7 @@ export class HtmlDocument {
     return new PageReader(this);
   }
 
-  public querySelectorAll(query: string): HtmlElement [] {
+  public querySelectorAll(query: string): HtmlElement[] {
     return this.documentElement.querySelectorAll(query);
   }
 
@@ -87,7 +91,7 @@ export class HtmlDocument {
     return this.querySelector("#" + id);
   }
 
-  public getSelectorCache(selector: string): HtmlElement [] {
+  public getSelectorCache(selector: string): HtmlElement[] {
     return this.selectorCache.getCache(selector);
   }
 
@@ -96,7 +100,7 @@ export class HtmlDocument {
     return this;
   }
 
-  public addSelectorCache(tag_name: string, element: HtmlElement){
+  public addSelectorCache(tag_name: string, element: HtmlElement) {
     this.selectorCache.addCache(tag_name, element);
   }
 
@@ -110,15 +114,15 @@ export class HtmlDocument {
   }
 
   public createElementFromDOM(node: HTMLElement | Node): HtmlElement {
-    let tag_name = (node instanceof HTMLElement)? node.tagName :
-      (node instanceof Text)? "(text)" : "??";
+    let tag_name = (node instanceof HTMLElement) ? node.tagName :
+      (node instanceof Text) ? "(text)" : "??";
     tag_name = tag_name.toLowerCase();
-    if((tag_name === "body" || tag_name === "html") &&
-       this.selectorCache.hasCache(tag_name)){
+    if ((tag_name === "body" || tag_name === "html") &&
+      this.selectorCache.hasCache(tag_name)) {
       return this.selectorCache.getCache(tag_name)[0];
     }
     let element = new HtmlElement(node, this);
-    if(element.tagName === "body"){
+    if (element.tagName === "body") {
       this.body = element;
     }
     element.root = this;

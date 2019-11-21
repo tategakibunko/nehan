@@ -40,6 +40,44 @@ import {
   ImageContext
 } from "./public-api";
 
+/*
+  <div>
+    <span>
+      text1
+      <p>foo</p>
+      text2
+    </span>
+  </div>
+
+  =>
+
+  <div>
+    <span>text1</span>
+    <p>foo</p>
+    <span>text2</span>
+  </div>
+*/
+function splitInlineBreak(element: HtmlElement): HtmlElement {
+  element.childNodes.forEach((child, index) => {
+    if (Display.load(child).isBlockLevel() && element.parent) {
+      // console.log('split inline break!');
+      const next = element.nextSibling;
+      const headChildren = element.childNodes.slice(0, index);
+      const restChildren = element.childNodes.slice(index + 1);
+      element.childNodes = headChildren;
+      headChildren[headChildren.length - 1].nextSibling = null;
+      // console.log('%s is sweep out to parent element(%s)!', child.tagName, element.parent.tagName);
+      element.parent.insertBefore(child, next);
+      let restNode = element.clone();
+      restChildren.forEach(child => restNode.appendChild(child));
+      // console.log('clone node(%s) with children count = %d', restNode.tagName, restNode.childNodes.length);
+      restNode = splitInlineBreak(restNode);
+      element.parent.insertBefore(restNode, next);
+    }
+  });
+  return element;
+}
+
 export class LayoutGeneratorFactory {
   static createGenerator(parent_ctx: FlowContext, element: HtmlElement): LayoutGenerator {
     if (element.isTextElement()) {
@@ -56,8 +94,12 @@ export class LayoutGeneratorFactory {
       let line_break = LayoutControl.createLineBreak();
       return new ConstantGenerator(new ControlContext(element, parent_ctx, line_break));
     }
-    CssLoader.load(element, parent_ctx);
+    // CssLoader.load(element, parent_ctx);
+    CssLoader.loadDynamic(element, parent_ctx);
     let display = Display.load(element);
+    if (display.isInlineLevel()) {
+      element = splitInlineBreak(element);
+    }
     if (display.isNone()) {
       if (Config.debugLayout) {
         console.log("[%s] empty box(display:none)", element.toString());
