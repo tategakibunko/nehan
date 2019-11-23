@@ -20,16 +20,16 @@ import {
 
 // element.style -> element.computedStyle
 export class ComputedStyle {
-  static setComputedValue(element: HtmlElement, parent_ctx?: FlowContext){
+  static setComputedValue(element: HtmlElement, parent_ctx?: FlowContext) {
     // always required.
     this.setValue(element, "display");
 
     // if display:none, skip
-    if(element.computedStyle.getPropertyValue("display") === "none"){
+    if (element.computedStyle.getPropertyValue("display") === "none") {
       return;
     }
     // if non layout control tags(br), skip
-    if(Config.nonLayoutTags.indexOf(element.tagName) >= 0){
+    if (Config.nonLayoutTags.indexOf(element.tagName) >= 0) {
       return;
     }
 
@@ -42,11 +42,11 @@ export class ComputedStyle {
     element.computedStyle.setProperty("line-height", this.getLineHeightString(element));
 
     // if defined as font size only, skip other css value.
-    if(Config.fontSizeOnlyTags.indexOf(element.tagName) >= 0){
+    if (Config.fontSizeOnlyTags.indexOf(element.tagName) >= 0) {
       return;
     }
 
-    if(Config.edgeSkipTags.indexOf(element.tagName) < 0){
+    if (Config.edgeSkipTags.indexOf(element.tagName) < 0) {
       this.setPadding(element);
       this.setBorderWidth(element);
       this.setBorderStyle(element);
@@ -54,7 +54,7 @@ export class ComputedStyle {
       this.setBorderRadius(element);
     }
 
-    if(Config.boxSizeSkipTags.indexOf(element.tagName) < 0){
+    if (Config.boxSizeSkipTags.indexOf(element.tagName) < 0) {
       this.setMargin(element);
       this.setMeasure(element, parent_ctx);
       this.setExtent(element, parent_ctx);
@@ -86,7 +86,7 @@ export class ComputedStyle {
     this.setValue(element, "background-position");
   }
 
-  static setValue(element: HtmlElement, prop: string, fmt = (str: string) => str){
+  static setValue(element: HtmlElement, prop: string, fmt = (str: string) => str) {
     let value = CssCascade.getValue(element, prop);
     element.computedStyle.setProperty(prop, fmt(value));
   }
@@ -101,7 +101,7 @@ export class ComputedStyle {
     let value = CssCascade.getValue(element, "line-height");
     let css_line_height = new CssLineHeight(value);
     let size = css_line_height.computeSize(element);
-    if(css_line_height.hasUnit()){ // has unit, so px value is already confirmed.
+    if (css_line_height.hasUnit()) { // has unit, so px value is already confirmed.
       return size + "px";
     }
     return String(size); // remain float value
@@ -109,7 +109,7 @@ export class ComputedStyle {
 
   static getLineHeightPx(element: HtmlElement, em_size: number): number {
     let value = this.getLineHeightString(element);
-    if(value.indexOf("px") < 0){
+    if (value.indexOf("px") < 0) {
       return Math.floor(em_size * parseFloat(value));
     }
     return Utils.atoi(value, 10);
@@ -125,7 +125,7 @@ export class ComputedStyle {
     return new CssBorderWidth(value, prop).computeSize(element);
   }
 
-  static setPadding(element: HtmlElement){
+  static setPadding(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       let prop = `padding-${direction}`;
       let size = ComputedStyle.getEdgeSize(element, prop);
@@ -133,7 +133,7 @@ export class ComputedStyle {
     });
   }
 
-  static setBorderWidth(element: HtmlElement){
+  static setBorderWidth(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       let prop = `border-${direction}-width`;
       let size = ComputedStyle.getBorderWidth(element, prop);
@@ -141,7 +141,7 @@ export class ComputedStyle {
     });
   }
 
-  static setBorderStyle(element: HtmlElement){
+  static setBorderStyle(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       let prop = `border-${direction}-style`;
       let value = CssCascade.getValue(element, prop);
@@ -149,7 +149,7 @@ export class ComputedStyle {
     });
   }
 
-  static setBorderColor(element: HtmlElement){
+  static setBorderColor(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       let prop = `border-${direction}-color`;
       let value = CssCascade.getValue(element, prop);
@@ -158,7 +158,7 @@ export class ComputedStyle {
     });
   }
 
-  static setBorderRadius(element: HtmlElement){
+  static setBorderRadius(element: HtmlElement) {
     LogicalBorderRadius.corners.forEach((corner: string) => {
       let prop = `border-${corner}-radius`;
       let size = ComputedStyle.getEdgeSize(element, prop);
@@ -166,7 +166,7 @@ export class ComputedStyle {
     });
   }
 
-  static setMargin(element: HtmlElement){
+  static setMargin(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       let prop = `margin-${direction}`;
       let size = ComputedStyle.getEdgeSize(element, prop);
@@ -174,30 +174,30 @@ export class ComputedStyle {
     });
   }
 
-  static setMeasure(element: HtmlElement, parent_ctx?: FlowContext){
+  static setMeasure(element: HtmlElement, parent_ctx?: FlowContext) {
     let value = CssCascade.getValue(element, "measure");
-    if(value !== "auto"){
+    if (value !== "auto") {
       let size = new CssBoxMeasure(value).computeSize(element, parent_ctx);
       element.computedStyle.setProperty("measure", size + "px");
     }
   }
 
-  static setExtent(element: HtmlElement, parent_ctx?: FlowContext){
+  static setExtent(element: HtmlElement, parent_ctx?: FlowContext) {
     let value = CssCascade.getValue(element, "extent");
-    if(value !== "auto"){
+    if (value !== "auto") {
       let size = new CssBoxExtent(value).computeSize(element, parent_ctx);
       element.computedStyle.setProperty("extent", size + "px");
     }
   }
 
-  static setPosition(element: HtmlElement, parent_ctx?: FlowContext){
+  static setPosition(element: HtmlElement, parent_ctx?: FlowContext) {
     LogicalEdgeDirections.forEach(direction => {
       let value = CssCascade.getValue(element, direction);
-      if(value !== "auto"){
-	let length = LogicalEdge.isInlineEdge(direction as LogicalEdgeDirection)?
-	  new CssInlinePosition(value) : new CssBlockPosition(value);
-	let size = length.computeSize(element, parent_ctx);
-	element.computedStyle.setProperty(direction, size + "px");
+      if (value !== "auto") {
+        let length = LogicalEdge.isInlineEdge(direction as LogicalEdgeDirection) ?
+          new CssInlinePosition(value) : new CssBlockPosition(value);
+        let size = length.computeSize(element, parent_ctx);
+        element.computedStyle.setProperty(direction, size + "px");
       }
     });
   }

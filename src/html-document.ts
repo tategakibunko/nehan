@@ -39,7 +39,7 @@ export class HtmlDocument {
     this.selectorCache = new SelectorCache();
     this.selectorCache.clear();
 
-    //console.time("html-parse");
+    // console.time("html-parse");
     this.$document = new DOMParser().parseFromString(this.source, "text/html");
     this.documentElement = this.createElementFromDOM(this.$document.documentElement);
     let body = this.documentElement.querySelector("body");
@@ -48,11 +48,7 @@ export class HtmlDocument {
     }
     this.body = body;
     this.body.parent = this.documentElement;
-    //console.timeEnd("html-parse");
-
-    // At this point, load styles of body only, because loading of each styles are heavy task.
-    // So styles of children are dynamically loaded when it's required by layout generator.
-    // CssLoader.load(this.body);
+    // console.timeEnd("html-parse");
 
     // console.time("CssLoader.loadAll");
     CssLoader.loadAll(this.body);
