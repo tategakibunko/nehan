@@ -59,14 +59,6 @@ export class HtmlDocument {
     // console.timeEnd("CssLoader.loadAll");
   }
 
-  // Load all styles of document at once.
-  // Note that this is mainly used by test.
-  // Normally, child styles are loaded when it's required by child generator.
-  public loadCssAll(): HtmlDocument {
-    CssLoader.loadAll(this.body);
-    return this;
-  }
-
   public createBodyGenerator(): BodyGenerator {
     return new BodyGenerator(new BodyContext(this.body));
   }

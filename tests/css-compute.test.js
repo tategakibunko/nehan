@@ -9,33 +9,34 @@ let html = [
 ].join("");
 
 let stylesheet = new Nehan.CssStyleSheet({
-  "body":{
-    "font-size":"20px",
-    "margin":"20px 10px"
+  "body": {
+    "font-size": "20px",
+    "margin": "20px 10px"
   },
-  "p.foo":{
-    "margin":"0",
-    "line-height":"200%",
-    "font-size":"0.5em" // 10px
+  "p.foo": {
+    "margin": "0",
+    "line-height": "200%",
+    "font-size": "0.5em" // 10px
   },
-  "div.one":{
-    "margin":"0",
-    "line-height":"1.5",
-    "font-size":"1rem" // 20px
+  "div.one": {
+    "margin": "0",
+    "line-height": "1.5",
+    "font-size": "1rem" // 20px
   },
-  "div.two":{ // line-height = 1.5
-    "font-size":"16px"
+  "div.two": { // line-height = 1.5
+    "font-size": "16px"
   },
-  "div.three":{ // line-height = 1.5
-    "font-size":"8px"
+  "div.three": { // line-height = 1.5
+    "font-size": "8px"
   },
-  "div.hoge":{ // line-height = 40px
-    "line-height":"2em"
+  "div.hoge": { // line-height = 40px
+    "line-height": "2em"
   }
 });
 let doc = new Nehan.HtmlDocument(html, {
-  styleSheets:[stylesheet]
-}).loadCssAll();
+  styleSheets: [stylesheet]
+});
+Nehan.CssLoader.loadAll(doc.body);
 
 let body = doc.body;
 let p_foo = doc.querySelector("p.foo");

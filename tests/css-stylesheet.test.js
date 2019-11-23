@@ -14,44 +14,45 @@ test("style matching test", () => {
     "<div class='hoge hage hige'></div>",
   ].join("");
   let default_font_size = "1em";
-  let header_font_size = {h1:"3em", h2:"2.2em", h3:"1.5em"};
+  let header_font_size = { h1: "3em", h2: "2.2em", h3: "1.5em" };
   let stylesheet = new Nehan.CssStyleSheet({
-    "body":{
-      "!important":(context) => {
-	return {"margin":"1em"};
+    "body": {
+      "!important": (context) => {
+        return { "margin": "1em" };
       }
     },
-    "h1,h2,h3,h4,h5,h6":{
-      "font-size":(selector) => {
-	return header_font_size[selector] || "1em";
+    "h1,h2,h3,h4,h5,h6": {
+      "font-size": (selector) => {
+        return header_font_size[selector] || "1em";
       }
     },
-    "h5":{
-      "color":(ctx) => "red" // macro
+    "h5": {
+      "color": (ctx) => "red" // macro
     },
-    "p.foo":{
-      "font-size":"2em"
+    "p.foo": {
+      "font-size": "2em"
     },
-    "div":{
-      "font-family":"Mincho,serif"
+    "div": {
+      "font-family": "Mincho,serif"
     },
-    "main":{
-      "width":(ctx) => "auto" // macro
+    "main": {
+      "width": (ctx) => "auto" // macro
     },
-    "main>div":{
-      "font-weight":"bold"
+    "main>div": {
+      "font-weight": "bold"
     },
-    "div.hoge":{
-      "font-style":"italic"
+    "div.hoge": {
+      "font-style": "italic"
     },
-    "div.hoge.hige.hage":{
-      "color":"blue"
+    "div.hoge.hige.hage": {
+      "color": "blue"
     }
   });
 
   let doc = new Nehan.HtmlDocument(html, {
-    styleSheets:[stylesheet]
-  }).loadCssAll();
+    styleSheets: [stylesheet]
+  });
+  Nehan.CssLoader.loadAll(doc.body);
   let body = doc.body;
   let p = body.firstChild;
   let div = p.nextSibling;
