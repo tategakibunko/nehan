@@ -7,10 +7,10 @@ import {
 } from "./public-api";
 
 let create_dummy_element = (): HTMLElement => {
-  if(typeof document !== "undefined"){
+  if (typeof document !== "undefined") {
     return document.createElement("span"); // for browser
   }
-  return {style:{}, innerHTML:""} as HTMLElement; // for node.js(local stub)
+  return { style: {}, innerHTML: "" } as HTMLElement; // for node.js(local stub)
 };
 
 // HTMLElement to get advance size of word.
@@ -32,9 +32,9 @@ export class Word implements ICharacter {
   public kerning: boolean;
   public spacing: number;
 
-  public constructor(str: string){
+  public constructor(str: string) {
     this.text = str;
-    this.size = new LogicalSize({measure:0, extent:0});
+    this.size = new LogicalSize({ measure: 0, extent: 0 });
     this.hasEmphasis = false;
     this.kerning = false;
     this.spacing = 0;
@@ -48,13 +48,13 @@ export class Word implements ICharacter {
     return this.text;
   }
 
-  public setMetrics(env: BoxEnv){
+  public setMetrics(env: BoxEnv) {
     this.size = Word.getLogicalSize(env.font, this.text);
   }
 
-  public splitTcys(): Tcy [] {
-    let tcys: Tcy [] = [];
-    for(let i = 0; i < this.text.length; i++){
+  public convertTcys(): Tcy[] {
+    let tcys: Tcy[] = [];
+    for (let i = 0; i < this.text.length; i++) {
       tcys.push(new Tcy(this.text.charAt(i)));
     }
     return tcys;
@@ -81,8 +81,8 @@ export class Word implements ICharacter {
     let rect = __word_span.getBoundingClientRect();
     document.body.removeChild(__word_span);
     return new LogicalSize({
-      measure:Math.round(rect.width),
-      extent:font.size // rect.height is too large, but I don't know why.
+      measure: Math.round(rect.width),
+      extent: font.size // rect.height is too large, but I don't know why.
       //extent: Math.round(rect.height)
     });
   }

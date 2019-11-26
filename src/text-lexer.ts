@@ -18,7 +18,7 @@ export class TextLexer extends BufferedLexer<Character>{
   public uprightTokens() {
     this.tokens = this.tokens.reduce((acm, token) => {
       if (token instanceof Word) {
-        return acm.concat(token.splitTcys());
+        return acm.concat(token.convertTcys());
       }
       return acm.concat(token);
     }, [] as Character[]);
