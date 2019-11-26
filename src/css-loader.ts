@@ -27,9 +27,11 @@ export class CssLoader {
       element.style = spec_style;
     }
 
+    /*
     // get dynamic style and overwrite if parent_ctx
     let dynamic_style = this.getDynamicStyle(element, parent_ctx);
     element.style.mergeFrom(dynamic_style);
+    */
 
     // get inline style and overwrite
     let inline_style = this.getInlineStyle(element);
