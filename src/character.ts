@@ -1,6 +1,5 @@
 import {
   LogicalSize,
-  BoxEnv,
   Char,
   SpaceChar,
   HalfChar,
