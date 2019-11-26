@@ -1,8 +1,8 @@
 import {
   ICharacter,
   LogicalSize,
-  BoxEnv,
   Word,
+  Font,
 } from "./public-api";
 
 export class Tcy implements ICharacter {
@@ -13,21 +13,25 @@ export class Tcy implements ICharacter {
   public spacing: number;
   public charCount: number;
 
-  public constructor(str: string){
+  public constructor(str: string) {
     this.text = str;
-    this.size = new LogicalSize({measure:0, extent:0});
+    this.size = new LogicalSize({ measure: 0, extent: 0 });
     this.hasEmphasis = false;
     this.kerning = false;
     this.spacing = 0;
     this.charCount = str.length;
   }
 
-  public setMetrics(env: BoxEnv){
-    if(env.isTextVertical()){
-      this.size.measure = env.fontSize;
-      this.size.extent = env.fontSize;
+  public setMetrics(opts: {
+    font: Font;
+    isVertical: boolean;
+    isEmphasized: boolean;
+  }) {
+    if (opts.isVertical) {
+      this.size.measure = opts.font.size;
+      this.size.extent = opts.font.size;
     } else {
-      this.size = Word.getLogicalSize(env.font, this.text);
+      this.size = Word.getLogicalSize(opts.font, this.text);
     }
   }
 

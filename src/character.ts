@@ -9,7 +9,8 @@ import {
   MixChar,
   DualChar,
   Tcy,
-  Word
+  Word,
+  Font,
 } from "./public-api";
 
 export interface ICharacter {
@@ -19,7 +20,11 @@ export interface ICharacter {
   hasEmphasis: boolean,
   kerning: boolean,
   spacing: number,
-  setMetrics: (env: BoxEnv) => void,
+  setMetrics: (opts: {
+    font: Font;
+    isVertical: boolean;
+    isEmphasized: boolean;
+  }) => void,
   toString: () => string
 }
 
@@ -30,12 +35,12 @@ export type EmphasizableChar = Char | RefChar;
 
 export let isCharacter = (value: any) => {
   return (value instanceof Char ||
-	  value instanceof SpaceChar ||
-	  value instanceof HalfChar ||
-	  value instanceof RefChar ||
-	  value instanceof SmpUniChar ||
-	  value instanceof MixChar ||
-	  value instanceof DualChar ||
-	  value instanceof Tcy ||
-	  value instanceof Word);
+    value instanceof SpaceChar ||
+    value instanceof HalfChar ||
+    value instanceof RefChar ||
+    value instanceof SmpUniChar ||
+    value instanceof MixChar ||
+    value instanceof DualChar ||
+    value instanceof Tcy ||
+    value instanceof Word);
 };

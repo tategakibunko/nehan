@@ -1,7 +1,7 @@
 import {
   ICharacter,
   LogicalSize,
-  BoxEnv,
+  Font,
 } from "./public-api";
 
 export class RefChar implements ICharacter {
@@ -14,18 +14,22 @@ export class RefChar implements ICharacter {
 
   static softHyphen: string = "&shy;";
 
-  public constructor(str: string){
+  public constructor(str: string) {
     this.text = str;
-    this.size = new LogicalSize({measure:0, extent:0});
+    this.size = new LogicalSize({ measure: 0, extent: 0 });
     this.hasEmphasis = false;
     this.kerning = false;
     this.spacing = 0;
     this.charCount = 1;
   }
 
-  public setMetrics(env: BoxEnv){
-    this.size.measure = env.fontSize;
-    this.size.extent = env.fontSize;
+  public setMetrics(opts: {
+    font: Font,
+    isVertical: boolean;
+    isEmphasized: boolean;
+  }) {
+    this.size.measure = opts.font.size;
+    this.size.extent = opts.font.size;
   }
 
   public toString(): string {

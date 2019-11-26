@@ -1,5 +1,6 @@
 import {
   ILayoutContext,
+  ICharacter,
   FlowContext,
   HtmlElement,
   LayoutStatus,
@@ -55,28 +56,15 @@ export class TextContext implements ILayoutContext {
     return this.status.isNormal();
   }
 
-  protected normalizeText(str: string): string {
-    let norm_str = str
-      .replace(/&#x([0-9A-F]+);/gi, (match, p1) => {
-        return String.fromCodePoint(Utils.atoi(p1, 16));
-      })
-      .replace(/&#([0-9]+);/gi, (match, p1) => {
-        return String.fromCodePoint(Utils.atoi(p1, 10));
-      });
-    if (this.parent.isPre() === false) {
-      norm_str = Utils.String.multiSpaceToSingle2(norm_str);
-    }
-    return norm_str;
-  }
-
   protected createLexer(element: HtmlElement, parent: FlowContext): TextLexer {
-    let text = this.normalizeText(element.textContent);
-    let is_vert = parent.isTextVertical();
-    let is_tcy = parent.isTextTcy();
-    let lexer = (is_vert && is_tcy) ?
+    const text = element.textContent;
+    const isPre = this.parent.isPre();
+    const isVert = parent.isTextVertical();
+    const isTcy = parent.isTextTcy();
+    const lexer = (isVert && isTcy) ?
       new DirectTextLexer(text, [new Tcy(text)]) :
-      new TextLexer(text);
-    if (is_vert && parent.isTextUpright()) {
+      new TextLexer(text, { isPre });
+    if (isVert && parent.isTextUpright()) {
       lexer.uprightTokens();
     }
     return lexer;
@@ -132,7 +120,7 @@ export class TextContext implements ILayoutContext {
     return this.parent.env;
   }
 
-  protected addInline(char: Character): boolean {
+  protected addInline(char: ICharacter): boolean {
     let is_filled = this.region.addInline(char);
     this.counter.incInlineChar(char.charCount);
     return is_filled;
@@ -145,7 +133,7 @@ export class TextContext implements ILayoutContext {
   }
 
   // char, uchar, dual-char, mix-char, space-char, tcy
-  public shiftCharacter(char: Character): boolean {
+  public shiftCharacter(char: ICharacter): boolean {
     if (this.region.isInlineError(char)) {
       return true;
     }
@@ -236,7 +224,11 @@ export class TextContext implements ILayoutContext {
     // Note that word token should be called setMetrics always,
     // because any word could be broken by 'overflow-wrap:break-word' or 'word-break:break-all'.
     if (text instanceof Word || text.size.measure === 0) {
-      text.setMetrics(this.env);
+      text.setMetrics({
+        font: this.env.font,
+        isVertical: this.env.isTextVertical(),
+        isEmphasized: this.env.isTextEmphasized(),
+      });
     }
     return { done: false, value: [new LayoutValue(text)] };
   }

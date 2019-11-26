@@ -1,7 +1,7 @@
 import {
   ICharacter,
   LogicalSize,
-  BoxEnv,
+  Font,
 } from "./public-api";
 
 // Unicode on Supplementary Multilingual Plane(SMP).
@@ -13,21 +13,25 @@ export class SmpUniChar implements ICharacter {
   public spacing: number;
   public charCount: number;
 
-  public constructor(str: string){
+  public constructor(str: string) {
     this.text = str;
-    this.size = new LogicalSize({measure:0, extent:0});
+    this.size = new LogicalSize({ measure: 0, extent: 0 });
     this.hasEmphasis = false;
     this.kerning = false;
     this.spacing = 0;
     this.charCount = 1;
   }
 
-  public setMetrics(env: BoxEnv){
-    this.size.measure = env.fontSize;
-    this.size.extent = env.fontSize;
-    if(env.isTextEmphasized()){
+  public setMetrics(opts: {
+    font: Font,
+    isVertical: boolean;
+    isEmphasized: boolean;
+  }) {
+    this.size.measure = opts.font.size;
+    this.size.extent = opts.font.size;
+    if (opts.isEmphasized) {
       this.hasEmphasis = true;
-      this.size.extent = Math.floor(env.fontSize * 1.5);
+      this.size.extent = Math.floor(opts.font.size * 1.5);
     }
   }
 

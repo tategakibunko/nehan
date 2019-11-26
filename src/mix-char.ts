@@ -1,7 +1,7 @@
 import {
   ICharacter,
   LogicalSize,
-  BoxEnv,
+  Font,
 } from "./public-api";
 
 // ligature
@@ -13,23 +13,27 @@ export class MixChar implements ICharacter {
   public spacing: number;
   public charCount: number;
 
-  public constructor(str: string){
+  public constructor(str: string) {
     this.text = str;
-    this.size = new LogicalSize({measure:0, extent:0});
+    this.size = new LogicalSize({ measure: 0, extent: 0 });
     this.hasEmphasis = false;
     this.kerning = false;
     this.spacing = 0;
     this.charCount = 1;
   }
 
-  public setMetrics(env: BoxEnv){
-    if(env.isTextVertical()){
-      this.size.measure = env.fontSize;
+  public setMetrics(opts: {
+    font: Font;
+    isVertical: boolean;
+    isEmphasized: boolean;
+  }) {
+    if (opts.isVertical) {
+      this.size.measure = opts.font.size;
     } else {
-      this.size.measure = Math.floor(env.fontSize * 1.25);
+      this.size.measure = Math.floor(opts.font.size * 1.25);
     }
-    this.size.extent = env.fontSize;
-    
+    this.size.extent = opts.font.size;
+
   }
 
   public toString(): string {

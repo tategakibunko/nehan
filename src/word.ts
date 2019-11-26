@@ -48,8 +48,12 @@ export class Word implements ICharacter {
     return this.text;
   }
 
-  public setMetrics(env: BoxEnv) {
-    this.size = Word.getLogicalSize(env.font, this.text);
+  public setMetrics(opts: {
+    font: Font,
+    isVertical: boolean,
+    isEmphasized: boolean
+  }) {
+    this.size = Word.getLogicalSize(opts.font, this.text);
   }
 
   public convertTcys(): Tcy[] {

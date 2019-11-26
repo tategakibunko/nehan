@@ -17,7 +17,7 @@ export class TextRegion extends FlowRegion {
     return this.content.popInline() as ICharacter;
   }
 
-  public pushCharacter(char: ICharacter){
+  public pushCharacter(char: ICharacter) {
     this.content.addInline(char);
   }
 
@@ -28,7 +28,11 @@ export class TextRegion extends FlowRegion {
   public breakWord(word: Word): Word {
     let rest_measure = this.restContextBoxMeasure;
     let word_head = word.breakWord(rest_measure);
-    word_head.setMetrics(this.context.env);
+    word_head.setMetrics({
+      font: this.context.env.font,
+      isVertical: this.context.env.isTextVertical(),
+      isEmphasized: this.context.env.isTextEmphasized(),
+    });
     word_head.size.measure = rest_measure; // force set measure(just size to fit line-max).
     return word_head;
   }
@@ -56,7 +60,7 @@ export class TextRegion extends FlowRegion {
   // use parent rest measure.
   public get maxSpaceMeasure(): number {
     let float_region = this.getFloatRegion();
-    if(float_region){
+    if (float_region) {
       return this.context.region.restSpaceMeasure;
     }
     return this.context.region.restContextBoxMeasure;

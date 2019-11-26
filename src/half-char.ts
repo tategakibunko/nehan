@@ -2,7 +2,7 @@ import {
   ICharacter,
   LogicalSize,
   LogicalBox,
-  BoxEnv,
+  Font,
   NativeStyleMap
 } from "./public-api";
 
@@ -15,28 +15,32 @@ export class HalfChar implements ICharacter {
   public spacing: number;
   public charCount: number;
 
-  public constructor(str: string){
+  public constructor(str: string) {
     this.text = str;
-    this.size = new LogicalSize({measure:0, extent:0});
+    this.size = new LogicalSize({ measure: 0, extent: 0 });
     this.hasEmphasis = false;
     this.kerning = false;
     this.spacing = 0;
     this.charCount = 1;
   }
 
-  public setMetrics(env: BoxEnv) {
-    this.size.measure = env.isTextVertical()? env.fontSize : Math.floor(env.fontSize / 2);
-    this.size.extent = env.fontSize;
-    if(env.isTextEmphasized()){
+  public setMetrics(opts: {
+    font: Font;
+    isVertical: boolean;
+    isEmphasized: boolean;
+  }) {
+    this.size.measure = opts.isVertical ? opts.font.size : Math.floor(opts.font.size / 2);
+    this.size.extent = opts.font.size;
+    if (opts.isEmphasized) {
       this.hasEmphasis = true;
-      this.size.extent = env.fontSize * 2;
+      this.size.extent = opts.font.size * 2;
     }
   }
 
   public getCssVert(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
     css.set("text-align", "center");
-    if(this.text.length === 2){
+    if (this.text.length === 2) {
       css.set("padding-left", Math.floor(box.fontSize / 4) + "px");
     }
     return css;

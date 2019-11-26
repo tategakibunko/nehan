@@ -1,6 +1,7 @@
 import {
-  Character,
-  BufferedLexer,
+  Utils,
+  ICharacter,
+  Lexer,
   Config,
   Char,
   Word,
@@ -14,14 +15,28 @@ import {
   Tcy,
 } from "./public-api";
 
-export class TextLexer extends BufferedLexer<Character>{
+export class TextLexer extends Lexer<ICharacter>{
+  protected normalize(src: string, args: { isPre: boolean }): string {
+    let normSrc = src
+      .replace(/&#x([0-9A-F]+);/gi, (match, p1) => {
+        return String.fromCodePoint(Utils.atoi(p1, 16));
+      })
+      .replace(/&#([0-9]+);/gi, (match, p1) => {
+        return String.fromCodePoint(Utils.atoi(p1, 10));
+      });
+    if (!args.isPre) {
+      normSrc = Utils.String.multiSpaceToSingle2(normSrc);
+    }
+    return normSrc;
+  }
+
   public uprightTokens() {
     this.tokens = this.tokens.reduce((acm, token) => {
       if (token instanceof Word) {
         return acm.concat(token.convertTcys());
       }
       return acm.concat(token);
-    }, [] as Character[]);
+    }, [] as ICharacter[]);
   }
 
   private getShy(): string | null {
@@ -143,7 +158,7 @@ export class TextLexer extends BufferedLexer<Character>{
     return new DualChar(c1, info);
   }
 
-  protected createToken(): Character {
+  protected createToken(): ICharacter {
     // try to parse dual-char to prevent treating half-size dual-char(like U+0029) as word.
     let p1 = this.peekChar();
     let half_dual_char = this.getDualChar(p1);
