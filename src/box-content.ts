@@ -1,12 +1,12 @@
 import {
   LogicalSize,
-  Character,
+  ICharacter,
   isCharacter,
   LogicalBox,
   Ruby
 } from "./public-api";
 
-export type BoxContent = Character | Ruby | LogicalBox;
+export type BoxContent = ICharacter | Ruby | LogicalBox;
 
 export class BoxContentSize {
   static getInlineSize(cont: BoxContent): number {
@@ -18,11 +18,11 @@ export class BoxContentSize {
   }
 
   static getLogicalSize(cont: BoxContent): LogicalSize {
-    if(isCharacter(cont)){
-      return (cont as Character).size;
-    } else if(cont instanceof Ruby){
+    if (isCharacter(cont)) {
+      return (cont as ICharacter).size;
+    } else if (cont instanceof Ruby) {
       return cont.totalSize;
-    } else if(cont instanceof LogicalBox){
+    } else if (cont instanceof LogicalBox) {
       return cont.totalSize;
     }
     throw new Error("Invalid argument type for BoxContentSize.getLogicalSize");

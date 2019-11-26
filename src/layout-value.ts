@@ -1,6 +1,6 @@
 import {
   LayoutControl,
-  Character,
+  ICharacter,
   isCharacter,
   Ruby,
   BoxContent,
@@ -11,8 +11,8 @@ export type LayoutValueType = LayoutControl | BoxContent;
 
 export class LayoutValue {
   public value: LayoutValueType;
-  
-  constructor(value: LayoutValueType){
+
+  constructor(value: LayoutValueType) {
     this.value = value;
   }
 
@@ -44,8 +44,8 @@ export class LayoutValue {
     return this.value as LogicalBox;
   }
 
-  public getAsCharacter(): Character {
-    return this.value as Character;
+  public getAsCharacter(): ICharacter {
+    return this.value as ICharacter;
   }
 
   public getAsRuby(): Ruby {

@@ -28,9 +28,6 @@ export interface ICharacter {
   toString: () => string
 }
 
-export type Character = Char | SpaceChar | HalfChar | RefChar | SmpUniChar |
-  MixChar | DualChar | Tcy | Word;
-
 export type EmphasizableChar = Char | RefChar;
 
 export let isCharacter = (value: any) => {

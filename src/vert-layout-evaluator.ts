@@ -3,7 +3,7 @@ import {
   LayoutEvaluator,
   LogicalBox,
   BoxContent,
-  Character,
+  ICharacter,
   isCharacter,
   LayoutParent,
   Word,
@@ -20,18 +20,18 @@ import {
 } from "./public-api";
 
 export class VertLayoutEvaluator extends LayoutEvaluator {
-  protected appendBoxChildAfter(node: HTMLElement, box: LogicalBox, child: BoxContent){
+  protected appendBoxChildAfter(node: HTMLElement, box: LogicalBox, child: BoxContent) {
     //console.log("appendBoxChildAfter:", child);
-    if((child instanceof Char ||
-	child instanceof SmpUniChar ||
-	child instanceof RefChar) &&
-       child.hasEmphasis === false){
+    if ((child instanceof Char ||
+      child instanceof SmpUniChar ||
+      child instanceof RefChar) &&
+      child.hasEmphasis === false) {
       node.appendChild(document.createElement("br"));
     }
-    if(isCharacter(child)){
-      let char = child as Character;
-      if(char.spacing > 0){
-	node.appendChild(this.createSpacing(char.spacing));
+    if (isCharacter(child)) {
+      let char = child as ICharacter;
+      if (char.spacing > 0) {
+        node.appendChild(this.createSpacing(char.spacing));
       }
     }
   }
@@ -49,7 +49,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
     let e_classes = box.classList.values().map(Prefix.addExternal);
     let i_classes = ["vertical", "block", box.pureTagName].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(box.id){
+    if (box.id) {
       node.id = Prefix.addExternal(box.id);
     }
     box.getCssBlock(parent).apply(node);
@@ -61,7 +61,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
     let e_classes = box.classList.values().map(Prefix.addExternal);
     let i_classes = ["inline", box.pureTagName].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(box.id){
+    if (box.id) {
       node.id = Prefix.addExternal(box.id);
     }
     box.getCssInline(parent).apply(node);
@@ -73,7 +73,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
     let e_classes = box.classList.values().map(Prefix.addExternal);
     let i_classes = ["inline-block", box.pureTagName].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(box.id){
+    if (box.id) {
       node.id = Prefix.addExternal(box.id);
     }
     box.getCssInlineBlock(parent).apply(node);
@@ -119,7 +119,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
     let e_classes = ruby.classList.values().map(Prefix.addExternal);
     let i_classes = ["ruby"].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(ruby.id){
+    if (ruby.id) {
       node.id = Prefix.addExternal(ruby.id);
     }
     rb.className = Prefix.addInternal("rb");
@@ -133,7 +133,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
 
   protected evalChar(parent: LogicalBox, char: Char): Node {
     //console.log("evalChar:", char);
-    if(char.hasEmphasis){
+    if (char.hasEmphasis) {
       return this.evalEmphasizedCharacter(parent, char);
     }
     return document.createTextNode(char.text);
@@ -169,7 +169,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
 
   protected evalRefChar(parent: LogicalBox, char: RefChar): Node {
     //console.log("evalRefChar:", char);
-    if(char.hasEmphasis){
+    if (char.hasEmphasis) {
       return this.evalEmphasizedCharacter(parent, char);
     }
     return document.createTextNode(char.text);
@@ -203,7 +203,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
     let text = document.createTextNode(char.text);
     node.classList.add(Prefix.addInternal("vert-glyph"));
     node.appendChild(text);
-    if(char.kerning){
+    if (char.kerning) {
       node.classList.add(Prefix.addInternal("dual-char-kern"));
     }
     return node;
