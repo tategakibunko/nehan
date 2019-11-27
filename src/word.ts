@@ -101,7 +101,7 @@ export class Word implements ICharacter {
     __word_style.font = font.css;
     __word_span.innerHTML = word;
     document.body.appendChild(__word_span);
-    let rect = __word_span.getBoundingClientRect();
+    const rect = __word_span.getBoundingClientRect();
     document.body.removeChild(__word_span);
     return new LogicalSize({
       measure: Math.round(rect.width),
