@@ -85,6 +85,13 @@ export class Font {
     ].join(" ");
   }
 
+  public get lineExtent(): number {
+    if (this.lineHeight.indexOf("px") >= 0) {
+      return Utils.atoi(this.lineHeight);
+    }
+    return Math.floor(parseFloat(this.lineHeight) * this.size);
+  }
+
   // infer shorthanded css property by value and defined index.
   static inferProp(value: string, index: number): string {
     if (/^[1-9]00$/.test(value)) {

@@ -52,7 +52,7 @@ export class BoxEnv {
   public pageBreakBefore: PageBreakBefore;
   public backgroundPos: LogicalBackgroundPos;
 
-  constructor(element: HtmlElement, parent?: BoxEnv){
+  constructor(element: HtmlElement, parent?: BoxEnv) {
     this.element = element;
     this.parent = parent;
     this.measure = LogicalSize.loadMeasure(element);
@@ -80,14 +80,14 @@ export class BoxEnv {
 
   protected loadDisplay(element: HtmlElement, float: LogicalFloat): Display {
     let display = Display.load(element);
-    if(display.isInlineLevel() && float.isFloat()){
+    if (display.isInlineLevel() && float.isFloat()) {
       display.setBlockLevel();
     }
     return display;
   }
 
   protected loadEdge(element: HtmlElement, display: Display): LogicalBoxEdge {
-    return display.isNone()? LogicalBoxEdge.none : LogicalBoxEdge.load(element);
+    return display.isNone() ? LogicalBoxEdge.none : LogicalBoxEdge.load(element);
   }
 
   public isTextVertical(): boolean {
@@ -139,7 +139,7 @@ export class BoxEnv {
   }
 
   public getLineExtent(max_inline_extent: number): number {
-    if(this.font.lineHeight.indexOf("px") < 0){
+    if (this.font.lineHeight.indexOf("px") < 0) {
       return Math.floor(max_inline_extent * parseFloat(this.font.lineHeight));
     }
     return Utils.atoi(this.font.lineHeight, 10);
