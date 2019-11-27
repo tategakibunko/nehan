@@ -40,12 +40,11 @@ export class CssLoader {
     // set computed-value to element.computedStyle
     ComputedStyle.setComputedValue(element, parent_ctx);
 
-    /*
+    // [TODO] Deprecated in the future
     // set collapse value
     if (Config.edgeSkipTags.indexOf(element.tagName) < 0) {
       MarginCollapse.collapse(element);
     }
-    */
   }
 
   static loadDynamic(element: HtmlElement, parent_ctx?: FlowContext): boolean {
