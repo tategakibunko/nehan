@@ -5,7 +5,7 @@ import {
   Font,
 } from "./public-api";
 
-let create_dummy_element = (): HTMLElement => {
+const createDummyElement = (): HTMLElement => {
   if (typeof document !== "undefined") {
     return document.createElement("span"); // for browser
   }
@@ -13,8 +13,8 @@ let create_dummy_element = (): HTMLElement => {
 };
 
 // HTMLElement to get advance size of word.
-let __word_span = create_dummy_element();
-let __word_style = __word_span.style;
+const __word_span = createDummyElement();
+const __word_style = __word_span.style;
 __word_style.display = "inline";
 __word_style.margin = "0";
 __word_style.padding = "0";
@@ -24,10 +24,16 @@ __word_style.width = "auto";
 __word_style.height = "auto";
 __word_style.visibility = "hidden";
 
-const offCanvasCtx: OffscreenCanvasRenderingContext2D | null = new OffscreenCanvas(0, 0).getContext("2d");
-if (offCanvasCtx) {
-  console.info('offCanvasCtx is ready!');
+const createOffscreenCanvasContext2d = (): OffscreenCanvasRenderingContext2D | null => {
+  if (typeof OffscreenCanvas === "undefined") {
+    return null;
+  }
+  const canvas: OffscreenCanvas = new OffscreenCanvas(0, 0);
+  const offCanvasCtx: OffscreenCanvasRenderingContext2D | null = canvas.getContext("2d");
+  return offCanvasCtx;
 }
+
+const offCanvasCtx: OffscreenCanvasRenderingContext2D | null = createOffscreenCanvasContext2d();
 
 export class Word implements ICharacter {
   public text: string;
