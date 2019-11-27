@@ -24,6 +24,11 @@ __word_style.width = "auto";
 __word_style.height = "auto";
 __word_style.visibility = "hidden";
 
+const offCanvasCtx: OffscreenCanvasRenderingContext2D | null = new OffscreenCanvas(0, 0).getContext("2d");
+if (offCanvasCtx) {
+  console.info('offCanvasCtx is ready!');
+}
+
 export class Word implements ICharacter {
   public text: string;
   public size: LogicalSize;
@@ -78,6 +83,15 @@ export class Word implements ICharacter {
   }
 
   static getLogicalSize(font: Font, word: string): LogicalSize {
+    if (offCanvasCtx) {
+      offCanvasCtx.font = font.css;
+      const metrics: TextMetrics = offCanvasCtx.measureText(word);
+      return new LogicalSize({
+        measure: Math.round(metrics.width),
+        extent: font.size
+      });
+    }
+    // if offscreen canvas is not supported, use dummy DOM.
     __word_style.font = font.css;
     __word_span.innerHTML = word;
     document.body.appendChild(__word_span);
