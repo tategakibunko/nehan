@@ -1,7 +1,6 @@
 import {
   ICharacter,
   LogicalSize,
-  BoxEnv,
   Tcy,
   Font,
 } from "./public-api";
