@@ -23,7 +23,7 @@ export class FlowRegion {
   protected cursor: LogicalCursorPos;
   protected floatRegion: FloatRegion | null;
 
-  constructor(context: FlowContext, content = new FlowContent()){
+  constructor(context: FlowContext, content = new FlowContent()) {
     this.context = context;
     this.cursor = LogicalCursorPos.zero;
     this.floatRegion = null;
@@ -34,46 +34,46 @@ export class FlowRegion {
     return this.context.name;
   }
 
-  public clear(){
+  public clear() {
     this.cursor.zero();
     this.clearFloatRegion();
   }
 
-  public clearFloatRegion(){
+  public clearFloatRegion() {
     // do nothing
   }
 
-  public clearFloat(clear: LogicalClear){
-    if(Config.debugLayout){
+  public clearFloat(clear: LogicalClear) {
+    if (Config.debugLayout) {
       console.log("[%s] clear float(%s)", this.name, clear.value);
     }
     let float_region = this.getFloatRegion();
-    if(!float_region){
+    if (!float_region) {
       return;
     }
-    if(clear.isBoth()){
+    if (clear.isBoth()) {
       this.cursor.before = float_region.clearBoth();
-    } else if(clear.isStart()){
+    } else if (clear.isStart()) {
       this.cursor.before = float_region.clearStart();
-    } else if(clear.isEnd()){
+    } else if (clear.isEnd()) {
       this.cursor.before = float_region.clearEnd();
     }
   }
 
-  public setMarginAuto(element: HtmlElement){
+  public setMarginAuto(element: HtmlElement) {
     let start = element.style.getPropertyValue("margin-start") || "";
     let end = element.style.getPropertyValue("margin-end") || "";
     let measure = LogicalSize.loadMeasure(element);
-    if(measure === null){
+    if (measure === null) {
       return;
     }
-    if(start === "auto" && end === "auto"){
+    if (start === "auto" && end === "auto") {
       let auto = Math.floor((this.maxContextBoxMeasure - measure) / 2);
       element.computedStyle.setProperty("margin-start", auto + "px");
-    } else if(start === "auto" && end !== "auto"){
+    } else if (start === "auto" && end !== "auto") {
       let auto = this.maxContextBoxMeasure - measure;
       element.computedStyle.setProperty("margin-start", auto + "px");
-    } else if(start !== "auto" && end === "auto"){
+    } else if (start !== "auto" && end === "auto") {
       let auto = this.maxContextBoxMeasure - measure;
       element.computedStyle.setProperty("margin-end", auto + "px");
     }
@@ -89,7 +89,7 @@ export class FlowRegion {
 
   public isInlineError(obj: BoxContent): boolean {
     let max = this.maxSpaceMeasure;
-    if(max <= 0){
+    if (max <= 0) {
       console.error("[%s] too narrow parent area(max=%d, page=%d)", this.name, max);
       return true;
     }
@@ -100,12 +100,12 @@ export class FlowRegion {
     let delta = BoxContentSize.getInlineSize(obj);
     let max = this.maxSpaceMeasure;
     let is_over = this.cursor.start + delta > max;
-    if(is_over && Config.debugLayout){
+    if (is_over && Config.debugLayout) {
       let over_size = this.cursor.start + delta - max;
       console.log(
-	"%c[%s] inline over! (cur=%d, delta=%d, maxM=%d, over=%d):",
-	"color:green; font-weight:bold",
-	this.name, this.cursor.start, delta, max, over_size, obj
+        "%c[%s] inline over! (cur=%d, delta=%d, maxM=%d, over=%d):",
+        "color:green; font-weight:bold",
+        this.name, this.cursor.start, delta, max, over_size, obj
       );
     }
     return is_over;
@@ -119,7 +119,7 @@ export class FlowRegion {
 
   public isInlineMaxBoxOver(size: number): boolean {
     let max = this.maxContextBoxMeasure;
-    if(size > max){
+    if (size > max) {
       console.error("[%s] unable to yield. size(%d) > max(%d)", this.name, size, max);
       return true;
     }
@@ -131,11 +131,11 @@ export class FlowRegion {
     delta = delta || BoxContentSize.getInlineSize(obj);
     let max = this.maxSpaceMeasure;
     let prev = this.cursor.start, next = prev + delta;
-    if((!isCharacter(obj) && Config.debugLayout) ||
-       (isCharacter(obj) && Config.debugCharacter)){
+    if ((!isCharacter(obj) && Config.debugLayout) ||
+      (isCharacter(obj) && Config.debugCharacter)) {
       console.log(
-	"[%s] <- [%s]:(m:%d->%d, max:%d)",
-	this.name, obj.toString(), prev, next, max
+        "[%s] <- [%s]:(m:%d->%d, max:%d)",
+        this.name, obj.toString(), prev, next, max
       );
     }
     this.content.addInline(obj);
@@ -149,12 +149,12 @@ export class FlowRegion {
   public isBlockOver(block: LogicalBox): boolean {
     let delta = block.totalExtent, max = this.maxContextBoxExtent;
     let is_over = this.cursor.before + delta > max;
-    if(is_over && Config.debugLayout){
+    if (is_over && Config.debugLayout) {
       let over_size = this.cursor.before + delta - max;
       console.log(
-	"%c[%s] block over! (cur=%d, delta=%d, maxE=%d, over=%d):",
-	"color:blue; font-weight:bold",
-	this.name, this.cursor.before, delta, max, over_size, block
+        "%c[%s] block over! (cur=%d, delta=%d, maxE=%d, over=%d):",
+        "color:blue; font-weight:bold",
+        this.name, this.cursor.before, delta, max, over_size, block
       );
     }
     return is_over;
@@ -169,26 +169,26 @@ export class FlowRegion {
     block.blockPos = this.createBlockPos(block);
     this.content.addBlock(block);
     this.cursor.before += delta;
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log(
-	"[%s]<-[%s]:(e:%d->%d,max:%d), pos:%o",
-	this.name, block.toString(), prev, next, max, block.blockPos
+        "[%s]<-[%s]:(e:%d->%d,max:%d), pos:%o",
+        this.name, block.toString(), prev, next, max, block.blockPos
       );
     }
     return this.cursor.before >= max || block.blockBreak;
   }
 
-  public addAbsBlock(block: LogicalBox){
+  public addAbsBlock(block: LogicalBox) {
     this.content.addBlock(block);
   }
 
-  public addFloatBlock(block: LogicalBox){
-    if(!block.isFloat()){
+  public addFloatBlock(block: LogicalBox) {
+    if (!block.isFloat()) {
       return;
     }
-    if(block.isFloatStart()){
+    if (block.isFloatStart()) {
       block.blockPos = this.pushFloatStart(this.rootRegionBefore, block.totalSize);
-    } else if(block.isFloatEnd()){
+    } else if (block.isFloatEnd()) {
       block.blockPos = this.pushFloatEnd(this.rootRegionBefore, block.totalSize);
     }
     this.content.addBlock(block);
@@ -198,18 +198,18 @@ export class FlowRegion {
     let delta = block.totalExtent, max = this.maxContextBoxExtent;
     let root_before = this.rootRegionBefore;
     let float_region = this.getFloatRegion();
-    if(!float_region){
+    if (!float_region) {
       return false;
     }
     let before_measure = this.getSpaceMeasureAt(float_region, root_before);
     let after_measure = this.getSpaceMeasureAt(float_region, root_before + block.totalExtent);
     // float element can't be included at after position.
-    if(after_measure < before_measure){
+    if (after_measure < before_measure) {
       return true;
     }
-    if(this.cursor.before + delta > max){
-      if(Config.debugLayout){
-	console.warn("[%s] float space over", this.name);
+    if (this.cursor.before + delta > max) {
+      if (Config.debugLayout) {
+        console.warn("[%s] float space over", this.name);
       }
       return true;
     }
@@ -231,34 +231,34 @@ export class FlowRegion {
 
   protected createBlockAutoSize(): LogicalSize {
     return new LogicalSize({
-      measure:this.maxContextBoxMeasure,
-      extent:this.cursor.before
+      measure: this.maxContextBoxMeasure,
+      extent: this.cursor.before
     });
   }
 
   protected createInlineAutoSize(env: BoxEnv): LogicalSize {
     return new LogicalSize({
-      measure:this.cursor.start,
-      extent:this.lineExtent
+      measure: this.cursor.start,
+      extent: this.lineExtent
     });
   }
 
   protected createInlineBlockAutoSize(): LogicalSize {
     return new LogicalSize({
-      measure:this.cursor.start,
-      extent:this.cursor.before
+      measure: this.cursor.start,
+      extent: this.cursor.before
     });
   }
 
   protected createInlineEdge(): LogicalBoxEdge {
-    if(!this.context.edge){
+    if (!this.context.edge) {
       return LogicalBoxEdge.none;
     }
     let edge = this.context.edge.clone();
-    if(!this.context.isFirstOutput()){
+    if (!this.context.isFirstOutput()) {
       edge.clearStart();
     }
-    if(!this.context.isFinalOutput()){
+    if (!this.context.isFinalOutput()) {
       edge.clearEnd();
     }
     return edge;
@@ -266,30 +266,30 @@ export class FlowRegion {
 
   // create context-aware size of edge.
   protected createBlockEdge(): LogicalBoxEdge {
-    if(!this.context.edge){
+    if (!this.context.edge) {
       return LogicalBoxEdge.none;
     }
     // block edges of root layout are always available.
-    if(this.context.isBody()){
+    if (this.context.isBody()) {
       return this.context.edge;
     }
     let edge = this.context.edge.clone();
-    if(!this.context.isFirstOutput()){
+    if (!this.context.isFirstOutput()) {
       edge.clearBefore();
     }
-    if(!this.context.isFinalOutput()){
+    if (!this.context.isFinalOutput()) {
       edge.clearAfter();
     }
     return edge;
   }
 
   protected createBlockPos(box: LogicalBox): LogicalCursorPos {
-    let pos = new LogicalCursorPos({start:0, before:this.cursor.before});
-    if(!box.isLine()){
+    let pos = new LogicalCursorPos({ start: 0, before: this.cursor.before });
+    if (!box.isLine()) {
       return pos;
     }
     let float_region = this.getFloatRegion();
-    if(float_region && box.float.isNone()){
+    if (float_region && box.float.isNone()) {
       let root_before = this.rootRegionBefore;
       let space_pos = float_region.getSpacePos(root_before);
       pos.start = space_pos.start;
@@ -300,16 +300,16 @@ export class FlowRegion {
   protected createBlockSize(overflow: boolean): LogicalSize {
     let fixed_measure = this.fixedMeasure;
     let fixed_extent = this.fixedExtent;
-    let extent = (fixed_extent !== null)? fixed_extent :
-      (overflow? this.maxContextBoxExtent : this.cursor.before);
-    let measure = (fixed_measure !== null)? fixed_measure : this.maxContextBoxMeasure;
-    let size = new LogicalSize({measure:measure, extent:extent});
+    let extent = (fixed_extent !== null) ? fixed_extent :
+      (overflow ? this.maxContextBoxExtent : this.cursor.before);
+    let measure = (fixed_measure !== null) ? fixed_measure : this.maxContextBoxMeasure;
+    let size = new LogicalSize({ measure: measure, extent: extent });
     // floating or flow-root
-    if(this.context.isShrinkToFit()){
+    if (this.context.isShrinkToFit()) {
       size.measure = fixed_measure || this.flowRootMeasure;
       size.extent = fixed_extent || this.flowRootExtent;
     }
-    if(this.content.isEmptyBoxBlock()){
+    if (this.content.isEmptyBoxBlock()) {
       size.extent = 0;
     }
     return size;
@@ -335,8 +335,8 @@ export class FlowRegion {
 
   protected createEmptyLineSize(env: BoxEnv): LogicalSize {
     return new LogicalSize({
-      measure:this.maxSpaceMeasure,
-      extent:env.fontSize
+      measure: this.maxSpaceMeasure,
+      extent: env.fontSize
     });
   }
 
@@ -349,8 +349,8 @@ export class FlowRegion {
 
   protected createInlineSize(env: BoxEnv, overflow: boolean): LogicalSize {
     return new LogicalSize({
-      measure:this.cursor.start,
-      extent:this.lineExtent
+      measure: this.cursor.start,
+      extent: this.lineExtent
     });
   }
 
@@ -366,13 +366,13 @@ export class FlowRegion {
     let is_white_space_only = this.content.isWhiteSpaceOnly();
     let is_empty_line = this.content.isInlineEmpty() || is_white_space_only;
     let is_root_line = env.isLineRoot();
-    let extent = is_empty_line? this.lineTextExtent :
-      (is_root_line? this.rootLineExtent : this.lineExtent);
+    let extent = is_empty_line ? this.lineTextExtent :
+      (is_root_line ? this.rootLineExtent : this.lineExtent);
     let size = new LogicalSize({
-      measure:this.maxSpaceMeasure,
-      extent:extent
+      measure: this.maxSpaceMeasure,
+      extent: extent
     });
-    if(this.context.isShrinkToFit()){
+    if (this.context.isShrinkToFit()) {
       size.measure = this.cursor.start;
     }
     return size;
@@ -387,8 +387,8 @@ export class FlowRegion {
 
   protected createBaselineSize(env: BoxEnv, parent: LogicalBox): LogicalSize {
     let size = new LogicalSize({
-      measure:parent.size.measure,
-      extent:this.lineTextExtent
+      measure: parent.size.measure,
+      extent: this.lineTextExtent
     });
     return size;
   }
@@ -402,7 +402,7 @@ export class FlowRegion {
 
   protected getLocalPosFromRootPos(root_pos: LogicalCursorPos): LogicalCursorPos {
     return new LogicalCursorPos({
-      before:this.cursor.before,
+      before: this.cursor.before,
       start: root_pos.start
     });
   }
@@ -419,8 +419,8 @@ export class FlowRegion {
 
   protected getFloatSpacePos(root_before: number): LogicalCursorPos {
     let float_region = this.getFloatRegion();
-    if(!float_region){
-      return new LogicalCursorPos({start:0, before:this.cursor.before});
+    if (!float_region) {
+      return new LogicalCursorPos({ start: 0, before: this.cursor.before });
     }
     let root_pos = float_region.getSpacePos(root_before);
     return this.getLocalPosFromRootPos(root_pos);
@@ -435,19 +435,19 @@ export class FlowRegion {
     return this.rootRegion.getFloatRegion();
   }
 
-  public clearInlines(){
+  public clearInlines() {
     this.content.clearInlines();
   }
 
-  public clearBlocks(){
+  public clearBlocks() {
     this.content.clearBlocks();
   }
 
-  public resetInlineCursor(){
+  public resetInlineCursor() {
     this.cursor.start = 0;
   }
 
-  public resetBlockCursor(){
+  public resetBlockCursor() {
     this.cursor.before = 0;
   }
 
@@ -460,17 +460,17 @@ export class FlowRegion {
   }
 
   public isBlockHead(): boolean {
-    if(this.cursor.before > 0){
+    if (this.cursor.before > 0) {
       return false;
     }
-    if(!this.context.parent){
+    if (!this.context.parent) {
       return true;
     }
     return this.context.parent.region.isBlockHead();
   }
 
   public isLineHead(): boolean {
-    if(this.cursor.start > 0){
+    if (this.cursor.start > 0) {
       return false;
     }
     let inline_root = this.inlineRoot;
@@ -494,10 +494,10 @@ export class FlowRegion {
   }
 
   protected get inlineRoot(): FlowRegion {
-    if(this.context.isBlockLevel()){
+    if (this.context.isBlockLevel()) {
       return this;
     }
-    if(this.context.parent){
+    if (this.context.parent) {
       return this.context.parent.region.inlineRoot;
     }
     throw new Error("inline root not found!");
@@ -516,30 +516,30 @@ export class FlowRegion {
   }
 
   protected get contextEdgeExtentBefore(): number {
-    if(!this.context.edge || !this.context.isFirstOutput()){
+    if (!this.context.edge || !this.context.isFirstOutput()) {
       return 0;
     }
     return this.context.edge.before;
   }
 
   protected get contextEdgeExtentAfter(): number {
-    if(!this.context.edge || !this.context.isFinalOutput()){
+    if (!this.context.edge || !this.context.isFinalOutput()) {
       return 0;
     }
     return this.context.edge.after;
   }
 
   protected get contextEdgeMeasure(): number {
-    if(!this.context.edge){
+    if (!this.context.edge) {
       return 0;
     }
     let display = this.context.env.display;
     let always = display.isBlockLevel() || display.isFlowRoot();
     let measure = 0;
-    if(always || this.context.isFirstOutput()){
+    if (always || this.context.isFirstOutput()) {
       measure += this.context.edge.start;
     }
-    if(always || this.context.isFinalOutput()){
+    if (always || this.context.isFinalOutput()) {
       measure += this.context.edge.end;
     }
     return measure;
@@ -560,7 +560,7 @@ export class FlowRegion {
   }
 
   public get restContextBoxMeasure(): number {
-    if(!this.context.hasActiveChild()){
+    if (!this.context.hasActiveChild()) {
       return this.maxContextBoxMeasure;
     }
     return this.maxContextBoxMeasure - this.cursor.start;
@@ -581,7 +581,7 @@ export class FlowRegion {
   protected get rootLineExtent(): number {
     let root_line_extent = this.content.getRootLineExtent(this.context.env);
     let fixed_extent = this.fixedExtent;
-    if(fixed_extent){
+    if (fixed_extent) {
       root_line_extent = Math.min(root_line_extent, fixed_extent);
     }
     //console.warn("[%s] rootLineExtent = %d", this.context.name, root_line_extent);
@@ -591,7 +591,7 @@ export class FlowRegion {
   protected get lineExtent(): number {
     let line_extent = this.content.getLineExtent(this.context.env);
     let fixed_extent = this.fixedExtent;
-    if(fixed_extent){
+    if (fixed_extent) {
       line_extent = Math.min(line_extent, fixed_extent);
     }
     //console.warn("[%s] lineExtent = %d", this.context.name, line_extent);
@@ -601,7 +601,7 @@ export class FlowRegion {
   protected get lineTextExtent(): number {
     let line_text_extent = this.content.getLineTextExtent(this.context.env);
     let fixed_extent = this.fixedExtent;
-    if(fixed_extent){
+    if (fixed_extent) {
       line_text_extent = Math.min(line_text_extent, fixed_extent);
     }
     //console.warn("[%s] lineTextExtent = %d", this.context.name, line_text_extent);
@@ -621,22 +621,22 @@ export class FlowRegion {
   }
 
   protected get fixedExtent(): number | null {
-    if(!this.context.parent){ // body
+    if (!this.context.parent) { // body
       return this.bodyExtent;
     }
     let fixed_size = this.context.env.extent;
-    if(!fixed_size){
+    if (!fixed_size) {
       return null;
     }
     return fixed_size;
   }
 
   protected get fixedMeasure(): number | null {
-    if(!this.context.parent){ // body
+    if (!this.context.parent) { // body
       return this.bodyMeasure;
     }
     let fixed_size = this.context.env.measure;
-    if(fixed_size === null){
+    if (fixed_size === null) {
       return null;
     }
     return fixed_size;
@@ -644,18 +644,18 @@ export class FlowRegion {
 
   protected get maxSpaceMeasure(): number {
     let float_region = this.getFloatRegion();
-    if(!this.context.isFloat() && float_region){ // float space client
+    if (!this.context.isFloat() && float_region) { // float space client
       let root_pos = this.rootRegionBefore;
       let measure = this.getSpaceMeasureAt(float_region, root_pos);
       // float region is already cleared by another layout.
-      if(measure === this.maxContextBoxMeasure){
-	if(Config.debugLayout){
-	  console.warn(
-	    "disabled float-region(at %s) in flow-root at %d(page=%d), root_pos = %d",
-	    this.rootRegion.name, this.cursor.before, this.context.bodyPageIndex, root_pos
-	  );
-	}
-	this.rootRegion.clearFloatRegion();
+      if (measure === this.maxContextBoxMeasure) {
+        if (Config.debugLayout) {
+          console.warn(
+            "disabled float-region(at %s) in flow-root at %d(page=%d), root_pos = %d",
+            this.rootRegion.name, this.cursor.before, this.context.bodyPageIndex, root_pos
+          );
+        }
+        this.rootRegion.clearFloatRegion();
       }
       return measure;
     }
@@ -669,10 +669,10 @@ export class FlowRegion {
   // max 'content' measure(except 'context' edge size) refering to parent context.
   public get maxContextBoxMeasure(): number {
     let fixed_measure = this.fixedMeasure;
-    if(fixed_measure !== null){
+    if (fixed_measure !== null) {
       return fixed_measure;
     }
-    if(!this.context.parent){
+    if (!this.context.parent) {
       throw new Error("never"); // never happen
     }
     let parent_rest = this.context.parent.region.restContextBoxMeasure;
@@ -685,10 +685,10 @@ export class FlowRegion {
   // so always [maxContextBoxMeasure] >= [maxEdgedBoxMeasure]
   public get maxEdgedBoxMeasure(): number {
     let fixed_measure = this.fixedMeasure;
-    if(fixed_measure !== null){
+    if (fixed_measure !== null) {
       return fixed_measure;
     }
-    if(!this.context.parent){
+    if (!this.context.parent) {
       throw new Error("never"); // never happen
     }
     let parent_rest = this.context.parent.region.restEdgedBoxMeasure;
@@ -700,10 +700,10 @@ export class FlowRegion {
   // max 'content' extent(except 'context' edge size) referring to parent context.
   public get maxContextBoxExtent(): number {
     let fixed_extent = this.fixedExtent;
-    if(fixed_extent !== null){
+    if (fixed_extent !== null) {
       return fixed_extent;
     }
-    if(!this.context.parent){
+    if (!this.context.parent) {
       throw new Error("never"); // never happen
     }
     let parent_rest = this.context.parent.region.restContextBoxExtent;
@@ -716,10 +716,10 @@ export class FlowRegion {
   // so always [maxContextBoxExtent] >= [maxEdgedBoxExtent]
   public get maxEdgedBoxExtent(): number {
     let fixed_extent = this.fixedExtent;
-    if(fixed_extent !== null){
+    if (fixed_extent !== null) {
       return fixed_extent;
     }
-    if(!this.context.parent){
+    if (!this.context.parent) {
       throw new Error("never"); // never happen
     }
     let parent_rest = this.context.parent.region.restEdgedBoxExtent;
