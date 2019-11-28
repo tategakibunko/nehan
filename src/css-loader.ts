@@ -13,6 +13,9 @@ export class CssLoader {
   static loadAll(element: HtmlElement) {
     this.load(element);
     element.children.forEach(child => this.loadAll(child));
+    if (element.tagName === "body") {
+      this.loadDynamic(element);
+    }
   }
 
   static load(element: HtmlElement, parent_ctx?: FlowContext) {
