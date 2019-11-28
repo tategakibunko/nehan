@@ -1,24 +1,15 @@
 import {
-  Utils,
-  DefaultCss,
   HtmlElement,
   CssCascade,
 } from "./public-api";
 
-export enum WritingModeValue {
-  HORIZONTAL_TB = "horizontal-tb",
-  VERTICAL_RL = "vertical-rl",
-  VERTICAL_LR = "vertical-lr"
-}
+export type WritingModeValue = 'horizontal-tb' | 'vertical-rl' | 'vertical-lr';
 
 export class WritingMode {
-  public value: string;
-  static values: string [] = Utils.Enum.toValueArray(WritingModeValue);
+  public value: WritingModeValue;
 
-  constructor(value: WritingModeValue){
-    this.value = DefaultCss.selectOrDefault(
-      "writing-mode", value, WritingMode.values
-    );
+  constructor(value: WritingModeValue) {
+    this.value = value;
   }
 
   static load(element: HtmlElement): WritingMode {
@@ -27,7 +18,7 @@ export class WritingMode {
   }
 
   public isVerticalRl(): boolean {
-    return this.value === WritingModeValue.VERTICAL_RL;
+    return this.value === 'vertical-rl';
   }
 
   public isTextVertical(): boolean {
