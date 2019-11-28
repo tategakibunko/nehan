@@ -16,16 +16,16 @@ export enum LogicalEdgeDirection {
   START = "start"
 }
 
-export let LogicalEdgeDirections: string [] = Utils.Enum.toValueArray(LogicalEdgeDirection)
+export let LogicalEdgeDirections: string[] = Utils.Enum.toValueArray(LogicalEdgeDirection)
 
-export interface LogicalEdgeValue<T>{
+export interface LogicalEdgeValue<T> {
   before: T;
   end: T;
   after: T;
   start: T;
 }
 
-export interface PhysicalEdgeValue<T>{
+export interface PhysicalEdgeValue<T> {
   top: T;
   right: T;
   bottom: T;
@@ -38,19 +38,19 @@ export class PhysicalEdge<T> implements PhysicalEdgeValue<T> {
   public bottom: T;
   public left: T;
 
-  constructor(values: PhysicalEdgeValue<T>){
+  constructor(values: PhysicalEdgeValue<T>) {
     this.top = values.top;
     this.right = values.right;
     this.bottom = values.bottom;
     this.left = values.left;
   }
 
-  public get items(): PropValue<string, T> [] {
+  public get items(): PropValue<string, T>[] {
     return [
-      {prop:"top", value:this.top},
-      {prop:"right", value:this.right},
-      {prop:"bottom", value:this.bottom},
-      {prop:"left", value:this.left}
+      { prop: "top", value: this.top },
+      { prop: "right", value: this.right },
+      { prop: "bottom", value: this.bottom },
+      { prop: "left", value: this.left }
     ];
   }
 }
@@ -61,7 +61,7 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
   public after: T;
   public start: T;
 
-  constructor(values: LogicalEdgeValue<T>){
+  constructor(values: LogicalEdgeValue<T>) {
     this.before = values.before;
     this.end = values.end;
     this.after = values.after;
@@ -70,12 +70,12 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
 
   static isBlockEdge(direction: LogicalEdgeDirection): boolean {
     return (direction === LogicalEdgeDirection.BEFORE ||
-	    direction === LogicalEdgeDirection.AFTER);
+      direction === LogicalEdgeDirection.AFTER);
   }
 
   static isInlineEdge(direction: LogicalEdgeDirection): boolean {
     return (direction === LogicalEdgeDirection.START ||
-	    direction === LogicalEdgeDirection.END);
+      direction === LogicalEdgeDirection.END);
   }
 
   public getPhysicalEdgeValue(writing_mode: WritingMode): PhysicalEdgeValue<T> {
@@ -95,15 +95,15 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
   }
 
   public get values(): LogicalEdgeValue<T> {
-    return {before:this.before, end:this.end, after:this.after, start:this.start};
+    return { before: this.before, end: this.end, after: this.after, start: this.start };
   }
 
-  public get items(): PropValue<string, T> [] {
+  public get items(): PropValue<string, T>[] {
     return [
-      {prop:"before", value:this.before},
-      {prop:"end", value:this.end},
-      {prop:"after", value:this.after},
-      {prop:"start", value:this.start}
+      { prop: "before", value: this.before },
+      { prop: "end", value: this.end },
+      { prop: "after", value: this.after },
+      { prop: "start", value: this.start }
     ];
   }
 
@@ -121,10 +121,10 @@ export class LogicalEdgeSize extends LogicalEdge<number> {
 
   static get zeroValue(): LogicalEdgeValue<number> {
     return {
-      before:0,
-      end:0,
-      after:0,
-      start:0
+      before: 0,
+      end: 0,
+      after: 0,
+      start: 0
     };
   }
 

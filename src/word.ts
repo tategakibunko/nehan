@@ -97,16 +97,22 @@ export class Word implements ICharacter {
         extent: font.size
       });
     }
-    // if offscreen canvas is not supported, use dummy DOM.
-    __word_style.font = font.css;
-    __word_span.innerHTML = word;
-    document.body.appendChild(__word_span);
-    const rect = __word_span.getBoundingClientRect();
-    document.body.removeChild(__word_span);
+    if (typeof document !== "undefined") {
+      // if offscreen canvas is not supported, use dummy DOM.
+      __word_style.font = font.css;
+      __word_span.innerHTML = word;
+      document.body.appendChild(__word_span);
+      const rect = __word_span.getBoundingClientRect();
+      document.body.removeChild(__word_span);
+      return new LogicalSize({
+        measure: Math.round(rect.width),
+        extent: font.size // rect.height is too large, but I don't know why.
+        //extent: Math.round(rect.height)
+      });
+    }
     return new LogicalSize({
-      measure: Math.round(rect.width),
-      extent: font.size // rect.height is too large, but I don't know why.
-      //extent: Math.round(rect.height)
+      measure: Math.round(word.length * font.size / 2),
+      extent: font.size
     });
   }
 }
