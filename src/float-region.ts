@@ -56,14 +56,15 @@ export class FloatRegion {
     return cleared_extent;
   }
 
-  private getSpaceMeasureAt(before_pos: number): number {
-    return this.maxRegion.measure - this.getSideRectMeasureAt(before_pos);
-  }
-
   public getSpacePos(before_pos: number): LogicalCursorPos {
     let rect = this.getStartSideRect(before_pos);
     let start = rect ? rect.end : 0;
     return new LogicalCursorPos({ start: start, before: before_pos });
+  }
+
+  public getSideRectMeasureAt(before_pos: number): number {
+    return this.getStartSideRectMeasure(before_pos)
+      + this.getEndSideRectMeasure(before_pos);
   }
 
   public pushStart(before: number, size: LogicalSize): LogicalCursorPos {
@@ -125,17 +126,16 @@ export class FloatRegion {
     return this.pushEnd(this.cursorBefore, size);
   }
 
+  private getSpaceMeasureAt(before_pos: number): number {
+    return this.maxRegion.measure - this.getSideRectMeasureAt(before_pos);
+  }
+
   private get maxStartRegionExtent(): number {
     return this.getMaxSideCursorBeforeFrom(this.startRects);
   }
 
   private get maxEndRegionExtent(): number {
     return this.getMaxSideCursorBeforeFrom(this.endRects);
-  }
-
-  public getSideRectMeasureAt(before_pos: number): number {
-    return this.getStartSideRectMeasure(before_pos)
-      + this.getEndSideRectMeasure(before_pos);
   }
 
   private getStartSideRect(before_pos: number): LogicalRect | null {
@@ -165,12 +165,6 @@ export class FloatRegion {
   private getMaxSideCursorBeforeFrom(rects: LogicalRect[]): number {
     return rects.reduce((max, rect) => Math.max(max, rect.after), this.cursorBefore);
   }
-
-  /*
-  private getRectsAfter(rects: LogicalRect [], before_pos: number): LogicalRect [] {
-    return rects.filter(rect => rect.before >= before_pos);
-  }
-  */
 
   private getSideRect(floats: LogicalRect[], before_pos: number): LogicalRect | null {
     for (let i = floats.length - 1; i >= 0; i--) {
