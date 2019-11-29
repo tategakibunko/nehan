@@ -56,10 +56,9 @@ export class FloatRegion {
     return cleared_extent;
   }
 
-  public getSpacePos(before: number): LogicalCursorPos {
+  public getSpaceStartAt(before: number): number {
     let rect = this.getStartSideRect(before);
-    let start = rect ? rect.end : 0;
-    return new LogicalCursorPos({ start: start, before });
+    return rect ? rect.end : 0;
   }
 
   public getSpaceMeasureAt(before_pos: number): number {

@@ -288,11 +288,9 @@ export class FlowRegion {
     if (!box.isLine()) {
       return pos;
     }
-    let float_region = this.getFloatRegion();
+    const float_region = this.getFloatRegion();
     if (float_region && box.float.isNone()) {
-      let root_before = this.rootRegionBefore;
-      let space_pos = float_region.getSpacePos(root_before);
-      pos.start = space_pos.start;
+      pos.start = float_region.getSpaceStartAt(this.rootRegionBefore);
     }
     return pos;
   }
@@ -408,26 +406,27 @@ export class FlowRegion {
   }
 
   public pushFloatStart(root_before: number, size: LogicalSize): LogicalCursorPos {
-    let root_pos = this.rootRegion.pushFloatStart(root_before, size);
+    const root_pos = this.rootRegion.pushFloatStart(root_before, size);
     return this.getLocalPosFromRootPos(root_pos);
   }
 
   public pushFloatEnd(root_before: number, size: LogicalSize): LogicalCursorPos {
-    let root_pos = this.rootRegion.pushFloatEnd(root_before, size);
+    const root_pos = this.rootRegion.pushFloatEnd(root_before, size);
     return this.getLocalPosFromRootPos(root_pos);
   }
 
   protected getFloatSpacePos(root_before: number): LogicalCursorPos {
-    let float_region = this.getFloatRegion();
+    const float_region = this.getFloatRegion();
     if (!float_region) {
       return new LogicalCursorPos({ start: 0, before: this.cursor.before });
     }
-    let root_pos = float_region.getSpacePos(root_before);
+    const root_start = float_region.getSpaceStartAt(root_before);
+    const root_pos = new LogicalCursorPos({ before: root_before, start: root_start });
     return this.getLocalPosFromRootPos(root_pos);
   }
 
   protected getSpaceMeasureAt(float_region: FloatRegion, root_before: number): number {
-    let float_measure = float_region.getSideRectMeasureAt(root_before);
+    const float_measure = float_region.getSideRectMeasureAt(root_before);
     return this.maxContextBoxMeasure - float_measure;
   }
 
