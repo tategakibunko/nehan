@@ -4,17 +4,26 @@ import {
   LogicalCursorPos
 } from "./public-api";
 
+export interface SpaceCursorPos {
+  measure: number;
+  cursor: LogicalCursorPos;
+}
+
 export class FloatRegion {
   public maxRegion: LogicalRect;
   public startRects: LogicalRect[];
   public endRects: LogicalRect[];
   public cursorBefore: number; // next float chain pos.
+  private startLedgePositions: Set<number>;
+  private endLedgePositions: Set<number>;
 
   constructor(max_size: LogicalSize, before: number) {
     this.maxRegion = new LogicalRect(new LogicalCursorPos({ start: 0, before: 0 }), max_size);
     this.cursorBefore = before;
     this.startRects = [];
     this.endRects = [];
+    this.startLedgePositions = new Set<number>();
+    this.endLedgePositions = new Set<number>();
   }
 
   public toString(): string {
@@ -38,6 +47,8 @@ export class FloatRegion {
     let cleared_extent = this.maxRegionExtent;
     this.startRects = [];
     this.endRects = [];
+    this.startLedgePositions.clear();
+    this.endLedgePositions.clear();
     this.cursorBefore = cleared_extent;
     return cleared_extent;
   }
@@ -45,6 +56,7 @@ export class FloatRegion {
   public clearStart(): number {
     let cleared_extent = this.maxStartRegionExtent;
     this.startRects = [];
+    this.startLedgePositions.clear();
     this.cursorBefore = cleared_extent;
     return cleared_extent;
   }
@@ -52,6 +64,7 @@ export class FloatRegion {
   public clearEnd(): number {
     let cleared_extent = this.maxEndRegionExtent;
     this.endRects = [];
+    this.endLedgePositions.clear();
     this.cursorBefore = cleared_extent;
     return cleared_extent;
   }
@@ -70,20 +83,75 @@ export class FloatRegion {
       + this.getEndSideRectMeasure(before);
   }
 
-  public findSpaceCursorFor(before: number, size: LogicalSize): { cursor: LogicalCursorPos, measure: number } {
-    throw "todo";
+  public findSpaceCursorForSize(before: number, wantedSize: LogicalSize): SpaceCursorPos | undefined {
+    if (this.hasSpaceForSize(before, wantedSize)) {
+      const start = this.getSpaceStartAt(before);
+      const measure = this.getSpaceMeasureAt(before);
+      return { cursor: new LogicalCursorPos({ before, start }), measure };
+    }
+    const foundBefore = this.ledgePositions
+      .filter(pos => pos > before)
+      .find(pos => this.hasSpaceForSize(pos, wantedSize));
+    if (foundBefore === undefined) {
+      return undefined;
+    }
+    const foundStart = this.getSpaceStartAt(foundBefore);
+    const foundMeasure = this.getSpaceMeasureAt(foundBefore);
+    const foundCursor = new LogicalCursorPos({ before: foundBefore, start: foundStart });
+    return { cursor: foundCursor, measure: foundMeasure };
   }
 
-  private hasSpaceFor(before: number, wantedSize: LogicalSize): boolean {
+  public hasSpaceForSize(before: number, wantedSize: LogicalSize): boolean {
     const spaceMeasure = this.getSpaceMeasureAt(before);
     if (spaceMeasure < wantedSize.measure) {
       return false;
     }
     const wantedCursor = new LogicalCursorPos({ start: this.getSpaceStartAt(before), before });
     const wantedSpace = new LogicalRect(wantedCursor, wantedSize);
-    const floats = this.allRects.filter(rect => rect.before > before || rect.after > before);
+    const floats = this.allRects.filter(rect => rect.after > before);
     const collideFloat = floats.find(rect => wantedSpace.collideWith(rect));
     return collideFloat === undefined;
+  }
+
+
+  private get ledgePositions(): number[] {
+    const tmp = new Set<number>();
+    this.startLedgePositions.forEach(pos => tmp.add(pos));
+    this.endLedgePositions.forEach(pos => tmp.add(pos));
+    const positions: number[] = [];
+    tmp.forEach(pos => positions.push(pos));
+    // not allowed! option '---downlevelIteration' is required.
+    // return [...tmpSet];
+    return positions.sort();
+  }
+
+  private addLedgePos(ledgePos: Set<number>, lastRect: LogicalRect | undefined, newRect: LogicalRect) {
+    if (!lastRect) {
+      ledgePos.add(0);
+      ledgePos.add(newRect.after);
+    } else if (lastRect.before === newRect.before) {
+      if (newRect.extent > lastRect.extent) {
+        ledgePos.delete(lastRect.after);
+      }
+      ledgePos.add(newRect.after);
+    } else {
+      if (lastRect.measure === newRect.measure) {
+        ledgePos.delete(lastRect.after);
+      }
+      ledgePos.add(newRect.after);
+    }
+  }
+
+  private pushStartRect(rect: LogicalRect) {
+    const lastRect = this.startRects[this.startRects.length - 1];
+    this.addLedgePos(this.startLedgePositions, lastRect, rect);
+    this.startRects.push(rect);
+  }
+
+  private pushEndRect(rect: LogicalRect) {
+    const lastRect = this.endRects[this.endRects.length - 1];
+    this.addLedgePos(this.endLedgePositions, lastRect, rect);
+    this.endRects.push(rect);
   }
 
   public pushStart(before: number, size: LogicalSize): LogicalCursorPos {
@@ -93,7 +161,7 @@ export class FloatRegion {
     this.cursorBefore = Math.max(this.cursorBefore, before);
     if (this.startRects.length === 0) {
       let pos = new LogicalCursorPos({ start: 0, before: this.cursorBefore });
-      this.startRects.push(new LogicalRect(pos, size));
+      this.pushStartRect(new LogicalRect(pos, size));
       return pos;
     }
     let top = this.startRects[this.startRects.length - 1];
@@ -104,7 +172,7 @@ export class FloatRegion {
       let start = rect ? rect.end : 0;
       let before = this.cursorBefore;
       let pos = new LogicalCursorPos({ start: start, before: before });
-      this.startRects.push(new LogicalRect(pos, size));
+      this.pushStartRect(new LogicalRect(pos, size))
       return pos;
     }
     // enough measure is not ready, so skip top block.
@@ -126,7 +194,7 @@ export class FloatRegion {
         start: this.maxRegion.measure - size.measure,
         before: this.cursorBefore
       });
-      this.endRects.push(new LogicalRect(pos, size));
+      this.pushEndRect(new LogicalRect(pos, size));
       return pos;
     }
     let top = this.endRects[this.endRects.length - 1];
@@ -135,7 +203,7 @@ export class FloatRegion {
       let rect = this.getEndSideRect(this.cursorBefore);
       let start = rect ? rect.start - size.measure : this.maxRegion.measure - size.measure;
       let pos = new LogicalCursorPos({ start: start, before: this.cursorBefore });
-      this.endRects.push(new LogicalRect(pos, size));
+      this.pushEndRect(new LogicalRect(pos, size));
       return pos;
     }
     this.cursorBefore += top.extent;
@@ -170,7 +238,7 @@ export class FloatRegion {
     if (!rect) {
       return 0;
     }
-    return rect.measure;
+    return rect.end;
   }
 
   private getEndSideRectMeasure(before_pos: number): number {
@@ -178,7 +246,7 @@ export class FloatRegion {
     if (!rect) {
       return 0;
     }
-    return rect.measure;
+    return this.maxRegion.measure - rect.start;
   }
 
   private getMaxSideCursorBeforeFrom(rects: LogicalRect[]): number {

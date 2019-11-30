@@ -22,14 +22,11 @@ export class LogicalRect {
   }
 
   public collideWith(rect: LogicalRect): boolean {
-    const left = this.start < rect.start ? this : rect;
-    const right = this === left ? rect : this;
-    const top = this.before < rect.before ? this : rect;
-    const bottom = this === top ? rect : this;
-    return (
-      left.start <= right.start && right.start <= left.end &&
-      top.before <= bottom.before && bottom.before <= top.after
-    );
+    const dx = Math.abs(this.start - rect.start);
+    const sx = (this.measure + rect.measure) / 2;
+    const dy = Math.abs(this.before - rect.before);
+    const sy = (this.extent + rect.extent) / 2;
+    return dx < sx && dy < sy;
   }
 
   public get extent(): number {
