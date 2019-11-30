@@ -420,18 +420,6 @@ export class FlowRegion {
     return this.getLocalRectFromRootRect(rootRect);
   }
 
-  /*
-  public pushFloatStart(root_before: number, size: LogicalSize): LogicalCursorPos {
-    const root_pos = this.rootRegion.pushFloatStart(root_before, size);
-    return this.getLocalPosFromRootPos(root_pos);
-  }
-
-  public pushFloatEnd(root_before: number, size: LogicalSize): LogicalCursorPos {
-    const root_pos = this.rootRegion.pushFloatEnd(root_before, size);
-    return this.getLocalPosFromRootPos(root_pos);
-  }
-  */
-
   protected getFloatSpacePos(root_before: number): LogicalCursorPos {
     const float_region = this.getFloatRegion();
     if (!float_region) {
