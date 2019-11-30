@@ -61,13 +61,29 @@ export class FloatRegion {
     return rect ? rect.end : 0;
   }
 
-  public getSpaceMeasureAt(before_pos: number): number {
-    return this.maxRegion.measure - this.getSideRectMeasureAt(before_pos);
+  public getSpaceMeasureAt(before: number): number {
+    return this.maxRegion.measure - this.getSideRectMeasureAt(before);
   }
 
   public getSideRectMeasureAt(before: number): number {
     return this.getStartSideRectMeasure(before)
       + this.getEndSideRectMeasure(before);
+  }
+
+  public findSpaceCursorFor(before: number, size: LogicalSize): { cursor: LogicalCursorPos, measure: number } {
+    throw "todo";
+  }
+
+  private hasSpaceFor(before: number, wantedSize: LogicalSize): boolean {
+    const spaceMeasure = this.getSpaceMeasureAt(before);
+    if (spaceMeasure < wantedSize.measure) {
+      return false;
+    }
+    const wantedCursor = new LogicalCursorPos({ start: this.getSpaceStartAt(before), before });
+    const wantedSpace = new LogicalRect(wantedCursor, wantedSize);
+    const floats = this.allRects.filter(rect => rect.before > before || rect.after > before);
+    const collideFloat = floats.find(rect => wantedSpace.collideWith(rect));
+    return collideFloat === undefined;
   }
 
   public pushStart(before: number, size: LogicalSize): LogicalCursorPos {
@@ -127,6 +143,10 @@ export class FloatRegion {
       throw new Error("FloatRegion:no more space left.");
     }
     return this.pushEnd(this.cursorBefore, size);
+  }
+
+  private get allRects(): LogicalRect[] {
+    return this.startRects.concat(this.endRects);
   }
 
   private get maxStartRegionExtent(): number {

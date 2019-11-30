@@ -7,18 +7,29 @@ export class LogicalRect {
   public pos: LogicalCursorPos;
   public size: LogicalSize;
 
-  constructor(pos: LogicalCursorPos, size: LogicalSize){
+  constructor(pos: LogicalCursorPos, size: LogicalSize) {
     this.pos = pos;
     this.size = size;
   }
 
   public toString(): string {
-    let str = JSON.stringify({pos:this.pos, size:this.size});
+    let str = JSON.stringify({ pos: this.pos, size: this.size });
     return `rect(${str})`;
   }
 
   public includeSize(size: LogicalSize): boolean {
     return (this.measure >= size.measure && this.extent >= size.extent);
+  }
+
+  public collideWith(rect: LogicalRect): boolean {
+    const left = this.start < rect.start ? this : rect;
+    const right = this === left ? rect : this;
+    const top = this.before < rect.before ? this : rect;
+    const bottom = this === top ? rect : this;
+    return (
+      left.start <= right.start && right.start <= left.end &&
+      top.before <= bottom.before && bottom.before <= top.after
+    );
   }
 
   public get extent(): number {
@@ -33,7 +44,7 @@ export class LogicalRect {
     return this.size.measure;
   }
 
-  public set measure(size: number){
+  public set measure(size: number) {
     this.size.measure = size;
   }
 
@@ -41,7 +52,7 @@ export class LogicalRect {
     return this.pos.start;
   }
 
-  public set start(size: number){
+  public set start(size: number) {
     this.pos.start = size;
   }
 
@@ -49,7 +60,7 @@ export class LogicalRect {
     return this.pos.before;
   }
 
-  public set before(size: number){
+  public set before(size: number) {
     this.pos.before = size;
   }
 

@@ -23,24 +23,24 @@
     "typescript"
   ],
   "jest": {
-    "verbose": true,
-    "testURL": "http://localhost",
+    "testURL": "http://localhost/",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.ts$": "ts-jest"
     },
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "src/tsconfig.json"
+        "tsConfig": "../src/tsconfig.json",
+        "diagnostics": {
+          "warnOnly": true
+        }
       }
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
+    "testMatch": [
+      "**/tests/**/*.test.ts"
     ]
   },
   "author": "Watanabe Masaki",

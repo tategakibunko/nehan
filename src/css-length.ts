@@ -8,10 +8,10 @@ import {
 } from "./public-api";
 
 export class CssLength {
-  public cssText: string; 
+  public cssText: string;
   public unitTypeName: CssUnitTypeName;
 
-  constructor(css_text: string){
+  constructor(css_text: string) {
     this.cssText = this.normalize(css_text);
     this.unitTypeName = CssUnitType.inferName(this.cssText);
   }
@@ -31,7 +31,7 @@ export class CssLength {
   static getRemBasePx(element: HtmlElement): number {
     let doc = element.ownerDocument;
     let font_size = doc.body.computedStyle.getPropertyValue("font-size");
-    if(!font_size){
+    if (!font_size) {
       return Config.defaultFontSize;
     }
     let rem_size = Utils.atoi(font_size, 10);
@@ -41,13 +41,13 @@ export class CssLength {
   // except 'font-size' value, base size is compute by font-size of 'current' box.
   // note that 'font-size' must be calculated by 'parent' font-size.
   // (see CssFontSize::computeEmBasePx)
-  protected computeEmBasePx(element: HtmlElement): number {
+  public computeEmBasePx(element: HtmlElement): number {
     let parent = element.parent;
-    if(!parent){
+    if (!parent) {
       return CssLength.getRemBasePx(element.ownerDocument.body);
     }
     let font_size = element.computedStyle.getPropertyValue("font-size");
-    if(font_size){
+    if (font_size) {
       return Utils.atoi(font_size, 10);
     }
     return Config.defaultFontSize;
@@ -55,34 +55,34 @@ export class CssLength {
 
   public computeSize(element: HtmlElement, parent_ctx?: FlowContext): number {
     let base_size;
-    if(this.cssText === "inherit"){
+    if (this.cssText === "inherit") {
       return this.computeInheritSize(element, parent_ctx);
     }
-    switch(this.unitTypeName){
-    case CssUnitTypeName.PERCENT:
-      return this.computePercentSize(element, parent_ctx);
-    case CssUnitTypeName.PX:
-      return Math.floor(this.floatValue);
-    case CssUnitTypeName.PT:
-      return Math.floor(this.floatValue * 4 / 3);
-    case CssUnitTypeName.EM:
-      base_size = this.computeEmBasePx(element);
-      return Math.floor(this.floatValue * base_size);
-    case CssUnitTypeName.REM:
-      base_size = CssLength.getRemBasePx(element);
-      return Math.floor(this.floatValue * base_size);
-    case CssUnitTypeName.VW:
-      base_size = window.innerWidth;
-      return Math.floor(base_size * (this.floatValue / 100));
-    case CssUnitTypeName.VH:
-      base_size = window.innerHeight;
-      return Math.floor(base_size * (this.floatValue / 100));
+    switch (this.unitTypeName) {
+      case CssUnitTypeName.PERCENT:
+        return this.computePercentSize(element, parent_ctx);
+      case CssUnitTypeName.PX:
+        return Math.floor(this.floatValue);
+      case CssUnitTypeName.PT:
+        return Math.floor(this.floatValue * 4 / 3);
+      case CssUnitTypeName.EM:
+        base_size = this.computeEmBasePx(element);
+        return Math.floor(this.floatValue * base_size);
+      case CssUnitTypeName.REM:
+        base_size = CssLength.getRemBasePx(element);
+        return Math.floor(this.floatValue * base_size);
+      case CssUnitTypeName.VW:
+        base_size = window.innerWidth;
+        return Math.floor(base_size * (this.floatValue / 100));
+      case CssUnitTypeName.VH:
+        base_size = window.innerHeight;
+        return Math.floor(base_size * (this.floatValue / 100));
     }
-    if(Utils.isNumber(this.cssText)){
+    if (Utils.isNumber(this.cssText)) {
       return this.floatValue;
     }
     let size = this.computeKeywordSize(element);
-    if(size !== null){
+    if (size !== null) {
       return size;
     }
     return this.computeInitialSize(element, parent_ctx);
