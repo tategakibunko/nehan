@@ -3,13 +3,13 @@ import {
   FlowRegion,
   FloatRegion,
   LogicalSize,
-  LogicalCursorPos,
+  LogicalRect,
 } from "./public-api";
 
 export class FlowRootRegion extends FlowRegion {
   protected floatRegion: FloatRegion | null;
-  
-  constructor(context: FlowContext){
+
+  constructor(context: FlowContext) {
     super(context);
     this.floatRegion = null;
   }
@@ -18,7 +18,7 @@ export class FlowRootRegion extends FlowRegion {
     return this.cursor.before;
   }
 
-  public get rootRegion(){
+  public get rootRegion() {
     return this;
   }
 
@@ -32,14 +32,14 @@ export class FlowRootRegion extends FlowRegion {
 
   protected createFloatRegion(): FloatRegion {
     let size = new LogicalSize({
-      measure:this.maxContextBoxMeasure,
-      extent:this.maxContextBoxExtent
+      measure: this.maxContextBoxMeasure,
+      extent: this.maxContextBoxExtent
     });
     return new FloatRegion(size, this.cursor.before);
   }
 
-  public clearFloatRegion(){
-    if(this.floatRegion){
+  public clearFloatRegion() {
+    if (this.floatRegion) {
       //this.floatRegion.clear();
       this.floatRegion = null;
     }
@@ -53,15 +53,15 @@ export class FlowRootRegion extends FlowRegion {
     return this.floatRegion;
   }
 
-  public pushFloatStart(root_before: number, size: LogicalSize): LogicalCursorPos {
-    if(!this.floatRegion){
+  public pushFloatStart(root_before: number, size: LogicalSize): LogicalRect {
+    if (!this.floatRegion) {
       this.floatRegion = this.createFloatRegion();
     }
     return this.floatRegion.pushStart(root_before, size);
   }
 
-  public pushFloatEnd(root_before: number, size: LogicalSize): LogicalCursorPos {
-    if(!this.floatRegion){
+  public pushFloatEnd(root_before: number, size: LogicalSize): LogicalRect {
+    if (!this.floatRegion) {
       this.floatRegion = this.createFloatRegion();
     }
     return this.floatRegion.pushEnd(root_before, size);

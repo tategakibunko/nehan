@@ -9,6 +9,7 @@ import {
   LogicalCursorPos,
   LogicalSize,
   LogicalClear,
+  LogicalRect,
   BoxContent,
   BoxContentSize,
   BoxEnv,
@@ -187,9 +188,9 @@ export class FlowRegion {
       return;
     }
     if (block.isFloatStart()) {
-      block.blockPos = this.pushFloatStart(this.rootRegionBefore, block.totalSize);
+      block.blockPos = this.pushFloatStart(this.rootRegionBefore, block.totalSize).pos;
     } else if (block.isFloatEnd()) {
-      block.blockPos = this.pushFloatEnd(this.rootRegionBefore, block.totalSize);
+      block.blockPos = this.pushFloatEnd(this.rootRegionBefore, block.totalSize).pos;
     }
     this.content.addBlock(block);
   }
@@ -405,6 +406,21 @@ export class FlowRegion {
     });
   }
 
+  protected getLocalRectFromRootRect(root_rect: LogicalRect): LogicalRect {
+    return new LogicalRect(this.getLocalPosFromRootPos(root_rect.pos), root_rect.size);
+  }
+
+  public pushFloatStart(root_before: number, size: LogicalSize): LogicalRect {
+    const rootRect = this.rootRegion.pushFloatStart(root_before, size);
+    return this.getLocalRectFromRootRect(rootRect);
+  }
+
+  public pushFloatEnd(root_before: number, size: LogicalSize): LogicalRect {
+    const rootRect = this.rootRegion.pushFloatEnd(root_before, size);
+    return this.getLocalRectFromRootRect(rootRect);
+  }
+
+  /*
   public pushFloatStart(root_before: number, size: LogicalSize): LogicalCursorPos {
     const root_pos = this.rootRegion.pushFloatStart(root_before, size);
     return this.getLocalPosFromRootPos(root_pos);
@@ -414,6 +430,7 @@ export class FlowRegion {
     const root_pos = this.rootRegion.pushFloatEnd(root_before, size);
     return this.getLocalPosFromRootPos(root_pos);
   }
+  */
 
   protected getFloatSpacePos(root_before: number): LogicalCursorPos {
     const float_region = this.getFloatRegion();

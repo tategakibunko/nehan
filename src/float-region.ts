@@ -142,27 +142,29 @@ export class FloatRegion {
     }
   }
 
-  private pushStartRect(rect: LogicalRect) {
+  private pushStartRect(rect: LogicalRect): LogicalRect {
     const lastRect = this.startRects[this.startRects.length - 1];
     this.addLedgePos(this.startLedgePositions, lastRect, rect);
     this.startRects.push(rect);
+    return rect;
   }
 
-  private pushEndRect(rect: LogicalRect) {
+  private pushEndRect(rect: LogicalRect): LogicalRect {
     const lastRect = this.endRects[this.endRects.length - 1];
     this.addLedgePos(this.endLedgePositions, lastRect, rect);
     this.endRects.push(rect);
+    return rect;
   }
 
-  public pushStart(before: number, size: LogicalSize): LogicalCursorPos {
+  public pushStart(before: number, size: LogicalSize): LogicalRect {
     if (this.maxRegion.includeSize(size) === false) {
       throw new Error("FloatRegion:too large size");
     }
     this.cursorBefore = Math.max(this.cursorBefore, before);
     if (this.startRects.length === 0) {
-      let pos = new LogicalCursorPos({ start: 0, before: this.cursorBefore });
-      this.pushStartRect(new LogicalRect(pos, size));
-      return pos;
+      const pos = new LogicalCursorPos({ start: 0, before: this.cursorBefore });
+      const rect = new LogicalRect(pos, size);
+      return this.pushStartRect(rect);
     }
     let top = this.startRects[this.startRects.length - 1];
     let rest_measure = this.getSpaceMeasureAt(this.cursorBefore);
@@ -172,8 +174,7 @@ export class FloatRegion {
       let start = rect ? rect.end : 0;
       let before = this.cursorBefore;
       let pos = new LogicalCursorPos({ start: start, before: before });
-      this.pushStartRect(new LogicalRect(pos, size))
-      return pos;
+      return this.pushStartRect(new LogicalRect(pos, size))
     }
     // enough measure is not ready, so skip top block.
     this.cursorBefore += top.extent;
@@ -184,7 +185,7 @@ export class FloatRegion {
     return this.pushStart(this.cursorBefore, size);
   }
 
-  public pushEnd(before: number, size: LogicalSize): LogicalCursorPos {
+  public pushEnd(before: number, size: LogicalSize): LogicalRect {
     if (this.maxRegion.includeSize(size) === false) {
       throw new Error("FloatRegion:too large size");
     }
@@ -194,8 +195,7 @@ export class FloatRegion {
         start: this.maxRegion.measure - size.measure,
         before: this.cursorBefore
       });
-      this.pushEndRect(new LogicalRect(pos, size));
-      return pos;
+      return this.pushEndRect(new LogicalRect(pos, size));
     }
     let top = this.endRects[this.endRects.length - 1];
     let rest_measure = this.getSpaceMeasureAt(this.cursorBefore);
@@ -203,8 +203,7 @@ export class FloatRegion {
       let rect = this.getEndSideRect(this.cursorBefore);
       let start = rect ? rect.start - size.measure : this.maxRegion.measure - size.measure;
       let pos = new LogicalCursorPos({ start: start, before: this.cursorBefore });
-      this.pushEndRect(new LogicalRect(pos, size));
-      return pos;
+      return this.pushEndRect(new LogicalRect(pos, size));
     }
     this.cursorBefore += top.extent;
     if (this.cursorBefore + size.extent >= this.maxRegion.extent) {

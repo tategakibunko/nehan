@@ -1,38 +1,51 @@
 import {
   FloatRegion,
   LogicalSize,
+  SpaceCursorPos,
+  LogicalRect,
 } from '../dist';
 
 test("float-region", () => {
   let region = new FloatRegion(new LogicalSize({ measure: 100, extent: 100 }), 0);
+  let rect: LogicalRect;
+  /*
+  ----------------------------------
+  |10x20|20x30|30x10|  |10x10|20x40|
+  |     |     |------  ------|     |
+  ------|     |              |     |
+  |     -------              |     |
+  |                          -------
+  |                                 |
+  ----------------------------------
+  */
+  rect = region.pushStart(0, new LogicalSize({ measure: 10, extent: 20 }));
+  expect(rect.before).toBe(0)
+  expect(rect.start).toBe(0)
+  rect = region.pushStart(rect.before, new LogicalSize({ measure: 20, extent: 30 }));
+  expect(rect.before).toBe(0)
+  expect(rect.start).toBe(10)
+  rect = region.pushStart(rect.before, new LogicalSize({ measure: 30, extent: 10 }));
+  expect(rect.before).toBe(0)
+  expect(rect.start).toBe(30)
+  rect = region.pushEnd(rect.before, new LogicalSize({ measure: 20, extent: 40 }));
+  expect(rect.before).toBe(0)
+  expect(rect.start).toBe(80)
+  rect = region.pushEnd(rect.before, new LogicalSize({ measure: 10, extent: 10 }));
+  expect(rect.before).toBe(0)
+  expect(rect.start).toBe(70)
 
-  let push_start = (size: LogicalSize) => {
-    let pos = region.pushStart(0, size);
-    console.log("push_start:%o, float-pos:%o", size, pos);
-  };
+  let scur: SpaceCursorPos | undefined;
+  scur = region.findSpaceCursorForSize(0, new LogicalSize({ measure: 10, extent: 10 }));
+  expect(scur!.measure).toBe(10);
+  expect(scur!.cursor.start).toBe(60);
+  expect(scur!.cursor.before).toBe(0);
 
-  let push_end = (size: LogicalSize) => {
-    let pos = region.pushEnd(0, size);
-    console.log("push_end:%o, float-pos:%o", size, pos);
-  };
+  scur = region.findSpaceCursorForSize(0, new LogicalSize({ measure: 20, extent: 20 }));
+  expect(scur!.measure).toBe(50);
+  expect(scur!.cursor.start).toBe(30);
+  expect(scur!.cursor.before).toBe(10);
 
-  push_start(new LogicalSize({ measure: 10, extent: 20 }));
-  push_start(new LogicalSize({ measure: 20, extent: 30 }));
-  push_start(new LogicalSize({ measure: 30, extent: 10 }));
-  push_end(new LogicalSize({ measure: 20, extent: 40 }));
-  push_end(new LogicalSize({ measure: 10, extent: 10 }));
-
-  const spCur1 = region.findSpaceCursorForSize(0, new LogicalSize({ measure: 10, extent: 10 }));
-  console.log('spCur1: %o', spCur1);
-
-  const spCur2 = region.findSpaceCursorForSize(0, new LogicalSize({ measure: 20, extent: 20 }));
-  console.log('spCur2: %o', spCur2);
-
-  let check: boolean;
-  check = region.hasSpaceForSize(0, new LogicalSize({ measure: 10, extent: 10 }));
-  console.log('has space? :', check);
-  check = region.hasSpaceForSize(0, new LogicalSize({ measure: 20, extent: 10 }));
-  console.log('has space? :', check);
-  check = region.hasSpaceForSize(10, new LogicalSize({ measure: 20, extent: 10 }));
-  console.log('has space? :', check);
+  expect(region.hasSpaceForSize(0, new LogicalSize({ measure: 10, extent: 10 }))).toBe(true);
+  expect(region.hasSpaceForSize(0, new LogicalSize({ measure: 20, extent: 10 }))).toBe(false);
+  expect(region.hasSpaceForSize(10, new LogicalSize({ measure: 20, extent: 10 }))).toBe(true);
 });
