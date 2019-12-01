@@ -113,49 +113,6 @@ export class FloatRegion {
     return collideFloat === undefined;
   }
 
-
-  private get ledgePositions(): number[] {
-    const tmp = new Set<number>();
-    this.startLedgePositions.forEach(pos => tmp.add(pos));
-    this.endLedgePositions.forEach(pos => tmp.add(pos));
-    const positions: number[] = [];
-    tmp.forEach(pos => positions.push(pos));
-    // not allowed! option '---downlevelIteration' is required.
-    // return [...tmpSet];
-    return positions.sort();
-  }
-
-  private addLedgePos(ledgePos: Set<number>, lastRect: LogicalRect | undefined, newRect: LogicalRect) {
-    if (!lastRect) {
-      ledgePos.add(0);
-      ledgePos.add(newRect.after);
-    } else if (lastRect.before === newRect.before) {
-      if (newRect.extent > lastRect.extent) {
-        ledgePos.delete(lastRect.after);
-      }
-      ledgePos.add(newRect.after);
-    } else {
-      if (lastRect.measure === newRect.measure) {
-        ledgePos.delete(lastRect.after);
-      }
-      ledgePos.add(newRect.after);
-    }
-  }
-
-  private pushStartRect(rect: LogicalRect): LogicalRect {
-    const lastRect = this.startRects[this.startRects.length - 1];
-    this.addLedgePos(this.startLedgePositions, lastRect, rect);
-    this.startRects.push(rect);
-    return rect;
-  }
-
-  private pushEndRect(rect: LogicalRect): LogicalRect {
-    const lastRect = this.endRects[this.endRects.length - 1];
-    this.addLedgePos(this.endLedgePositions, lastRect, rect);
-    this.endRects.push(rect);
-    return rect;
-  }
-
   public pushStart(before: number, size: LogicalSize): LogicalRect {
     if (this.maxRegion.includeSize(size) === false) {
       throw new Error("FloatRegion:too large size");
@@ -210,6 +167,48 @@ export class FloatRegion {
       throw new Error("FloatRegion:no more space left.");
     }
     return this.pushEnd(this.cursorBefore, size);
+  }
+
+  private get ledgePositions(): number[] {
+    const tmp = new Set<number>();
+    this.startLedgePositions.forEach(pos => tmp.add(pos));
+    this.endLedgePositions.forEach(pos => tmp.add(pos));
+    const positions: number[] = [];
+    tmp.forEach(pos => positions.push(pos));
+    // not allowed! option '---downlevelIteration' is required.
+    // return [...tmpSet];
+    return positions.sort();
+  }
+
+  private addLedgePos(ledgePos: Set<number>, lastRect: LogicalRect | undefined, newRect: LogicalRect) {
+    if (!lastRect) {
+      ledgePos.add(0);
+      ledgePos.add(newRect.after);
+    } else if (lastRect.before === newRect.before) {
+      if (newRect.extent > lastRect.extent) {
+        ledgePos.delete(lastRect.after);
+      }
+      ledgePos.add(newRect.after);
+    } else {
+      if (lastRect.measure === newRect.measure) {
+        ledgePos.delete(lastRect.after);
+      }
+      ledgePos.add(newRect.after);
+    }
+  }
+
+  private pushStartRect(rect: LogicalRect): LogicalRect {
+    const lastRect = this.startRects[this.startRects.length - 1];
+    this.addLedgePos(this.startLedgePositions, lastRect, rect);
+    this.startRects.push(rect);
+    return rect;
+  }
+
+  private pushEndRect(rect: LogicalRect): LogicalRect {
+    const lastRect = this.endRects[this.endRects.length - 1];
+    this.addLedgePos(this.endLedgePositions, lastRect, rect);
+    this.endRects.push(rect);
+    return rect;
   }
 
   private get allRects(): LogicalRect[] {
