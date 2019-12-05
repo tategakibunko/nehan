@@ -5,20 +5,13 @@ import {
   CssCascade,
 } from "./public-api";
 
-export enum WordBreakValue {
-  NORMAL = "normal",
-  BREAK_ALL = "break-all",
-  KEEP_ALL = "keep-all",
-}
+export type WordBreakValue = "normal" | "break-all" | "keep-all";
 
 export class WordBreak {
-  public value: string;
-  static values: string [] = Utils.Enum.toValueArray(WordBreakValue);
+  public value: WordBreakValue;
 
-  constructor(value: WordBreakValue){
-    this.value = DefaultCss.selectOrDefault(
-      "word-break", value, WordBreak.values
-    );
+  constructor(value: WordBreakValue) {
+    this.value = value;
   }
 
   static load(element: HtmlElement): WordBreak {
@@ -27,7 +20,7 @@ export class WordBreak {
   }
 
   public isNormal(): boolean {
-    return this.value === WordBreakValue.NORMAL;
+    return this.value === 'normal';
   }
 
   // Note that 'word-break:break-all' get prefference over 'overflow-wrap:break-word'.
@@ -42,10 +35,10 @@ export class WordBreak {
   // [this is      ]
   // [looooong word]
   public isBreakAll(): boolean {
-    return this.value === WordBreakValue.BREAK_ALL;
+    return this.value === 'break-all';
   }
 
   public isKeepAll(): boolean {
-    return this.value === WordBreakValue.KEEP_ALL;
+    return this.value === 'keep-all';
   }
 }
