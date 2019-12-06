@@ -13,10 +13,10 @@ export enum LogicalClearValue {
 }
 
 export class LogicalClear {
-  static values: LogicalClearValue [] = Utils.Enum.toValueArray(LogicalClearValue)
+  static values: LogicalClearValue[] = Utils.Enum.toValueArray(LogicalClearValue)
   public value: LogicalClearValue;
 
-  constructor(value: LogicalClearValue){
+  constructor(value: LogicalClearValue) {
     this.value = DefaultCss.selectOrDefault(
       "clear", value, LogicalClear.values
     ) as LogicalClearValue;

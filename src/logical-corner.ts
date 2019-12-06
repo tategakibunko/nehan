@@ -5,4 +5,4 @@ export interface LogicalCornerValue<T> {
   "after-start": T
 }
 
-  
+

@@ -16,9 +16,9 @@ export enum LogicalFloatValue {
 
 export class LogicalFloat {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(LogicalFloatValue);
+  static values: string[] = Utils.Enum.toValueArray(LogicalFloatValue);
 
-  constructor(value: string){
+  constructor(value: string) {
     this.value = DefaultCss.selectOrDefault("float", value, LogicalFloat.values);
   }
 
@@ -45,11 +45,11 @@ export class LogicalFloat {
 
   public getCss(parent: LayoutParent, box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
-    if(this.isNone()){
+    if (this.isNone()) {
       return css;
     }
-    if(!box.isTextVertical()){
-      css.set("float", this.isStart()? "left" : "right");
+    if (!box.isTextVertical()) {
+      css.set("float", this.isStart() ? "left" : "right");
     }
     return css;
   }

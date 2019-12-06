@@ -19,7 +19,7 @@ export class LogicalBoxEdge {
   public border: LogicalBorder;
   public margin: LogicalMargin;
 
-  constructor(values: LogicalBoxEdgeValue){
+  constructor(values: LogicalBoxEdgeValue) {
     this.padding = values.padding;
     this.border = values.border;
     this.margin = values.margin;
@@ -31,47 +31,47 @@ export class LogicalBoxEdge {
     // And margin and border for body are not targets of nehan layouting.
     let is_body = element.tagName === "body";
     return new LogicalBoxEdge({
-      padding:LogicalPadding.load(element),
-      border:is_body? LogicalBorder.none : LogicalBorder.load(element),
-      margin:is_body? LogicalMargin.none : LogicalMargin.load(element)
+      padding: LogicalPadding.load(element),
+      border: is_body ? LogicalBorder.none : LogicalBorder.load(element),
+      margin: is_body ? LogicalMargin.none : LogicalMargin.load(element)
     });
   }
 
   static get none(): LogicalBoxEdge {
     return new LogicalBoxEdge({
-      padding:LogicalPadding.none,
-      border:LogicalBorder.none,
-      margin:LogicalMargin.none
+      padding: LogicalPadding.none,
+      border: LogicalBorder.none,
+      margin: LogicalMargin.none
     });
   }
 
   public clone(): LogicalBoxEdge {
     return new LogicalBoxEdge({
-      padding:this.padding.clone(),
-      border:this.border.clone(),
-      margin:this.margin.clone()
+      padding: this.padding.clone(),
+      border: this.border.clone(),
+      margin: this.margin.clone()
     });
   }
 
-  public clearBefore(){
+  public clearBefore() {
     this.padding.before = 0;
     this.border.clearBefore();
     this.margin.before = 0;
   }
 
-  public clearAfter(){
+  public clearAfter() {
     this.padding.after = 0;
     this.border.clearAfter();
     this.margin.after = 0;
   }
 
-  public clearStart(){
+  public clearStart() {
     this.padding.start = 0;
     this.border.clearStart();
     this.margin.start = 0;
   }
 
-  public clearEnd(){
+  public clearEnd() {
     this.padding.end = 0;
     this.border.clearEnd();
     this.margin.end = 0;
@@ -101,10 +101,34 @@ export class LogicalBoxEdge {
     return this.start + this.end;
   }
 
+  public get borderBoxBefore(): number {
+    return this.padding.before + this.border.width.before;
+  }
+
+  public get borderBoxAfter(): number {
+    return this.padding.after + this.border.width.after;
+  }
+
+  public get borderBoxStart(): number {
+    return this.padding.start + this.border.width.start;
+  }
+
+  public get borderBoxEnd(): number {
+    return this.padding.end + this.border.width.end;
+  }
+
+  public get borderBoxExtent(): number {
+    return this.borderBoxBefore + this.borderBoxAfter;
+  }
+
+  public get borderBoxMeasure(): number {
+    return this.borderBoxStart + this.borderBoxStart;
+  }
+
   public getInnerBoxOffset(): LogicalCursorPosValue {
     return {
-      start:this.padding.start,
-      before:this.padding.before
+      start: this.padding.start,
+      before: this.padding.before
     };
   }
 
@@ -113,7 +137,7 @@ export class LogicalBoxEdge {
     this.padding.getCss(box).mergeTo(css);
     // margin and border of root layout(<body> in general) are not targets of nehan layout.
     // In other words, use native css.
-    if(!box.isRootBox()){
+    if (!box.isRootBox()) {
       this.border.getCss(box).mergeTo(css);
       this.margin.getCss(box).mergeTo(css);
     }
