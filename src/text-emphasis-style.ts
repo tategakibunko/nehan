@@ -15,7 +15,7 @@ const Marks = Utils.Enum.fromArray(MarkValues)
 export type TextEmphasisMark = keyof typeof Marks
 const DefaultMark: TextEmphasisMark = "dot"
 
-let empha_marks: { [keyword: string]: string } = {
+const EmphaEncodeMaps: { [value: string]: string } = {
   "filled dot": "\u2022",
   "open dot": "\u25E6",
   "filled circle": "\u25CF",
@@ -64,7 +64,7 @@ export class TextEmphasisStyle {
   }
 
   public get text(): string {
-    return empha_marks[this.value] || "\u2022";
+    return EmphaEncodeMaps[this.value] || "\u2022";
   }
 
   public isNone(): boolean {
