@@ -1,6 +1,4 @@
 import {
-  Utils,
-  DefaultCss,
   HtmlElement,
   CssCascade,
   LayoutParent,
@@ -8,18 +6,13 @@ import {
   NativeStyleMap,
 } from "./public-api";
 
-export enum LogicalFloatValue {
-  START = "start",
-  END = "end",
-  NONE = "none"
-}
+export type LogicalFloatValue = "start" | "end" | "none"
 
 export class LogicalFloat {
-  public value: string;
-  static values: string[] = Utils.Enum.toValueArray(LogicalFloatValue);
+  public value: LogicalFloatValue;
 
-  constructor(value: string) {
-    this.value = DefaultCss.selectOrDefault("float", value, LogicalFloat.values);
+  constructor(value: LogicalFloatValue) {
+    this.value = value;
   }
 
   public isFloat(): boolean {
@@ -40,7 +33,7 @@ export class LogicalFloat {
 
   static load(element: HtmlElement): LogicalFloat {
     let value = CssCascade.getValue(element, "float");
-    return new LogicalFloat(value);
+    return new LogicalFloat(value as LogicalFloatValue);
   }
 
   public getCss(parent: LayoutParent, box: LogicalBox): NativeStyleMap {
