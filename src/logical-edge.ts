@@ -9,14 +9,8 @@ import {
   CssCascade,
 } from "./public-api";
 
-export enum LogicalEdgeDirection {
-  BEFORE = "before",
-  END = "end",
-  AFTER = "after",
-  START = "start"
-}
-
-export let LogicalEdgeDirections: string[] = Utils.Enum.toValueArray(LogicalEdgeDirection)
+export type LogicalEdgeDirection = "before" | "end" | "after" | "start"
+export let LogicalEdgeDirections: LogicalEdgeDirection[] = ["before", "end", "after", "start"]
 
 export interface LogicalEdgeValue<T> {
   before: T;
@@ -69,13 +63,11 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
   }
 
   static isBlockEdge(direction: LogicalEdgeDirection): boolean {
-    return (direction === LogicalEdgeDirection.BEFORE ||
-      direction === LogicalEdgeDirection.AFTER);
+    return (direction === "before" || direction === "after");
   }
 
   static isInlineEdge(direction: LogicalEdgeDirection): boolean {
-    return (direction === LogicalEdgeDirection.START ||
-      direction === LogicalEdgeDirection.END);
+    return (direction === "start" || direction === "end");
   }
 
   public getPhysicalEdgeValue(writing_mode: WritingMode): PhysicalEdgeValue<T> {
@@ -98,7 +90,7 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
     return { before: this.before, end: this.end, after: this.after, start: this.start };
   }
 
-  public get items(): PropValue<string, T>[] {
+  public get items(): PropValue<LogicalEdgeDirection, T>[] {
     return [
       { prop: "before", value: this.before },
       { prop: "end", value: this.end },
