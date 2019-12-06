@@ -12,9 +12,9 @@ export enum ListStylePositionValue {
 
 export class ListStylePosition {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(ListStylePositionValue);
+  static values: string[] = Utils.Enum.toValueArray(ListStylePositionValue);
 
-  constructor(value: ListStylePositionValue){
+  constructor(value: ListStylePositionValue) {
     this.value = DefaultCss.selectOrDefault(
       "list-style-position", value, ListStylePosition.values
     );

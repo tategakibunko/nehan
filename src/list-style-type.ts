@@ -3,63 +3,48 @@ import {
   HtmlElement,
   Utils,
   CssCascade,
-  DefaultCss,
 } from "./public-api";
 
-export enum ListStyleTypeValue {
-  NONE = "none",
-  DISC = "disc",
-  CIRCLE = "circle",
-  SQUARE = "square",
-  DECIMAL = "decimal",
-}
+const TypeValues = ["none", "disc", "circle", "square", "decimal"];
+const Types = Utils.Enum.fromArray(TypeValues);
+export type ListStyleTypeValue = keyof typeof Types;
 
-/*
-interface ListMarkerInfo {
-  name: string,
-  isNumeric: boolean,
-  isDecimal: boolean,
-}
-*/
-
-let MarkerText: {[keyword: string]: string} = {
-  "none":SpaceChar.markerSpace,
-  "disc":"\u2022",   // BULLET(U+2022)
-  "circle":"\u25E6", // WHITE BULLET(U+25E6)
-  "square":"\u25AA", // BLACK SMALL SQUARE(U+25AA)
+let MarkerText: { [keyword: string]: string } = {
+  "none": SpaceChar.markerSpace,
+  "disc": "\u2022",   // BULLET(U+2022)
+  "circle": "\u25E6", // WHITE BULLET(U+25E6)
+  "square": "\u25AA", // BLACK SMALL SQUARE(U+25AA)
 }
 
 export class ListStyleType {
   public value: ListStyleTypeValue;
-  static values: string [] = Utils.Enum.toValueArray(ListStyleTypeValue);
+  static values: string[] = TypeValues;
+  static property: string = "list-style-type";
 
   static load(element: HtmlElement): ListStyleType {
-    let value = CssCascade.getValue(element, "list-style-type");
+    let value = CssCascade.getValue(element, this.property);
     return new ListStyleType(value as ListStyleTypeValue);
   }
 
-  constructor(value: ListStyleTypeValue){
-    this.value = DefaultCss.selectOrDefault(
-      "list-style-type", value, ListStyleType.values
-    ) as ListStyleTypeValue;
+  constructor(value: ListStyleTypeValue) {
+    this.value = value;
   }
 
   public isTcyMarker(): boolean {
-    return this.value === ListStyleTypeValue.DECIMAL;
+    return this.value === "decimal";
   }
 
   public getMarkerText(index: number): string {
-    switch(this.value){
-    case ListStyleTypeValue.NONE:
-    case ListStyleTypeValue.DISC:
-    case ListStyleTypeValue.CIRCLE:
-    case ListStyleTypeValue.SQUARE:
-      return MarkerText[this.value];
-
-    case ListStyleTypeValue.DECIMAL:
-      return String(index + 1) + ".";
-    default: // TODO
-      return MarkerText[ListStyleTypeValue.DISC];
+    switch (this.value) {
+      case "none":
+      case "circle":
+      case "disc":
+      case "square":
+        return MarkerText[this.value];
+      case "decimal":
+        return String(index + 1) + ".";
+      default: // TODO
+        return MarkerText["disc"];
     }
   }
 }
