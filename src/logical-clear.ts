@@ -1,25 +1,15 @@
 import {
-  Utils,
-  DefaultCss,
   HtmlElement,
   CssCascade,
 } from "./public-api";
 
-export enum LogicalClearValue {
-  NONE = "none",
-  START = "start",
-  END = "end",
-  BOTH = "both"
-}
+export type LogicalClearValue = "none" | "start" | "end" | "both"
 
 export class LogicalClear {
-  static values: LogicalClearValue[] = Utils.Enum.toValueArray(LogicalClearValue)
   public value: LogicalClearValue;
 
   constructor(value: LogicalClearValue) {
-    this.value = DefaultCss.selectOrDefault(
-      "clear", value, LogicalClear.values
-    ) as LogicalClearValue;
+    this.value = value;
   }
 
   static load(element: HtmlElement): LogicalClear {
@@ -28,18 +18,18 @@ export class LogicalClear {
   }
 
   public isNone(): boolean {
-    return this.value === LogicalClearValue.NONE;
+    return this.value === 'none';
   }
 
   public isStart(): boolean {
-    return this.value === LogicalClearValue.START;
+    return this.value === 'start';
   }
 
   public isEnd(): boolean {
-    return this.value === LogicalClearValue.END;
+    return this.value === 'end';
   }
 
   public isBoth(): boolean {
-    return this.value === LogicalClearValue.BOTH;
+    return this.value === 'both';
   }
 }
