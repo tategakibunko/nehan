@@ -10,7 +10,10 @@ import {
 } from "./public-api";
 
 export type LogicalEdgeDirection = "before" | "end" | "after" | "start"
-export let LogicalEdgeDirections: LogicalEdgeDirection[] = ["before", "end", "after", "start"]
+export const LogicalEdgeDirections: LogicalEdgeDirection[] = ["before", "end", "after", "start"]
+
+export type PhysicalEdgeDirection = "top" | "right" | "bottom" | "left"
+export const PhysicalEdgeDirections: PhysicalEdgeDirection[] = ["top", "right", "bottom", "left"]
 
 export interface LogicalEdgeValue<T> {
   before: T;
@@ -39,7 +42,7 @@ export class PhysicalEdge<T> implements PhysicalEdgeValue<T> {
     this.left = values.left;
   }
 
-  public get items(): PropValue<string, T>[] {
+  public get items(): PropValue<PhysicalEdgeDirection, T>[] {
     return [
       { prop: "top", value: this.top },
       { prop: "right", value: this.right },
