@@ -1,31 +1,23 @@
 import {
-  Utils,
-  DefaultCss,
   HtmlElement,
   CssCascade,
 } from "./public-api";
 
-export enum ListStylePositionValue {
-  INSIDE = "inside",
-  OUTSIDE = "outside"
-}
+export type ListStylePositionValue = "inside" | "outside"
 
 export class ListStylePosition {
-  public value: string;
-  static values: string[] = Utils.Enum.toValueArray(ListStylePositionValue);
+  public value: ListStylePositionValue;
 
   constructor(value: ListStylePositionValue) {
-    this.value = DefaultCss.selectOrDefault(
-      "list-style-position", value, ListStylePosition.values
-    );
+    this.value = value;
   }
 
   public isOutside(): boolean {
-    return this.value === ListStylePositionValue.OUTSIDE;
+    return this.value === 'outside'
   }
 
   public isInside(): boolean {
-    return this.value === ListStylePositionValue.INSIDE;
+    return this.value === 'inside';
   }
 
   static load(element: HtmlElement): ListStylePosition {

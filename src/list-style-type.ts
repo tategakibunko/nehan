@@ -1,13 +1,10 @@
 import {
   SpaceChar,
   HtmlElement,
-  Utils,
   CssCascade,
 } from "./public-api";
 
-const TypeValues = ["none", "disc", "circle", "square", "decimal"];
-const Types = Utils.Enum.fromArray(TypeValues);
-export type ListStyleTypeValue = keyof typeof Types;
+export type ListStyleTypeValue = "none" | "disc" | "circle" | "square" | "decimal"
 
 let MarkerText: { [keyword: string]: string } = {
   "none": SpaceChar.markerSpace,
@@ -18,7 +15,6 @@ let MarkerText: { [keyword: string]: string } = {
 
 export class ListStyleType {
   public value: ListStyleTypeValue;
-  static values: string[] = TypeValues;
   static property: string = "list-style-type";
 
   static load(element: HtmlElement): ListStyleType {
