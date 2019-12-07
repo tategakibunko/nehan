@@ -8,7 +8,7 @@ export interface LogicalCursorPosValue {
   start: number,
 }
 
-export class LogicalCursorPos {
+export class LogicalCursorPos implements LogicalCursorPosValue {
   public before: number;
   public start: number;
 
