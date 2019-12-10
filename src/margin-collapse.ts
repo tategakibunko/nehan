@@ -20,15 +20,15 @@ let collapse_skip_tags = [
 ];
 
 export class MarginCollapse {
-  static collapse(element: HtmlElement){
-    if(!this.isTarget(element)){
+  static collapse(element: HtmlElement) {
+    if (!this.isTarget(element)) {
       return;
     }
     // collapse between element.before <-> (prev-chains).after
     // prev-chains := prev, last of prev, last of last of prev ...
     let before = Utils.atoi(element.computedStyle.getPropertyValue("margin-before") || "0px");
     let prev_max = this.getMaxAfterOfBefore(element);
-    let new_before = (prev_max >= before)? 0 : before - prev_max;
+    let new_before = (prev_max >= before) ? 0 : before - prev_max;
     element.computedStyle.setProperty("margin-before", String(new_before) + "px");
     /*
       if(before !== new_before){
@@ -40,7 +40,7 @@ export class MarginCollapse {
     // parent-chains := parent, last of parent, last of last of parent ...
     let after = Utils.atoi(element.computedStyle.getPropertyValue("margin-after") || "0px");
     let parent_max = this.getMaxAfterOfParent(element);
-    let new_after = (parent_max >= after)? 0 : after - parent_max;
+    let new_after = (parent_max >= after) ? 0 : after - parent_max;
     element.computedStyle.setProperty("margin-after", String(new_after) + "px");
     /*
       if(after !== new_after){
@@ -60,25 +60,25 @@ export class MarginCollapse {
   // last child of previous,
   // last child of last child of previous ....
   static getMaxAfterOfBefore(element: HtmlElement): number {
-    if(this.hasBorder(element, "before")){
+    if (this.hasBorder(element, "before")) {
       return 0;
     }
     let prev = element.previousSibling, max = 0;
-    while(prev){ // prev -> last -> last ...
-      if(WhiteSpace.isWhiteSpaceElement(prev)){
-	prev = prev.previousSibling;
-	continue;
+    while (prev) { // prev -> last -> last ...
+      if (WhiteSpace.isWhiteSpaceElement(prev)) {
+        prev = prev.previousSibling;
+        continue;
       }
-      if(!this.isTarget(prev) || this.hasBorder(prev, "after")){
-	break;
+      if (!this.isTarget(prev) || this.hasBorder(prev, "after")) {
+        break;
       }
       let size = Utils.atoi(prev.computedStyle.getPropertyValue("margin-after") || "0px");
-      if(size > max){
-	max = size;
+      if (size > max) {
+        max = size;
       }
       prev = prev.lastChild;
-      if(!prev){
-	break;
+      if (!prev) {
+        break;
       }
     }
     return max;
@@ -88,38 +88,38 @@ export class MarginCollapse {
   // last child of parent
   // last child of lasts child of parent ...
   static getMaxAfterOfParent(element: HtmlElement): number {
-    if(this.hasBorder(element, "after")){
+    if (this.hasBorder(element, "after")) {
       return 0;
     }
     let parent = element.parent, max = 0;
-    if(!parent || parent.lastChild !== element){
+    if (!parent || parent.lastChild !== element) {
       return 0;
     }
-    while(parent){
-      if(!this.isTarget(parent)){
-	break;
+    while (parent) {
+      if (!this.isTarget(parent)) {
+        break;
       }
       let size = Utils.atoi(parent.computedStyle.getPropertyValue("margin-after") || "0px");
-      if(size > max){
-	max = size;
+      if (size > max) {
+        max = size;
       }
-      if(!parent.parent){
-	break;
+      if (!parent.parent) {
+        break;
       }
       let last: HtmlElement | null = parent.parent.lastChild;
-      if(last === null){
-	break;
+      if (last === null) {
+        break;
       }
       // At this point, last is not null, but it's not recognized by typescript,
       // so we use 'last as HtmlElement'.
-      while(WhiteSpace.isWhiteSpaceElement(last as HtmlElement)){
-	last = last.previousSibling;
-	if(last === null){
-	  break;
-	}
+      while (WhiteSpace.isWhiteSpaceElement(last as HtmlElement)) {
+        last = last.previousSibling;
+        if (last === null) {
+          break;
+        }
       }
-      if(parent !== last){
-	break;
+      if (parent !== last) {
+        break;
       }
       parent = parent.parent;
     }
@@ -127,21 +127,21 @@ export class MarginCollapse {
   }
 
   static isTarget(element: HtmlElement): boolean {
-    if(element.parent === null){ // root element
+    if (element.parent === null) { // root element
       return false;
     }
-    if(element.isTextElement()){
+    if (element.isTextElement()) {
       return false;
     }
-    if(collapse_skip_tags.indexOf(element.tagName) >= 0){
+    if (collapse_skip_tags.indexOf(element.tagName) >= 0) {
       return false;
     }
     let float = element.computedStyle.getPropertyValue("float") || "none";
-    if(float !== "none"){
+    if (float !== "none") {
       return false;
     }
     let display = Display.load(element);
-    if(display.isBlockLevel() === false){
+    if (display.isBlockLevel() === false) {
       return false;
     }
     return true;
