@@ -245,22 +245,20 @@ export class HtmlElement {
   }
 
   public isOnlyChild(): boolean {
-    let siblings = this.siblings;
-    return siblings.length === 1;
+    return this.siblings.length === 1;
   }
 
   public isOnlyOfType(): boolean {
-    let siblings = this.siblings.filter(sib => sib.tagName === this.tagName);
+    const siblings = this.siblings.filter(sib => sib.tagName === this.tagName);
     return siblings.length === 1;
   }
 
   public isFirstChild(): boolean {
-    let siblings = this.siblings;
-    return (siblings.length > 0) ? siblings[0] === this : false;
+    return this.siblings.indexOf(this) === 0;
   }
 
   public isLastChild(): boolean {
-    let siblings = this.siblings;
+    const siblings = this.siblings;
     return (siblings.length > 0) ? siblings[siblings.length - 1] === this : false;
   }
 
