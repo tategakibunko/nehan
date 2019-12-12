@@ -37,50 +37,11 @@ import {
   ListItemContext,
   EmptyBoxContext,
   ReplacedElementGenerator,
-  ImageContext
+  ImageContext,
+  InvalidBlockSweeper,
 } from "./public-api";
 
-/*
-  <div>
-    <span>
-      text1
-      <p>foo</p>
-      text2
-      <p>bar</p>
-      text3
-    </span>
-  </div>
-
-  =>
-
-  <div>
-    <span>text1</span>
-    <p>foo</p>
-    <span>text2</span>
-    <p>bar</p>
-    <span>text3</span>
-  </div>
-*/
-function sweepOutBlocksFromInlineChildren(element: HtmlElement): HtmlElement {
-  const children = element.childNodes;
-  for (let i = 0; i < element.childNodes.length; i++) {
-    const child = element.childNodes[i];
-    if (Display.load(child).isBlockLevel() && element.parent) {
-      const next = element.nextSibling;
-      const headChildren = children.slice(0, i);
-      const restChildren = children.slice(i + 1);
-      element.childNodes = headChildren;
-      element.parent.insertBefore(child, next);
-      let restNode = element.clone();
-      restNode.parent = element.parent;
-      restChildren.forEach(child => restNode.appendChild(child));
-      restNode = sweepOutBlocksFromInlineChildren(restNode);
-      element.parent.insertBefore(restNode, next);
-      break;
-    }
-  }
-  return element;
-}
+const invalidBlockSweeper = new InvalidBlockSweeper();
 
 export class LayoutGeneratorFactory {
   static createGenerator(parent_ctx: FlowContext, element: HtmlElement): LayoutGenerator {
@@ -102,7 +63,7 @@ export class LayoutGeneratorFactory {
     CssLoader.loadDynamic(element, parent_ctx);
     let display = Display.load(element);
     if (display.isInlineLevel()) {
-      element = sweepOutBlocksFromInlineChildren(element);
+      element = element.acceptNodeModifier(invalidBlockSweeper);
     }
     if (display.isNone()) {
       if (Config.debugLayout) {

@@ -3,6 +3,8 @@ import {
   CssStyleDeclaration,
   DomTokenList,
   SelectorParser,
+  NodeFilter,
+  NodeModifier,
 } from "./public-api";
 
 // For performance reason, we use this [HtmlElement] class for both [Node] and [HTMLElement].
@@ -28,6 +30,16 @@ export class HtmlElement {
     this.computedStyle = new CssStyleDeclaration();
     this.classList = this.createClassList();
     this.setupChildren(node, root);
+  }
+
+  public acceptNodeFilter(visitor: NodeFilter): HtmlElement {
+    this.childNodes = this.childNodes.filter(node => visitor.visit(node));
+    this.childNodes = this.childNodes.map(node => node.acceptNodeFilter(visitor));
+    return this;
+  }
+
+  public acceptNodeModifier(visitor: NodeModifier): HtmlElement {
+    return visitor.visit(this);
   }
 
   public get nextSibling(): HtmlElement | null {
