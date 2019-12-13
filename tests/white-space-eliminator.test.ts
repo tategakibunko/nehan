@@ -18,7 +18,7 @@ const html = `
 
 test("white-space-eliminator", () => {
   const doc = new Nehan.HtmlDocument(html);
-  const body = doc.body.acceptNodeFilter(new WhiteSpaceEliminator());
+  const body = doc.body.acceptChildNodeFilter(new WhiteSpaceEliminator());
   const main = body.firstChild;
   const div = main!.firstChild;
   const p1 = div!.firstChild;

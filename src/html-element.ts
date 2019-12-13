@@ -3,7 +3,7 @@ import {
   CssStyleDeclaration,
   DomTokenList,
   SelectorParser,
-  NodeFilter,
+  ChildNodeFilter,
   NodeEffector,
 } from "./public-api";
 
@@ -32,14 +32,19 @@ export class HtmlElement {
     this.setupChildren(node, root);
   }
 
-  public acceptNodeFilter(visitor: NodeFilter): HtmlElement {
-    this.childNodes = this.childNodes.filter(node => visitor.visit(node));
-    this.childNodes = this.childNodes.map(node => node.acceptNodeFilter(visitor));
+  public acceptChildNodeFilter(visitor: ChildNodeFilter): HtmlElement {
+    this.childNodes = this.childNodes
+      .filter(node => visitor.visit(node))
+      .map(node => node.acceptChildNodeFilter(visitor));
     return this;
   }
 
-  public acceptNodeEffector(visitor: NodeEffector) {
+  public acceptNodeEffector(visitor: NodeEffector, all = false): HtmlElement {
     visitor.visit(this);
+    if (all) {
+      this.childNodes.forEach(node => node.acceptNodeEffector(visitor, true));
+    }
+    return this;
   }
 
   public get nextSibling(): HtmlElement | null {

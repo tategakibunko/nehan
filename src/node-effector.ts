@@ -32,25 +32,31 @@ export interface NodeEffector {
   </div>
 */
 export class InvalidBlockSweeper implements NodeEffector {
-  visit(element: HtmlElement) {
-    const nodes = element.childNodes;
+  visit(inlineElement: HtmlElement) {
+    const nodes = inlineElement.childNodes;
+    const nextNode = inlineElement.nextSibling;
     for (let i = 0; i < nodes.length; i++) {
       const child = nodes[i];
-      if (Display.load(child).isBlockLevel() && element.parent) {
-        const next = element.nextSibling;
+      if (Display.load(child).isBlockLevel() && inlineElement.parent) {
         const headNodes = nodes.slice(0, i);
         const tailNodes = nodes.slice(i + 1);
-        element.childNodes = headNodes;
-        element.parent.insertBefore(child, next);
-        let restNode = element.clone();
-        restNode.parent = element.parent;
-        tailNodes.forEach(child => restNode.appendChild(child));
-        this.visit(restNode);
-        element.parent.insertBefore(restNode, next);
+        inlineElement.childNodes = headNodes;
+        inlineElement.parent.insertBefore(child, nextNode);
+        const inlineElement2 = inlineElement.clone();
+        inlineElement2.parent = inlineElement.parent;
+        tailNodes.forEach(child => inlineElement2.appendChild(child));
+        this.visit(inlineElement2);
+        inlineElement.parent.insertBefore(inlineElement2, nextNode);
         break;
       }
     }
-    return element;
+  }
+}
+
+// - measure(auto/percent/fiexed)
+// - margin-start, margin-end(auto/percent/fixed)
+export class CssInlineSizeLoader implements NodeEffector {
+  visit(element: HtmlElement) {
   }
 }
 
