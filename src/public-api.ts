@@ -40,7 +40,7 @@ export * from "./css-parser"
 export * from "./css-loader"
 export * from "./html-document"
 export * from './node-filter'
-export * from './node-modifier'
+export * from './node-effector'
 export * from './node-mapper'
 export * from "./html-element"
 export * from "./attr-selector"

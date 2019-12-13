@@ -63,7 +63,7 @@ export class LayoutGeneratorFactory {
     CssLoader.loadDynamic(element, parent_ctx);
     let display = Display.load(element);
     if (display.isInlineLevel()) {
-      element = element.acceptNodeModifier(invalidBlockSweeper);
+      element.acceptNodeEffector(invalidBlockSweeper);
     }
     if (display.isNone()) {
       if (Config.debugLayout) {

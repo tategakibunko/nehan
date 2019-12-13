@@ -4,7 +4,7 @@ import {
   DomTokenList,
   SelectorParser,
   NodeFilter,
-  NodeModifier,
+  NodeEffector,
 } from "./public-api";
 
 // For performance reason, we use this [HtmlElement] class for both [Node] and [HTMLElement].
@@ -38,8 +38,8 @@ export class HtmlElement {
     return this;
   }
 
-  public acceptNodeModifier(visitor: NodeModifier): HtmlElement {
-    return visitor.visit(this);
+  public acceptNodeEffector(visitor: NodeEffector) {
+    visitor.visit(this);
   }
 
   public get nextSibling(): HtmlElement | null {
