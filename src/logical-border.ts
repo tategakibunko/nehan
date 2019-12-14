@@ -23,8 +23,8 @@ export class LogicalBorder {
   public width: LogicalBorderWidth;
   public color: LogicalBorderColor;
   public radius: LogicalBorderRadius;
-  
-  constructor(values: LogicalBorderValue){
+
+  constructor(values: LogicalBorderValue) {
     this.style = values.style;
     this.width = values.width;
     this.color = values.color;
@@ -33,28 +33,28 @@ export class LogicalBorder {
 
   public clone(): LogicalBorder {
     return new LogicalBorder({
-      style:this.style.clone(),
-      width:this.width.clone(),
-      color:this.color.clone(),
-      radius:this.radius.clone()
+      style: this.style.clone(),
+      width: this.width.clone(),
+      color: this.color.clone(),
+      radius: this.radius.clone()
     });
   }
 
   static load(element: HtmlElement): LogicalBorder {
     return new LogicalBorder({
-      style:LogicalBorderStyle.load(element),
-      width:LogicalBorderWidth.load(element),
-      color:LogicalBorderColor.load(element),
-      radius:LogicalBorderRadius.load(element)
+      style: LogicalBorderStyle.load(element),
+      width: LogicalBorderWidth.load(element),
+      color: LogicalBorderColor.load(element),
+      radius: LogicalBorderRadius.load(element)
     });
   }
 
   static get none(): LogicalBorder {
     return new LogicalBorder({
-      style:LogicalBorderStyle.none,
-      width:LogicalBorderWidth.none,
-      color:LogicalBorderColor.none,
-      radius:LogicalBorderRadius.none
+      style: LogicalBorderStyle.none,
+      width: LogicalBorderWidth.none,
+      color: LogicalBorderColor.none,
+      radius: LogicalBorderRadius.none
     });
   }
 
@@ -67,19 +67,19 @@ export class LogicalBorder {
     return css;
   }
 
-  public clearBefore(){
+  public clearBefore() {
     this.width.clearBefore();
   }
 
-  public clearEnd(){
+  public clearEnd() {
     this.width.clearEnd();
   }
 
-  public clearAfter(){
+  public clearAfter() {
     this.width.clearAfter();
   }
 
-  public clearStart(){
+  public clearStart() {
     this.width.clearStart();
   }
 
@@ -99,57 +99,57 @@ export class LogicalBorder {
     return this.width.start;
   }
 
-  static expand(declrs: PropValue<string, string> []): PropValue<string, string> [] {
+  static expand(declrs: PropValue<string, string>[]): PropValue<string, string>[] {
     return declrs.reduce((acm, item) => {
-      switch(item.prop){
-      case "width":
-	return acm.concat(LogicalBorderWidth.parseShorthand(new CssText(item)));
-      case "style":
-	return acm.concat(LogicalBorderStyle.parseShorthand(new CssText(item)));
-      case "color":
-	return acm.concat(LogicalBorderColor.parseShorthand(new CssText(item)));
+      switch (item.prop) {
+        case "width":
+          return acm.concat(LogicalBorderWidth.parseShorthand(new CssText(item)));
+        case "style":
+          return acm.concat(LogicalBorderStyle.parseShorthand(new CssText(item)));
+        case "color":
+          return acm.concat(LogicalBorderColor.parseShorthand(new CssText(item)));
       }
       console.error(`undefined prop for logical-border:${item.prop}`);
       return acm;
-    }, [] as PropValue<string, string> []);
+    }, [] as PropValue<string, string>[]);
   }
 
   static inferPropType(value: string): string {
-    if(LogicalBorderStyle.values.indexOf(value) >= 0){
+    if (LogicalBorderStyle.values.indexOf(value) >= 0) {
       return "style";
     }
-    if(LogicalBorderWidth.keywords.indexOf(value) >= 0){
+    if (LogicalBorderWidth.keywords.indexOf(value) >= 0) {
       return "width";
     }
-    if(new CssLength(value).hasUnit()){
+    if (new CssLength(value).hasUnit()) {
       return "width";
     }
     return "color";
   }
 
   // shorthand -> width, style, color
-  static parseShorthandWidthStyleColor(css_text: CssText): PropValue<string, string> [] {
-    let declrs: {[prop: string]: string} = {width:"medium", style:"none", color:"currentcolor"};
-    let vals = (css_text.value === "none")? [] : css_text.split().slice(0, 3);
+  static parseShorthandWidthStyleColor(css_text: CssText): PropValue<string, string>[] {
+    let declrs: { [prop: string]: string } = { width: "medium", style: "none", color: "currentcolor" };
+    let vals = (css_text.value === "none") ? [] : css_text.split().slice(0, 3);
     vals.forEach(value => {
       let prop = LogicalBorder.inferPropType(value);
       declrs[prop] = value;
     }, declrs);
     return Object.keys(declrs).map(key => {
-      return {prop:key, value:declrs[key]};
-    }) as PropValue<string, string> [];
+      return { prop: key, value: declrs[key] };
+    }) as PropValue<string, string>[];
   }
 
-  static parseShorthand(css_text: CssText): PropValue<string, string> [] {
+  static parseShorthand(css_text: CssText): PropValue<string, string>[] {
     let sh_declrs = LogicalBorder.parseShorthandWidthStyleColor(css_text);
     return LogicalBorder.expand(sh_declrs);
   }
 
-  static parseShorthandEach(css_text: CssText, direction: string): PropValue<string, string> [] {
+  static parseShorthandEach(css_text: CssText, direction: string): PropValue<string, string>[] {
     // direction = [before, end, after, start]
     // item.prop = [width, style, color]
     return LogicalBorder.parseShorthandWidthStyleColor(css_text).map(item => {
-      return {prop:`border-${direction}-${item.prop}`, value:item.value};
+      return { prop: `border-${direction}-${item.prop}`, value: item.value };
     });
   }
 }
