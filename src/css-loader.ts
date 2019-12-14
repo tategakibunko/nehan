@@ -41,7 +41,7 @@ export class CssLoader {
     element.style.mergeFrom(inline_style);
 
     // set computed-value to element.computedStyle
-    ComputedStyle.setComputedValue(element, parent_ctx);
+    ComputedStyle.setComputedValue(element);
 
     // [TODO] Deprecated in the future
     // set collapse value
@@ -69,7 +69,7 @@ export class CssLoader {
     });
 
     // update computed style.
-    ComputedStyle.setComputedValue(element, parent_ctx);
+    ComputedStyle.setComputedValue(element);
     return true; // successfully updated
   }
 

@@ -1,7 +1,6 @@
 import {
   Utils,
   HtmlElement,
-  FlowContext,
   Config,
   LogicalEdge,
   LogicalEdgeDirection,
@@ -20,7 +19,7 @@ import {
 
 // element.style -> element.computedStyle
 export class ComputedStyle {
-  static setComputedValue(element: HtmlElement, parent_ctx?: FlowContext) {
+  static setComputedValue(element: HtmlElement) {
     // always required.
     this.setValue(element, "display");
 
@@ -56,9 +55,9 @@ export class ComputedStyle {
 
     if (Config.boxSizeSkipTags.indexOf(element.tagName) < 0) {
       this.setMargin(element);
-      this.setMeasure(element, parent_ctx);
-      this.setExtent(element, parent_ctx);
-      this.setPosition(element, parent_ctx);
+      this.setMeasure(element);
+      this.setExtent(element);
+      this.setPosition(element);
     }
 
     this.setValue(element, "font-family");
@@ -174,7 +173,7 @@ export class ComputedStyle {
     });
   }
 
-  static setMeasure(element: HtmlElement, parent_ctx?: FlowContext) {
+  static setMeasure(element: HtmlElement) {
     let value = CssCascade.getValue(element, "measure");
     if (value !== "auto") {
       let size = new CssBoxMeasure(value).computeSize(element);
@@ -182,7 +181,7 @@ export class ComputedStyle {
     }
   }
 
-  static setExtent(element: HtmlElement, parent_ctx?: FlowContext) {
+  static setExtent(element: HtmlElement) {
     let value = CssCascade.getValue(element, "extent");
     if (value !== "auto") {
       let size = new CssBoxExtent(value).computeSize(element);
@@ -190,13 +189,13 @@ export class ComputedStyle {
     }
   }
 
-  static setPosition(element: HtmlElement, parent_ctx?: FlowContext) {
+  static setPosition(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       let value = CssCascade.getValue(element, direction);
       if (value !== "auto") {
         let length = LogicalEdge.isInlineEdge(direction as LogicalEdgeDirection) ?
           new CssInlinePosition(value) : new CssBlockPosition(value);
-        let size = length.computeSize(element, parent_ctx);
+        let size = length.computeSize(element);
         element.computedStyle.setProperty(direction, size + "px");
       }
     });
