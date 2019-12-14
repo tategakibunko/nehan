@@ -14,30 +14,30 @@ export enum LogicalBorderWidthKeyword {
   THICK = "thick",
 }
 
-export let LogicalBorderWidthKeywordSize: {[keyword: string]: number} = {
-  thin:2,
-  medium:4,
-  thick:6
+export const LogicalBorderWidthKeywordSize: { [keyword: string]: number } = {
+  thin: 2,
+  medium: 4,
+  thick: 6
 }
 
 export class LogicalBorderWidth extends LogicalEdgeSize {
-  static keywords: string [] = Utils.Enum.toValueArray(LogicalBorderWidthKeyword);
+  static keywords: string[] = Utils.Enum.toValueArray(LogicalBorderWidthKeyword);
 
-  static parseShorthand(css_text: CssText): PropValue<string, string> [] {
+  static parseShorthand(css_text: CssText): PropValue<string, string>[] {
     let vs = CssText.getValue4D(css_text.value);
     return [
-      {prop:"border-before-width", value:vs[0]},
-      {prop:"border-end-width",    value:vs[1]},
-      {prop:"border-after-width",  value:vs[2]},
-      {prop:"border-start-width",  value:vs[3]}
+      { prop: "border-before-width", value: vs[0] },
+      { prop: "border-end-width", value: vs[1] },
+      { prop: "border-after-width", value: vs[2] },
+      { prop: "border-start-width", value: vs[3] }
     ];
   }
 
   static load(element: HtmlElement): LogicalBorderWidth {
     return new LogicalBorderWidth(
       LogicalEdgeDirections.reduce((size, direction) => {
-	size[direction] = LogicalEdgeSize.loadDirection(element, `border-${direction}-width`);
-	return size;
+        size[direction] = LogicalEdgeSize.loadDirection(element, `border-${direction}-width`);
+        return size;
       }, {} as any) as LogicalEdgeValue<number>
     );
   }
@@ -50,19 +50,19 @@ export class LogicalBorderWidth extends LogicalEdgeSize {
     return new LogicalBorderWidth(this.values);
   }
 
-  public clearBefore(){
+  public clearBefore() {
     this.before = 0;
   }
 
-  public clearEnd(){
+  public clearEnd() {
     this.end = 0;
   }
 
-  public clearAfter(){
+  public clearAfter() {
     this.after = 0;
   }
 
-  public clearStart(){
+  public clearStart() {
     this.start = 0;
   }
 
