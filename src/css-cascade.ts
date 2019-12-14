@@ -5,12 +5,12 @@ import {
 
 export class CssCascade {
   static getValue(element: HtmlElement, prop: string): string {
-    let default_css = DefaultCss.get(prop);
-    let computed_value = element.computedStyle.getPropertyValue(prop);
+    const default_css = DefaultCss.get(prop);
+    const computed_value = element.computedStyle.getPropertyValue(prop);
     if (computed_value) {
       return computed_value;
     }
-    let value = element.style.getPropertyValue(prop);
+    const value = element.style.getPropertyValue(prop);
     if (value && value !== "inherit") {
       return value;
     }
