@@ -2,7 +2,6 @@ import {
   CssBoxSize,
   BoxDimension,
   HtmlElement,
-  FlowContext
 } from "./public-api";
 
 // CssLength > CssBoxSize > CssBoxExtent
