@@ -177,7 +177,7 @@ export class ComputedStyle {
   static setMeasure(element: HtmlElement, parent_ctx?: FlowContext) {
     let value = CssCascade.getValue(element, "measure");
     if (value !== "auto") {
-      let size = new CssBoxMeasure(value).computeSize(element, parent_ctx);
+      let size = new CssBoxMeasure(value).computeSize(element);
       element.computedStyle.setProperty("measure", size + "px");
     }
   }
@@ -185,7 +185,7 @@ export class ComputedStyle {
   static setExtent(element: HtmlElement, parent_ctx?: FlowContext) {
     let value = CssCascade.getValue(element, "extent");
     if (value !== "auto") {
-      let size = new CssBoxExtent(value).computeSize(element, parent_ctx);
+      let size = new CssBoxExtent(value).computeSize(element);
       element.computedStyle.setProperty("extent", size + "px");
     }
   }

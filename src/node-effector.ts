@@ -1,7 +1,7 @@
 import {
   HtmlElement,
   Display,
-  CssStyleDeclaration,
+  CssCascade,
   CssParser,
   PseudoElement,
 } from './public-api'
@@ -68,7 +68,7 @@ export class InvalidBlockSweeper implements NodeEffector {
 */
 
 // 1. Initialize specified value
-export class CssSpecifiedValueSetter implements NodeEffector {
+export class SpecifiedValueSetter implements NodeEffector {
   visit(element: HtmlElement) {
     // pseudo element already get it's own styles while css matching.
     // See CssStyleSheet::getRulesOfElement in 'css-stylesheet.ts'
@@ -81,7 +81,7 @@ export class CssSpecifiedValueSetter implements NodeEffector {
 }
 
 // 2. set dynamic (specified) value
-export class CssDynamicValueSetter implements NodeEffector {
+export class SpecifiedDynamicValueSetter implements NodeEffector {
   visit(element: HtmlElement) {
     const dynamicStyle = element.style.getDynamicStyle(element);
     element.style.mergeFrom(dynamicStyle);
@@ -89,7 +89,7 @@ export class CssDynamicValueSetter implements NodeEffector {
 }
 
 // 3. set inline (specified) value
-export class CssInlineValueSetter implements NodeEffector {
+export class SpecifiedInlineValueSetter implements NodeEffector {
   visit(element: HtmlElement) {
     const inlineStyleSrc = element.getAttribute("style") || "";
     const inlineStyle = CssParser.parseInlineStyle(inlineStyleSrc);
@@ -97,15 +97,20 @@ export class CssInlineValueSetter implements NodeEffector {
   }
 }
 
-export class ComputedFontSetter implements NodeEffector {
-  visit(element: HtmlElement) {
-  }
-}
-
 // - measure(auto/percent/fiexed)
 // - margin-start, margin-end(auto/percent/fixed)
 export class CssComputedValueSetter implements NodeEffector {
+  private setCascadedValue(element: HtmlElement, prop: string): string {
+    let value = CssCascade.getValue(element, prop);
+    element.computedStyle.setProperty(prop, value);
+    return value;
+  }
+
   visit(element: HtmlElement) {
+    const display = this.setCascadedValue(element, "display");
+    if (display === 'none') {
+      return;
+    }
   }
 }
 
