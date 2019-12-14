@@ -24,7 +24,7 @@ export class LogicalBorderWidth extends LogicalEdgeSize {
   static keywords: string[] = Utils.Enum.toValueArray(LogicalBorderWidthKeyword);
 
   static parseShorthand(css_text: CssText): PropValue<string, string>[] {
-    let vs = CssText.getValue4D(css_text.value);
+    const vs = CssText.getValue4D(css_text.value);
     return [
       { prop: "border-before-width", value: vs[0] },
       { prop: "border-end-width", value: vs[1] },
