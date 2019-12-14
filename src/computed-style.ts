@@ -86,9 +86,9 @@ export class ComputedStyle {
     this.setValue(element, "background-position");
   }
 
-  static setValue(element: HtmlElement, prop: string, fmt = (str: string) => str) {
+  static setValue(element: HtmlElement, prop: string) {
     let value = CssCascade.getValue(element, prop);
-    element.computedStyle.setProperty(prop, fmt(value));
+    element.computedStyle.setProperty(prop, value);
   }
 
   static getFontSize(element: HtmlElement): number {
