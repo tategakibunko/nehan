@@ -8,7 +8,7 @@ export interface DefaultCssValue {
   inherit: boolean
 }
 
-let defaults = {
+let defaults: { [cssProp: string]: DefaultCssValue } = {
   "after": {
     initial: "auto",
     inherit: false
@@ -26,6 +26,7 @@ let defaults = {
     inherit: false
   },
   "border": {
+    initial: "medium none currentcolor",
     inherit: false
   },
   "border-collapse": {
@@ -417,7 +418,7 @@ export class DefaultCss {
   }
 
   static get(prop: string): DefaultCssValue {
-    let entry: DefaultCssValue = (defaults as any)[prop];
+    let entry: DefaultCssValue = defaults[prop];
     if (!entry) {
       throw new Error("Invalid property:" + prop);
     }
