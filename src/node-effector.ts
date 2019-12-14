@@ -1,6 +1,9 @@
 import {
   HtmlElement,
   Display,
+  CssStyleDeclaration,
+  CssParser,
+  PseudoElement,
 } from './public-api'
 
 // treat side-effect
@@ -53,9 +56,55 @@ export class InvalidBlockSweeper implements NodeEffector {
   }
 }
 
+/*
+  [css setter]
+
+  element
+    .acceptNodeEffector(cssSpecifiedValueSetter)
+    .acceptNodeEffector(cssDynamicValueSetter)
+    .acceptNodeEffector(cssInlineValueSetter)
+    .acceptNodeEffector(cssComputedValueSetter)
+    .acceptNodeEffector(cssUsedValueSetter)
+*/
+
+// 1. Initialize specified value
+export class CssSpecifiedValueSetter implements NodeEffector {
+  visit(element: HtmlElement) {
+    // pseudo element already get it's own styles while css matching.
+    // See CssStyleSheet::getRulesOfElement in 'css-stylesheet.ts'
+    if (element.isTextElement() || PseudoElement.isPseudoElement(element)) {
+      return;
+    }
+    const specStyle = element.ownerDocument.specStyleSheet.getStyleOfElement(element);
+    element.style = specStyle;
+  }
+}
+
+// 2. set dynamic (specified) value
+export class CssDynamicValueSetter implements NodeEffector {
+  visit(element: HtmlElement) {
+    const dynamicStyle = element.style.getDynamicStyle(element);
+    element.style.mergeFrom(dynamicStyle);
+  }
+}
+
+// 3. set inline (specified) value
+export class CssInlineValueSetter implements NodeEffector {
+  visit(element: HtmlElement) {
+    const inlineStyleSrc = element.getAttribute("style") || "";
+    const inlineStyle = CssParser.parseInlineStyle(inlineStyleSrc);
+    element.style.mergeFrom(inlineStyle);
+  }
+}
+
+export class ComputedFontSetter implements NodeEffector {
+  visit(element: HtmlElement) {
+  }
+}
+
 // - measure(auto/percent/fiexed)
 // - margin-start, margin-end(auto/percent/fixed)
-export class CssInlineSizeLoader implements NodeEffector {
+export class CssComputedValueSetter implements NodeEffector {
   visit(element: HtmlElement) {
   }
 }
