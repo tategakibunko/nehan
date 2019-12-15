@@ -1,12 +1,13 @@
 import {
+  Utils,
   HtmlElement,
   ComputedStyle,
   FlowContext
 } from "./public-api";
 
 export interface DynamicStyleContextValue {
-  selector:string,
-  name:string,
+  selector: string,
+  name: string,
   element: HtmlElement,
   parentContext?: FlowContext
 }
@@ -20,7 +21,7 @@ export class DynamicStyleContext {
   public element: HtmlElement;
   public parentContext?: FlowContext;
 
-  constructor(value: DynamicStyleContextValue){
+  constructor(value: DynamicStyleContextValue) {
     this.selector = value.selector;
     this.name = value.name;
     this.element = value.element;
@@ -32,7 +33,7 @@ export class DynamicStyleContext {
   }
 
   public get remSize(): number {
-    if(this.parentContext){
+    if (this.parentContext) {
       return this.parentContext.body.env.font.size;
     }
     return this.emSize;
@@ -43,11 +44,18 @@ export class DynamicStyleContext {
   }
 
   public get lineHeight(): number {
-    return ComputedStyle.getLineHeightPx(this.element, this.emSize);
+    const value = this.element.computedStyle.getPropertyValue("line-height");
+    if (!value) {
+      throw new Error("line-height is not defined!");
+    }
+    if (value.indexOf("px") < 0) {
+      return Math.floor(this.emSize * parseFloat(value));
+    }
+    return Utils.atoi(value, 10);
   }
 
   public get restContextBoxExtent(): number {
-    if(this.parentContext){
+    if (this.parentContext) {
       return this.parentContext.region.restContextBoxExtent;
     }
     throw new Error("parent context is not defined");

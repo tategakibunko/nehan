@@ -73,14 +73,14 @@ export class InvalidBlockSweeper implements NodeEffector {
 
 /*
   element
-    .acceptNodeEffector(cssSpecifiedValueSetter)
-    .acceptNodeEffector(cssDynamicValueSetter)
-    .acceptNodeEffector(cssInlineValueSetter)
-    .acceptNodeEffector(cssComputedValueSetter)
-    .acceptNodeEffector(cssUsedValueSetter)
+    .acceptNodeEffector(cssSpecifiedValueLoader)
+    .acceptNodeEffector(cssDynamicValueLoader)
+    .acceptNodeEffector(cssInlineValueLoader)
+    .acceptNodeEffector(cssComputedValueLoader)
+    .acceptNodeEffector(cssUsedValueLoader)
 */
 
-export class SpecifiedValueSetter implements NodeEffector {
+export class SpecifiedValueLoader implements NodeEffector {
   visit(element: HtmlElement) {
     // pseudo element already get it's own styles while css matching.
     // See CssStyleSheet::getRulesOfElement in 'css-stylesheet.ts'
@@ -92,14 +92,14 @@ export class SpecifiedValueSetter implements NodeEffector {
   }
 }
 
-export class SpecifiedDynamicValueSetter implements NodeEffector {
+export class SpecifiedDynamicValueLoader implements NodeEffector {
   visit(element: HtmlElement) {
     const dynamicStyle = element.style.getDynamicStyle(element);
     element.style.mergeFrom(dynamicStyle);
   }
 }
 
-export class SpecifiedInlineValueSetter implements NodeEffector {
+export class SpecifiedInlineValueLoader implements NodeEffector {
   visit(element: HtmlElement) {
     const inlineStyleSrc = element.getAttribute("style") || "";
     const inlineStyle = CssParser.parseInlineStyle(inlineStyleSrc);
@@ -107,14 +107,13 @@ export class SpecifiedInlineValueSetter implements NodeEffector {
   }
 }
 
-export class CssComputedValueSetter implements NodeEffector {
+export class CssComputedValueLoader implements NodeEffector {
   private getFontSize(element: HtmlElement): number {
     let value = CssCascade.getValue(element, "font-size");
     let size = new CssFontSize(value).computeSize(element);
     return size;
   }
 
-  // todo: (margin: auto, measure: auto)
   private getMeasure(element: HtmlElement): "auto" | number {
     const specValue = this.setCascadedValue(element, "measure");
     if (element.tagName === "body" && specValue === "auto") {
@@ -131,26 +130,22 @@ export class CssComputedValueSetter implements NodeEffector {
     return specValue === "auto" ? specValue : new CssBoxExtent(specValue).computeSize(element);
   }
 
-  // line-height is inheritable property, and css value keeps it String typed.
-  // suppose that font-size:10px
-  // if line-height:2em, calculated as 20px, and children inherit line-height '20px'.
-  // if line-height:2.0, calculated as 20px, and children inherit line-height '2.0'.
+  /*
+    Suppose that font-size is '10px'.
+    
+    If line-height is '2em', it's calculated to 20px, and children inherit line-height '20px'(as number)
+    If line-height is '2.0', is's calculated to 20px, and children inherit line-height '2.0'(as string)
+
+    So we have to keep 'line-height' string-typed.
+  */
   private getLineHeightString(element: HtmlElement): string {
-    const value = CssCascade.getValue(element, "line-height");
-    const css_line_height = new CssLineHeight(value);
-    const size = css_line_height.computeSize(element);
-    if (css_line_height.hasUnit()) { // has unit, so px value is already confirmed.
+    const specValue = CssCascade.getValue(element, "line-height");
+    const cssLineHeight = new CssLineHeight(specValue);
+    const size = cssLineHeight.computeSize(element);
+    if (cssLineHeight.hasUnit()) { // has unit, so px value is already confirmed.
       return size + "px";
     }
     return String(size); // remain float value
-  }
-
-  private getLineHeightPx(element: HtmlElement, em_size: number): number {
-    const value = this.getLineHeightString(element);
-    if (value.indexOf("px") < 0) {
-      return Math.floor(em_size * parseFloat(value));
-    }
-    return Utils.atoi(value, 10);
   }
 
   private getMarginSize(element: HtmlElement, prop: string): number | string {
@@ -318,7 +313,7 @@ export class CssComputedValueSetter implements NodeEffector {
 
 // prop: measure, extent, margin
 // auto -> px
-export class CssUsedValueSetter implements NodeEffector {
+export class CssUsedValueLoader implements NodeEffector {
   visit(element: HtmlElement) {
   }
 }

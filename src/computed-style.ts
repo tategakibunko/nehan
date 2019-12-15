@@ -106,14 +106,6 @@ export class ComputedStyle {
     return String(size); // remain float value
   }
 
-  static getLineHeightPx(element: HtmlElement, em_size: number): number {
-    let value = this.getLineHeightString(element);
-    if (value.indexOf("px") < 0) {
-      return Math.floor(em_size * parseFloat(value));
-    }
-    return Utils.atoi(value, 10);
-  }
-
   static getEdgeSize(element: HtmlElement, prop: string): number {
     let value = CssCascade.getValue(element, prop);
     return new CssEdgeSize(value, prop).computeSize(element);
