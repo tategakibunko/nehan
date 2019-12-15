@@ -1,6 +1,5 @@
 import {
   Config,
-  Utils,
   HtmlElement,
   Display,
   CssCascade,
