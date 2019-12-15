@@ -32,17 +32,17 @@ export class HtmlElement {
     this.setupChildren(node, root);
   }
 
-  public acceptChildNodeFilter(visitor: ChildNodeFilter): HtmlElement {
+  public acceptChildFilter(visitor: ChildNodeFilter): HtmlElement {
     this.childNodes = this.childNodes
       .filter(node => visitor.visit(node))
-      .map(node => node.acceptChildNodeFilter(visitor));
+      .map(node => node.acceptChildFilter(visitor));
     return this;
   }
 
-  public acceptNodeEffector(visitor: NodeEffector, all = false): HtmlElement {
+  public acceptEffector(visitor: NodeEffector, all = false): HtmlElement {
     visitor.visit(this);
     if (all) {
-      this.childNodes.forEach(node => node.acceptNodeEffector(visitor, true));
+      this.childNodes.forEach(node => node.acceptEffector(visitor, true));
     }
     return this;
   }
