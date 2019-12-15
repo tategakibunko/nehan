@@ -1,10 +1,22 @@
 import {
+  Config,
+  Utils,
   HtmlElement,
   Display,
   CssCascade,
   CssParser,
+  CssFontSize,
+  CssEdgeSize,
+  CssBorderWidth,
+  CssLineHeight,
   CssBoxMeasure,
   CssBoxExtent,
+  CssInlinePosition,
+  CssBlockPosition,
+  LogicalEdge,
+  LogicalEdgeDirection,
+  LogicalEdgeDirections,
+  LogicalBorderRadius,
   PseudoElement,
   DefaultStyle,
 } from './public-api'
@@ -60,8 +72,6 @@ export class InvalidBlockSweeper implements NodeEffector {
 }
 
 /*
-  [css setter]
-
   element
     .acceptNodeEffector(cssSpecifiedValueSetter)
     .acceptNodeEffector(cssDynamicValueSetter)
@@ -70,7 +80,6 @@ export class InvalidBlockSweeper implements NodeEffector {
     .acceptNodeEffector(cssUsedValueSetter)
 */
 
-// 1. Initialize specified value
 export class SpecifiedValueSetter implements NodeEffector {
   visit(element: HtmlElement) {
     // pseudo element already get it's own styles while css matching.
@@ -83,7 +92,6 @@ export class SpecifiedValueSetter implements NodeEffector {
   }
 }
 
-// 2. set dynamic (specified) value
 export class SpecifiedDynamicValueSetter implements NodeEffector {
   visit(element: HtmlElement) {
     const dynamicStyle = element.style.getDynamicStyle(element);
@@ -91,7 +99,6 @@ export class SpecifiedDynamicValueSetter implements NodeEffector {
   }
 }
 
-// 3. set inline (specified) value
 export class SpecifiedInlineValueSetter implements NodeEffector {
   visit(element: HtmlElement) {
     const inlineStyleSrc = element.getAttribute("style") || "";
@@ -100,54 +107,211 @@ export class SpecifiedInlineValueSetter implements NodeEffector {
   }
 }
 
-// - measure(auto/percent/fiexed)
-// - margin-start, margin-end(auto/percent/fixed)
 export class CssComputedValueSetter implements NodeEffector {
+  private getFontSize(element: HtmlElement): number {
+    let value = CssCascade.getValue(element, "font-size");
+    let size = new CssFontSize(value).computeSize(element);
+    return size;
+  }
+
+  // todo: (margin: auto, measure: auto)
+  private getMeasure(element: HtmlElement): "auto" | number {
+    const specValue = this.setCascadedValue(element, "measure");
+    if (element.tagName === "body" && specValue === "auto") {
+      return parseInt(DefaultStyle.get("body", "measure"), 10);
+    }
+    return specValue === "auto" ? specValue : new CssBoxMeasure(specValue).computeSize(element);
+  }
+
+  private getExtent(element: HtmlElement): "auto" | number {
+    const specValue = this.setCascadedValue(element, "extent");
+    if (element.tagName === "body" && specValue === "auto") {
+      return parseInt(DefaultStyle.get("body", "measure"), 10);
+    }
+    return specValue === "auto" ? specValue : new CssBoxExtent(specValue).computeSize(element);
+  }
+
+  private getLineHeightString(element: HtmlElement): string {
+    const value = CssCascade.getValue(element, "line-height");
+    const css_line_height = new CssLineHeight(value);
+    const size = css_line_height.computeSize(element);
+    if (css_line_height.hasUnit()) { // has unit, so px value is already confirmed.
+      return size + "px";
+    }
+    return String(size); // remain float value
+  }
+
+  private getLineHeightPx(element: HtmlElement, em_size: number): number {
+    const value = this.getLineHeightString(element);
+    if (value.indexOf("px") < 0) {
+      return Math.floor(em_size * parseFloat(value));
+    }
+    return Utils.atoi(value, 10);
+  }
+
+  private getMarginSize(element: HtmlElement, prop: string): number | string {
+    const value = CssCascade.getValue(element, prop);
+    return value === "auto" ? value : new CssEdgeSize(value, prop).computeSize(element);
+  }
+
+  private getEdgeSize(element: HtmlElement, prop: string): number {
+    const value = CssCascade.getValue(element, prop);
+    return new CssEdgeSize(value, prop).computeSize(element);
+  }
+
+  private getBorderWidth(element: HtmlElement, prop: string): number {
+    const value = CssCascade.getValue(element, prop);
+    return new CssBorderWidth(value, prop).computeSize(element);
+  }
+
   private setCascadedValue(element: HtmlElement, prop: string): string {
     let value = CssCascade.getValue(element, prop);
     element.computedStyle.setProperty(prop, value);
     return value;
   }
 
-  private getMeasure(element: HtmlElement): number {
-    const specValue = this.setCascadedValue(element, "measure");
-    if (element.tagName === "body") {
-      if (specValue === "" || specValue === "auto") {
-        return parseInt(DefaultStyle.get("body", "measure"), 10);
-      }
-    }
-    return new CssBoxMeasure(specValue).computeSize(element);
+  private setFontSize(element: HtmlElement) {
+    const fontSize = this.getFontSize(element);
+    element.computedStyle.setProperty("font-size", fontSize + "px");
   }
 
-  private getExtent(element: HtmlElement): number {
-    const specValue = this.setCascadedValue(element, "extent");
-    if (element.tagName === "body") {
-      if (specValue === "" || specValue === "auto") {
-        return parseInt(DefaultStyle.get("body", "extent"), 10);
-      }
-    }
-    return new CssBoxExtent(specValue).computeSize(element);
+  private setMeasure(element: HtmlElement): "auto" | number {
+    const value1 = this.getMeasure(element);
+    const value2 = value1 === "auto" ? value1 : value1 + "px";
+    element.computedStyle.setProperty("measure", value2);
+    return value1;
   }
 
-  private setMeasure(element: HtmlElement): number {
-    const measure = this.getMeasure(element);
-    element.computedStyle.setProperty("measure", String(measure));
-    return measure;
+  private setExtent(element: HtmlElement): "auto" | number {
+    const value1 = this.getExtent(element);
+    const value2 = value1 === "auto" ? value1 : value1 + "px";
+    element.computedStyle.setProperty("extent", value2);
+    return value1;
+  }
+
+  private setPadding(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      const prop = `padding-${direction}`;
+      const size = this.getEdgeSize(element, prop);
+      element.computedStyle.setProperty(prop, size + "px");
+    });
+  }
+
+  private setBorderWidth(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      const prop = `border-${direction}-width`;
+      const size = this.getBorderWidth(element, prop);
+      element.computedStyle.setProperty(prop, size + "px");
+    });
+  }
+
+  private setBorderStyle(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      const prop = `border-${direction}-style`;
+      const value = CssCascade.getValue(element, prop);
+      element.computedStyle.setProperty(prop, value);
+    });
+  }
+
+  private setBorderColor(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      const prop = `border-${direction}-color`;
+      const value = CssCascade.getValue(element, prop);
+      element.computedStyle.setProperty(prop, value);
+    });
+  }
+
+  private setBorderRadius(element: HtmlElement) {
+    LogicalBorderRadius.corners.forEach((corner: string) => {
+      const prop = `border-${corner}-radius`;
+      const size = this.getEdgeSize(element, prop);
+      element.computedStyle.setProperty(prop, size + "px");
+    });
+  }
+
+  private setMargin(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      const prop = `margin-${direction}`;
+      const size = this.getMarginSize(element, prop);
+      element.computedStyle.setProperty(prop, size + "px");
+    });
+  }
+
+  private setPosition(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      const value = CssCascade.getValue(element, direction);
+      if (value !== "auto") {
+        const length = LogicalEdge.isInlineEdge(direction as LogicalEdgeDirection) ?
+          new CssInlinePosition(value) : new CssBlockPosition(value);
+        const size = length.computeSize(element);
+        element.computedStyle.setProperty(direction, size + "px");
+      }
+    });
   }
 
   visit(element: HtmlElement) {
-    const display = this.setCascadedValue(element, "display");
-    if (display === 'none') {
+    if (element.isTextElement()) {
       return;
     }
-    const measure = this.setMeasure(element);
+    if (this.setCascadedValue(element, "display") === "none") {
+      return;
+    }
+    this.setFontSize(element);
+
+    if (Config.edgeSkipTags.indexOf(element.tagName) < 0) {
+      this.setPadding(element);
+      this.setBorderWidth(element);
+      this.setBorderStyle(element);
+      this.setBorderColor(element);
+      this.setBorderRadius(element);
+    }
+
+    if (Config.boxSizeSkipTags.indexOf(element.tagName) < 0) {
+      this.setMargin(element);
+      this.setMeasure(element);
+      this.setExtent(element);
+      this.setPosition(element);
+    }
+
+    this.setCascadedValue(element, "float");
+    this.setCascadedValue(element, "font-family");
+    this.setCascadedValue(element, "font-style");
+    this.setCascadedValue(element, "font-weight");
+    this.setCascadedValue(element, "font-variant");
+    this.setCascadedValue(element, "font-stretch");
+    this.setCascadedValue(element, "writing-mode");
+    this.setCascadedValue(element, "text-orientation");
+    this.setCascadedValue(element, "text-combine-upright");
+    this.setCascadedValue(element, "text-emphasis-style");
+    this.setCascadedValue(element, "text-emphasis-color");
+    this.setCascadedValue(element, "text-align");
+    this.setCascadedValue(element, "vertical-align");
+    this.setCascadedValue(element, "list-style-type");
+    this.setCascadedValue(element, "list-style-position");
+    this.setCascadedValue(element, "list-style-image");
+    this.setCascadedValue(element, "content");
+    this.setCascadedValue(element, "word-break");
+    this.setCascadedValue(element, "overflow-wrap");
+    this.setCascadedValue(element, "white-space");
+    this.setCascadedValue(element, "page-break-before");
+    this.setCascadedValue(element, "background-position");
+
+    // Use 'text-align:justify' instead.
+    // this.setCascadedValue(element, "text-justify");
+  }
+}
+
+// prop: measure, extent, margin
+// auto -> px
+export class CssUsedValueSetter implements NodeEffector {
+  visit(element: HtmlElement) {
   }
 }
 
 // TODO
 // optimize element order of float element.
 // (inline+ float) -> (float inline+)
-class FloatOptimizer implements NodeEffector {
+export class FloatOptimizer implements NodeEffector {
   visit(element: HtmlElement) {
   }
 }
