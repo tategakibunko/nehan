@@ -131,6 +131,10 @@ export class CssComputedValueSetter implements NodeEffector {
     return specValue === "auto" ? specValue : new CssBoxExtent(specValue).computeSize(element);
   }
 
+  // line-height is inheritable property, and css value keeps it String typed.
+  // suppose that font-size:10px
+  // if line-height:2em, calculated as 20px, and children inherit line-height '20px'.
+  // if line-height:2.0, calculated as 20px, and children inherit line-height '2.0'.
   private getLineHeightString(element: HtmlElement): string {
     const value = CssCascade.getValue(element, "line-height");
     const css_line_height = new CssLineHeight(value);
@@ -173,6 +177,11 @@ export class CssComputedValueSetter implements NodeEffector {
   private setFontSize(element: HtmlElement) {
     const fontSize = this.getFontSize(element);
     element.computedStyle.setProperty("font-size", fontSize + "px");
+  }
+
+  private setLineHeight(element: HtmlElement) {
+    const lineHeightStr = this.getLineHeightString(element);
+    element.computedStyle.setProperty("line-height", lineHeightStr);
   }
 
   private setMeasure(element: HtmlElement): "auto" | number {
@@ -257,6 +266,12 @@ export class CssComputedValueSetter implements NodeEffector {
       return;
     }
     this.setFontSize(element);
+    this.setLineHeight(element);
+
+    // if defined as font size only, skip other css value.
+    if (Config.fontSizeOnlyTags.indexOf(element.tagName) >= 0) {
+      return;
+    }
 
     if (Config.edgeSkipTags.indexOf(element.tagName) < 0) {
       this.setPadding(element);
