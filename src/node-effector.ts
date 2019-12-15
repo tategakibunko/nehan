@@ -115,9 +115,18 @@ export class CssComputedValueSetter implements NodeEffector {
       if (specValue === "" || specValue === "auto") {
         return parseInt(DefaultStyle.get("body", "measure"), 10);
       }
-      return parseInt(specValue, 10);
     }
     return new CssBoxMeasure(specValue).computeSize(element);
+  }
+
+  private getExtent(element: HtmlElement): number {
+    const specValue = this.setCascadedValue(element, "extent");
+    if (element.tagName === "body") {
+      if (specValue === "" || specValue === "auto") {
+        return parseInt(DefaultStyle.get("body", "extent"), 10);
+      }
+    }
+    return new CssBoxExtent(specValue).computeSize(element);
   }
 
   private setMeasure(element: HtmlElement): number {
