@@ -3,7 +3,10 @@ import {
   Display,
   CssCascade,
   CssParser,
+  CssBoxMeasure,
+  CssBoxExtent,
   PseudoElement,
+  DefaultStyle,
 } from './public-api'
 
 // treat side-effect
@@ -106,11 +109,29 @@ export class CssComputedValueSetter implements NodeEffector {
     return value;
   }
 
+  private getMeasure(element: HtmlElement): number {
+    const specValue = this.setCascadedValue(element, "measure");
+    if (element.tagName === "body") {
+      if (specValue === "" || specValue === "auto") {
+        return parseInt(DefaultStyle.get("body", "measure"), 10);
+      }
+      return parseInt(specValue, 10);
+    }
+    return new CssBoxMeasure(specValue).computeSize(element);
+  }
+
+  private setMeasure(element: HtmlElement): number {
+    const measure = this.getMeasure(element);
+    element.computedStyle.setProperty("measure", String(measure));
+    return measure;
+  }
+
   visit(element: HtmlElement) {
     const display = this.setCascadedValue(element, "display");
     if (display === 'none') {
       return;
     }
+    const measure = this.setMeasure(element);
   }
 }
 

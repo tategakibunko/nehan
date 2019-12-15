@@ -2,7 +2,6 @@ import {
   Config,
   Utils,
   HtmlElement,
-  FlowContext,
   CssUnitType,
   CssUnitTypeName
 } from "./public-api";
@@ -53,14 +52,14 @@ export class CssLength {
     return Config.defaultFontSize;
   }
 
-  public computeSize(element: HtmlElement, parent_ctx?: FlowContext): number {
+  public computeSize(element: HtmlElement): number {
     let base_size;
     if (this.cssText === "inherit") {
-      return this.computeInheritSize(element, parent_ctx);
+      return this.computeInheritSize(element);
     }
     switch (this.unitTypeName) {
       case CssUnitTypeName.PERCENT:
-        return this.computePercentSize(element, parent_ctx);
+        return this.computePercentSize(element);
       case CssUnitTypeName.PX:
         return Math.floor(this.floatValue);
       case CssUnitTypeName.PT:
@@ -85,26 +84,26 @@ export class CssLength {
     if (size !== null) {
       return size;
     }
-    return this.computeInitialSize(element, parent_ctx);
+    return this.computeInitialSize(element);
   }
 
   public computeKeywordSize(element: HtmlElement): number | null {
     return null;
   }
 
-  public computeParentSize(element: HtmlElement, parent_ctx?: FlowContext): number {
+  public computeParentSize(element: HtmlElement): number {
     throw new Error("CssLength::computeParentSize must be overrided.");
   }
 
-  public computeInheritSize(element: HtmlElement, parent_ctx?: FlowContext): number {
+  public computeInheritSize(element: HtmlElement): number {
     throw new Error("CssLength::computeInheritSize must be overrided.");
   }
 
-  public computeInitialSize(element: HtmlElement, parent_ctx?: FlowContext): number {
+  public computeInitialSize(element: HtmlElement): number {
     throw new Error("CssLength::getInitialSize must be overrided");
   }
 
-  public computePercentSize(element: HtmlElement, parent_ctx?: FlowContext): number {
+  public computePercentSize(element: HtmlElement): number {
     throw new Error("CssLength::getPercentSize must be overrided");
   }
 }
