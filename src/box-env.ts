@@ -29,7 +29,6 @@ import {
 // But BoxEnv is set of 'constant' styles defined in each css settings.
 export class BoxEnv {
   public element: HtmlElement;
-  public parent?: BoxEnv;
   public measure: number | null;
   public extent: number | null;
   public absPos: LogicalPos;
@@ -52,9 +51,8 @@ export class BoxEnv {
   public pageBreakBefore: PageBreakBefore;
   public backgroundPos: LogicalBackgroundPos;
 
-  constructor(element: HtmlElement, parent?: BoxEnv) {
+  constructor(element: HtmlElement) {
     this.element = element;
-    this.parent = parent;
     this.measure = LogicalSize.loadMeasure(element);
     this.extent = LogicalSize.loadExtent(element);
     this.float = LogicalFloat.load(element);

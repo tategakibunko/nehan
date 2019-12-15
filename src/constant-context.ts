@@ -17,10 +17,10 @@ export class ConstantContext implements ILayoutContext {
   protected counter: LayoutCounter;
   protected status: LayoutStatus;
 
-  constructor(element: HtmlElement, parent: FlowContext){
+  constructor(element: HtmlElement, parent: FlowContext) {
     this.element = element;
     this.progress = 1;
-    this.env = new BoxEnv(element, parent.env);
+    this.env = new BoxEnv(element);
     this.parent = parent;
     this.counter = new LayoutCounter();
     this.status = new LayoutStatus();
@@ -34,15 +34,15 @@ export class ConstantContext implements ILayoutContext {
     return this.status.isNormal();
   }
 
-  public getValues(): LayoutValue [] {
+  public getValues(): LayoutValue[] {
     throw new Error("must be overrided");
   }
 
-  public updateStyle(){
+  public updateStyle() {
     throw new Error("must be overrided");
   }
 
-  public updateLead(){
+  public updateLead() {
     throw new Error("must be overrided");
   }
 
@@ -70,43 +70,43 @@ export class ConstantContext implements ILayoutContext {
     return true;
   }
 
-  public resume(){
+  public resume() {
     this.status.setNormal();
   }
 
-  public pause(){
+  public pause() {
     this.status.setPause();
   }
 
-  public abort(){
+  public abort() {
     console.warn("[%s] aborted", this.name);
     this.status.setAbort();
   }
 
-  public commit(){
+  public commit() {
     this.counter.incYield();
     this.counter.resetRollback();
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] is commited!", this.name);
     }
   }
 
-  public rollback(){
+  public rollback() {
     this.counter.resetYield();
     this.counter.incRollback();
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] is rollbacked!", this.name);
     }
   }
 
   public hasNext(): boolean {
-    if(this.status.isAbort()){
+    if (this.status.isAbort()) {
       return false;
     }
     return this.counter.isNotYielded(); // output only once.
   }
 
-  public getNext(): IteratorResult<LayoutValue []> {
+  public getNext(): IteratorResult<LayoutValue[]> {
     throw new Error("not implemented.");
   }
 }

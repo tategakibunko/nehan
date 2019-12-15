@@ -9,11 +9,11 @@ import {
 } from "./public-api";
 
 export class HrContext extends ConstantContext {
-  public updateLead(){
+  public updateLead() {
     // do child, do nothing
   }
 
-  public updateStyle(){
+  public updateStyle() {
     this.env = this.parent.createChildEnv(this.element);
   }
 
@@ -33,18 +33,18 @@ export class HrContext extends ConstantContext {
     return false;
   }
 
-  public getValues(): LayoutValue [] {
+  public getValues(): LayoutValue[] {
     let hr = this.createHrBox(this.element);
     return [new LayoutValue(hr)];
   }
 
   public createHrBox(element: HtmlElement): LogicalBox {
     let region = new HrRegion(this.parent);
-    let env = new BoxEnv(element, this.parent.env);
+    let env = new BoxEnv(element);
     let box = region.createHrBox(env);
     box.pageIndex = this.parent.bodyPageIndex;
     box.localPageIndex = 0; // always zero
-    if(Config.debugLayout){
+    if (Config.debugLayout) {
       console.log("[%s] createHrBox:", this.element.toString(), box);
     }
     return box;

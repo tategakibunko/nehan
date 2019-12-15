@@ -517,7 +517,7 @@ export class FlowContext implements ILayoutContext {
   }
 
   public createChildEnv(element: HtmlElement): BoxEnv {
-    return new BoxEnv(element, this.env);
+    return new BoxEnv(element);
   }
 
   protected createEnv(element: HtmlElement, parent?: FlowContext): BoxEnv {
