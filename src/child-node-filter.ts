@@ -20,6 +20,9 @@ export interface ChildNodeFilter {
   <div><p>some text</p></div>
 */
 export class WhiteSpaceEliminator implements ChildNodeFilter {
+  static instance = new WhiteSpaceEliminator();
+  private constructor() { }
+
   private isBlockElement(element: HtmlElement): boolean {
     const display = Display.load(element);
     return display.isBlockLevel();

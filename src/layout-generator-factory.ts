@@ -41,8 +41,6 @@ import {
   InvalidBlockSweeper,
 } from "./public-api";
 
-const invalidBlockSweeper = new InvalidBlockSweeper();
-
 export class LayoutGeneratorFactory {
   static createGenerator(parent_ctx: FlowContext, element: HtmlElement): LayoutGenerator {
     if (element.isTextElement()) {
@@ -63,7 +61,7 @@ export class LayoutGeneratorFactory {
     CssLoader.loadDynamic(element, parent_ctx);
     let display = Display.load(element);
     if (display.isInlineLevel()) {
-      element.acceptEffector(invalidBlockSweeper);
+      element.acceptEffector(InvalidBlockSweeper.instance);
     }
     if (display.isNone()) {
       if (Config.debugLayout) {

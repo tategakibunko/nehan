@@ -49,6 +49,9 @@ export interface NodeEffector {
   </div>
 */
 export class InvalidBlockSweeper implements NodeEffector {
+  static instance = new InvalidBlockSweeper();
+  private constructor() { }
+
   visit(inlineElement: HtmlElement) {
     const nodes = inlineElement.childNodes;
     const nextNode = inlineElement.nextSibling;
@@ -80,6 +83,9 @@ export class InvalidBlockSweeper implements NodeEffector {
 */
 
 export class SpecifiedValueLoader implements NodeEffector {
+  static instance = new SpecifiedValueLoader();
+  private constructor() { }
+
   visit(element: HtmlElement) {
     // pseudo element already get it's own styles while css matching.
     // See CssStyleSheet::getRulesOfElement in 'css-stylesheet.ts'
@@ -92,6 +98,9 @@ export class SpecifiedValueLoader implements NodeEffector {
 }
 
 export class SpecifiedDynamicValueLoader implements NodeEffector {
+  static instance = new SpecifiedDynamicValueLoader();
+  private constructor() { }
+
   visit(element: HtmlElement) {
     const dynamicStyle = element.style.getDynamicStyle(element);
     element.style.mergeFrom(dynamicStyle);
@@ -99,6 +108,9 @@ export class SpecifiedDynamicValueLoader implements NodeEffector {
 }
 
 export class SpecifiedInlineValueLoader implements NodeEffector {
+  static instance = new SpecifiedInlineValueLoader();
+  private constructor() { }
+
   visit(element: HtmlElement) {
     const inlineStyleSrc = element.getAttribute("style") || "";
     const inlineStyle = CssParser.parseInlineStyle(inlineStyleSrc);
@@ -107,6 +119,9 @@ export class SpecifiedInlineValueLoader implements NodeEffector {
 }
 
 export class CssComputedValueLoader implements NodeEffector {
+  static instance = new CssComputedValueLoader();
+  private constructor() { }
+
   private getFontSize(element: HtmlElement): number {
     let value = CssCascade.getValue(element, "font-size");
     let size = new CssFontSize(value).computeSize(element);
@@ -313,6 +328,9 @@ export class CssComputedValueLoader implements NodeEffector {
 // prop: measure, extent, margin
 // auto -> px
 export class CssUsedValueLoader implements NodeEffector {
+  static instance = new CssUsedValueLoader();
+  private constructor() { }
+
   visit(element: HtmlElement) {
   }
 }
@@ -321,6 +339,9 @@ export class CssUsedValueLoader implements NodeEffector {
 // optimize element order of float element.
 // (inline+ float) -> (float inline+)
 export class FloatOptimizer implements NodeEffector {
+  static instance = new FloatOptimizer();
+  private constructor() { }
+
   visit(element: HtmlElement) {
   }
 }
