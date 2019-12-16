@@ -193,18 +193,16 @@ export class CssComputedValueLoader implements NodeEffector {
     element.computedStyle.setProperty("line-height", lineHeightStr);
   }
 
-  private setMeasure(element: HtmlElement): "auto" | number {
-    const value1 = this.getMeasure(element);
-    const value2 = value1 === "auto" ? value1 : value1 + "px";
-    element.computedStyle.setProperty("measure", value2);
-    return value1;
+  private setMeasure(element: HtmlElement) {
+    const cascadedValue = this.getMeasure(element);
+    const computedValue = cascadedValue === "auto" ? cascadedValue : cascadedValue + "px";
+    element.computedStyle.setProperty("measure", computedValue);
   }
 
-  private setExtent(element: HtmlElement): "auto" | number {
-    const value1 = this.getExtent(element);
-    const value2 = value1 === "auto" ? value1 : value1 + "px";
-    element.computedStyle.setProperty("extent", value2);
-    return value1;
+  private setExtent(element: HtmlElement) {
+    const cascadedValue = this.getExtent(element);
+    const computedValue = cascadedValue === "auto" ? cascadedValue : cascadedValue + "px";
+    element.computedStyle.setProperty("extent", computedValue);
   }
 
   private setPadding(element: HtmlElement) {
