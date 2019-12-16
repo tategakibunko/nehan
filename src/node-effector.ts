@@ -2,7 +2,7 @@ import {
   Config,
   HtmlElement,
   Display,
-  CssCascade,
+  DefaultCss,
   CssParser,
   CssFontSize,
   CssEdgeSize,
@@ -122,8 +122,24 @@ export class CssComputedValueLoader implements NodeEffector {
   static instance = new CssComputedValueLoader();
   private constructor() { }
 
+  private getCascadedValue(element: HtmlElement, prop: string): string {
+    const computedValue = element.computedStyle.getPropertyValue(prop);
+    if (computedValue) {
+      return computedValue;
+    }
+    const specValue = element.style.getPropertyValue(prop);
+    if (specValue && specValue !== "inherit") {
+      return specValue;
+    }
+    const defaultCss = DefaultCss.get(prop);
+    if (defaultCss.inherit && element.parent && (!specValue || specValue === "inherit")) {
+      return this.getCascadedValue(element.parent, prop);
+    }
+    return defaultCss.initial;
+  }
+
   private getFontSize(element: HtmlElement): number {
-    let value = CssCascade.getValue(element, "font-size");
+    let value = this.getCascadedValue(element, "font-size");
     let size = new CssFontSize(value).computeSize(element);
     return size;
   }
@@ -153,7 +169,7 @@ export class CssComputedValueLoader implements NodeEffector {
     So we have to keep 'line-height' string-typed.
   */
   private getLineHeightString(element: HtmlElement): string {
-    const specValue = CssCascade.getValue(element, "line-height");
+    const specValue = this.getCascadedValue(element, "line-height");
     const cssLineHeight = new CssLineHeight(specValue);
     const size = cssLineHeight.computeSize(element);
     if (cssLineHeight.hasUnit()) { // has unit, so px value is already confirmed.
@@ -163,22 +179,22 @@ export class CssComputedValueLoader implements NodeEffector {
   }
 
   private getMarginSize(element: HtmlElement, prop: string): number | string {
-    const value = CssCascade.getValue(element, prop);
+    const value = this.getCascadedValue(element, prop);
     return value === "auto" ? value : new CssEdgeSize(value, prop).computeSize(element);
   }
 
   private getEdgeSize(element: HtmlElement, prop: string): number {
-    const value = CssCascade.getValue(element, prop);
+    const value = this.getCascadedValue(element, prop);
     return new CssEdgeSize(value, prop).computeSize(element);
   }
 
   private getBorderWidth(element: HtmlElement, prop: string): number {
-    const value = CssCascade.getValue(element, prop);
+    const value = this.getCascadedValue(element, prop);
     return new CssBorderWidth(value, prop).computeSize(element);
   }
 
   private setCascadedValue(element: HtmlElement, prop: string): string {
-    let value = CssCascade.getValue(element, prop);
+    let value = this.getCascadedValue(element, prop);
     element.computedStyle.setProperty(prop, value);
     return value;
   }
@@ -224,7 +240,7 @@ export class CssComputedValueLoader implements NodeEffector {
   private setBorderStyle(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-style`;
-      const value = CssCascade.getValue(element, prop);
+      const value = this.getCascadedValue(element, prop);
       element.computedStyle.setProperty(prop, value);
     });
   }
@@ -232,7 +248,7 @@ export class CssComputedValueLoader implements NodeEffector {
   private setBorderColor(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-color`;
-      const value = CssCascade.getValue(element, prop);
+      const value = this.getCascadedValue(element, prop);
       element.computedStyle.setProperty(prop, value);
     });
   }
@@ -255,7 +271,7 @@ export class CssComputedValueLoader implements NodeEffector {
 
   private setPosition(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      const value = CssCascade.getValue(element, direction);
+      const value = this.getCascadedValue(element, direction);
       if (value !== "auto") {
         const length = LogicalEdge.isInlineEdge(direction as LogicalEdgeDirection) ?
           new CssInlinePosition(value) : new CssBlockPosition(value);
@@ -323,13 +339,34 @@ export class CssComputedValueLoader implements NodeEffector {
   }
 }
 
+/*
+  [example]
+
+  Compute inherit, auto value.
+
+  <body style="measure:100px">
+    <div style="measure:auto">
+      100px
+      <div style="measure:50%">
+        50px(50% of parent=100px)
+        <div style="measure:inherit">
+          25px(inherit=50% of parent=50px)
+          Note that inherited value of 'inherit' is specified value(50%), not computed value(50px).
+        </div>
+      </div>
+    </div>
+  </body>
+*/
 // prop: measure, extent, margin
 // auto -> px
 export class CssUsedValueLoader implements NodeEffector {
   static instance = new CssUsedValueLoader();
   private constructor() { }
 
+  private setAutoValue(element: HtmlElement) { }
+
   visit(element: HtmlElement) {
+    this.setAutoValue(element);
   }
 }
 
