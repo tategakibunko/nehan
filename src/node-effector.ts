@@ -26,7 +26,9 @@ export interface NodeEffector {
 }
 
 /*
-  # sweep out block from inline
+  Sweep out invalid block from inline children.
+
+  [example]
 
   <div>
     <span>
@@ -74,14 +76,8 @@ export class InvalidBlockSweeper implements NodeEffector {
 }
 
 /*
-  element
-    .acceptNodeEffector(cssSpecifiedValueLoader)
-    .acceptNodeEffector(cssDynamicValueLoader)
-    .acceptNodeEffector(cssInlineValueLoader)
-    .acceptNodeEffector(cssComputedValueLoader)
-    .acceptNodeEffector(cssUsedValueLoader)
+  Load cascading specified value.
 */
-
 export class SpecifiedValueLoader implements NodeEffector {
   static instance = new SpecifiedValueLoader();
   private constructor() { }
@@ -97,6 +93,9 @@ export class SpecifiedValueLoader implements NodeEffector {
   }
 }
 
+/*
+  Load dynamic value after normal specified value loaded.
+*/
 export class SpecifiedDynamicValueLoader implements NodeEffector {
   static instance = new SpecifiedDynamicValueLoader();
   private constructor() { }
@@ -107,6 +106,9 @@ export class SpecifiedDynamicValueLoader implements NodeEffector {
   }
 }
 
+/*
+  Load inline style value after normal/dynamic value loaded.
+*/
 export class SpecifiedInlineValueLoader implements NodeEffector {
   static instance = new SpecifiedInlineValueLoader();
   private constructor() { }
@@ -118,6 +120,9 @@ export class SpecifiedInlineValueLoader implements NodeEffector {
   }
 }
 
+/*
+  Load computed value that can be calculated directly from specified value.
+*/
 export class CssComputedValueLoader implements NodeEffector {
   static instance = new CssComputedValueLoader();
   private constructor() { }
@@ -172,7 +177,7 @@ export class CssComputedValueLoader implements NodeEffector {
     const specValue = this.getCascadedValue(element, "line-height");
     const cssLineHeight = new CssLineHeight(specValue);
     const size = cssLineHeight.computeSize(element);
-    if (cssLineHeight.hasUnit()) { // has unit, so px value is already confirmed.
+    if (cssLineHeight.hasUnit()) { // if there is some unit included, px value is already confirmed.
       return size + "px";
     }
     return String(size); // remain float value
@@ -340,9 +345,9 @@ export class CssComputedValueLoader implements NodeEffector {
 }
 
 /*
-  [example]
+  Compute used-value(auto, inherit, percent) for 'measure', 'extent', 'margin' etc.
 
-  Compute inherit, auto value.
+  [example]
 
   <body style="measure:100px">
     <div style="measure:auto">
@@ -357,8 +362,6 @@ export class CssComputedValueLoader implements NodeEffector {
     </div>
   </body>
 */
-// prop: measure, extent, margin
-// auto -> px
 export class CssUsedValueLoader implements NodeEffector {
   static instance = new CssUsedValueLoader();
   private constructor() { }
