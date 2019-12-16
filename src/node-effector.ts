@@ -139,7 +139,7 @@ export class CssComputedValueLoader implements NodeEffector {
   private getExtent(element: HtmlElement): "auto" | number {
     const specValue = this.setCascadedValue(element, "extent");
     if (element.tagName === "body" && specValue === "auto") {
-      return parseInt(DefaultStyle.get("body", "measure"), 10);
+      return parseInt(DefaultStyle.get("body", "extent"), 10);
     }
     return specValue === "auto" ? specValue : new CssBoxExtent(specValue).computeSize(element);
   }
