@@ -336,6 +336,20 @@ export class CssUsedValueLoader implements NodeEffector {
       new CssBlockPosition(value).computeSize(element);
   }
 
+  private getParentMeasure(element: HtmlElement): number {
+    if (!element.parent) {
+      return Config.defaultBodyMeasure;
+    }
+    return parseInt(CssCascade.getValue(element.parent, "measure"), 10);
+  }
+
+  private getParentExtent(element: HtmlElement): number {
+    if (!element.parent) {
+      return Config.defaultBodyExtent;
+    }
+    return parseInt(CssCascade.getValue(element.parent, "extent"), 10);
+  }
+
   visit(element: HtmlElement) {
     if (element.isTextElement()) {
       return;
@@ -363,21 +377,56 @@ export class CssUsedValueLoader implements NodeEffector {
     const paddingBefore = this.getPadding(element, "before");
     const paddingAfter = this.getPadding(element, "after");
     const isRe = ReplacedElement.isReplacedElement(element);
+    const start = this.getPosition(element, "start");
+    const end = this.getPosition(element, "end");
+    const before = this.getPosition(element, "before");
+    const after = this.getPosition(element, "after");
     const position = CssCascade.getValue(element, "position");
-
+    const parentMeasure = this.getParentMeasure(element);
+    const parentExtent = this.getParentExtent(element);
     let finalMeasure = measure === "auto" ? 0 : measure;
     let finalMarginStart = 0, finalMarginEnd = 0;
 
-    // https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
+    // Percentage value like 'padding:10%' can't be decided before measure is not decided.
+    // So we have to compute measure first!
+
+    // [compute measure]
+    // url: https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
 
     // 1. inline && non-replaced elements
     if (display.isInlineLevel() && !isRe) {
+      finalMarginStart = finalMarginEnd = 0;
     }
     // 2. inline && replaced elements
     else if (display.isInlineLevel() && isRe) {
+      finalMarginStart = finalMarginEnd = 0;
+      if (measure === "auto" && extent === "auto") {
+        console.warn("");
+      }
     }
     // 3. block & non-replaced elements
     else if (display.isBlockLevel() && !isRe) {
+      // constraint [finalMeasure < maxMeasure]
+      if (maxMeasure !== "none") {
+        finalMeasure = Math.min(finalMeasure, maxMeasure);
+      }
+      // constraint [finalMeasure > minMeasure]
+      if (minMeasure !== "none") {
+        finalMeasure = Math.max(finalMeasure, minMeasure);
+      }
+      if (measure === "auto") {
+        if (marginStart === "auto") {
+          finalMarginStart = 0;
+        }
+        if (marginEnd === "auto") {
+          finalMarginEnd = 0;
+        }
+      }
+      const inlineEdgeSize = finalMarginStart + paddingStart + paddingEnd + finalMarginEnd;
+      if (measure === "auto" && element.parent) {
+        finalMeasure = parentMeasure - inlineEdgeSize;
+      }
+      element.computedStyle.setProperty("measure", finalMeasure + "px");
     }
     // 4. block replaced element
     else if (display.isBlockLevel() && isRe) {
@@ -400,28 +449,6 @@ export class CssUsedValueLoader implements NodeEffector {
     // 10. inline-block, replaced elements
     else if (display.isInlineBlockFlow() && isRe) {
     }
-    // constraint [finalMeasure < maxMeasure]
-    if (maxMeasure !== "none") {
-      finalMeasure = Math.min(finalMeasure, maxMeasure);
-    }
-    // constraint [finalMeasure > minMeasure]
-    if (minMeasure !== "none") {
-      finalMeasure = Math.max(finalMeasure, minMeasure);
-    }
-    if (measure === "auto") {
-      if (marginStart === "auto") {
-        finalMarginStart = 0;
-      }
-      if (marginEnd === "auto") {
-        finalMarginEnd = 0;
-      }
-    }
-    const inlineEdgeSize = finalMarginStart + paddingStart + paddingEnd + finalMarginEnd;
-    if (measure === "auto" && element.parent) {
-      const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0");
-      finalMeasure = parentMeasure - inlineEdgeSize;
-    }
-    element.computedStyle.setProperty("measure", finalMeasure + "px");
   }
 }
 
