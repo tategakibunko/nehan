@@ -5,19 +5,37 @@ import {
 
 export class CssCascade {
   static getValue(element: HtmlElement, prop: string): string {
-    const default_css = DefaultCss.get(prop);
-    const computed_value = element.computedStyle.getPropertyValue(prop);
-    if (computed_value) {
-      return computed_value;
+    const computedValue = element.computedStyle.getPropertyValue(prop) || "";
+    return computedValue || this.getSpecValue(element, prop);
+  }
+
+  static getSpecValue(element: HtmlElement, prop: string): string {
+    const specValue = element.style.getPropertyValue(prop) || "";
+    const defaultCss = DefaultCss.get(prop);
+    switch (specValue) {
+      // no value specified
+      case "":
+        // if inheritable value, inherit parent 'computed' value.
+        if (defaultCss.inherit && element.parent) {
+          return this.getValue(element.parent, prop);
+        }
+        // if root, use initial value.
+        return defaultCss.initial;
+      case "initial":
+        return defaultCss.initial;
+      case "inherit":
+        if (element.parent) {
+          // if inheritable value, inherit parent 'computed' value.
+          if (defaultCss.inherit) {
+            return this.getValue(element.parent, prop);
+          }
+          // if non inheritable value, inherit parent 'specified' value(or initial value).
+          return this.getSpecValue(element.parent, prop);
+        }
+        return defaultCss.initial;
+      default:
+        return specValue;
     }
-    const value = element.style.getPropertyValue(prop);
-    if (value && value !== "inherit") {
-      return value;
-    }
-    if (default_css.inherit && element.parent && (!value || value === "inherit")) {
-      return CssCascade.getValue(element.parent, prop);
-    }
-    return default_css.initial;
   }
 }
 

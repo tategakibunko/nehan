@@ -2,8 +2,7 @@ import {
   Config,
   HtmlElement,
   Display,
-  DisplayValue,
-  DefaultCss,
+  CssCascade,
   CssParser,
   CssFontSize,
   CssEdgeSize,
@@ -122,6 +121,7 @@ export class SpecifiedInlineValueLoader implements NodeEffector {
   }
 }
 
+/*
 class CssCascade {
   static getValue(element: HtmlElement, prop: string): string {
     const computedValue = element.computedStyle.getPropertyValue(prop) || "";
@@ -156,6 +156,7 @@ class CssCascade {
     }
   }
 }
+*/
 
 /*
   Load computed value that can be calculated directly from specified value.
@@ -399,32 +400,43 @@ export class CssUsedValueLoader implements NodeEffector {
     const paddingBefore = this.getPadding(element, "before");
     const paddingAfter = this.getPadding(element, "after");
     const isRe = ReplacedElement.isReplacedElement(element);
+    const position = CssCascade.getValue(element, "position");
 
     let finalMeasure = measure === "auto" ? 0 : measure;
     let finalMarginStart = 0, finalMarginEnd = 0;
 
-    // block level
-    if (display.isBlockLevel()) {
-      // block replaced-element
-      if (isRe) {
+    // https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
 
-      }
-      // block normal-flow
-      else {
-      }
+    // 1. inline && non-replaced elements
+    if (display.isInlineLevel() && !isRe) {
     }
-    // inline level 
-    else {
-      // inline, replaced-element
-      if (isRe) {
-
-      }
-      // inline, normal-flow
-      else {
-
-      }
+    // 2. inline && replaced elements
+    else if (display.isInlineLevel() && isRe) {
     }
-
+    // 3. block & non-replaced elements
+    else if (display.isBlockLevel() && !isRe) {
+    }
+    // 4. block replaced element
+    else if (display.isBlockLevel() && isRe) {
+    }
+    // 5. floating, non-replaced elements
+    else if (float !== "none" && !isRe) {
+    }
+    // 6. floating, replaced elements
+    else if (float !== "none" && isRe) {
+    }
+    // 7. abs positioned, non-replaced elements
+    else if (display.isInlineBlockFlow() && !isRe) {
+    }
+    // 8. abs positioned, replaced elements
+    else if (display.isInlineBlockFlow() && isRe) {
+    }
+    // 9. inline-block, non-replaced elements
+    else if (display.isInlineBlockFlow() && !isRe) {
+    }
+    // 10. inline-block, replaced elements
+    else if (display.isInlineBlockFlow() && isRe) {
+    }
     // constraint [finalMeasure < maxMeasure]
     if (maxMeasure !== "none") {
       finalMeasure = Math.min(finalMeasure, maxMeasure);

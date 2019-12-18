@@ -14,9 +14,6 @@ export let DefaultStyles: CssRules = {
     "direction": "rtl",
     "unicode-bidi": "embed"
   },
-  "a": {
-    "display": "inherit"
-  },
   "abbr": {
   },
   "address": {
