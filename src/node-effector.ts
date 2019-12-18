@@ -122,43 +122,6 @@ export class SpecifiedInlineValueLoader implements NodeEffector {
 }
 
 /*
-class CssCascade {
-  static getValue(element: HtmlElement, prop: string): string {
-    const computedValue = element.computedStyle.getPropertyValue(prop) || "";
-    return computedValue || this.getSpecValue(element, prop);
-  }
-
-  static getSpecValue(element: HtmlElement, prop: string): string {
-    const specValue = element.style.getPropertyValue(prop) || "";
-    const defaultCss = DefaultCss.get(prop);
-    switch (specValue) {
-      case "":
-        // if not specified but inheritable value, use parent computed value.
-        if (defaultCss.inherit && element.parent) {
-          return this.getValue(element.parent, prop);
-        }
-        // if root element, but not specified, use initial value.
-        return defaultCss.initial;
-      case "initial":
-        return defaultCss.initial;
-      case "inherit":
-        if (element.parent) {
-          // if inheritable prop, inherit parent computed value.
-          if (defaultCss.inherit) {
-            return this.getValue(element.parent, prop);
-          }
-          // if non inheritable prop, inherit parent specified value(or initial value).
-          return this.getSpecValue(element.parent, prop);
-        }
-        return defaultCss.initial;
-      default:
-        return specValue;
-    }
-  }
-}
-*/
-
-/*
   Load computed value that can be calculated directly from specified value.
 */
 export class CssComputedValueLoader implements NodeEffector {
