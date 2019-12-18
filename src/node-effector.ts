@@ -2,6 +2,7 @@ import {
   Config,
   HtmlElement,
   Display,
+  DisplayValue,
   DefaultCss,
   CssParser,
   CssFontSize,
@@ -17,6 +18,7 @@ import {
   LogicalEdgeDirections,
   LogicalBorderRadius,
   PseudoElement,
+  ReplacedElement,
   DefaultStyle,
 } from './public-api'
 
@@ -120,31 +122,49 @@ export class SpecifiedInlineValueLoader implements NodeEffector {
   }
 }
 
+class CssCascade {
+  static getValue(element: HtmlElement, prop: string): string {
+    const computedValue = element.computedStyle.getPropertyValue(prop) || "";
+    return computedValue || this.getSpecValue(element, prop);
+  }
+
+  static getSpecValue(element: HtmlElement, prop: string): string {
+    const specValue = element.style.getPropertyValue(prop) || "";
+    const defaultCss = DefaultCss.get(prop);
+    switch (specValue) {
+      case "":
+        // if not specified but inheritable value, use parent computed value.
+        if (defaultCss.inherit && element.parent) {
+          return this.getValue(element.parent, prop);
+        }
+        // if root element, but not specified, use initial value.
+        return defaultCss.initial;
+      case "initial":
+        return defaultCss.initial;
+      case "inherit":
+        if (element.parent) {
+          // if inheritable prop, inherit parent computed value.
+          if (defaultCss.inherit) {
+            return this.getValue(element.parent, prop);
+          }
+          // if non inheritable prop, inherit parent specified value(or initial value).
+          return this.getSpecValue(element.parent, prop);
+        }
+        return defaultCss.initial;
+      default:
+        return specValue;
+    }
+  }
+}
+
 /*
   Load computed value that can be calculated directly from specified value.
 */
 export class CssComputedValueLoader implements NodeEffector {
   static instance = new CssComputedValueLoader();
-  private constructor() { }
-
-  private getCascadedValue(element: HtmlElement, prop: string): string {
-    const computedValue = element.computedStyle.getPropertyValue(prop);
-    if (computedValue) {
-      return computedValue;
-    }
-    const specValue = element.style.getPropertyValue(prop);
-    if (specValue && specValue !== "inherit") {
-      return specValue;
-    }
-    const defaultCss = DefaultCss.get(prop);
-    if (defaultCss.inherit && element.parent && (!specValue || specValue === "inherit")) {
-      return this.getCascadedValue(element.parent, prop);
-    }
-    return defaultCss.initial;
-  }
 
   private getFontSize(element: HtmlElement): number {
-    let value = this.getCascadedValue(element, "font-size");
+    let value = CssCascade.getValue(element, "font-size");
     let size = new CssFontSize(value).computeSize(element);
     return size;
   }
@@ -158,7 +178,7 @@ export class CssComputedValueLoader implements NodeEffector {
     So we have to keep 'line-height' string-typed.
   */
   private getLineHeightString(element: HtmlElement): string {
-    const specValue = this.getCascadedValue(element, "line-height");
+    const specValue = CssCascade.getValue(element, "line-height");
     const cssLineHeight = new CssLineHeight(specValue);
     const size = cssLineHeight.computeSize(element);
     if (cssLineHeight.hasUnit()) { // if there is some unit included, px value is already confirmed.
@@ -168,17 +188,17 @@ export class CssComputedValueLoader implements NodeEffector {
   }
 
   private getEdgeSize(element: HtmlElement, prop: string): number {
-    const value = this.getCascadedValue(element, prop);
+    const value = CssCascade.getValue(element, prop);
     return new CssEdgeSize(value, prop).computeSize(element);
   }
 
   private getBorderWidth(element: HtmlElement, prop: string): number {
-    const value = this.getCascadedValue(element, prop);
+    const value = CssCascade.getValue(element, prop);
     return new CssBorderWidth(value, prop).computeSize(element);
   }
 
   private setCascadedValue(element: HtmlElement, prop: string): string {
-    let value = this.getCascadedValue(element, prop);
+    let value = CssCascade.getValue(element, prop);
     element.computedStyle.setProperty(prop, value);
     return value;
   }
@@ -204,7 +224,7 @@ export class CssComputedValueLoader implements NodeEffector {
   private setBorderStyle(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-style`;
-      const value = this.getCascadedValue(element, prop);
+      const value = CssCascade.getValue(element, prop);
       element.computedStyle.setProperty(prop, value);
     });
   }
@@ -212,7 +232,7 @@ export class CssComputedValueLoader implements NodeEffector {
   private setBorderColor(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-color`;
-      const value = this.getCascadedValue(element, prop);
+      const value = CssCascade.getValue(element, prop);
       element.computedStyle.setProperty(prop, value);
     });
   }
@@ -236,7 +256,7 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setFontSize(element);
     this.setLineHeight(element);
 
-    if (Config.edgeSkipTags.indexOf(element.tagName) < 0) {
+    if (!Config.edgeSkipTags.includes(element.tagName)) {
       this.setBorderWidth(element);
       this.setBorderStyle(element);
       this.setBorderColor(element);
@@ -264,6 +284,7 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setCascadedValue(element, "overflow-wrap");
     this.setCascadedValue(element, "white-space");
     this.setCascadedValue(element, "page-break-before");
+    this.setCascadedValue(element, "position");
 
     // Use 'text-align:justify' instead.
     // this.setCascadedValue(element, "text-justify");
@@ -272,6 +293,7 @@ export class CssComputedValueLoader implements NodeEffector {
 
 /*
   Compute used-value(auto, inherit, percent) for 'measure', 'extent', 'margin' etc.
+  These props have it's constraints, and thus, decided by other extra rule or property.
 
   [target prop]
 
@@ -283,7 +305,9 @@ export class CssComputedValueLoader implements NodeEffector {
   padding-***,
   text-indent
 
-  [example]
+  [warning]
+
+  In these props(measure, extent, margin etc), percent value is kept percent value by 'inherit'.
 
   <body style="measure:100px">
     <div style="measure:auto">
@@ -300,137 +324,129 @@ export class CssComputedValueLoader implements NodeEffector {
 */
 export class CssUsedValueLoader implements NodeEffector {
   static instance = new CssUsedValueLoader();
-  private constructor() { }
 
-  private getCascadedValue(element: HtmlElement, prop: string): string {
-    const computedValue = element.computedStyle.getPropertyValue(prop);
-    // If already calculated, return it.
-    if (computedValue) {
-      return computedValue;
-    }
-    const specValue = element.style.getPropertyValue(prop);
-    if (specValue === "inherit") {
-      if (!element.parent) {
-        throw new Error(`Invalid inherit value at ${element.tagName}`);
-      }
-      // If parent specified-value has percentage unit,
-      // use parent specified-value as cascaded value.
-      const parentSpecValue = element.parent.style.getPropertyValue(prop) || ""
-      if (parentSpecValue.includes("%")) {
-        return parentSpecValue;
-      }
-      // If it's not percentage value, use parent cascaded-value.
-      return this.getCascadedValue(element.parent, prop);
-    }
-    // If specified-value is not defined, use initial value.
-    if (!specValue) {
-      const defaultCss = DefaultCss.get(prop);
-      return defaultCss.initial;
-    }
-    return specValue;
+  private getMinMeasure(element: HtmlElement): "none" | number {
+    const value = CssCascade.getValue(element, "min-measure");
+    return value === "none" ? value : new CssBoxMeasure(value).computeSize(element);
   }
 
-  private getEdgeSize(element: HtmlElement, prop: string): number {
-    const value = this.getCascadedValue(element, prop);
-    return new CssEdgeSize(value, prop).computeSize(element);
+  private getMaxMeasure(element: HtmlElement): "none" | number {
+    const value = CssCascade.getValue(element, "max-measure");
+    return value === "none" ? value : new CssBoxMeasure(value).computeSize(element);
   }
 
-  private getMarginSize(element: HtmlElement, prop: string): number | string {
-    const value = this.getCascadedValue(element, prop);
-    return value === "auto" ? value : new CssEdgeSize(value, prop).computeSize(element);
+  private getMinExtent(element: HtmlElement): "none" | number {
+    const value = CssCascade.getValue(element, "min-extent");
+    return value === "none" ? value : new CssBoxExtent(value).computeSize(element);
+  }
+
+  private getMaxExtent(element: HtmlElement): "none" | number {
+    const value = CssCascade.getValue(element, "max-extent");
+    return value === "none" ? value : new CssBoxExtent(value).computeSize(element);
+  }
+
+  private getMargin(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
+    const value = CssCascade.getValue(element, `margin-${direction}`);
+    return value === "auto" ? value : new CssEdgeSize(value, direction).computeSize(element);
+  }
+
+  private getPadding(element: HtmlElement, direction: LogicalEdgeDirection): number {
+    const value = CssCascade.getValue(element, `padding-${direction}`);
+    return new CssEdgeSize(value, direction).computeSize(element);
   }
 
   private getMeasure(element: HtmlElement): "auto" | number {
-    const specValue = this.setCascadedValue(element, "measure");
-    if (element.tagName === "body" && specValue === "auto") {
-      return parseInt(DefaultStyle.get("body", "measure"), 10);
-    }
-    return specValue === "auto" ? specValue : new CssBoxMeasure(specValue).computeSize(element);
+    const value = CssCascade.getValue(element, "measure");
+    return value === "auto" ? value : new CssBoxMeasure(value).computeSize(element);
   }
 
   private getExtent(element: HtmlElement): "auto" | number {
-    const specValue = this.setCascadedValue(element, "extent");
-    if (element.tagName === "body" && specValue === "auto") {
-      return parseInt(DefaultStyle.get("body", "extent"), 10);
-    }
-    return specValue === "auto" ? specValue : new CssBoxExtent(specValue).computeSize(element);
+    const value = CssCascade.getValue(element, "extent");
+    return value === "auto" ? value : new CssBoxExtent(value).computeSize(element);
   }
 
-  private setCascadedValue(element: HtmlElement, prop: string): string {
-    let value = this.getCascadedValue(element, prop);
-    element.computedStyle.setProperty(prop, value);
-    return value;
-  }
-
-  private setMargin(element: HtmlElement) {
-    LogicalEdgeDirections.forEach(direction => {
-      const prop = `margin-${direction}`;
-      const size = this.getMarginSize(element, prop);
-      element.computedStyle.setProperty(prop, size + "px");
-    });
-  }
-
-  private setPosition(element: HtmlElement) {
-    LogicalEdgeDirections.forEach(direction => {
-      const value = this.getCascadedValue(element, direction);
-      if (value !== "auto") {
-        const length = LogicalEdge.isInlineEdge(direction as LogicalEdgeDirection) ?
-          new CssInlinePosition(value) : new CssBlockPosition(value);
-        const size = length.computeSize(element);
-        element.computedStyle.setProperty(direction, size + "px");
-      }
-    });
-  }
-
-  private setPadding(element: HtmlElement) {
-    LogicalEdgeDirections.forEach(direction => {
-      const prop = `padding-${direction}`;
-      const size = this.getEdgeSize(element, prop);
-      element.computedStyle.setProperty(prop, size + "px");
-    });
-  }
-
-  private setMeasure(element: HtmlElement) {
-    const cascadedValue = this.getMeasure(element);
-    const computedValue = cascadedValue === "auto" ? cascadedValue : cascadedValue + "px";
-    element.computedStyle.setProperty("measure", computedValue);
-  }
-
-  private setExtent(element: HtmlElement) {
-    const cascadedValue = this.getExtent(element);
-    const computedValue = cascadedValue === "auto" ? cascadedValue : cascadedValue + "px";
-    element.computedStyle.setProperty("extent", computedValue);
-  }
-
-  isIgnoredElement(element: HtmlElement): boolean {
-    if (element.isTextElement()) {
-      return true;
-    }
-    if (element.computedStyle.getPropertyValue("display") === "none") {
-      return true;
-    }
-    if (Config.boxSizeSkipTags.indexOf(element.tagName) >= 0) {
-      return true;
-    }
-    return false;
+  private getPosition(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
+    const value = CssCascade.getValue(element, direction);
+    return value === "auto" ? value : LogicalEdge.isInlineEdge(direction) ?
+      new CssInlinePosition(value).computeSize(element) :
+      new CssBlockPosition(value).computeSize(element);
   }
 
   visit(element: HtmlElement) {
-    if (this.isIgnoredElement(element)) {
+    if (element.isTextElement()) {
       return;
     }
-    const style = element.style;
-    const display = element.computedStyle.getPropertyValue("dipslay");
+    if (Config.boxSizeSkipTags.indexOf(element.tagName) >= 0) {
+      return;
+    }
+    const display = Display.load(element);
+    if (display.isNone()) {
+      return;
+    }
     const float = element.computedStyle.getPropertyValue("float");
-    const marginStart = style.getPropertyValue("margin-start");
-    const marginEnd = style.getPropertyValue("margin-end");
-    const marginBefore = style.getPropertyValue("margin-before");
-    const marginAfter = style.getPropertyValue("margin-after");
-    const paddingStart = style.getPropertyValue("padding-start");
-    const paddingEnd = style.getPropertyValue("padding-end");
-    const paddingBefore = style.getPropertyValue("padding-before");
-    const paddingAfter = style.getPropertyValue("padding-after");
-    // this.setCascadedValue(element, "background-position");
+    const minMeasure = this.getMinMeasure(element);
+    const maxMeasure = this.getMaxMeasure(element);
+    const minExtent = this.getMinExtent(element);
+    const maxExtent = this.getMaxExtent(element);
+    const measure = this.getMeasure(element);
+    const extent = this.getExtent(element);
+    const marginStart = this.getMargin(element, "start");
+    const marginEnd = this.getMargin(element, "end");
+    const marginBefore = this.getMargin(element, "before");
+    const marginAfter = this.getMargin(element, "after");
+    const paddingStart = this.getPadding(element, "start");
+    const paddingEnd = this.getPadding(element, "end");
+    const paddingBefore = this.getPadding(element, "before");
+    const paddingAfter = this.getPadding(element, "after");
+    const isRe = ReplacedElement.isReplacedElement(element);
+
+    let finalMeasure = measure === "auto" ? 0 : measure;
+    let finalMarginStart = 0, finalMarginEnd = 0;
+
+    // block level
+    if (display.isBlockLevel()) {
+      // block replaced-element
+      if (isRe) {
+
+      }
+      // block normal-flow
+      else {
+      }
+    }
+    // inline level 
+    else {
+      // inline, replaced-element
+      if (isRe) {
+
+      }
+      // inline, normal-flow
+      else {
+
+      }
+    }
+
+    // constraint [finalMeasure < maxMeasure]
+    if (maxMeasure !== "none") {
+      finalMeasure = Math.min(finalMeasure, maxMeasure);
+    }
+    // constraint [finalMeasure > minMeasure]
+    if (minMeasure !== "none") {
+      finalMeasure = Math.max(finalMeasure, minMeasure);
+    }
+    if (measure === "auto") {
+      if (marginStart === "auto") {
+        finalMarginStart = 0;
+      }
+      if (marginEnd === "auto") {
+        finalMarginEnd = 0;
+      }
+    }
+    const inlineEdgeSize = finalMarginStart + paddingStart + paddingEnd + finalMarginEnd;
+    if (measure === "auto" && element.parent) {
+      const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0");
+      finalMeasure = parentMeasure - inlineEdgeSize;
+    }
+    element.computedStyle.setProperty("measure", finalMeasure + "px");
   }
 }
 

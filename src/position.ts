@@ -1,22 +1,15 @@
 import {
-  Utils,
-  DefaultCss,
   HtmlElement,
   CssCascade,
 } from "./public-api";
 
-export enum PositionValue {
-  STATIC = "static",
-  RELATIVE = "relative",
-  ABSOLUTE = "absolute"
-}
+export type PositionValue = "static" | "relative" | "absolute"
 
 export class Position {
-  public value: string;
-  static values: string [] = Utils.Enum.toValueArray(PositionValue);
+  public value: PositionValue;
 
-  constructor(value: PositionValue){
-    this.value = DefaultCss.selectOrDefault("position", value, Position.values);
+  constructor(value: PositionValue) {
+    this.value = value;
   }
 
   static load(element: HtmlElement): Position {
@@ -25,14 +18,14 @@ export class Position {
   }
 
   public isAbsolute(): boolean {
-    return this.value === PositionValue.ABSOLUTE;
+    return this.value === "absolute";
   }
 
   public isRelative(): boolean {
-    return this.value === PositionValue.RELATIVE;
+    return this.value === "relative";
   }
 
   public isStatic(): boolean {
-    return this.value === PositionValue.STATIC;
+    return this.value === "static";
   }
 }

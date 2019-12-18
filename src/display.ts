@@ -56,15 +56,15 @@ export enum DisplayValue {
   FLOW_ROOT = "flow-root",               // block flow-root
   RUN_IN = "run-in",                     // run-in flow
   LIST_ITEM = "list-item",               // block flow list-item
-  INLINE_LIST_ITEM = "inline list-item", // inline flow list-item
+  INLINE_LIST_ITEM = "inline-list-item", // inline flow list-item
   FLEX = "flex",                         // block flex
   INLINE_FLEX = "inline-flex",           // inline flex
   GRID = "grid",                         // block grid
   INLINE_GRID = "inline-grid",           // inline grid
   RUBY = "ruby",                         // inline ruby
-  BLOCK_RUBY = "block ruby",             // block ruby
+  BLOCK_RUBY = "block-ruby",             // block ruby
   TABLE = "table",                       // block table
-  INLINE_TABLE = "inline table",         // inline table
+  INLINE_TABLE = "inline-table",         // inline table
 }
 
 export class Display {
@@ -75,126 +75,126 @@ export class Display {
   public listItem?: string;
   public box?: string;
 
-  static values: string [] = Utils.Enum.toValueArray(DisplayValue);
-  static listItemValues: string [] = Utils.Enum.toValueArray(DisplayListItem);
-  static internalValues: string [] = Utils.Enum.toValueArray(DisplayInternal);
-  static boxValues: string [] = Utils.Enum.toValueArray(DisplayBox);
-  static allValues: string [] = Display.values
+  static values: string[] = Utils.Enum.toValueArray(DisplayValue);
+  static listItemValues: string[] = Utils.Enum.toValueArray(DisplayListItem);
+  static internalValues: string[] = Utils.Enum.toValueArray(DisplayInternal);
+  static boxValues: string[] = Utils.Enum.toValueArray(DisplayBox);
+  static allValues: string[] = Display.values
     .concat(Display.listItemValues)
     .concat(Display.internalValues)
     .concat(Display.boxValues);
-  
-  constructor(value: DisplayValue){
-    if(Display.internalValues.indexOf(value) >= 0){
+
+  constructor(value: DisplayValue) {
+    if (Display.internalValues.includes(value)) {
       this.internal = value;
     }
-    if(Display.listItemValues.indexOf(value) >= 0){
+    if (Display.listItemValues.includes(value)) {
       this.listItem = value;
     }
-    if(Display.boxValues.indexOf(value) >= 0){
+    if (Display.boxValues.includes(value)) {
       this.box = value;
     }
     this.value = DefaultCss.selectOrDefault("display", value, Display.allValues);
 
-    switch(this.value){
-    case DisplayValue.NONE:
-      this.box = DisplayBox.NONE;
-      break;
+    switch (this.value) {
+      case DisplayValue.NONE:
+        this.box = DisplayBox.NONE;
+        break;
 
-    case DisplayValue.CONTENTS:
-      this.box = DisplayBox.CONTENTS;
-      break;
+      case DisplayValue.CONTENTS:
+        this.box = DisplayBox.CONTENTS;
+        break;
 
-    case DisplayValue.BLOCK: // block flow
-      this.outside = DisplayOutside.BLOCK;
-      this.inside = DisplayInside.FLOW;
-      break;
-      
-    case DisplayValue.INLINE_BLOCK: // inline flow-root
-      this.outside = DisplayOutside.INLINE;
-      this.inside = DisplayInside.FLOW_ROOT;
-      break;
+      case DisplayValue.BLOCK: // block flow
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.FLOW;
+        break;
 
-    case DisplayValue.FLOW_ROOT: // block flow-root
-      this.outside = DisplayOutside.BLOCK;
-      this.inside = DisplayInside.FLOW_ROOT;
-      break;
+      case DisplayValue.INLINE_BLOCK: // inline flow-root
+        this.outside = DisplayOutside.INLINE;
+        this.inside = DisplayInside.FLOW_ROOT;
+        break;
 
-    case DisplayValue.LIST_ITEM: // block flow list-item
-      this.outside = DisplayOutside.BLOCK;
-      this.inside = DisplayInside.FLOW;
-      this.listItem = DisplayListItem.LIST_ITEM;
-      break;
+      case DisplayValue.FLOW_ROOT: // block flow-root
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.FLOW_ROOT;
+        break;
 
-    case DisplayValue.INLINE_LIST_ITEM: // inline flow list-item
-      this.outside = DisplayOutside.INLINE;
-      this.inside = DisplayInside.FLOW;
-      this.listItem = DisplayListItem.LIST_ITEM;
-      break;
+      case DisplayValue.LIST_ITEM: // block flow list-item
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.FLOW;
+        this.listItem = DisplayListItem.LIST_ITEM;
+        break;
 
-    case DisplayValue.RUN_IN: // run-in flow
-      this.outside = DisplayOutside.RUN_IN;
-      this.inside = DisplayInside.FLOW;
-      break;
+      case DisplayValue.INLINE_LIST_ITEM: // inline flow list-item
+        this.outside = DisplayOutside.INLINE;
+        this.inside = DisplayInside.FLOW;
+        this.listItem = DisplayListItem.LIST_ITEM;
+        break;
 
-    case DisplayValue.FLEX: // block flex
-      this.outside = DisplayOutside.BLOCK;
-      this.inside = DisplayInside.FLEX;
-      break;
+      case DisplayValue.RUN_IN: // run-in flow
+        this.outside = DisplayOutside.RUN_IN;
+        this.inside = DisplayInside.FLOW;
+        break;
 
-    case DisplayValue.INLINE_FLEX: // inline flex
-      this.outside = DisplayOutside.INLINE;
-      this.inside = DisplayInside.FLEX;
-      break;
+      case DisplayValue.FLEX: // block flex
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.FLEX;
+        break;
 
-    case DisplayValue.GRID: // block grid
-      this.outside = DisplayOutside.BLOCK;
-      this.inside = DisplayInside.GRID;
-      break;
+      case DisplayValue.INLINE_FLEX: // inline flex
+        this.outside = DisplayOutside.INLINE;
+        this.inside = DisplayInside.FLEX;
+        break;
 
-    case DisplayValue.INLINE_GRID: // inline grid
-      this.outside = DisplayOutside.INLINE;
-      this.inside = DisplayInside.GRID;
-      break;
+      case DisplayValue.GRID: // block grid
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.GRID;
+        break;
 
-    case DisplayValue.BLOCK_RUBY: // block ruby
-      this.outside = DisplayOutside.BLOCK;
-      this.inside = DisplayInside.RUBY;
-      break;
+      case DisplayValue.INLINE_GRID: // inline grid
+        this.outside = DisplayOutside.INLINE;
+        this.inside = DisplayInside.GRID;
+        break;
 
-    case DisplayValue.RUBY: // inline ruby
-      this.outside = DisplayOutside.INLINE;
-      this.inside = DisplayInside.RUBY;
-      break;
+      case DisplayValue.BLOCK_RUBY: // block ruby
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.RUBY;
+        break;
 
-    case DisplayValue.TABLE: // block table
-      this.outside = DisplayOutside.BLOCK;
-      this.inside = DisplayInside.TABLE;
-      break;
+      case DisplayValue.RUBY: // inline ruby
+        this.outside = DisplayOutside.INLINE;
+        this.inside = DisplayInside.RUBY;
+        break;
 
-    case DisplayValue.INLINE_TABLE: // inline table
-      this.outside = DisplayOutside.INLINE;
-      this.inside = DisplayInside.TABLE;
-      break;
+      case DisplayValue.TABLE: // block table
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.TABLE;
+        break;
 
-    case DisplayInternal.TABLE_ROW_GROUP:
-    case DisplayInternal.TABLE_HEADER_GROUP:
-    case DisplayInternal.TABLE_FOOTER_GROUP:
-    case DisplayInternal.TABLE_ROW:
-      this.outside = DisplayOutside.BLOCK;
-      this.inside = DisplayInside.FLOW;
-      break;
+      case DisplayValue.INLINE_TABLE: // inline table
+        this.outside = DisplayOutside.INLINE;
+        this.inside = DisplayInside.TABLE;
+        break;
 
-    case DisplayInternal.TABLE_CELL:
-      this.outside = DisplayOutside.INLINE;
-      this.inside = DisplayInside.FLOW_ROOT;
-      break;
-      
-    case DisplayValue.INLINE: // inline flow
-    default:
-      this.outside = DisplayOutside.INLINE;
-      this.inside = DisplayInside.FLOW;
-      break;
+      case DisplayInternal.TABLE_ROW_GROUP:
+      case DisplayInternal.TABLE_HEADER_GROUP:
+      case DisplayInternal.TABLE_FOOTER_GROUP:
+      case DisplayInternal.TABLE_ROW:
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.FLOW;
+        break;
+
+      case DisplayInternal.TABLE_CELL:
+        this.outside = DisplayOutside.INLINE;
+        this.inside = DisplayInside.FLOW_ROOT;
+        break;
+
+      case DisplayValue.INLINE: // inline flow
+      default:
+        this.outside = DisplayOutside.INLINE;
+        this.inside = DisplayInside.FLOW;
+        break;
     }
   }
 
@@ -202,7 +202,7 @@ export class Display {
     let value = CssCascade.getValue(element, "display");
     let display = new Display(value as DisplayValue);
     // display of <a> is dynamically decided by it's content.
-    if(element.tagName === "a"){
+    if (element.tagName === "a") {
       return Display.loadDynamicDisplay(element, display);
     }
     return display;
@@ -210,14 +210,14 @@ export class Display {
 
   static loadDynamicDisplay(element: HtmlElement, init_value: Display): Display {
     let first_element = element.firstElementChild;
-    if(!first_element){
+    if (!first_element) {
       return init_value;
     }
     CssLoader.load(first_element);
     return Display.load(first_element);
   }
 
-  public setBlockLevel(){
+  public setBlockLevel() {
     this.outside = DisplayOutside.BLOCK;
   }
 
@@ -226,40 +226,40 @@ export class Display {
   }
 
   public isNone(): boolean {
-    return this.box? this.box === DisplayBox.NONE : false;
+    return this.box ? this.box === DisplayBox.NONE : false;
   }
 
   public isContents(): boolean {
-    return this.box? this.box === DisplayBox.CONTENTS : false;
+    return this.box ? this.box === DisplayBox.CONTENTS : false;
   }
 
   public isListItem(): boolean {
-    return this.listItem? true : false;
+    return this.listItem ? true : false;
   }
 
   public isTable(): boolean {
-    return this.inside? this.inside === DisplayInside.TABLE : false;
+    return this.inside ? this.inside === DisplayInside.TABLE : false;
   }
 
   public isTableRowGroup(): boolean {
-    if(!this.internal){
+    if (!this.internal) {
       return false;
     }
-    switch(this.internal){
-    case DisplayInternal.TABLE_ROW_GROUP:
-    case DisplayInternal.TABLE_HEADER_GROUP:
-    case DisplayInternal.TABLE_FOOTER_GROUP:
-      return true;
+    switch (this.internal) {
+      case DisplayInternal.TABLE_ROW_GROUP:
+      case DisplayInternal.TABLE_HEADER_GROUP:
+      case DisplayInternal.TABLE_FOOTER_GROUP:
+        return true;
     }
     return false;
   }
 
   public isTableRow(): boolean {
-    return this.internal? this.internal === DisplayInternal.TABLE_ROW : false;
+    return this.internal ? this.internal === DisplayInternal.TABLE_ROW : false;
   }
 
   public isTableCell(): boolean {
-    return this.internal? this.internal === DisplayInternal.TABLE_CELL : false;
+    return this.internal ? this.internal === DisplayInternal.TABLE_CELL : false;
   }
 
   public isRubyChild(): boolean {
@@ -267,11 +267,11 @@ export class Display {
   }
 
   public isRubyBase(): boolean {
-    return this.internal? this.internal === DisplayInternal.RUBY_BASE : false;
+    return this.internal ? this.internal === DisplayInternal.RUBY_BASE : false;
   }
 
   public isRubyText(): boolean {
-    return this.internal? this.internal === DisplayInternal.RUBY_TEXT : false;
+    return this.internal ? this.internal === DisplayInternal.RUBY_TEXT : false;
   }
 
   public isFlow(): boolean {
@@ -294,34 +294,34 @@ export class Display {
   }
 
   public isFlowInside(): boolean {
-    return this.inside? this.inside === DisplayInside.FLOW : false;
+    return this.inside ? this.inside === DisplayInside.FLOW : false;
   }
 
   public isFlowRoot(): boolean {
-    return this.inside? this.inside === DisplayInside.FLOW_ROOT : false;
+    return this.inside ? this.inside === DisplayInside.FLOW_ROOT : false;
   }
 
   public isFlowTable(): boolean {
-    return this.inside? this.inside === DisplayInside.TABLE : false;
+    return this.inside ? this.inside === DisplayInside.TABLE : false;
   }
 
   public isFlowRuby(): boolean {
-    return this.inside? this.inside === DisplayInside.RUBY : false;
+    return this.inside ? this.inside === DisplayInside.RUBY : false;
   }
 
   public isBlockLevel(): boolean {
-    return this.outside? this.outside === DisplayOutside.BLOCK : false;
+    return this.outside ? this.outside === DisplayOutside.BLOCK : false;
   }
 
   public isInlineLevel(): boolean {
-    return this.outside? this.outside === DisplayOutside.INLINE : false;
+    return this.outside ? this.outside === DisplayOutside.INLINE : false;
   }
 
   public get boxType(): BoxType {
-    if(this.isInlineFlow()){
+    if (this.isInlineFlow()) {
       return BoxType.INLINE;
     }
-    if(this.isInlineBlockFlow()){
+    if (this.isInlineBlockFlow()) {
       return BoxType.INLINE_BLOCK;
     }
     return BoxType.BLOCK;
