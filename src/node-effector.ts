@@ -319,6 +319,11 @@ export class CssUsedValueLoader implements NodeEffector {
     return new CssEdgeSize(value, direction).computeSize(element);
   }
 
+  private getBorderWidth(element: HtmlElement, direction: LogicalEdgeDirection): number {
+    const value = CssCascade.getValue(element, `border-${direction}-width`);
+    return new CssEdgeSize(value, direction).computeSize(element);
+  }
+
   private getMeasure(element: HtmlElement): "auto" | number {
     const value = CssCascade.getValue(element, "measure");
     return value === "auto" ? value : new CssBoxMeasure(value).computeSize(element);
@@ -338,14 +343,14 @@ export class CssUsedValueLoader implements NodeEffector {
 
   private getParentMeasure(element: HtmlElement): number {
     if (!element.parent) {
-      return Config.defaultBodyMeasure;
+      return parseInt(CssCascade.getSpecValue(element, "measure"), 10);
     }
     return parseInt(CssCascade.getValue(element.parent, "measure"), 10);
   }
 
   private getParentExtent(element: HtmlElement): number {
     if (!element.parent) {
-      return Config.defaultBodyExtent;
+      return parseInt(CssCascade.getSpecValue(element, "extent"), 10);
     }
     return parseInt(CssCascade.getValue(element.parent, "extent"), 10);
   }
@@ -374,9 +379,16 @@ export class CssUsedValueLoader implements NodeEffector {
     const marginAfter = this.getMargin(element, "after");
     const paddingStart = this.getPadding(element, "start");
     const paddingEnd = this.getPadding(element, "end");
+    const borderStartWidth = this.getBorderWidth(element, "start");
+    const borderEndWidth = this.getBorderWidth(element, "end");
+    const borderBeforeWidth = this.getBorderWidth(element, "before");
+    const borderAfterWidth = this.getBorderWidth(element, "after");
     const paddingBefore = this.getPadding(element, "before");
     const paddingAfter = this.getPadding(element, "after");
     const isRe = ReplacedElement.isReplacedElement(element);
+    const isBlockLevel = display.isBlockLevel();
+    const isInlineLevel = display.isInlineLevel();
+    const isInlineBlock = display.isInlineBlockFlow();
     const start = this.getPosition(element, "start");
     const end = this.getPosition(element, "end");
     const before = this.getPosition(element, "before");
@@ -387,25 +399,19 @@ export class CssUsedValueLoader implements NodeEffector {
     let finalMeasure = measure === "auto" ? 0 : measure;
     let finalMarginStart = 0, finalMarginEnd = 0;
 
-    // Percentage value like 'padding:10%' can't be decided before measure is not decided.
-    // So we have to compute measure first!
+    // TODO
+    // const width = new CssBoxWidth(value).computeSize(element)
+    // const height = new CssBoxHeight(value).computeSize(element)
 
-    // [compute measure]
-    // url: https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
+    const getBorderBoxEdgeMeasure = (): number => {
+      return borderStartWidth + paddingStart + paddingEnd + borderEndWidth;
+    };
 
-    // 1. inline && non-replaced elements
-    if (display.isInlineLevel() && !isRe) {
-      finalMarginStart = finalMarginEnd = 0;
-    }
-    // 2. inline && replaced elements
-    else if (display.isInlineLevel() && isRe) {
-      finalMarginStart = finalMarginEnd = 0;
-      if (measure === "auto" && extent === "auto") {
-        console.warn("");
-      }
-    }
-    // 3. block & non-replaced elements
-    else if (display.isBlockLevel() && !isRe) {
+    const getMarginBoxEdgeMeasure = (): number => {
+      return finalMarginStart + borderStartWidth + paddingStart + paddingEnd + borderEndWidth + finalMarginEnd;
+    };
+
+    const applyMinMaxMeasure = () => {
       // constraint [finalMeasure < maxMeasure]
       if (maxMeasure !== "none") {
         finalMeasure = Math.min(finalMeasure, maxMeasure);
@@ -414,6 +420,24 @@ export class CssUsedValueLoader implements NodeEffector {
       if (minMeasure !== "none") {
         finalMeasure = Math.max(finalMeasure, minMeasure);
       }
+    }
+
+    // Percentage value like 'padding:10%' can't be decided before measure is not decided.
+    // So we have to compute measure first!
+
+    // [compute measure]
+    // url: https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
+
+    // 1. inline && non-replaced elements
+    if (isInlineLevel && !isRe) {
+      finalMarginStart = finalMarginEnd = 0;
+    }
+    // 2. inline && replaced elements
+    else if (isInlineLevel && isRe) {
+      finalMarginStart = finalMarginEnd = 0;
+    }
+    // 3. block & non-replaced elements
+    else if (isBlockLevel && !isRe) {
       if (measure === "auto") {
         if (marginStart === "auto") {
           finalMarginStart = 0;
@@ -421,15 +445,25 @@ export class CssUsedValueLoader implements NodeEffector {
         if (marginEnd === "auto") {
           finalMarginEnd = 0;
         }
+      } else {
+        const autoMarginSize = Math.floor((parentMeasure - getBorderBoxEdgeMeasure()) / 2);
+        if (marginStart === "auto") {
+          finalMarginStart = finalMarginEnd = autoMarginSize;
+        }
       }
-      const inlineEdgeSize = finalMarginStart + paddingStart + paddingEnd + finalMarginEnd;
+      if (finalMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
+        finalMarginEnd = 0; // if ltr
+        if (finalMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
+          finalMarginStart = 0;
+        }
+      }
       if (measure === "auto" && element.parent) {
-        finalMeasure = parentMeasure - inlineEdgeSize;
+        finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       }
       element.computedStyle.setProperty("measure", finalMeasure + "px");
     }
     // 4. block replaced element
-    else if (display.isBlockLevel() && isRe) {
+    else if (isBlockLevel && isRe) {
     }
     // 5. floating, non-replaced elements
     else if (float !== "none" && !isRe) {
@@ -438,16 +472,16 @@ export class CssUsedValueLoader implements NodeEffector {
     else if (float !== "none" && isRe) {
     }
     // 7. abs positioned, non-replaced elements
-    else if (display.isInlineBlockFlow() && !isRe) {
+    else if (position === "absolute" && !isRe) {
     }
     // 8. abs positioned, replaced elements
-    else if (display.isInlineBlockFlow() && isRe) {
+    else if (position === "absolute" && isRe) {
     }
     // 9. inline-block, non-replaced elements
-    else if (display.isInlineBlockFlow() && !isRe) {
+    else if (isInlineBlock && !isRe) {
     }
     // 10. inline-block, replaced elements
-    else if (display.isInlineBlockFlow() && isRe) {
+    else if (isInlineBlock && isRe) {
     }
   }
 }

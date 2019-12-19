@@ -2,6 +2,7 @@ import {
   CssBoxSize,
   BoxDimension,
   HtmlElement,
+  CssCascade,
 } from "./public-api";
 
 // CssLength > CssBoxSize > CssBoxExtent
@@ -12,9 +13,8 @@ export class CssBoxExtent extends CssBoxSize {
 
   public computeParentSize(element: HtmlElement): number {
     if (!element.parent) {
-      console.error("parent extent for(%s) is not defined", element.tagName);
-      throw new Error("parent extent is not defined");
+      throw new Error("parent is not defined");
     }
-    return parseInt(element.parent.computedStyle.getPropertyValue("extent") || "0", 10);
+    return parseInt(CssCascade.getValue(element.parent, "extent"), 10);
   }
 }

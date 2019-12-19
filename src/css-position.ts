@@ -1,6 +1,7 @@
 import {
   HtmlElement,
-  CssLength
+  CssLength,
+  CssCascade,
 } from "./public-api";
 
 class CssPosition extends CssLength {
@@ -16,7 +17,7 @@ export class CssInlinePosition extends CssPosition {
     if (!element.parent) {
       throw new Error("parent is not defined");
     }
-    return parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
+    return parseInt(CssCascade.getValue(element.parent, "measure"), 10);
   }
 }
 
@@ -25,6 +26,6 @@ export class CssBlockPosition extends CssPosition {
     if (!element.parent) {
       throw new Error("parent is not defined");
     }
-    return parseInt(element.parent.computedStyle.getPropertyValue("extent") || "0", 10);
+    return parseInt(CssCascade.getValue(element.parent, "extent"), 10);
   }
 }

@@ -1,5 +1,6 @@
 import {
   CssBoxSize,
+  CssCascade,
   BoxDimension,
   HtmlElement,
 } from "./public-api";
@@ -15,6 +16,6 @@ export class CssBoxMeasure extends CssBoxSize {
       console.error("parent measure for(%s) is not defined", element.tagName);
       throw new Error("parent measure is not defined");
     }
-    return parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
+    return parseInt(CssCascade.getValue(element.parent, "measure"), 10);
   }
 }
