@@ -18,6 +18,7 @@ import {
   LogicalBorderRadius,
   PseudoElement,
   ReplacedElement,
+  PhysicalSize,
   DefaultStyle,
 } from './public-api'
 
@@ -177,6 +178,14 @@ export class CssComputedValueLoader implements NodeEffector {
     element.computedStyle.setProperty("line-height", lineHeightStr);
   }
 
+  private setPadding(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      let prop = `padding-${direction}`;
+      let size = this.getEdgeSize(element, prop);
+      element.computedStyle.setProperty(prop, size + "px");
+    });
+  }
+
   private setBorderWidth(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-width`;
@@ -221,6 +230,7 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setLineHeight(element);
 
     if (!Config.edgeSkipTags.includes(element.tagName)) {
+      this.setPadding(element);
       this.setBorderWidth(element);
       this.setBorderStyle(element);
       this.setBorderColor(element);
@@ -248,7 +258,7 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setCascadedValue(element, "overflow-wrap");
     this.setCascadedValue(element, "white-space");
     this.setCascadedValue(element, "page-break-before");
-    this.setCascadedValue(element, "position");
+    this.setCascadedValue(element, "position"); // static, relative, absolute
 
     // Use 'text-align:justify' instead.
     // this.setCascadedValue(element, "text-justify");
@@ -259,19 +269,23 @@ export class CssComputedValueLoader implements NodeEffector {
   Compute used-value(auto, inherit, percent) for 'measure', 'extent', 'margin' etc.
   These props have it's constraints, and thus, decided by other extra rule or property.
 
-  [target prop]
-
-  background-position
-  before, end, after, start
-  extent, measure,
-  margin-***,
-  min-extent, min-measure
-  padding-***,
-  text-indent
-
   [warning]
 
-  In these props(measure, extent, margin etc), percent value is kept percent value by 'inherit'.
+  There are some properties that inherit percent value by inherit.
+
+  quote from [https://www.w3.org/TR/CSS2/changes.html#q21.36]
+  > Since computed value of a property can now also be a percentage.
+  > In particular, the following properties now inherit the percentage if the specified value is a percentage.
+
+  > background-position
+  > before, end, after, start
+  > extent, measure,
+  > margin-***,
+  > min-extent, min-measure
+  > padding-***,
+  > text-indent
+
+  [example]
 
   <body style="measure:100px">
     <div style="measure:auto">
@@ -315,8 +329,7 @@ export class CssUsedValueLoader implements NodeEffector {
   }
 
   private getPadding(element: HtmlElement, direction: LogicalEdgeDirection): number {
-    const value = CssCascade.getValue(element, `padding-${direction}`);
-    return new CssEdgeSize(value, direction).computeSize(element);
+    return parseInt(CssCascade.getValue(element, `padding-${direction}`), 10);
   }
 
   private getBorderWidth(element: HtmlElement, direction: LogicalEdgeDirection): number {
@@ -422,51 +435,64 @@ export class CssUsedValueLoader implements NodeEffector {
       }
     }
 
-    // Percentage value like 'padding:10%' can't be decided before measure is not decided.
-    // So we have to compute measure first!
-
     // [compute measure]
     // url: https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
 
     // 1. inline && non-replaced elements
     if (isInlineLevel && !isRe) {
+      finalMarginStart = marginStart === "auto" ? 0 : marginStart;
+      finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
       finalMarginStart = finalMarginEnd = 0;
     }
     // 2. inline && replaced elements
     else if (isInlineLevel && isRe) {
       finalMarginStart = finalMarginEnd = 0;
+      const physicalSize = PhysicalSize.load(element);
+      // TODO
     }
     // 3. block & non-replaced elements
     else if (isBlockLevel && !isRe) {
       if (measure === "auto") {
-        if (marginStart === "auto") {
-          finalMarginStart = 0;
-        }
-        if (marginEnd === "auto") {
-          finalMarginEnd = 0;
-        }
+        finalMarginStart = marginStart === "auto" ? 0 : marginStart;
+        finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
+        finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       } else {
-        const autoMarginSize = Math.floor((parentMeasure - getBorderBoxEdgeMeasure()) / 2);
+        finalMeasure = measure;
+        const restSpaceSize = parentMeasure - finalMeasure - getBorderBoxEdgeMeasure();
+        const autoMarginSize = Math.floor(Math.max(0, restSpaceSize) / 2);
         if (marginStart === "auto") {
           finalMarginStart = finalMarginEnd = autoMarginSize;
         }
       }
       if (finalMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
-        finalMarginEnd = 0; // if ltr
+        finalMarginEnd = 0; // if horizontal-lr, vertical-rl
         if (finalMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
-          finalMarginStart = 0;
+          finalMarginStart = parentMeasure - getBorderBoxEdgeMeasure();
         }
       }
       if (measure === "auto" && element.parent) {
         finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       }
       element.computedStyle.setProperty("measure", finalMeasure + "px");
+      element.computedStyle.setProperty("margin-start", finalMarginStart + "px");
+      element.computedStyle.setProperty("margin-end", finalMarginEnd + "px");
     }
     // 4. block replaced element
     else if (isBlockLevel && isRe) {
+      /* 
+      The used value of 'width' is determined as for inline replaced elements. 
+      Then the rules for non-replaced block-level elements are applied to determine the margins.
+      */
     }
     // 5. floating, non-replaced elements
     else if (float !== "none" && !isRe) {
+      finalMarginStart = marginStart === "auto" ? 0 : marginStart;
+      finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
+      if (measure === "auto") {
+        console.error("Float measure is not defined, shrink to fit width is not supported yet.")
+      } else {
+        finalMeasure = parentMeasure - getBorderBoxEdgeMeasure();
+      }
     }
     // 6. floating, replaced elements
     else if (float !== "none" && isRe) {

@@ -13,8 +13,7 @@ export class CssBoxMeasure extends CssBoxSize {
 
   public computeParentSize(element: HtmlElement): number {
     if (!element.parent) {
-      console.error("parent measure for(%s) is not defined", element.tagName);
-      throw new Error("parent measure is not defined");
+      throw new Error("parent is not defined");
     }
     return parseInt(CssCascade.getValue(element.parent, "measure"), 10);
   }

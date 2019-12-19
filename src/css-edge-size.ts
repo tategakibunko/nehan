@@ -2,13 +2,14 @@ import {
   Utils,
   HtmlElement,
   FlowContext,
-  CssLength
+  CssLength,
+  CssCascade,
 } from "./public-api";
 
 export class CssEdgeSize extends CssLength {
   public readonly edgeName: string;
 
-  constructor(css_text: string, edge_name: string){
+  constructor(css_text: string, edge_name: string) {
     super(css_text);
     this.edgeName = edge_name;
   }
@@ -19,7 +20,7 @@ export class CssEdgeSize extends CssLength {
 
   public computeParentEdgeSize(element: HtmlElement): number {
     let parent = element.parent;
-    if(!parent){
+    if (!parent) {
       return 0;
     }
     let size = parent.computedStyle.getPropertyValue(this.edgeName) || "0";
@@ -34,9 +35,13 @@ export class CssEdgeSize extends CssLength {
     return 0;
   }
 
-  public computePercentSize(element: HtmlElement, parnet_ctx?: FlowContext): number {
-    let base_size = this.computeParentEdgeSize(element);
-    let size = base_size * this.floatValue / 100;
+  public computePercentSize(element: HtmlElement): number {
+    if (!element.parent) {
+      throw new Error("parent is not defined");
+    }
+    // percentage size for edge is calculated from measure of containing block(parent element).
+    let baseSize = parseInt(CssCascade.getValue(element.parent, "measure"), 10);
+    let size = baseSize * this.floatValue / 100;
     return Math.floor(size);
   }
 }
