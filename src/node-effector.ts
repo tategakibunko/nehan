@@ -19,6 +19,7 @@ import {
   PseudoElement,
   ReplacedElement,
   PhysicalSize,
+  WritingMode,
   DefaultStyle,
 } from './public-api'
 
@@ -276,6 +277,7 @@ export class CssComputedValueLoader implements NodeEffector {
   quote from [https://www.w3.org/TR/CSS2/changes.html#q21.36]
   > Since computed value of a property can now also be a percentage.
   > In particular, the following properties now inherit the percentage if the specified value is a percentage.
+  > Note that only 'text-indent' inherits by default, the others only inherit if the 'inherit' keyword is specified.
 
   > background-position
   > before, end, after, start
@@ -380,6 +382,7 @@ export class CssUsedValueLoader implements NodeEffector {
       return;
     }
     const float = element.computedStyle.getPropertyValue("float");
+    const writingMode = WritingMode.load(element);
     const minMeasure = this.getMinMeasure(element);
     const maxMeasure = this.getMaxMeasure(element);
     const minExtent = this.getMinExtent(element);
@@ -410,6 +413,7 @@ export class CssUsedValueLoader implements NodeEffector {
     const parentMeasure = this.getParentMeasure(element);
     const parentExtent = this.getParentExtent(element);
     let finalMeasure = measure === "auto" ? 0 : measure;
+    let finalExtent = extent === "auto" ? 0 : extent;
     let finalMarginStart = 0, finalMarginEnd = 0;
 
     // TODO
@@ -435,6 +439,17 @@ export class CssUsedValueLoader implements NodeEffector {
       }
     }
 
+    const applyMinMaxExtent = () => {
+      // constraint [finalExtent < maxExtent]
+      if (maxExtent !== "none") {
+        finalExtent = Math.min(finalExtent, maxExtent);
+      }
+      // constraint [finalExtent > minExtent]
+      if (minExtent !== "none") {
+        finalExtent = Math.max(finalExtent, minExtent);
+      }
+    }
+
     // [compute measure]
     // url: https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
 
@@ -448,7 +463,13 @@ export class CssUsedValueLoader implements NodeEffector {
     else if (isInlineLevel && isRe) {
       finalMarginStart = finalMarginEnd = 0;
       const physicalSize = PhysicalSize.load(element);
-      // TODO
+      const logicalSize = physicalSize.getLogicalSize(writingMode);
+      finalMeasure = logicalSize.measure;
+      finalExtent = logicalSize.extent;
+      applyMinMaxMeasure();
+      applyMinMaxExtent();
+      element.computedStyle.setProperty("measure", logicalSize.measure + "px");
+      element.computedStyle.setProperty("extent", logicalSize.extent + "px");
     }
     // 3. block & non-replaced elements
     else if (isBlockLevel && !isRe) {
@@ -473,9 +494,15 @@ export class CssUsedValueLoader implements NodeEffector {
       if (measure === "auto" && element.parent) {
         finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       }
+      applyMinMaxMeasure();
       element.computedStyle.setProperty("measure", finalMeasure + "px");
       element.computedStyle.setProperty("margin-start", finalMarginStart + "px");
       element.computedStyle.setProperty("margin-end", finalMarginEnd + "px");
+      if (extent !== "auto") {
+        finalExtent = extent;
+        applyMinMaxExtent();
+        element.computedStyle.setProperty("extent", finalExtent + "px");
+      }
     }
     // 4. block replaced element
     else if (isBlockLevel && isRe) {
@@ -491,11 +518,24 @@ export class CssUsedValueLoader implements NodeEffector {
       if (measure === "auto") {
         console.error("Float measure is not defined, shrink to fit width is not supported yet.")
       } else {
-        finalMeasure = parentMeasure - getBorderBoxEdgeMeasure();
+        finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
+        element.computedStyle.setProperty("measure", finalMeasure + "px");
+        element.computedStyle.setProperty("margin-start", finalMarginStart + "px");
+        element.computedStyle.setProperty("margin-end", finalMarginEnd + "px");
       }
     }
     // 6. floating, replaced elements
     else if (float !== "none" && isRe) {
+      finalMarginStart = marginStart === "auto" ? 0 : marginStart;
+      finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
+      const physicalSize = PhysicalSize.load(element);
+      const logicalSize = physicalSize.getLogicalSize(writingMode);
+      finalMeasure = logicalSize.measure;
+      finalExtent = logicalSize.extent;
+      applyMinMaxMeasure();
+      applyMinMaxExtent();
+      element.computedStyle.setProperty("measure", finalMeasure + "px");
+      element.computedStyle.setProperty("extent", finalExtent + "px");
     }
     // 7. abs positioned, non-replaced elements
     else if (position === "absolute" && !isRe) {
