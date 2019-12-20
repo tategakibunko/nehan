@@ -6,8 +6,8 @@ import {
   WritingMode,
 } from "./public-api";
 
-// CssLength > CssBoxSize > CssBoxPhysicalSize
-export class CssBoxPhysicalSize extends CssBoxSize {
+// CssLength > CssBoxSize > CssPhysicalBoxSize
+export class CssPhysicalBoxSize extends CssBoxSize {
   private writingMode: WritingMode;
 
   constructor(cssText: string, boxDimension: BoxDimension, writingMode: WritingMode) {
@@ -22,7 +22,7 @@ export class CssBoxPhysicalSize extends CssBoxSize {
       case "height":
         return this.writingMode.isTextHorizontal() ? "extent" : "measure";
       default:
-        throw new Error(`CssBoxPhysicalSize.getLogicalBoxDimension(): invalid boxDimension(${this.boxDimension})`);
+        throw new Error(`CssPhysicalBoxSize.getLogicalBoxDimension(): invalid boxDimension(${this.boxDimension})`);
     }
   }
 
