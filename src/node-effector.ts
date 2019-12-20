@@ -17,6 +17,7 @@ import {
   LogicalEdgeDirection,
   LogicalEdgeDirections,
   LogicalBorderRadius,
+  BoxDimension,
   PseudoElement,
   ReplacedElement,
   PhysicalSize,
@@ -359,12 +360,25 @@ export class CssUsedValueLoader implements NodeEffector {
     return value === "auto" ? value : new CssBoxSize(value, "extent").computeSize(element);
   }
 
+  private getAttrSize(element: HtmlElement, dim: BoxDimension, writingMode: WritingMode): number {
+    const value = element.getAttribute(dim) || "0";
+    return new CssPhysicalBoxSize(value, dim, writingMode).computeSize(element);
+  }
+
   private getWidth(element: HtmlElement, writingMode: WritingMode): "auto" | number {
+    const attrSize = this.getAttrSize(element, "width", writingMode);
+    if (attrSize > 0) {
+      return attrSize;
+    }
     const value = CssCascade.getValue(element, "width");
     return value === "auto" ? value : new CssPhysicalBoxSize(value, "width", writingMode).computeSize(element);
   }
 
   private getHeight(element: HtmlElement, writingMode: WritingMode): "auto" | number {
+    const attrSize = this.getAttrSize(element, "height", writingMode);
+    if (attrSize > 0) {
+      return attrSize;
+    }
     const value = CssCascade.getValue(element, "height");
     return value === "auto" ? value : new CssPhysicalBoxSize(value, "height", writingMode).computeSize(element);
   }
@@ -494,14 +508,23 @@ export class CssUsedValueLoader implements NodeEffector {
     else if (isInlineLevel && isRe) {
       finalMarginStart = (marginStart === "auto") ? 0 : marginStart;
       finalMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
-      const physicalSize = PhysicalSize.load(element);
+      finalMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
+      finalMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
+      if (width === "auto" || height === "auto") {
+        throw new Error("auto size for replaced element is not supported yet!");
+      }
+      const physicalSize = new PhysicalSize({ width, height })
       const logicalSize = physicalSize.getLogicalSize(writingMode);
       finalMeasure = logicalSize.measure;
       finalExtent = logicalSize.extent;
       applyMinMaxMeasure();
       applyMinMaxExtent();
-      element.computedStyle.setProperty("measure", logicalSize.measure + "px");
-      element.computedStyle.setProperty("extent", logicalSize.extent + "px");
+      element.computedStyle.setProperty("measure", finalMeasure + "px");
+      element.computedStyle.setProperty("extent", finalExtent + "px");
+      element.computedStyle.setProperty("margin-start", finalMarginStart + "px");
+      element.computedStyle.setProperty("margin-end", finalMarginEnd + "px");
+      element.computedStyle.setProperty("margin-before", finalMarginBefore + "px");
+      element.computedStyle.setProperty("margin-after", finalMarginAfter + "px");
     }
     // 3. block & non-replaced elements
     else if (isBlockLevel && !isRe) {
