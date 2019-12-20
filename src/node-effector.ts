@@ -20,7 +20,6 @@ import {
   ReplacedElement,
   PhysicalSize,
   WritingMode,
-  DefaultStyle,
 } from './public-api'
 
 // treat side-effect
