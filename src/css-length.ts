@@ -53,7 +53,7 @@ export class CssLength {
   }
 
   public computeSize(element: HtmlElement): number {
-    let base_size;
+    let baseSize;
     switch (this.unitTypeName) {
       case CssUnitTypeName.PERCENT:
         return this.computePercentSize(element);
@@ -62,17 +62,17 @@ export class CssLength {
       case CssUnitTypeName.PT:
         return Math.floor(this.floatValue * 4 / 3);
       case CssUnitTypeName.EM:
-        base_size = this.computeEmBasePx(element);
-        return Math.floor(this.floatValue * base_size);
+        baseSize = this.computeEmBasePx(element);
+        return Math.floor(this.floatValue * baseSize);
       case CssUnitTypeName.REM:
-        base_size = CssLength.getRemBasePx(element);
-        return Math.floor(this.floatValue * base_size);
+        baseSize = CssLength.getRemBasePx(element);
+        return Math.floor(this.floatValue * baseSize);
       case CssUnitTypeName.VW:
-        base_size = window.innerWidth;
-        return Math.floor(base_size * (this.floatValue / 100));
+        baseSize = window.innerWidth;
+        return Math.floor(baseSize * (this.floatValue / 100));
       case CssUnitTypeName.VH:
-        base_size = window.innerHeight;
-        return Math.floor(base_size * (this.floatValue / 100));
+        baseSize = window.innerHeight;
+        return Math.floor(baseSize * (this.floatValue / 100));
     }
     if (Utils.isNumber(this.cssText)) {
       return this.floatValue;
@@ -81,6 +81,7 @@ export class CssLength {
     if (size !== null) {
       return size;
     }
+    console.warn(`CssLength: initial size is used for (${this.cssText})!`);
     return this.computeInitialSize(element);
   }
 

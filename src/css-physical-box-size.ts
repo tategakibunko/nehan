@@ -1,17 +1,18 @@
 import {
-  CssBoxSize,
+  CssLength,
   CssCascade,
   BoxDimension,
   HtmlElement,
   WritingMode,
 } from "./public-api";
 
-// CssLength > CssBoxSize > CssPhysicalBoxSize
-export class CssPhysicalBoxSize extends CssBoxSize {
-  private writingMode: WritingMode;
+export class CssPhysicalBoxSize extends CssLength {
+  public boxDimension: BoxDimension;
+  public writingMode: WritingMode;
 
   constructor(cssText: string, boxDimension: BoxDimension, writingMode: WritingMode) {
-    super(cssText, boxDimension);
+    super(cssText);
+    this.boxDimension = boxDimension;
     this.writingMode = writingMode;
   }
 
@@ -32,5 +33,11 @@ export class CssPhysicalBoxSize extends CssBoxSize {
     }
     const logicalBoxDim = this.getLogicalBoxDimension();
     return parseInt(CssCascade.getValue(element.parent, logicalBoxDim), 10);
+  }
+
+  public computePercentSize(element: HtmlElement): number {
+    let baseSize = this.computeParentSize(element);
+    let size = baseSize * this.floatValue / 100;
+    return Math.floor(size);
   }
 }

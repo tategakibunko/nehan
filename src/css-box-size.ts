@@ -1,7 +1,6 @@
 import {
   BoxDimension,
   HtmlElement,
-  WritingMode,
   CssLength,
   CssCascade,
 } from "./public-api";
