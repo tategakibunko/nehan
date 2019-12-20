@@ -44,7 +44,7 @@ export class PhysicalSize {
     return writing_mode.isTextVertical() ? this.height : this.width;
   }
 
-  public getRatioWidthPerHeight(): number {
+  public getWidthPerHeight(): number {
     return this.width / this.height;
   }
 }
