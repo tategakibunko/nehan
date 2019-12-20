@@ -1,24 +1,33 @@
 import {
   BoxDimension,
   HtmlElement,
-  CssLength
+  WritingMode,
+  CssLength,
+  CssCascade,
 } from "./public-api";
 
 export class CssBoxSize extends CssLength {
   public boxDimension: BoxDimension;
 
-  constructor(css_text: string, box_dimension: BoxDimension) {
-    super(css_text);
-    this.boxDimension = box_dimension;
+  constructor(cssText: string, boxDimension: BoxDimension) {
+    super(cssText);
+    this.boxDimension = boxDimension;
   }
 
   public computeInitialSize(element: HtmlElement): number {
     return this.computeParentSize(element);
   }
 
+  public computeParentSize(element: HtmlElement): number {
+    if (!element.parent) {
+      throw new Error("parent is not defined");
+    }
+    return parseInt(CssCascade.getValue(element.parent, this.boxDimension), 10);
+  }
+
   public computePercentSize(element: HtmlElement): number {
-    let base_size = this.computeParentSize(element);
-    let size = base_size * this.floatValue / 100;
+    let baseSize = this.computeParentSize(element);
+    let size = baseSize * this.floatValue / 100;
     return Math.floor(size);
   }
 }

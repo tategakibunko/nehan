@@ -8,12 +8,11 @@ import {
   CssCascade,
   CssInlinePosition,
   CssBlockPosition,
+  CssBoxSize,
   CssEdgeSize,
   CssBorderWidth,
   CssFontSize,
   CssLineHeight,
-  CssBoxMeasure,
-  CssBoxExtent,
   LogicalBorderRadius
 } from "./public-api";
 
@@ -168,7 +167,7 @@ export class ComputedStyle {
   static setMeasure(element: HtmlElement) {
     let value = CssCascade.getValue(element, "measure");
     if (value !== "auto") {
-      let size = new CssBoxMeasure(value).computeSize(element);
+      let size = new CssBoxSize(value, "measure").computeSize(element);
       element.computedStyle.setProperty("measure", size + "px");
     }
   }
@@ -176,7 +175,7 @@ export class ComputedStyle {
   static setExtent(element: HtmlElement) {
     let value = CssCascade.getValue(element, "extent");
     if (value !== "auto") {
-      let size = new CssBoxExtent(value).computeSize(element);
+      let size = new CssBoxSize(value, "extent").computeSize(element);
       element.computedStyle.setProperty("extent", size + "px");
     }
   }

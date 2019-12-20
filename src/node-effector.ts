@@ -6,12 +6,12 @@ import {
   CssParser,
   CssFontSize,
   CssEdgeSize,
+  CssBoxSize,
   CssBorderWidth,
   CssLineHeight,
-  CssBoxMeasure,
-  CssBoxExtent,
   CssInlinePosition,
   CssBlockPosition,
+  LogicalSize,
   LogicalEdge,
   LogicalEdgeDirection,
   LogicalEdgeDirections,
@@ -307,22 +307,22 @@ export class CssUsedValueLoader implements NodeEffector {
 
   private getMinMeasure(element: HtmlElement): "none" | number {
     const value = CssCascade.getValue(element, "min-measure");
-    return value === "none" ? value : new CssBoxMeasure(value).computeSize(element);
+    return value === "none" ? value : new CssBoxSize(value, "measure").computeSize(element);
   }
 
   private getMaxMeasure(element: HtmlElement): "none" | number {
     const value = CssCascade.getValue(element, "max-measure");
-    return value === "none" ? value : new CssBoxMeasure(value).computeSize(element);
+    return value === "none" ? value : new CssBoxSize(value, "measure").computeSize(element);
   }
 
   private getMinExtent(element: HtmlElement): "none" | number {
     const value = CssCascade.getValue(element, "min-extent");
-    return value === "none" ? value : new CssBoxExtent(value).computeSize(element);
+    return value === "none" ? value : new CssBoxSize(value, "extent").computeSize(element);
   }
 
   private getMaxExtent(element: HtmlElement): "none" | number {
     const value = CssCascade.getValue(element, "max-extent");
-    return value === "none" ? value : new CssBoxExtent(value).computeSize(element);
+    return value === "none" ? value : new CssBoxSize(value, "extent").computeSize(element);
   }
 
   private getMargin(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
@@ -341,12 +341,12 @@ export class CssUsedValueLoader implements NodeEffector {
 
   private getMeasure(element: HtmlElement): "auto" | number {
     const value = CssCascade.getValue(element, "measure");
-    return value === "auto" ? value : new CssBoxMeasure(value).computeSize(element);
+    return value === "auto" ? value : new CssBoxSize(value, "measure").computeSize(element);
   }
 
   private getExtent(element: HtmlElement): "auto" | number {
     const value = CssCascade.getValue(element, "extent");
-    return value === "auto" ? value : new CssBoxExtent(value).computeSize(element);
+    return value === "auto" ? value : new CssBoxSize(value, "extent").computeSize(element);
   }
 
   private getPosition(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
@@ -368,6 +368,13 @@ export class CssUsedValueLoader implements NodeEffector {
       return parseInt(CssCascade.getSpecValue(element, "extent"), 10);
     }
     return parseInt(CssCascade.getValue(element.parent, "extent"), 10);
+  }
+
+  private getParentLogicalSize(element: HtmlElement): LogicalSize {
+    return new LogicalSize({
+      measure: this.getParentMeasure(element),
+      extent: this.getParentExtent(element)
+    });
   }
 
   /*

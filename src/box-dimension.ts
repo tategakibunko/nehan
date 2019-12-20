@@ -1,4 +1,6 @@
-export enum BoxDimension {
-  MEASURE = "measure",
-  EXTENT = "extent"
-}
+export type BoxDimension =
+  "measure" |
+  "extent" |
+  "width" |
+  "height"
+
