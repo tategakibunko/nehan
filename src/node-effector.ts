@@ -7,6 +7,7 @@ import {
   CssFontSize,
   CssEdgeSize,
   CssBoxSize,
+  CssPhysicalBoxSize,
   CssBorderWidth,
   CssLineHeight,
   CssInlinePosition,
@@ -338,6 +339,16 @@ export class CssUsedValueLoader implements NodeEffector {
     return new CssEdgeSize(value, direction).computeSize(element);
   }
 
+  private getRootMeasure(element: HtmlElement): number {
+    const value = CssCascade.getValue(element, "measure");
+    return value === "auto" ? Config.defaultBodyMeasure : new CssBoxSize(value, "measure").computeSize(element);
+  }
+
+  private getRootExtent(element: HtmlElement): number {
+    const value = CssCascade.getValue(element, "extent");
+    return value === "auto" ? Config.defaultBodyExtent : new CssBoxSize(value, "extent").computeSize(element);
+  }
+
   private getMeasure(element: HtmlElement): "auto" | number {
     const value = CssCascade.getValue(element, "measure");
     return value === "auto" ? value : new CssBoxSize(value, "measure").computeSize(element);
@@ -348,6 +359,16 @@ export class CssUsedValueLoader implements NodeEffector {
     return value === "auto" ? value : new CssBoxSize(value, "extent").computeSize(element);
   }
 
+  private getWidth(element: HtmlElement, writingMode: WritingMode): "auto" | number {
+    const value = CssCascade.getValue(element, "width");
+    return value === "auto" ? value : new CssPhysicalBoxSize(value, "width", writingMode).computeSize(element);
+  }
+
+  private getHeight(element: HtmlElement, writingMode: WritingMode): "auto" | number {
+    const value = CssCascade.getValue(element, "height");
+    return value === "auto" ? value : new CssPhysicalBoxSize(value, "height", writingMode).computeSize(element);
+  }
+
   private getPosition(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
     const value = CssCascade.getValue(element, direction);
     return value === "auto" ? value : LogicalEdge.isInlineEdge(direction) ?
@@ -355,18 +376,12 @@ export class CssUsedValueLoader implements NodeEffector {
       new CssBlockPosition(value).computeSize(element);
   }
 
-  private getParentMeasure(element: HtmlElement): number {
-    if (!element.parent) {
-      return parseInt(CssCascade.getSpecValue(element, "measure"), 10);
-    }
-    return parseInt(CssCascade.getValue(element.parent, "measure"), 10);
+  private getParentMeasure(parentElement: HtmlElement): number {
+    return parseInt(CssCascade.getValue(parentElement, "measure"), 10);
   }
 
-  private getParentExtent(element: HtmlElement): number {
-    if (!element.parent) {
-      return parseInt(CssCascade.getSpecValue(element, "extent"), 10);
-    }
-    return parseInt(CssCascade.getValue(element.parent, "extent"), 10);
+  private getParentExtent(parentElement: HtmlElement): number {
+    return parseInt(CssCascade.getValue(parentElement, "extent"), 10);
   }
 
   private getParentLogicalSize(element: HtmlElement): LogicalSize {
@@ -406,6 +421,8 @@ export class CssUsedValueLoader implements NodeEffector {
     const maxExtent = this.getMaxExtent(element);
     const measure = this.getMeasure(element);
     const extent = this.getExtent(element);
+    const width = this.getWidth(element, writingMode);
+    const height = this.getHeight(element, writingMode);
     const marginStart = this.getMargin(element, "start");
     const marginEnd = this.getMargin(element, "end");
     const marginBefore = this.getMargin(element, "before");
@@ -423,16 +440,13 @@ export class CssUsedValueLoader implements NodeEffector {
     const before = this.getPosition(element, "before");
     const after = this.getPosition(element, "after");
     const position = CssCascade.getValue(element, "position");
-    const parentMeasure = this.getParentMeasure(element);
-    const parentExtent = this.getParentExtent(element);
+    const parentMeasure = element.parent ? this.getParentMeasure(element.parent) : this.getRootMeasure(element);
+    const parentExtent = element.parent ? this.getParentExtent(element.parent) : this.getRootExtent(element);
     let finalMeasure = measure === "auto" ? 0 : measure;
     let finalExtent = extent === "auto" ? 0 : extent;
     let finalMarginStart = 0, finalMarginEnd = 0;
     let finalMarginBefore = 0, finalMarginAfter = 0;
 
-    // TODO
-    // const width = new CssBoxWidth(value).computeSize(element)
-    // const height = new CssBoxHeight(value).computeSize(element)
 
     const getBorderBoxEdgeMeasure = (): number => {
       return borderStartWidth + paddingStart + paddingEnd + borderEndWidth;
