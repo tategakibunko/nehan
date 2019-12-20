@@ -27,10 +27,6 @@ export class CssEdgeSize extends CssLength {
     return Utils.atoi(size, 10);
   }
 
-  public computeInheritSize(element: HtmlElement): number {
-    return this.computeParentEdgeSize(element);
-  }
-
   public computeInitialSize(element: HtmlElement): number {
     return 0;
   }

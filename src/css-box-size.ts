@@ -12,10 +12,6 @@ export class CssBoxSize extends CssLength {
     this.boxDimension = box_dimension;
   }
 
-  public computeInheritSize(element: HtmlElement): number {
-    return this.computeParentSize(element);
-  }
-
   public computeInitialSize(element: HtmlElement): number {
     return this.computeParentSize(element);
   }

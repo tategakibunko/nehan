@@ -370,6 +370,13 @@ export class CssUsedValueLoader implements NodeEffector {
     return parseInt(CssCascade.getValue(element.parent, "extent"), 10);
   }
 
+  /*
+  private getAttrPhysicalSize(element: HtmlElement, writingMode: WritingMode): PhyiscalSize {
+    const attrWidth = element.getAttribute("width");
+    const attrHeight = element.getAttribute("height");
+  }
+  */
+
   visit(element: HtmlElement) {
     if (element.isTextElement()) {
       return;
@@ -457,9 +464,7 @@ export class CssUsedValueLoader implements NodeEffector {
     // 1. inline && non-replaced elements
     if (isInlineLevel && !isRe) {
       // for inline element, width(measure), margin-* is not enable.
-      finalMarginStart = marginStart === "auto" ? 0 : marginStart;
-      finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
-      finalMarginStart = finalMarginEnd = 0;
+      finalMarginStart = finalMarginEnd = finalMarginBefore = finalMarginAfter = 0;
       element.computedStyle.setProperty("margin-start", "0");
       element.computedStyle.setProperty("margin-end", "0");
       element.computedStyle.setProperty("margin-before", "0");
@@ -467,7 +472,8 @@ export class CssUsedValueLoader implements NodeEffector {
     }
     // 2. inline && replaced elements
     else if (isInlineLevel && isRe) {
-      finalMarginStart = finalMarginEnd = 0;
+      finalMarginStart = (marginStart === "auto") ? 0 : marginStart;
+      finalMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
       const physicalSize = PhysicalSize.load(element);
       const logicalSize = physicalSize.getLogicalSize(writingMode);
       finalMeasure = logicalSize.measure;

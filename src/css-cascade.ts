@@ -32,6 +32,7 @@ export class CssCascade {
           // if non inheritable value, inherit parent 'specified' value(or initial value).
           return this.getSpecValue(element.parent, prop);
         }
+        // if no parent, use initial value instead.
         return defaultCss.initial;
       default:
         return specValue;

@@ -54,9 +54,6 @@ export class CssLength {
 
   public computeSize(element: HtmlElement): number {
     let base_size;
-    if (this.cssText === "inherit") {
-      return this.computeInheritSize(element);
-    }
     switch (this.unitTypeName) {
       case CssUnitTypeName.PERCENT:
         return this.computePercentSize(element);
@@ -93,10 +90,6 @@ export class CssLength {
 
   public computeParentSize(element: HtmlElement): number {
     throw new Error("CssLength::computeParentSize must be overrided.");
-  }
-
-  public computeInheritSize(element: HtmlElement): number {
-    throw new Error("CssLength::computeInheritSize must be overrided.");
   }
 
   public computeInitialSize(element: HtmlElement): number {
