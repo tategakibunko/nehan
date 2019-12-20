@@ -45,6 +45,6 @@ export class PhysicalSize {
   }
 
   public getWidthPerHeight(): number {
-    return this.width / this.height;
+    return (this.height === 0) ? 1 : this.width / this.height;
   }
 }
