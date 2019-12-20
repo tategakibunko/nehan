@@ -381,6 +381,10 @@ export class CssUsedValueLoader implements NodeEffector {
     if (display.isNone()) {
       return;
     }
+    const isRe = ReplacedElement.isReplacedElement(element);
+    const isBlockLevel = display.isBlockLevel();
+    const isInlineLevel = display.isInlineLevel();
+    const isInlineBlock = display.isInlineBlockFlow();
     const float = element.computedStyle.getPropertyValue("float");
     const writingMode = WritingMode.load(element);
     const minMeasure = this.getMinMeasure(element);
@@ -401,10 +405,6 @@ export class CssUsedValueLoader implements NodeEffector {
     const borderAfterWidth = this.getBorderWidth(element, "after");
     const paddingBefore = this.getPadding(element, "before");
     const paddingAfter = this.getPadding(element, "after");
-    const isRe = ReplacedElement.isReplacedElement(element);
-    const isBlockLevel = display.isBlockLevel();
-    const isInlineLevel = display.isInlineLevel();
-    const isInlineBlock = display.isInlineBlockFlow();
     const start = this.getPosition(element, "start");
     const end = this.getPosition(element, "end");
     const before = this.getPosition(element, "before");
@@ -415,6 +415,7 @@ export class CssUsedValueLoader implements NodeEffector {
     let finalMeasure = measure === "auto" ? 0 : measure;
     let finalExtent = extent === "auto" ? 0 : extent;
     let finalMarginStart = 0, finalMarginEnd = 0;
+    let finalMarginBefore = 0, finalMarginAfter = 0;
 
     // TODO
     // const width = new CssBoxWidth(value).computeSize(element)
@@ -455,9 +456,14 @@ export class CssUsedValueLoader implements NodeEffector {
 
     // 1. inline && non-replaced elements
     if (isInlineLevel && !isRe) {
+      // for inline element, width(measure), margin-* is not enable.
       finalMarginStart = marginStart === "auto" ? 0 : marginStart;
       finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
       finalMarginStart = finalMarginEnd = 0;
+      element.computedStyle.setProperty("margin-start", "0");
+      element.computedStyle.setProperty("margin-end", "0");
+      element.computedStyle.setProperty("margin-before", "0");
+      element.computedStyle.setProperty("margin-after", "0");
     }
     // 2. inline && replaced elements
     else if (isInlineLevel && isRe) {
@@ -479,14 +485,14 @@ export class CssUsedValueLoader implements NodeEffector {
         finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       } else {
         finalMeasure = measure;
-        const restSpaceSize = parentMeasure - finalMeasure - getBorderBoxEdgeMeasure();
-        const autoMarginSize = Math.floor(Math.max(0, restSpaceSize) / 2);
-        if (marginStart === "auto") {
+        if (marginStart === "auto" || marginEnd === "auto") {
+          const restSpaceSize = parentMeasure - finalMeasure - getBorderBoxEdgeMeasure();
+          const autoMarginSize = Math.floor(Math.max(0, restSpaceSize) / 2);
           finalMarginStart = finalMarginEnd = autoMarginSize;
         }
       }
       if (finalMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
-        finalMarginEnd = 0; // if horizontal-lr, vertical-rl
+        finalMarginEnd = 0; // if horizontal-lr, vertical-rl(rtl for horizontal is not supported yet)
         if (finalMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
           finalMarginStart = parentMeasure - getBorderBoxEdgeMeasure();
         }
@@ -498,6 +504,12 @@ export class CssUsedValueLoader implements NodeEffector {
       element.computedStyle.setProperty("measure", finalMeasure + "px");
       element.computedStyle.setProperty("margin-start", finalMarginStart + "px");
       element.computedStyle.setProperty("margin-end", finalMarginEnd + "px");
+
+      finalMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
+      finalMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
+      element.computedStyle.setProperty("margin-before", finalMarginBefore + "px");
+      element.computedStyle.setProperty("margin-after", finalMarginAfter + "px");
+
       if (extent !== "auto") {
         finalExtent = extent;
         applyMinMaxExtent();
@@ -513,8 +525,8 @@ export class CssUsedValueLoader implements NodeEffector {
     }
     // 5. floating, non-replaced elements
     else if (float !== "none" && !isRe) {
-      finalMarginStart = marginStart === "auto" ? 0 : marginStart;
-      finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
+      finalMarginStart = (marginStart === "auto") ? 0 : marginStart;
+      finalMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
       if (measure === "auto") {
         console.error("Float measure is not defined, shrink to fit width is not supported yet.")
       } else {
@@ -526,8 +538,8 @@ export class CssUsedValueLoader implements NodeEffector {
     }
     // 6. floating, replaced elements
     else if (float !== "none" && isRe) {
-      finalMarginStart = marginStart === "auto" ? 0 : marginStart;
-      finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
+      finalMarginStart = (marginStart === "auto") ? 0 : marginStart;
+      finalMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
       const physicalSize = PhysicalSize.load(element);
       const logicalSize = physicalSize.getLogicalSize(writingMode);
       finalMeasure = logicalSize.measure;

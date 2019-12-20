@@ -43,4 +43,8 @@ export class PhysicalSize {
   public getMeasure(writing_mode: WritingMode): number {
     return writing_mode.isTextVertical() ? this.height : this.width;
   }
+
+  public getRatioWidthPerHeight(): number {
+    return this.width / this.height;
+  }
 }
