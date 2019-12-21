@@ -4,9 +4,9 @@ import {
 
 export namespace Utils {
   export let atoi = (x: string, base = 10): number => {
-    let n = parseInt(x, base);
+    const n = parseInt(x, base);
     if (isNaN(n)) {
-      console.error("%s is not a number", x);
+      console.error(`${n} is not a number`);
     }
     return n;
   }

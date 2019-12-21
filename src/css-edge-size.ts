@@ -24,7 +24,7 @@ export class CssEdgeSize extends CssLength {
       return 0;
     }
     let size = parent.computedStyle.getPropertyValue(this.edgeName) || "0";
-    return Utils.atoi(size, 10);
+    return Utils.atoi(size);
   }
 
   public computeInitialSize(element: HtmlElement): number {

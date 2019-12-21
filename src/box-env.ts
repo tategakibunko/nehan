@@ -140,6 +140,6 @@ export class BoxEnv {
     if (this.font.lineHeight.indexOf("px") < 0) {
       return Math.floor(max_inline_extent * parseFloat(this.font.lineHeight));
     }
-    return Utils.atoi(this.font.lineHeight, 10);
+    return Utils.atoi(this.font.lineHeight);
   }
 }

@@ -52,7 +52,7 @@ export class MarginCollapse {
   static hasBorder(element: HtmlElement, dir: string): boolean {
     let prop = "border-" + dir + "-width";
     let value = element.computedStyle.getPropertyValue(prop) || "0px";
-    let size = Utils.atoi(value, 10);
+    let size = Utils.atoi(value);
     return size > 0;
   }
 

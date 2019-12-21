@@ -40,7 +40,7 @@ export class CssFontSize extends CssLength {
     }
     let font_size = parent.computedStyle.getPropertyValue("font-size");
     if (font_size) {
-      return Utils.atoi(font_size, 10);
+      return Utils.atoi(font_size);
     }
     return Config.defaultFontSize;
   }

@@ -24,8 +24,8 @@ export class PhysicalSize {
     let attr_height = element.getAttribute("height");
     let prop_width = element.computedStyle.getPropertyValue("width");
     let prop_height = element.computedStyle.getPropertyValue("height");
-    let width = Utils.atoi(attr_width || prop_width || "0", 10);
-    let height = Utils.atoi(attr_height || prop_height || "0", 10);
+    let width = Utils.atoi(attr_width || prop_width || "0");
+    let height = Utils.atoi(attr_height || prop_height || "0");
     return new PhysicalSize({ width: width, height: height });
   }
 

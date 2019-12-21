@@ -179,10 +179,22 @@ export class CssComputedValueLoader implements NodeEffector {
     element.computedStyle.setProperty("line-height", lineHeightStr);
   }
 
+  // If value is 'auto', leave it as is.
+  // If value is not 'auto', use it as 'computed value',
+  // In layouting phase, the value may be different depending on the box constraints(called 'used value').
+  private setMargin(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      const prop = `margin-${direction}`;
+      const value = CssCascade.getValue(element, `margin-${direction}`);
+      const computedValue = value === "auto" ? value : new CssEdgeSize(value, direction).computeSize(element) + "px";
+      element.computedStyle.setProperty(prop, computedValue);
+    });
+  }
+
   private setPadding(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      let prop = `padding-${direction}`;
-      let size = this.getEdgeSize(element, prop);
+      const prop = `padding-${direction}`;
+      const size = this.getEdgeSize(element, prop);
       element.computedStyle.setProperty(prop, size + "px");
     });
   }
@@ -236,6 +248,7 @@ export class CssComputedValueLoader implements NodeEffector {
       this.setBorderStyle(element);
       this.setBorderColor(element);
       this.setBorderRadius(element);
+      this.setMargin(element);
     }
 
     this.setCascadedValue(element, "float");
@@ -327,7 +340,8 @@ export class CssUsedValueLoader implements NodeEffector {
 
   private getMargin(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
     const value = CssCascade.getValue(element, `margin-${direction}`);
-    return value === "auto" ? value : new CssEdgeSize(value, direction).computeSize(element);
+    // if not auto, it's already calculated as computed value.
+    return value === "auto" ? value : parseInt(value, 10);
   }
 
   private getPadding(element: HtmlElement, direction: LogicalEdgeDirection): number {
@@ -440,39 +454,38 @@ export class CssUsedValueLoader implements NodeEffector {
     const position = CssCascade.getValue(element, "position");
     const parentMeasure = element.parent ? this.getParentMeasure(element.parent) : this.getRootMeasure(element);
     const parentExtent = element.parent ? this.getParentExtent(element.parent) : this.getRootExtent(element);
-    let finalMeasure = measure === "auto" ? 0 : measure;
-    let finalExtent = extent === "auto" ? 0 : extent;
-    let finalMarginStart = 0, finalMarginEnd = 0;
-    let finalMarginBefore = 0, finalMarginAfter = 0;
-
+    let usedMeasure = measure === "auto" ? 0 : measure;
+    let usedExtent = extent === "auto" ? 0 : extent;
+    let usedMarginStart = 0, usedMarginEnd = 0;
+    let usedMarginBefore = 0, usedMarginAfter = 0;
 
     const getBorderBoxEdgeMeasure = (): number => {
       return borderStartWidth + paddingStart + paddingEnd + borderEndWidth;
     };
 
     const getMarginBoxEdgeMeasure = (): number => {
-      return finalMarginStart + borderStartWidth + paddingStart + paddingEnd + borderEndWidth + finalMarginEnd;
+      return usedMarginStart + borderStartWidth + paddingStart + paddingEnd + borderEndWidth + usedMarginEnd;
     };
 
     const applyMinMaxMeasure = () => {
-      // constraint [finalMeasure < maxMeasure]
+      // constraint [usedMeasure < maxMeasure]
       if (maxMeasure !== "none") {
-        finalMeasure = Math.min(finalMeasure, maxMeasure);
+        usedMeasure = Math.min(usedMeasure, maxMeasure);
       }
-      // constraint [finalMeasure > minMeasure]
+      // constraint [usedMeasure > minMeasure]
       if (minMeasure !== "none") {
-        finalMeasure = Math.max(finalMeasure, minMeasure);
+        usedMeasure = Math.max(usedMeasure, minMeasure);
       }
     }
 
     const applyMinMaxExtent = () => {
-      // constraint [finalExtent < maxExtent]
+      // constraint [usedExtent < maxExtent]
       if (maxExtent !== "none") {
-        finalExtent = Math.min(finalExtent, maxExtent);
+        usedExtent = Math.min(usedExtent, maxExtent);
       }
-      // constraint [finalExtent > minExtent]
+      // constraint [usedExtent > minExtent]
       if (minExtent !== "none") {
-        finalExtent = Math.max(finalExtent, minExtent);
+        usedExtent = Math.max(usedExtent, minExtent);
       }
     }
 
@@ -482,7 +495,7 @@ export class CssUsedValueLoader implements NodeEffector {
     // 1. inline && non-replaced elements
     if (isInlineLevel && !isRe) {
       // for inline element, width(measure), margin-* is not enable.
-      finalMarginStart = finalMarginEnd = finalMarginBefore = finalMarginAfter = 0;
+      usedMarginStart = usedMarginEnd = usedMarginBefore = usedMarginAfter = 0;
       element.computedStyle.setProperty("margin-start", "0");
       element.computedStyle.setProperty("margin-end", "0");
       element.computedStyle.setProperty("margin-before", "0");
@@ -490,63 +503,66 @@ export class CssUsedValueLoader implements NodeEffector {
     }
     // 2. inline && replaced elements
     else if (isInlineLevel && isRe) {
-      finalMarginStart = (marginStart === "auto") ? 0 : marginStart;
-      finalMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
-      finalMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
-      finalMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
+      usedMarginStart = (marginStart === "auto") ? 0 : marginStart;
+      usedMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
+      usedMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
+      usedMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
       if (width === "auto" || height === "auto") {
         throw new Error("auto size for replaced element is not supported yet!");
       }
       const physicalSize = new PhysicalSize({ width, height })
       const logicalSize = physicalSize.getLogicalSize(writingMode);
-      finalMeasure = logicalSize.measure;
-      finalExtent = logicalSize.extent;
+      usedMeasure = logicalSize.measure;
+      usedExtent = logicalSize.extent;
       applyMinMaxMeasure();
       applyMinMaxExtent();
-      element.computedStyle.setProperty("measure", finalMeasure + "px");
-      element.computedStyle.setProperty("extent", finalExtent + "px");
-      element.computedStyle.setProperty("margin-start", finalMarginStart + "px");
-      element.computedStyle.setProperty("margin-end", finalMarginEnd + "px");
-      element.computedStyle.setProperty("margin-before", finalMarginBefore + "px");
-      element.computedStyle.setProperty("margin-after", finalMarginAfter + "px");
+      element.computedStyle.setProperty("measure", usedMeasure + "px");
+      element.computedStyle.setProperty("extent", usedExtent + "px");
+      element.computedStyle.setProperty("margin-start", usedMarginStart + "px");
+      element.computedStyle.setProperty("margin-end", usedMarginEnd + "px");
+      element.computedStyle.setProperty("margin-before", usedMarginBefore + "px");
+      element.computedStyle.setProperty("margin-after", usedMarginAfter + "px");
+      const usedPhysicalSize = logicalSize.getPhysicalSize(writingMode);
+      element.computedStyle.setProperty("width", usedPhysicalSize.width + "px");
+      element.computedStyle.setProperty("height", usedPhysicalSize.height + "px");
     }
     // 3. block & non-replaced elements
     else if (isBlockLevel && !isRe) {
       if (measure === "auto") {
-        finalMarginStart = marginStart === "auto" ? 0 : marginStart;
-        finalMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
-        finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
+        usedMarginStart = marginStart === "auto" ? 0 : marginStart;
+        usedMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
+        usedMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       } else {
-        finalMeasure = measure;
+        usedMeasure = measure;
         if (marginStart === "auto" || marginEnd === "auto") {
-          const restSpaceSize = parentMeasure - finalMeasure - getBorderBoxEdgeMeasure();
+          const restSpaceSize = parentMeasure - usedMeasure - getBorderBoxEdgeMeasure();
           const autoMarginSize = Math.floor(Math.max(0, restSpaceSize) / 2);
-          finalMarginStart = finalMarginEnd = autoMarginSize;
+          usedMarginStart = usedMarginEnd = autoMarginSize;
         }
       }
-      if (finalMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
-        finalMarginEnd = 0; // if horizontal-lr, vertical-rl(rtl for horizontal is not supported yet)
-        if (finalMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
-          finalMarginStart = parentMeasure - getBorderBoxEdgeMeasure();
+      if (usedMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
+        usedMarginEnd = 0; // if horizontal-lr, vertical-rl(rtl for horizontal is not supported yet)
+        if (usedMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
+          usedMarginStart = parentMeasure - getBorderBoxEdgeMeasure();
         }
       }
       if (measure === "auto" && element.parent) {
-        finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
+        usedMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       }
       applyMinMaxMeasure();
-      element.computedStyle.setProperty("measure", finalMeasure + "px");
-      element.computedStyle.setProperty("margin-start", finalMarginStart + "px");
-      element.computedStyle.setProperty("margin-end", finalMarginEnd + "px");
+      element.computedStyle.setProperty("measure", usedMeasure + "px");
+      element.computedStyle.setProperty("margin-start", usedMarginStart + "px");
+      element.computedStyle.setProperty("margin-end", usedMarginEnd + "px");
 
-      finalMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
-      finalMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
-      element.computedStyle.setProperty("margin-before", finalMarginBefore + "px");
-      element.computedStyle.setProperty("margin-after", finalMarginAfter + "px");
+      usedMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
+      usedMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
+      element.computedStyle.setProperty("margin-before", usedMarginBefore + "px");
+      element.computedStyle.setProperty("margin-after", usedMarginAfter + "px");
 
       if (extent !== "auto") {
-        finalExtent = extent;
+        usedExtent = extent;
         applyMinMaxExtent();
-        element.computedStyle.setProperty("extent", finalExtent + "px");
+        element.computedStyle.setProperty("extent", usedExtent + "px");
       }
     }
     // 4. block replaced element
@@ -558,29 +574,29 @@ export class CssUsedValueLoader implements NodeEffector {
     }
     // 5. floating, non-replaced elements
     else if (float !== "none" && !isRe) {
-      finalMarginStart = (marginStart === "auto") ? 0 : marginStart;
-      finalMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
+      usedMarginStart = (marginStart === "auto") ? 0 : marginStart;
+      usedMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
       if (measure === "auto") {
         console.error("Float measure is not defined, shrink to fit width is not supported yet.")
       } else {
-        finalMeasure = parentMeasure - getMarginBoxEdgeMeasure();
-        element.computedStyle.setProperty("measure", finalMeasure + "px");
-        element.computedStyle.setProperty("margin-start", finalMarginStart + "px");
-        element.computedStyle.setProperty("margin-end", finalMarginEnd + "px");
+        usedMeasure = parentMeasure - getMarginBoxEdgeMeasure();
+        element.computedStyle.setProperty("measure", usedMeasure + "px");
+        element.computedStyle.setProperty("margin-start", usedMarginStart + "px");
+        element.computedStyle.setProperty("margin-end", usedMarginEnd + "px");
       }
     }
     // 6. floating, replaced elements
     else if (float !== "none" && isRe) {
-      finalMarginStart = (marginStart === "auto") ? 0 : marginStart;
-      finalMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
+      usedMarginStart = (marginStart === "auto") ? 0 : marginStart;
+      usedMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
       const physicalSize = PhysicalSize.load(element);
       const logicalSize = physicalSize.getLogicalSize(writingMode);
-      finalMeasure = logicalSize.measure;
-      finalExtent = logicalSize.extent;
+      usedMeasure = logicalSize.measure;
+      usedExtent = logicalSize.extent;
       applyMinMaxMeasure();
       applyMinMaxExtent();
-      element.computedStyle.setProperty("measure", finalMeasure + "px");
-      element.computedStyle.setProperty("extent", finalExtent + "px");
+      element.computedStyle.setProperty("measure", usedMeasure + "px");
+      element.computedStyle.setProperty("extent", usedExtent + "px");
     }
     // 7. abs positioned, non-replaced elements
     else if (position === "absolute" && !isRe) {

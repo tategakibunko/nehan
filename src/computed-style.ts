@@ -158,8 +158,10 @@ export class ComputedStyle {
   static setMargin(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `margin-${direction}`;
-      const size = ComputedStyle.getEdgeSize(element, prop);
-      element.computedStyle.setProperty(prop, size + "px");
+      const value = CssCascade.getValue(element, prop);
+      // [TODO] auto value must be replaced with used value.
+      const computedValue = (value === "auto") ? "0" : ComputedStyle.getEdgeSize(element, prop) + "px";
+      element.computedStyle.setProperty(prop, computedValue);
     });
   }
 

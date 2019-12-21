@@ -12,7 +12,7 @@ export enum BorderCollapseValue {
 
 let border_width = (element: HtmlElement, dir: string): number => {
   let value = element.computedStyle.getPropertyValue(`border-${dir}-width`) || "0";
-  return Utils.atoi(value, 10);
+  return Utils.atoi(value);
 }
 
 let parent_border_width = (element: HtmlElement, dir: string): number => {

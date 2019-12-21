@@ -36,7 +36,6 @@ let stylesheet = new Nehan.CssStyleSheet({
 let doc = new Nehan.HtmlDocument(html, {
   styleSheets: [stylesheet]
 });
-Nehan.CssLoader.loadAll(doc.body);
 
 let body = doc.body;
 let p_foo = doc.querySelector("p.foo");

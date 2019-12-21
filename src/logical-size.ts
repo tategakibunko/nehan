@@ -6,18 +6,13 @@ import {
   NativeStyleMap,
 } from "./public-api";
 
-export interface LogicalSizeValue {
-  measure: number,
-  extent: number
-}
-
 export class LogicalSize {
   public measure: number;
   public extent: number;
 
-  constructor(value: LogicalSizeValue) {
-    this.measure = value.measure;
-    this.extent = value.extent;
+  constructor(args: { measure: number; extent: number }) {
+    this.measure = args.measure;
+    this.extent = args.extent;
   }
 
   static load(element: HtmlElement): LogicalSize | null {
@@ -34,12 +29,12 @@ export class LogicalSize {
 
   static loadMeasure(element: HtmlElement): number | null {
     let value = element.computedStyle.getPropertyValue("measure") || "auto";
-    return (value === "auto") ? null : Utils.atoi(value, 10);
+    return (value === "auto") ? null : Utils.atoi(value);
   }
 
   static loadExtent(element: HtmlElement): number | null {
     let value = element.computedStyle.getPropertyValue("extent") || "auto";
-    return (value === "auto") ? null : Utils.atoi(value, 10);
+    return (value === "auto") ? null : Utils.atoi(value);
   }
 
   static get zero(): LogicalSize {

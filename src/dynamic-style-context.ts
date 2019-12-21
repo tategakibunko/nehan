@@ -51,7 +51,7 @@ export class DynamicStyleContext {
     if (value.indexOf("px") < 0) {
       return Math.floor(this.emSize * parseFloat(value));
     }
-    return Utils.atoi(value, 10);
+    return Utils.atoi(value);
   }
 
   public get restContextBoxExtent(): number {

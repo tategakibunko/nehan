@@ -111,7 +111,7 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
 
 export class LogicalEdgeSize extends LogicalEdge<number> {
   static loadDirection(element: HtmlElement, prop: string): number {
-    return Utils.atoi(CssCascade.getValue(element, prop), 10);
+    return Utils.atoi(CssCascade.getValue(element, prop));
   }
 
   static get zeroValue(): LogicalEdgeValue<number> {

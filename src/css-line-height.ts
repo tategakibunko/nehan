@@ -28,7 +28,7 @@ export class CssLineHeight extends CssLength {
     if (!font_size) {
       throw new Error("line height can't be computed before font-size is computed.");
     }
-    let base_size = Utils.atoi(font_size, 10);
+    let base_size = Utils.atoi(font_size);
     return base_size * percent / 100;
   }
 }
