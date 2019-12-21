@@ -39,11 +39,14 @@ export class HtmlElement {
     return this;
   }
 
-  public acceptEffector(visitor: NodeEffector, all = false): HtmlElement {
+  public acceptEffector(visitor: NodeEffector): HtmlElement {
     visitor.visit(this);
-    if (all) {
-      this.childNodes.forEach(node => node.acceptEffector(visitor, true));
-    }
+    return this;
+  }
+
+  public acceptEffectorAll(visitor: NodeEffector): HtmlElement {
+    visitor.visit(this);
+    this.childNodes.forEach(node => node.acceptEffectorAll(visitor));
     return this;
   }
 
