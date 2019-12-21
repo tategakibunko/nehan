@@ -396,13 +396,6 @@ export class CssUsedValueLoader implements NodeEffector {
     return value === "auto" ? value : new CssPosition(value, direction).computeSize(element);
   }
 
-  /*
-  private getAttrPhysicalSize(element: HtmlElement, writingMode: WritingMode): PhyiscalSize {
-    const attrWidth = element.getAttribute("width");
-    const attrHeight = element.getAttribute("height");
-  }
-  */
-
   visit(element: HtmlElement) {
     if (element.isTextElement()) {
       return;
