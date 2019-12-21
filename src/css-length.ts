@@ -20,7 +20,7 @@ export class CssLength {
   }
 
   public hasUnit(): boolean {
-    return this.unitTypeName !== CssUnitTypeName.NONE;
+    return this.unitTypeName !== "none";
   }
 
   public get floatValue(): number {
@@ -55,22 +55,22 @@ export class CssLength {
   public computeSize(element: HtmlElement): number {
     let baseSize;
     switch (this.unitTypeName) {
-      case CssUnitTypeName.PERCENT:
+      case "percent":
         return this.computePercentSize(element);
-      case CssUnitTypeName.PX:
+      case "px":
         return Math.floor(this.floatValue);
-      case CssUnitTypeName.PT:
+      case "pt":
         return Math.floor(this.floatValue * 4 / 3);
-      case CssUnitTypeName.EM:
+      case "em":
         baseSize = this.computeEmBasePx(element);
         return Math.floor(this.floatValue * baseSize);
-      case CssUnitTypeName.REM:
+      case "rem":
         baseSize = CssLength.getRemBasePx(element);
         return Math.floor(this.floatValue * baseSize);
-      case CssUnitTypeName.VW:
+      case "vw":
         baseSize = window.innerWidth;
         return Math.floor(baseSize * (this.floatValue / 100));
-      case CssUnitTypeName.VH:
+      case "vh":
         baseSize = window.innerHeight;
         return Math.floor(baseSize * (this.floatValue / 100));
     }

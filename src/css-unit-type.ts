@@ -1,41 +1,40 @@
-export enum CssUnitTypeName {
-  EM,
-  REM,
-  EX,
-  PX,
-  PT,
-  PERCENT,
-  VW,
-  VH,
-  NONE
-}
+export type CssUnitTypeName =
+  "em" |
+  "rem" |
+  "ex" |
+  "px" |
+  "pt" |
+  "percent" |
+  "vw" |
+  "vh" |
+  "none"
 
 export class CssUnitType {
-  static inferName(css_text: string): CssUnitTypeName {
-    if(css_text.indexOf("rem") >= 0){
-      return CssUnitTypeName.REM;
+  static inferName(cssText: string): CssUnitTypeName {
+    if (cssText.endsWith("rem")) {
+      return "rem";
     }
-    if(css_text.indexOf("em") >= 0){
-      return CssUnitTypeName.EM;
+    if (cssText.endsWith("em")) {
+      return "em";
     }
-    if(css_text.indexOf("ex") >= 0){
-      return CssUnitTypeName.EX;
+    if (cssText.endsWith("ex")) {
+      return "ex";
     }
-    if(css_text.indexOf("pt") >= 0){
-      return CssUnitTypeName.PT;
+    if (cssText.endsWith("pt")) {
+      return "pt";
     }
-    if(css_text.indexOf("px") >= 0){
-      return CssUnitTypeName.PX;
+    if (cssText.endsWith("px")) {
+      return "px";
     }
-    if(css_text.indexOf("vw") >= 0){
-      return CssUnitTypeName.VW;
+    if (cssText.endsWith("vw")) {
+      return "vw";
     }
-    if(css_text.indexOf("vh") >= 0){
-      return CssUnitTypeName.VH;
+    if (cssText.endsWith("vh")) {
+      return "vh";
     }
-    if(css_text.indexOf("%") >= 0){
-      return CssUnitTypeName.PERCENT;
+    if (cssText.endsWith("%")) {
+      return "percent";
     }
-    return CssUnitTypeName.NONE;
+    return "none";
   }
 }
