@@ -231,25 +231,93 @@ export class CssComputedValueLoader implements NodeEffector {
     });
   }
 
+  private setMeasure(element: HtmlElement) {
+    const value = CssCascade.getValue(element, "measure");
+    const computedValue = (value === "auto") ? value : new CssBoxSize(value, "measure").computeSize(element) + "px";
+    element.computedStyle.setProperty("measure", computedValue);
+  }
+
+  private setExtent(element: HtmlElement) {
+    const value = CssCascade.getValue(element, "measure");
+    const computedValue = (value === "auto") ? value : new CssBoxSize(value, "extent").computeSize(element) + "px";
+    element.computedStyle.setProperty("extent", computedValue);
+  }
+
+  private setMinMeasure(element: HtmlElement) {
+    const value = CssCascade.getValue(element, "min-measure");
+    const computedValue = (value === "none") ? value : new CssBoxSize(value, "measure").computeSize(element) + "px";
+    element.computedStyle.setProperty("min-measure", computedValue);
+  }
+
+  private setMaxMeasure(element: HtmlElement) {
+    const value = CssCascade.getValue(element, "max-measure");
+    const computedValue = (value === "none") ? value : new CssBoxSize(value, "measure").computeSize(element) + "px";
+    element.computedStyle.setProperty("max-measure", computedValue);
+  }
+
+  private setMinExtent(element: HtmlElement) {
+    const value = CssCascade.getValue(element, "min-extent");
+    const computedValue = (value === "none") ? value : new CssBoxSize(value, "extent").computeSize(element) + "px";
+    element.computedStyle.setProperty("min-extent", computedValue);
+  }
+
+  private setMaxExtent(element: HtmlElement) {
+    const value = CssCascade.getValue(element, "max-extent");
+    const computedValue = (value === "none") ? value : new CssBoxSize(value, "extent").computeSize(element) + "px";
+    element.computedStyle.setProperty("max-extent", computedValue);
+  }
+
+  private setWidth(element: HtmlElement, writingMode: WritingMode) {
+    const value = CssCascade.getValue(element, "width");
+    const computedValue = (value === "auto") ? value : new CssPhysicalBoxSize(value, "width", writingMode).computeSize(element) + "px";
+    element.computedStyle.setProperty("width", computedValue);
+  }
+
+  private setHeight(element: HtmlElement, writingMode: WritingMode) {
+    const value = CssCascade.getValue(element, "height");
+    const computedValue = (value === "auto") ? value : new CssPhysicalBoxSize(value, "height", writingMode).computeSize(element) + "px";
+    element.computedStyle.setProperty("height", computedValue);
+  }
+
+  private setPosition(element: HtmlElement, direction: LogicalEdgeDirection) {
+    const value = CssCascade.getValue(element, direction);
+    const computedValue = (value === "auto") ? value : new CssPosition(value, direction).computeSize(element) + "px";
+    element.computedStyle.setProperty(direction, computedValue);
+  }
+
   visit(element: HtmlElement) {
     if (element.isTextElement()) {
       return;
     }
-    const display = this.setCascadedValue(element, "display");
-    if (display === "none") {
+    this.setCascadedValue(element, "display");
+    const display = Display.load(element);
+    if (display.isNone()) {
       return;
     }
+    this.setCascadedValue(element, "writing-mode");
+    const writingMode = WritingMode.load(element);
+
     this.setFontSize(element);
     this.setLineHeight(element);
 
-    if (!Config.edgeSkipTags.includes(element.tagName)) {
-      this.setPadding(element);
-      this.setBorderWidth(element);
-      this.setBorderStyle(element);
-      this.setBorderColor(element);
-      this.setBorderRadius(element);
-      this.setMargin(element);
-    }
+    this.setPadding(element);
+    this.setBorderWidth(element);
+    this.setBorderStyle(element);
+    this.setBorderColor(element);
+    this.setBorderRadius(element);
+    this.setMargin(element);
+    this.setMeasure(element);
+    this.setExtent(element);
+    this.setMinMeasure(element);
+    this.setMaxMeasure(element);
+    this.setMinExtent(element);
+    this.setMaxExtent(element);
+    this.setWidth(element, writingMode);
+    this.setHeight(element, writingMode);
+    this.setPosition(element, "before");
+    this.setPosition(element, "end");
+    this.setPosition(element, "after");
+    this.setPosition(element, "start");
 
     this.setCascadedValue(element, "float");
     this.setCascadedValue(element, "font-family");
@@ -257,7 +325,6 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setCascadedValue(element, "font-weight");
     this.setCascadedValue(element, "font-variant");
     this.setCascadedValue(element, "font-stretch");
-    this.setCascadedValue(element, "writing-mode");
     this.setCascadedValue(element, "text-orientation");
     this.setCascadedValue(element, "text-combine-upright");
     this.setCascadedValue(element, "text-emphasis-style");
@@ -314,28 +381,35 @@ export class CssComputedValueLoader implements NodeEffector {
       </div>
     </div>
   </body>
+
+  [todo]
+
+  If element is absolutely posisioned,
+  percentage size is caluclated with respect to size of 'padding-box'.
 */
 export class CssUsedValueLoader implements NodeEffector {
-  static instance = new CssUsedValueLoader();
-
   private getMinMeasure(element: HtmlElement): "none" | number {
     const value = CssCascade.getValue(element, "min-measure");
-    return value === "none" ? value : new CssBoxSize(value, "measure").computeSize(element);
+    // if not none, it's already calculated as computed value.
+    return value === "none" ? value : parseInt(value, 10);
   }
 
   private getMaxMeasure(element: HtmlElement): "none" | number {
     const value = CssCascade.getValue(element, "max-measure");
-    return value === "none" ? value : new CssBoxSize(value, "measure").computeSize(element);
+    // if not none, it's already calculated as computed value.
+    return value === "none" ? value : parseInt(value, 10);
   }
 
   private getMinExtent(element: HtmlElement): "none" | number {
     const value = CssCascade.getValue(element, "min-extent");
-    return value === "none" ? value : new CssBoxSize(value, "extent").computeSize(element);
+    // if not none, it's already calculated as computed value.
+    return value === "none" ? value : parseInt(value, 10);
   }
 
   private getMaxExtent(element: HtmlElement): "none" | number {
     const value = CssCascade.getValue(element, "max-extent");
-    return value === "none" ? value : new CssBoxSize(value, "extent").computeSize(element);
+    // if not none, it's already calculated as computed value.
+    return value === "none" ? value : parseInt(value, 10);
   }
 
   private getMargin(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
@@ -352,6 +426,18 @@ export class CssUsedValueLoader implements NodeEffector {
   private getBorderWidth(element: HtmlElement, direction: LogicalEdgeDirection): number {
     // already calculated as computed value.
     return parseInt(CssCascade.getValue(element, `border-${direction}-width`), 10);
+  }
+
+  private getMeasure(element: HtmlElement): "auto" | number {
+    const value = CssCascade.getValue(element, "measure");
+    // if not auto, it's already calculated as computed value.
+    return value === "auto" ? value : parseInt(value, 10);
+  }
+
+  private getExtent(element: HtmlElement): "auto" | number {
+    const value = CssCascade.getValue(element, "extent");
+    // if not auto, it's already calculated as computed value.
+    return value === "auto" ? value : parseInt(value, 10);
   }
 
   private getRootMeasure(element: HtmlElement): number {
@@ -372,16 +458,6 @@ export class CssUsedValueLoader implements NodeEffector {
     return parseInt(CssCascade.getValue(parentElement, "extent"), 10);
   }
 
-  private getMeasure(element: HtmlElement): "auto" | number {
-    const value = CssCascade.getValue(element, "measure");
-    return value === "auto" ? value : new CssBoxSize(value, "measure").computeSize(element);
-  }
-
-  private getExtent(element: HtmlElement): "auto" | number {
-    const value = CssCascade.getValue(element, "extent");
-    return value === "auto" ? value : new CssBoxSize(value, "extent").computeSize(element);
-  }
-
   private getAttrSize(element: HtmlElement, dim: BoxDimension, writingMode: WritingMode): number {
     const value = element.getAttribute(dim) || "0";
     return new CssPhysicalBoxSize(value, dim, writingMode).computeSize(element);
@@ -393,7 +469,8 @@ export class CssUsedValueLoader implements NodeEffector {
       return attrSize;
     }
     const value = CssCascade.getValue(element, "width");
-    return value === "auto" ? value : new CssPhysicalBoxSize(value, "width", writingMode).computeSize(element);
+    // if it's not auto, already calculated as comupted value.
+    return value === "auto" ? value : parseInt(value, 10);
   }
 
   private getHeight(element: HtmlElement, writingMode: WritingMode): "auto" | number {
@@ -402,12 +479,14 @@ export class CssUsedValueLoader implements NodeEffector {
       return attrSize;
     }
     const value = CssCascade.getValue(element, "height");
-    return value === "auto" ? value : new CssPhysicalBoxSize(value, "height", writingMode).computeSize(element);
+    // if it's not auto, already calculated as comupted value.
+    return value === "auto" ? value : parseInt(value, 10);
   }
 
   private getPosition(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
     const value = CssCascade.getValue(element, direction);
-    return value === "auto" ? value : new CssPosition(value, direction).computeSize(element);
+    // if it's not auto, already calculated as comupted value.
+    return value === "auto" ? value : parseInt(value, 10);
   }
 
   visit(element: HtmlElement) {
@@ -507,30 +586,31 @@ export class CssUsedValueLoader implements NodeEffector {
       usedMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
       usedMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
       usedMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
-      if (width === "auto" || height === "auto") {
+      if (measure === "auto" || width === "auto" || height === "auto") {
         throw new Error("auto size for replaced element is not supported yet!");
       }
-      const physicalSize = new PhysicalSize({ width, height })
-      const logicalSize = physicalSize.getLogicalSize(writingMode);
+      const logicalSize = new PhysicalSize({ width, height }).getLogicalSize(writingMode);
       usedMeasure = logicalSize.measure;
       usedExtent = logicalSize.extent;
       applyMinMaxMeasure();
       applyMinMaxExtent();
+      const usedPhysicalSize = new LogicalSize({ measure: usedMeasure, extent: usedExtent }).getPhysicalSize(writingMode);
       element.computedStyle.setProperty("measure", usedMeasure + "px");
       element.computedStyle.setProperty("extent", usedExtent + "px");
+      element.computedStyle.setProperty("width", usedPhysicalSize.width + "px");
+      element.computedStyle.setProperty("height", usedPhysicalSize.height + "px");
       element.computedStyle.setProperty("margin-start", usedMarginStart + "px");
       element.computedStyle.setProperty("margin-end", usedMarginEnd + "px");
       element.computedStyle.setProperty("margin-before", usedMarginBefore + "px");
       element.computedStyle.setProperty("margin-after", usedMarginAfter + "px");
-      const usedPhysicalSize = logicalSize.getPhysicalSize(writingMode);
-      element.computedStyle.setProperty("width", usedPhysicalSize.width + "px");
-      element.computedStyle.setProperty("height", usedPhysicalSize.height + "px");
     }
     // 3. block & non-replaced elements
     else if (isBlockLevel && !isRe) {
+      usedMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
+      usedMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
       if (measure === "auto") {
-        usedMarginStart = marginStart === "auto" ? 0 : marginStart;
-        usedMarginEnd = marginEnd === "auto" ? 0 : marginEnd;
+        usedMarginStart = (marginStart === "auto") ? 0 : marginStart;
+        usedMarginEnd = (marginEnd === "auto") ? 0 : marginEnd;
         usedMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       } else {
         usedMeasure = measure;
@@ -539,6 +619,9 @@ export class CssUsedValueLoader implements NodeEffector {
           const autoMarginSize = Math.floor(Math.max(0, restSpaceSize) / 2);
           usedMarginStart = usedMarginEnd = autoMarginSize;
         }
+      }
+      if (extent !== "auto") {
+        usedExtent = Math.min(extent, parentExtent);
       }
       if (usedMeasure + getMarginBoxEdgeMeasure() > parentMeasure) {
         usedMarginEnd = 0; // if horizontal-lr, vertical-rl(rtl for horizontal is not supported yet)
@@ -550,7 +633,9 @@ export class CssUsedValueLoader implements NodeEffector {
         usedMeasure = parentMeasure - getMarginBoxEdgeMeasure();
       }
       applyMinMaxMeasure();
+      applyMinMaxExtent();
       element.computedStyle.setProperty("measure", usedMeasure + "px");
+      element.computedStyle.setProperty("extent", usedExtent + "px");
       element.computedStyle.setProperty("margin-start", usedMarginStart + "px");
       element.computedStyle.setProperty("margin-end", usedMarginEnd + "px");
 
@@ -558,19 +643,37 @@ export class CssUsedValueLoader implements NodeEffector {
       usedMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
       element.computedStyle.setProperty("margin-before", usedMarginBefore + "px");
       element.computedStyle.setProperty("margin-after", usedMarginAfter + "px");
-
-      if (extent !== "auto") {
-        usedExtent = extent;
-        applyMinMaxExtent();
-        element.computedStyle.setProperty("extent", usedExtent + "px");
-      }
     }
     // 4. block replaced element
     else if (isBlockLevel && isRe) {
-      /* 
-      The used value of 'width' is determined as for inline replaced elements. 
+      /*
+      The used value of 'width' is determined as for inline replaced elements.
       Then the rules for non-replaced block-level elements are applied to determine the margins.
       */
+      usedMarginBefore = (marginBefore === "auto") ? 0 : marginBefore;
+      usedMarginAfter = (marginAfter === "auto") ? 0 : marginAfter;
+      if (measure === "auto" || width === "auto" || height === "auto") {
+        throw new Error("auto size for replaced element is not supported yet!");
+      }
+      const logicalSize = new PhysicalSize({ width, height }).getLogicalSize(writingMode);
+      usedMeasure = logicalSize.measure;
+      usedExtent = logicalSize.extent;
+      applyMinMaxMeasure();
+      applyMinMaxExtent();
+      const usedPhysicalSize = new LogicalSize({ measure: usedMeasure, extent: usedExtent }).getPhysicalSize(writingMode);
+      if (marginStart === "auto" || marginEnd === "auto") {
+        const restSpaceSize = parentMeasure - usedMeasure - getBorderBoxEdgeMeasure();
+        const autoMarginSize = Math.floor(Math.max(0, restSpaceSize) / 2);
+        usedMarginStart = usedMarginEnd = autoMarginSize;
+      }
+      element.computedStyle.setProperty("measure", usedMeasure + "px");
+      element.computedStyle.setProperty("extent", usedExtent + "px");
+      element.computedStyle.setProperty("width", usedPhysicalSize.width + "px");
+      element.computedStyle.setProperty("height", usedPhysicalSize.height + "px");
+      element.computedStyle.setProperty("margin-start", usedMarginStart + "px");
+      element.computedStyle.setProperty("margin-end", usedMarginEnd + "px");
+      element.computedStyle.setProperty("margin-before", usedMarginBefore + "px");
+      element.computedStyle.setProperty("margin-after", usedMarginAfter + "px");
     }
     // 5. floating, non-replaced elements
     else if (float !== "none" && !isRe) {
