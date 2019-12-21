@@ -6,8 +6,7 @@ import {
   LogicalEdgeDirection,
   LogicalEdgeDirections,
   CssCascade,
-  CssInlinePosition,
-  CssBlockPosition,
+  CssPosition,
   CssBoxSize,
   CssEdgeSize,
   CssBorderWidth,
@@ -85,20 +84,20 @@ export class ComputedStyle {
   }
 
   static setValue(element: HtmlElement, prop: string) {
-    let value = CssCascade.getValue(element, prop);
+    const value = CssCascade.getValue(element, prop);
     element.computedStyle.setProperty(prop, value);
   }
 
   static getFontSize(element: HtmlElement): number {
-    let value = CssCascade.getValue(element, "font-size");
-    let size = new CssFontSize(value).computeSize(element);
+    const value = CssCascade.getValue(element, "font-size");
+    const size = new CssFontSize(value).computeSize(element);
     return size;
   }
 
   static getLineHeightString(element: HtmlElement): string {
-    let value = CssCascade.getValue(element, "line-height");
-    let css_line_height = new CssLineHeight(value);
-    let size = css_line_height.computeSize(element);
+    const value = CssCascade.getValue(element, "line-height");
+    const css_line_height = new CssLineHeight(value);
+    const size = css_line_height.computeSize(element);
     if (css_line_height.hasUnit()) { // has unit, so px value is already confirmed.
       return size + "px";
     }
@@ -106,43 +105,43 @@ export class ComputedStyle {
   }
 
   static getEdgeSize(element: HtmlElement, prop: string): number {
-    let value = CssCascade.getValue(element, prop);
+    const value = CssCascade.getValue(element, prop);
     return new CssEdgeSize(value, prop).computeSize(element);
   }
 
   static getBorderWidth(element: HtmlElement, prop: string): number {
-    let value = CssCascade.getValue(element, prop);
+    const value = CssCascade.getValue(element, prop);
     return new CssBorderWidth(value, prop).computeSize(element);
   }
 
   static setPadding(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      let prop = `padding-${direction}`;
-      let size = ComputedStyle.getEdgeSize(element, prop);
+      const prop = `padding-${direction}`;
+      const size = ComputedStyle.getEdgeSize(element, prop);
       element.computedStyle.setProperty(prop, size + "px");
     });
   }
 
   static setBorderWidth(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      let prop = `border-${direction}-width`;
-      let size = ComputedStyle.getBorderWidth(element, prop);
+      const prop = `border-${direction}-width`;
+      const size = ComputedStyle.getBorderWidth(element, prop);
       element.computedStyle.setProperty(prop, size + "px");
     });
   }
 
   static setBorderStyle(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      let prop = `border-${direction}-style`;
-      let value = CssCascade.getValue(element, prop);
+      const prop = `border-${direction}-style`;
+      const value = CssCascade.getValue(element, prop);
       element.computedStyle.setProperty(prop, value);
     });
   }
 
   static setBorderColor(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      let prop = `border-${direction}-color`;
-      let value = CssCascade.getValue(element, prop);
+      const prop = `border-${direction}-color`;
+      const value = CssCascade.getValue(element, prop);
       //console.warn("[%s].%s = %s", element.toString(), prop, value);
       element.computedStyle.setProperty(prop, value);
     });
@@ -150,43 +149,41 @@ export class ComputedStyle {
 
   static setBorderRadius(element: HtmlElement) {
     LogicalBorderRadius.corners.forEach((corner: string) => {
-      let prop = `border-${corner}-radius`;
-      let size = ComputedStyle.getEdgeSize(element, prop);
+      const prop = `border-${corner}-radius`;
+      const size = ComputedStyle.getEdgeSize(element, prop);
       element.computedStyle.setProperty(prop, size + "px");
     });
   }
 
   static setMargin(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      let prop = `margin-${direction}`;
-      let size = ComputedStyle.getEdgeSize(element, prop);
+      const prop = `margin-${direction}`;
+      const size = ComputedStyle.getEdgeSize(element, prop);
       element.computedStyle.setProperty(prop, size + "px");
     });
   }
 
   static setMeasure(element: HtmlElement) {
-    let value = CssCascade.getValue(element, "measure");
+    const value = CssCascade.getValue(element, "measure");
     if (value !== "auto") {
-      let size = new CssBoxSize(value, "measure").computeSize(element);
+      const size = new CssBoxSize(value, "measure").computeSize(element);
       element.computedStyle.setProperty("measure", size + "px");
     }
   }
 
   static setExtent(element: HtmlElement) {
-    let value = CssCascade.getValue(element, "extent");
+    const value = CssCascade.getValue(element, "extent");
     if (value !== "auto") {
-      let size = new CssBoxSize(value, "extent").computeSize(element);
+      const size = new CssBoxSize(value, "extent").computeSize(element);
       element.computedStyle.setProperty("extent", size + "px");
     }
   }
 
   static setPosition(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      let value = CssCascade.getValue(element, direction);
+      const value = CssCascade.getValue(element, direction);
       if (value !== "auto") {
-        let length = LogicalEdge.isInlineEdge(direction as LogicalEdgeDirection) ?
-          new CssInlinePosition(value) : new CssBlockPosition(value);
-        let size = length.computeSize(element);
+        const size = new CssPosition(value, direction).computeSize(element);
         element.computedStyle.setProperty(direction, size + "px");
       }
     });

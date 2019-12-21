@@ -10,8 +10,7 @@ import {
   CssPhysicalBoxSize,
   CssBorderWidth,
   CssLineHeight,
-  CssInlinePosition,
-  CssBlockPosition,
+  CssPosition,
   LogicalSize,
   LogicalEdge,
   LogicalEdgeDirection,
@@ -273,7 +272,7 @@ export class CssComputedValueLoader implements NodeEffector {
 
   [warning]
 
-  There are some properties that inherit percent value by inherit.
+  There are some properties that inherit percentage value by inherit.
 
   quote from [https://www.w3.org/TR/CSS2/changes.html#q21.36]
   > Since computed value of a property can now also be a percentage.
@@ -332,12 +331,13 @@ export class CssUsedValueLoader implements NodeEffector {
   }
 
   private getPadding(element: HtmlElement, direction: LogicalEdgeDirection): number {
+    // already calculated as computed value.
     return parseInt(CssCascade.getValue(element, `padding-${direction}`), 10);
   }
 
   private getBorderWidth(element: HtmlElement, direction: LogicalEdgeDirection): number {
-    const value = CssCascade.getValue(element, `border-${direction}-width`);
-    return new CssEdgeSize(value, direction).computeSize(element);
+    // already calculated as computed value.
+    return parseInt(CssCascade.getValue(element, `border-${direction}-width`), 10);
   }
 
   private getRootMeasure(element: HtmlElement): number {
@@ -348,6 +348,14 @@ export class CssUsedValueLoader implements NodeEffector {
   private getRootExtent(element: HtmlElement): number {
     const value = CssCascade.getValue(element, "extent");
     return value === "auto" ? Config.defaultBodyExtent : new CssBoxSize(value, "extent").computeSize(element);
+  }
+
+  private getParentMeasure(parentElement: HtmlElement): number {
+    return parseInt(CssCascade.getValue(parentElement, "measure"), 10);
+  }
+
+  private getParentExtent(parentElement: HtmlElement): number {
+    return parseInt(CssCascade.getValue(parentElement, "extent"), 10);
   }
 
   private getMeasure(element: HtmlElement): "auto" | number {
@@ -385,24 +393,7 @@ export class CssUsedValueLoader implements NodeEffector {
 
   private getPosition(element: HtmlElement, direction: LogicalEdgeDirection): "auto" | number {
     const value = CssCascade.getValue(element, direction);
-    return value === "auto" ? value : LogicalEdge.isInlineEdge(direction) ?
-      new CssInlinePosition(value).computeSize(element) :
-      new CssBlockPosition(value).computeSize(element);
-  }
-
-  private getParentMeasure(parentElement: HtmlElement): number {
-    return parseInt(CssCascade.getValue(parentElement, "measure"), 10);
-  }
-
-  private getParentExtent(parentElement: HtmlElement): number {
-    return parseInt(CssCascade.getValue(parentElement, "extent"), 10);
-  }
-
-  private getParentLogicalSize(element: HtmlElement): LogicalSize {
-    return new LogicalSize({
-      measure: this.getParentMeasure(element),
-      extent: this.getParentExtent(element)
-    });
+    return value === "auto" ? value : new CssPosition(value, direction).computeSize(element);
   }
 
   /*
@@ -435,8 +426,8 @@ export class CssUsedValueLoader implements NodeEffector {
     const maxExtent = this.getMaxExtent(element);
     const measure = this.getMeasure(element);
     const extent = this.getExtent(element);
-    const width = this.getWidth(element, writingMode);
-    const height = this.getHeight(element, writingMode);
+    const width = this.getWidth(element, writingMode); // required by replaced-element only
+    const height = this.getHeight(element, writingMode); // required by replaced-element only
     const marginStart = this.getMargin(element, "start");
     const marginEnd = this.getMargin(element, "end");
     const marginBefore = this.getMargin(element, "before");
