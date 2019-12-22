@@ -7,11 +7,11 @@ import {
 export class PseudoElementSelector extends Selector {
   private src: string;
 
-  constructor(source: string){
+  constructor(source: string) {
     super();
     this.src = source;
     this.specificity.c = 1;
-    if(PseudoElementTagNames.indexOf(this.tagName) < 0){
+    if (!PseudoElementTagNames.includes(this.tagName)) {
       console.error("pseudo element(" + this.pseudoName + ") is not defined.");
     }
   }
@@ -28,7 +28,7 @@ export class PseudoElementSelector extends Selector {
     return "::" + this.pseudoName;
   }
 
-  public test(_: HtmlElement): boolean {
-    return true;
+  public test(element: HtmlElement): boolean {
+    return element.tagName === this.tagName;
   }
 }

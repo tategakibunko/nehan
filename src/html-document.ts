@@ -9,6 +9,7 @@ import {
   PageGenerator,
   PageReader,
   Config,
+  PseudoElementCreator,
 } from "./public-api";
 
 export interface HtmlDocumentOptions {
@@ -49,6 +50,9 @@ export class HtmlDocument {
     this.body = body;
     this.body.parent = this.documentElement;
     // console.timeEnd("html-parse");
+
+    //const peCreator = new PseudoElementCreator(this.specStyleSheet);
+    //this.body.acceptEffectorAll(peCreator);
 
     // console.time("CssLoader.loadAll");
     CssLoader.loadAll(this.body);

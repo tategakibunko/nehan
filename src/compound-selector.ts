@@ -5,6 +5,7 @@ import {
   TypeSelector,
   AttrSelector,
   ClassSelector,
+  PseudoElement,
   PseudoClassSelector,
   PseudoElementSelector,
   SimpleSelectors,
@@ -17,11 +18,11 @@ export class CompoundSelector extends Selector {
   private idSelector: IdSelector | null;
   private typeSelector: TypeSelector | null;
   private attrSelector: AttrSelector | null;
-  private classSelectors: ClassSelector [];
-  private pseudoClasses: PseudoClassSelector [];
+  private classSelectors: ClassSelector[];
+  private pseudoClasses: PseudoClassSelector[];
   public pseudoElement: PseudoElementSelector | null;
 
-  constructor(args: SimpleSelectors){
+  constructor(args: SimpleSelectors) {
     super();
     this.univSelector = args.univSelector || null;
     this.idSelector = args.idSelector || null;
@@ -34,7 +35,7 @@ export class CompoundSelector extends Selector {
   }
 
   public getTagName(): string {
-    if(this.typeSelector){
+    if (this.typeSelector) {
       return this.typeSelector.tagName;
     }
     return "*";
@@ -42,16 +43,16 @@ export class CompoundSelector extends Selector {
 
   public getSpecificity(): Specificity {
     let specificity = new Specificity(0, 0, 0);
-    if(this.idSelector){
+    if (this.idSelector) {
       specificity = Specificity.add(specificity, this.idSelector.specificity);
     }
-    if(this.typeSelector){
+    if (this.typeSelector) {
       specificity = Specificity.add(specificity, this.typeSelector.specificity);
     }
-    if(this.attrSelector){
+    if (this.attrSelector) {
       specificity = Specificity.add(specificity, this.attrSelector.specificity);
     }
-    if(this.pseudoElement){
+    if (this.pseudoElement) {
       specificity = Specificity.add(specificity, this.pseudoElement.specificity);
     }
     specificity = this.classSelectors.reduce((acm, selector) => {
@@ -63,48 +64,48 @@ export class CompoundSelector extends Selector {
     return specificity;
   }
 
-  public toString(): string{
+  public toString(): string {
     let str = "";
-    if(this.univSelector){
+    if (this.univSelector) {
       str += this.univSelector.toString();
     }
-    if(this.typeSelector){
+    if (this.typeSelector) {
       str += this.typeSelector.toString();
     }
-    if(this.idSelector){
+    if (this.idSelector) {
       str += this.idSelector.toString();
     }
     str += this.classSelectors.reduce((ret, s) => {
       return ret + s.toString();
     }, "");
-    if(this.attrSelector){
+    if (this.attrSelector) {
       str += this.attrSelector.toString();
     }
     str += this.pseudoClasses.reduce((ret, s) => {
       return ret + s.toString();
     }, "");
-    if(this.pseudoElement){
+    if (this.pseudoElement) {
       str += this.pseudoElement.toString();
     }
     return str;
   }
 
   public get leafSelector(): string {
-    return this.typeSelector? this.typeSelector.tagName : "*";
+    return this.typeSelector ? this.typeSelector.tagName : "*";
   }
 
   public querySelector(element: HtmlElement): HtmlElement | null {
     let elements = element.queryLeafs(this.leafSelector);
-    for(let i = 0; i < elements.length; i++){
+    for (let i = 0; i < elements.length; i++) {
       let element = elements[i];
-      if(this.test(element)){
-	return element;
+      if (this.test(element)) {
+        return element;
       }
     }
     return null;
   }
 
-  public querySelectorAll(element: HtmlElement): HtmlElement [] {
+  public querySelectorAll(element: HtmlElement): HtmlElement[] {
     return element.queryLeafs(this.leafSelector).filter(elm => this.test(elm));
   }
 
@@ -121,19 +122,23 @@ export class CompoundSelector extends Selector {
   }
 
   public test(element: HtmlElement): boolean {
-    if(this.typeSelector !== null && !this.typeSelector.test(element)){
+    if (PseudoElement.isPseudoElement(element) && this.pseudoElement && this.pseudoElement.test(element)) {
+      console.log("match pe:%o, element:%o", this, element);
+      // return this.test(element.parent);
+    }
+    if (this.typeSelector !== null && !this.typeSelector.test(element)) {
       return false;
     }
-    if(this.attrSelector !== null && !this.attrSelector.test(element)){
+    if (this.attrSelector !== null && !this.attrSelector.test(element)) {
       return false;
     }
-    if(this.idSelector !== null && !this.idSelector.test(element)){
+    if (this.idSelector !== null && !this.idSelector.test(element)) {
       return false;
     }
-    if(!this.testClasses(element)){
+    if (!this.testClasses(element)) {
       return false;
     }
-    if(!this.testPseudoClasses(element)){
+    if (!this.testPseudoClasses(element)) {
       return false;
     }
     return true;
