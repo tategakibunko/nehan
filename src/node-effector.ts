@@ -79,6 +79,15 @@ export class InvalidBlockSweeper implements NodeEffector {
 }
 
 /*
+  CssLoader
+
+  element
+    .acceptNodeEffector(SpecifiedValueLoader.instance)
+    .acceptNodeEffector(ComputedValueLoader.instance)
+    .acceptNodeEffector(UsedValueLoader.instance)
+*/
+
+/*
   Load cascading specified value.
 */
 export class SpecifiedValueLoader implements NodeEffector {
