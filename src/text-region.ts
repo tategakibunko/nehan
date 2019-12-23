@@ -42,10 +42,8 @@ export class TextRegion extends FlowRegion {
   // See 'FlowContext::removeBrAfterLine'.
   public createTextBoxSize(overflow: boolean, brasagari: boolean): LogicalSize {
     const measure = brasagari ? this.maxSpaceMeasure : this.cursor.start;
-    return new LogicalSize({
-      measure,
-      extent: this.context.env.fontSize
-    });
+    const extent = this.context.env.fontSize;
+    return new LogicalSize({ measure, extent });
   }
 
   public createTextBox(env: BoxEnv, overflow: boolean, brasagari: boolean): LogicalBox {

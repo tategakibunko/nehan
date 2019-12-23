@@ -80,29 +80,6 @@ export class InvalidBlockSweeper implements NodeEffector {
   }
 }
 
-export class PseudoElementCreator implements NodeEffector {
-  private specStyleSheet: CssStyleSheet;
-
-  constructor(specStyleSheet: CssStyleSheet) {
-    this.specStyleSheet = specStyleSheet;
-  }
-
-  visit(element: HtmlElement) {
-    if (PseudoElement.isPseudoElement(element)) {
-      return;
-    }
-    this.specStyleSheet.getRulesOfElement(element).forEach(rule => {
-      if (rule.peSelector) {
-        const peName = rule.peSelector.tagName;
-        if (!element.querySelector(peName)) {
-          console.log(`added pseudo element(${peName})) to ${element.tagName}`);
-          PseudoElement.addElement(element, peName);
-        }
-      }
-    })
-  }
-}
-
 /*
   CssLoader
 

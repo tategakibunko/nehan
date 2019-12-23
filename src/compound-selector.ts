@@ -122,10 +122,6 @@ export class CompoundSelector extends Selector {
   }
 
   public test(element: HtmlElement): boolean {
-    if (PseudoElement.isPseudoElement(element) && this.pseudoElement && this.pseudoElement.test(element)) {
-      console.log("match pe:%o, element:%o", this, element);
-      // return this.test(element.parent);
-    }
     if (this.typeSelector !== null && !this.typeSelector.test(element)) {
       return false;
     }
