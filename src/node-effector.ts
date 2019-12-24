@@ -81,61 +81,6 @@ export class InvalidBlockSweeper implements NodeEffector {
   }
 }
 
-export class ListMarkInitializer implements NodeEffector {
-  private findMarkerParent(element: HtmlElement): HtmlElement {
-    let first_child = element.firstChild;
-    if (!first_child || first_child.isTextElement()) {
-      return element;
-    }
-    if (first_child.tagName === "img") {
-      return element;
-    }
-    return this.findMarkerParent(first_child);
-  }
-
-  // Note that this function is called BEFORE defined-styles are set to element.style.
-  private addMarker(element: HtmlElement): HtmlElement {
-    // Even if li::marker is not defined in stylesheet,
-    // list-item-context try to add marker element before layouting.
-    // So if it's already inserted by css, just return it.
-    if (element.firstChild && element.firstChild.tagName === PseudoElementTagName.MARKER) {
-      return element.firstChild;
-    }
-    const list_style = ListStyle.load(element); // this value is inherited from parent(li).
-    const index = element.indexOfType;
-    const marker_element = element.root.createElement("::marker");
-    let marker_text = list_style.getMarkerText(index);
-    if (element.querySelectorAll("li").length > 0) {
-      marker_text = SpaceChar.markerSpace;
-    }
-    const marker_parent = this.findMarkerParent(element);
-    if (marker_parent.tagName === "::marker") {
-      //console.warn("marker is already created");
-      return marker_parent; // already created!
-    }
-    const marker_text_node = element.root.createTextNode(marker_text);
-    marker_element.appendChild(marker_text_node);
-    marker_element.parent = marker_parent;
-    marker_parent.insertBefore(marker_element, marker_parent.firstChild);
-    console.log("added marker element:", marker_element);
-    return marker_element;
-  }
-
-  visit(element: HtmlElement) {
-    const display = Display.load(element);
-    if (!display.isListItem()) {
-      return
-    }
-    if (element.parent) {
-      const parentDisplay = Display.load(element.parent);
-      if (parentDisplay.isListItem()) {
-        return;
-      }
-    }
-    this.addMarker(element);
-  }
-}
-
 // Before css loading, create pseudo-elements defined in css,
 // and initialize spec-styles for them.
 export class PseudoElementInitializer implements NodeEffector {

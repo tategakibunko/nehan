@@ -10,7 +10,6 @@ import {
   PageReader,
   Config,
   PseudoElementInitializer,
-  ListMarkInitializer,
 } from "./public-api";
 
 export interface HtmlDocumentOptions {
