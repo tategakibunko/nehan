@@ -8,27 +8,18 @@ import {
 export class CssRule {
   public selector: ComplexSelector;
   public style: CssStyleDeclaration;
-  private disabled: boolean;
 
   constructor(selector: ComplexSelector, style: CssStyleDeclaration) {
     this.selector = selector;
     this.style = style;
-    this.disabled = false;
-  }
-
-  public setDisabled(disabled: boolean) {
-    this.disabled = disabled;
   }
 
   public toString(): string {
     return "(rule):" + this.selector.toString();
   }
 
-  public test(element: HtmlElement): boolean {
-    if (this.disabled) {
-      return false;
-    }
-    return this.selector.test(element);
+  public test(element: HtmlElement, ignorePeRoot = true): boolean {
+    return this.selector.test(element, ignorePeRoot);
   }
 
   public get pseudoElementName(): string {

@@ -24,8 +24,7 @@ export class CssLoader {
     }
     // set specified styles
     let spec_style = this.getSpecifiedStyle(element);
-    // pseudo element already get it's own styles while css matching.
-    // see css-stylesheet.ts(at getRulesOfElement).
+    // spec-styles of pseudo element are already initialized by PseudoElementInitializer.
     if (!PseudoElement.isPseudoElement(element)) {
       element.style = spec_style;
     }

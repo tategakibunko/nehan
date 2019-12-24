@@ -32,36 +32,10 @@ export class CssStyleSheet {
   }
 
   public getStyleOfElement(element: HtmlElement): CssStyleDeclaration {
-    let rules = this.getRulesOfElement(element);
+    const rules = this.rules.filter(rule => rule.test(element));
     return rules.reduce((block: CssStyleDeclaration, rule: CssRule) => {
       return block.mergeFrom(rule.style);
     }, new CssStyleDeclaration());
-  }
-
-  public getRulesOfElement(element: HtmlElement): CssRule[] {
-    return this.rules.filter((rule) => {
-      if (!rule.test(element)) {
-        return false;
-      }
-      /*
-      if (rule.peSelector) {
-        let pe_name = rule.peSelector.tagName;
-        let pe = element.querySelector(pe_name) || PseudoElement.addElement(element, pe_name);
-        if (!pe) {
-          console.error("failed to create PseudoElement(%s) to %s", pe_name, element.toString());
-          return;
-        }
-        // PseudoElements are dynamically generated at css-loading phase,
-        // so if we don't set styles of them at this point,
-        // there is no chance for them to get their own css-styles.
-        // Note that cssRules is already sorted by specificity,
-        // so it's no problem just copying [rule.style] to [pe.style].
-        pe.style.mergeFrom(rule.style);
-        return false;
-      }
-      */
-      return true;
-    });
   }
 
   public addCssRules(rules: CssRules): CssStyleSheet {

@@ -1,6 +1,4 @@
 import {
-  BoxContent,
-  HtmlElement,
   FlowContext,
 } from "./public-api";
 

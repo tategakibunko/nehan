@@ -2,7 +2,6 @@ import {
   Config,
   HtmlElement,
   Display,
-  CssStyleSheet,
   CssRule,
   CssCascade,
   CssParser,
@@ -14,7 +13,6 @@ import {
   CssLineHeight,
   CssPosition,
   LogicalSize,
-  LogicalEdge,
   LogicalEdgeDirection,
   LogicalEdgeDirections,
   LogicalBorderRadius,
@@ -89,13 +87,12 @@ export class PseudoElementInitializer implements NodeEffector {
   visit(element: HtmlElement) {
     this.pseudoRules.forEach(rule => {
       // assert(rule.peSelector !== null)
-      if (rule.test(element) && rule.peSelector) {
+      if (rule.test(element, false) && rule.peSelector) {
         const peName = rule.peSelector.tagName;
         const pe = element.querySelector(peName) || PseudoElement.addElement(element, peName);
         if (pe) {
           pe.style.mergeFrom(rule.style);
         }
-        rule.setDisabled(true);
       }
     })
   }
@@ -118,8 +115,7 @@ export class SpecifiedValueLoader implements NodeEffector {
   private constructor() { }
 
   visit(element: HtmlElement) {
-    // pseudo element already get it's own styles while css matching.
-    // See CssStyleSheet::getRulesOfElement in 'css-stylesheet.ts'
+    // spec-style of pseudo element is already initialized by PseudoElementInitializer.
     if (element.isTextElement() || PseudoElement.isPseudoElement(element)) {
       return;
     }
