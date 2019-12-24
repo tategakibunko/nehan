@@ -119,9 +119,11 @@ export class LayoutGeneratorFactory {
         return this.createImageGenerator(parent_ctx, element);
     }
     if (display.isListItem()) {
+      /*
       if (parent_ctx.isListItem() === false) {
         PseudoElement.addMarker(element);
       }
+      */
       return new FlowGenerator(new ListItemContext(element, parent_ctx));
     }
     if (display.isTable()) {

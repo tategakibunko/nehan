@@ -18,9 +18,12 @@ import {
   LogicalBorderRadius,
   BoxDimension,
   PseudoElement,
+  PseudoElementTagName,
   ReplacedElement,
   PhysicalSize,
   WritingMode,
+  ListStyle,
+  SpaceChar,
 } from './public-api'
 
 // treat side-effect
@@ -78,20 +81,197 @@ export class InvalidBlockSweeper implements NodeEffector {
   }
 }
 
+export class ListMarkInitializer implements NodeEffector {
+  private findMarkerParent(element: HtmlElement): HtmlElement {
+    let first_child = element.firstChild;
+    if (!first_child || first_child.isTextElement()) {
+      return element;
+    }
+    if (first_child.tagName === "img") {
+      return element;
+    }
+    return this.findMarkerParent(first_child);
+  }
+
+  // Note that this function is called BEFORE defined-styles are set to element.style.
+  private addMarker(element: HtmlElement): HtmlElement {
+    // Even if li::marker is not defined in stylesheet,
+    // list-item-context try to add marker element before layouting.
+    // So if it's already inserted by css, just return it.
+    if (element.firstChild && element.firstChild.tagName === PseudoElementTagName.MARKER) {
+      return element.firstChild;
+    }
+    const list_style = ListStyle.load(element); // this value is inherited from parent(li).
+    const index = element.indexOfType;
+    const marker_element = element.root.createElement("::marker");
+    let marker_text = list_style.getMarkerText(index);
+    if (element.querySelectorAll("li").length > 0) {
+      marker_text = SpaceChar.markerSpace;
+    }
+    const marker_parent = this.findMarkerParent(element);
+    if (marker_parent.tagName === "::marker") {
+      //console.warn("marker is already created");
+      return marker_parent; // already created!
+    }
+    const marker_text_node = element.root.createTextNode(marker_text);
+    marker_element.appendChild(marker_text_node);
+    marker_element.parent = marker_parent;
+    marker_parent.insertBefore(marker_element, marker_parent.firstChild);
+    console.log("added marker element:", marker_element);
+    return marker_element;
+  }
+
+  visit(element: HtmlElement) {
+    const display = Display.load(element);
+    if (!display.isListItem()) {
+      return
+    }
+    if (element.parent) {
+      const parentDisplay = Display.load(element.parent);
+      if (parentDisplay.isListItem()) {
+        return;
+      }
+    }
+    this.addMarker(element);
+  }
+}
+
 // Before css loading, create pseudo-elements defined in css,
 // and initialize spec-styles for them.
 export class PseudoElementInitializer implements NodeEffector {
-  pseudoRules: CssRule[];
+  private pseudoRules: CssRule[];
+
   constructor(pseudoRules: CssRule[]) {
     this.pseudoRules = pseudoRules;
   }
 
+  private findMarkerParent(element: HtmlElement): HtmlElement {
+    let first_child = element.firstChild;
+    if (!first_child || first_child.isTextElement()) {
+      return element;
+    }
+    if (first_child.tagName === "img") {
+      return element;
+    }
+    return this.findMarkerParent(first_child);
+  }
+
+  // Note that this function is called BEFORE defined-styles are set to element.style.
+  private addMarker(element: HtmlElement): HtmlElement {
+    // Even if li::marker is not defined in stylesheet,
+    // list-item-context try to add marker element before layouting.
+    // So if it's already inserted by css, just return it.
+    if (element.firstChild && element.firstChild.tagName === PseudoElementTagName.MARKER) {
+      return element.firstChild;
+    }
+    const list_style = ListStyle.load(element); // this value is inherited from parent(li).
+    const index = element.indexOfType;
+    const marker_element = element.root.createElement("::marker");
+    let marker_text = list_style.getMarkerText(index);
+    if (element.querySelectorAll("li").length > 0) {
+      marker_text = SpaceChar.markerSpace;
+    }
+    const marker_parent = this.findMarkerParent(element);
+    if (marker_parent.tagName === "::marker") {
+      //console.warn("marker is already created");
+      return marker_parent; // already created!
+    }
+    const marker_text_node = element.root.createTextNode(marker_text);
+    marker_element.appendChild(marker_text_node);
+    marker_element.parent = marker_parent;
+    marker_parent.insertBefore(marker_element, marker_parent.firstChild);
+    return marker_element;
+  }
+
+  private addBefore(element: HtmlElement): HtmlElement {
+    const before = element.root.createElement(PseudoElementTagName.BEFORE);
+    element.insertBefore(before, element.firstChild);
+    return before;
+  }
+
+  private addAfter(element: HtmlElement): HtmlElement {
+    const after = element.root.createElement(PseudoElementTagName.AFTER);
+    element.appendChild(after);
+    return after;
+  }
+
+  private addFirstLine(element: HtmlElement): HtmlElement | null {
+    const first_line = element.root.createElement(PseudoElementTagName.FIRST_LINE);
+    const first_text_node = element.firstTextElement;
+    if (!first_text_node) {
+      return null;
+    }
+    const target_parent = first_text_node.parent;
+    if (!target_parent) {
+      return null;
+    }
+    first_line.appendChild(first_text_node);
+    target_parent.replaceChild(first_line, first_text_node);
+    return first_line;
+  }
+
+  private addFirstLetter(element: HtmlElement): HtmlElement | null {
+    const first_text_node = element.firstTextElement;
+    if (!first_text_node) {
+      return null;
+    }
+    const target_parent = first_text_node.parent;
+    if (!target_parent) {
+      return null;
+    }
+    const text = first_text_node.textContent;
+    const trim_text = text.trim();
+    const target_text = (trim_text.length > 1) ? trim_text : text;
+    const first_text = target_text.substring(0, 1);
+    const next_text = text.substring(1);
+    const first_letter = element.root.createElement(PseudoElementTagName.FIRST_LETTER);
+    first_letter.appendChild(element.root.createTextNode(first_text));
+    const next_node = element.root.createTextNode(next_text);
+    next_node.appendChild(element.root.createTextNode(next_text));
+    const base_node = first_text_node.nextSibling;
+    target_parent.removeChild(first_text_node);
+    target_parent.insertBefore(next_node, base_node);
+    target_parent.insertBefore(first_letter, next_node);
+    return first_letter;
+  }
+
+  private setupListItem(element: HtmlElement) {
+    if (element.parent) {
+      const parentDisplay = Display.load(element.parent);
+      if (parentDisplay.isListItem()) {
+        return;
+      }
+    }
+    this.addMarker(element);
+  }
+
+  private addPseudoElement(element: HtmlElement, pe_tag_name: string): HtmlElement | null {
+    switch (pe_tag_name) {
+      case PseudoElementTagName.MARKER:
+        return this.addMarker(element);
+      case PseudoElementTagName.BEFORE:
+        return this.addBefore(element);
+      case PseudoElementTagName.AFTER:
+        return this.addAfter(element);
+      case PseudoElementTagName.FIRST_LETTER:
+        return this.addFirstLetter(element);
+      case PseudoElementTagName.FIRST_LINE:
+        return this.addFirstLine(element);
+    }
+    throw new Error("undefined pseudo element:" + pe_tag_name);
+  }
+
   visit(element: HtmlElement) {
+    const display = Display.load(element);
+    if (display.isListItem()) {
+      this.setupListItem(element);
+      return;
+    }
     this.pseudoRules.forEach(rule => {
       // assert(rule.peSelector !== null)
       if (rule.test(element, true) && rule.peSelector) {
         const peName = rule.peSelector.tagName;
-        const pe = element.querySelector(peName) || PseudoElement.addElement(element, peName);
+        const pe = element.querySelector(peName) || this.addPseudoElement(element, peName);
         if (pe) {
           pe.style.mergeFrom(rule.style);
         }

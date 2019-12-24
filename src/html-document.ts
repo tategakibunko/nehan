@@ -10,6 +10,7 @@ import {
   PageReader,
   Config,
   PseudoElementInitializer,
+  ListMarkInitializer,
 } from "./public-api";
 
 export interface HtmlDocumentOptions {
@@ -56,6 +57,8 @@ export class HtmlDocument {
     // console.time("CssLoader.loadAll");
     CssLoader.loadAll(this.body);
     // console.timeEnd("CssLoader.loadAll");
+
+    // this.body.acceptEffectorAll(new ListMarkInitializer());
   }
 
   public createBodyGenerator(): BodyGenerator {
