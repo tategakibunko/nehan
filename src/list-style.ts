@@ -6,6 +6,8 @@ import {
   CssCascade,
   CssText,
   PropValue,
+  PseudoElementTagName,
+  SpaceChar,
 } from "./public-api";
 
 export class ListStyle {
@@ -39,6 +41,22 @@ export class ListStyle {
     let css = new NativeStyleMap();
     css.set("display", "inline-block");
     return css;
+  }
+
+  public insertMarkerText(element: HtmlElement) {
+    const markerElement = element.firstChild;
+    if (!markerElement || markerElement.tagName !== PseudoElementTagName.MARKER) {
+      return;
+    }
+    if (markerElement.firstChild && markerElement.firstChild.isTextElement()) {
+      return;
+    }
+    let markerText = this.getMarkerText(element.indexOfType);
+    if (element.querySelectorAll("li").length > 0) {
+      markerText = SpaceChar.markerSpace;
+    }
+    const markerTextNode = element.root.createTextNode(markerText);
+    markerElement.appendChild(markerTextNode);
   }
 
   static load(element: HtmlElement): ListStyle {
