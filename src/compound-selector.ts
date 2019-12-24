@@ -120,9 +120,9 @@ export class CompoundSelector extends Selector {
     });
   }
 
-  public test(element: HtmlElement, ignorePeRoot = true): boolean {
-    // don't match as pseudo element root
-    if (this.pseudoElement && ignorePeRoot) {
+  public test(element: HtmlElement, matchPeRoot = false): boolean {
+    // If matchPeRoot is false, don't match as parent of pseudo element.
+    if (this.pseudoElement && !matchPeRoot) {
       return false;
     }
     if (this.typeSelector !== null && !this.typeSelector.test(element)) {

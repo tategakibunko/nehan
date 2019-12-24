@@ -78,6 +78,8 @@ export class InvalidBlockSweeper implements NodeEffector {
   }
 }
 
+// Before css loading, create pseudo-elements defined in css,
+// and initialize spec-styles for them.
 export class PseudoElementInitializer implements NodeEffector {
   pseudoRules: CssRule[];
   constructor(pseudoRules: CssRule[]) {

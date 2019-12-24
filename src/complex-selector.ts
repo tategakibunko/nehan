@@ -147,7 +147,7 @@ export class ComplexSelector extends Selector {
     return null;
   }
 
-  public test(element: HtmlElement, ignorePeRoot = true): boolean {
+  public test(element: HtmlElement, matchPeRoot = false): boolean {
     let spos = 0, cpos = 0;
     let slen = this.selectors.length, clen = this.combinators.length;
     let cur: HtmlElement | null = element;
@@ -156,7 +156,7 @@ export class ComplexSelector extends Selector {
         break;
       }
       let left = this.selectors[spos];
-      if (spos === 0 && !left.test(cur, ignorePeRoot)) { // if spos > 0, left.test is already executed.
+      if (spos === 0 && !left.test(cur, matchPeRoot)) { // if spos > 0, left.test is already executed.
         return false;
       }
       if (cpos >= clen) {
