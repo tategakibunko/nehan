@@ -5,7 +5,6 @@ import {
   TypeSelector,
   AttrSelector,
   ClassSelector,
-  PseudoElement,
   PseudoClassSelector,
   PseudoElementSelector,
   SimpleSelectors,

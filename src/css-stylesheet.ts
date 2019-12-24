@@ -7,7 +7,7 @@ import {
 } from "./public-api";
 
 export class CssStyleSheet {
-  public rules: CssRule[];
+  private rules: CssRule[];
 
   constructor(css_rules?: CssRules) {
     this.rules = [];
@@ -27,6 +27,10 @@ export class CssStyleSheet {
     return this;
   }
 
+  public getPseudoRules(): CssRule[] {
+    return this.rules.filter(rule => rule.peSelector !== null);
+  }
+
   public getStyleOfElement(element: HtmlElement): CssStyleDeclaration {
     let rules = this.getRulesOfElement(element);
     return rules.reduce((block: CssStyleDeclaration, rule: CssRule) => {
@@ -39,6 +43,7 @@ export class CssStyleSheet {
       if (!rule.test(element)) {
         return false;
       }
+      /*
       if (rule.peSelector) {
         let pe_name = rule.peSelector.tagName;
         let pe = element.querySelector(pe_name) || PseudoElement.addElement(element, pe_name);
@@ -54,6 +59,7 @@ export class CssStyleSheet {
         pe.style.mergeFrom(rule.style);
         return false;
       }
+      */
       return true;
     });
   }
@@ -67,7 +73,7 @@ export class CssStyleSheet {
   }
 
   public addRule(selector: string, declr_block: CssDeclarationBlock): CssStyleSheet {
-    let rule_list = CssParser.parseRule(selector, declr_block);
+    const rule_list = CssParser.parseRule(selector, declr_block);
     this.rules = this.rules.concat(rule_list);
     return this.sort();
   }

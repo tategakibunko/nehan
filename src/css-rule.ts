@@ -8,10 +8,16 @@ import {
 export class CssRule {
   public selector: ComplexSelector;
   public style: CssStyleDeclaration;
+  private disabled: boolean;
 
-  constructor(selector: ComplexSelector, style: CssStyleDeclaration){
+  constructor(selector: ComplexSelector, style: CssStyleDeclaration) {
     this.selector = selector;
     this.style = style;
+    this.disabled = false;
+  }
+
+  public setDisabled(disabled: boolean) {
+    this.disabled = disabled;
   }
 
   public toString(): string {
@@ -19,11 +25,14 @@ export class CssRule {
   }
 
   public test(element: HtmlElement): boolean {
+    if (this.disabled) {
+      return false;
+    }
     return this.selector.test(element);
   }
 
   public get pseudoElementName(): string {
-    return this.peSelector? this.peSelector.tagName : "";
+    return this.peSelector ? this.peSelector.tagName : "";
   }
 
   public get peSelector(): PseudoElementSelector | null {

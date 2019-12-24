@@ -80,6 +80,27 @@ export class InvalidBlockSweeper implements NodeEffector {
   }
 }
 
+export class PseudoElementInitializer implements NodeEffector {
+  pseudoRules: CssRule[];
+  constructor(pseudoRules: CssRule[]) {
+    this.pseudoRules = pseudoRules;
+  }
+
+  visit(element: HtmlElement) {
+    this.pseudoRules.forEach(rule => {
+      // assert(rule.peSelector !== null)
+      if (rule.test(element) && rule.peSelector) {
+        const peName = rule.peSelector.tagName;
+        const pe = element.querySelector(peName) || PseudoElement.addElement(element, peName);
+        if (pe) {
+          pe.style.mergeFrom(rule.style);
+        }
+        rule.setDisabled(true);
+      }
+    })
+  }
+}
+
 /*
   CssLoader
 
