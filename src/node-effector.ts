@@ -89,7 +89,7 @@ export class PseudoElementInitializer implements NodeEffector {
   visit(element: HtmlElement) {
     this.pseudoRules.forEach(rule => {
       // assert(rule.peSelector !== null)
-      if (rule.test(element, false) && rule.peSelector) {
+      if (rule.test(element, true) && rule.peSelector) {
         const peName = rule.peSelector.tagName;
         const pe = element.querySelector(peName) || PseudoElement.addElement(element, peName);
         if (pe) {
