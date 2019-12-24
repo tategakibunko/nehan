@@ -13,7 +13,7 @@ export enum PseudoElementTagName {
   FIRST_LETTER = "::first-letter"
 }
 
-export let PseudoElementTagNames = Utils.Enum.toValueArray(PseudoElementTagName);
+export const PseudoElementTagNames = Utils.Enum.toValueArray(PseudoElementTagName);
 
 export class PseudoElement {
   static isPseudoElement(element: HtmlElement): boolean {
@@ -43,19 +43,19 @@ export class PseudoElement {
     if (element.firstChild && element.firstChild.tagName === PseudoElementTagName.MARKER) {
       return element.firstChild;
     }
-    let list_style = ListStyle.load(element); // this value is inherited from parent(li).
-    let index = element.indexOfType;
-    let marker_element = element.root.createElement("::marker");
+    const list_style = ListStyle.load(element); // this value is inherited from parent(li).
+    const index = element.indexOfType;
+    const marker_element = element.root.createElement("::marker");
     let marker_text = list_style.getMarkerText(index);
     if (element.querySelectorAll("li").length > 0) {
       marker_text = SpaceChar.markerSpace;
     }
-    let marker_parent = this.findMarkerParent(element);
+    const marker_parent = this.findMarkerParent(element);
     if (marker_parent.tagName === "::marker") {
       //console.warn("marker is already created");
       return marker_parent; // already created!
     }
-    let marker_text_node = element.root.createTextNode(marker_text);
+    const marker_text_node = element.root.createTextNode(marker_text);
     marker_element.appendChild(marker_text_node);
     marker_element.parent = marker_parent;
     marker_parent.insertBefore(marker_element, marker_parent.firstChild);
@@ -63,24 +63,24 @@ export class PseudoElement {
   }
 
   static addBefore(element: HtmlElement): HtmlElement {
-    let before = element.root.createElement(PseudoElementTagName.BEFORE);
+    const before = element.root.createElement(PseudoElementTagName.BEFORE);
     element.insertBefore(before, element.firstChild);
     return before;
   }
 
   static addAfter(element: HtmlElement): HtmlElement {
-    let after = element.root.createElement(PseudoElementTagName.AFTER);
+    const after = element.root.createElement(PseudoElementTagName.AFTER);
     element.appendChild(after);
     return after;
   }
 
   static addFirstLine(element: HtmlElement): HtmlElement | null {
-    let first_line = element.root.createElement(PseudoElementTagName.FIRST_LINE);
-    let first_text_node = element.firstTextElement;
+    const first_line = element.root.createElement(PseudoElementTagName.FIRST_LINE);
+    const first_text_node = element.firstTextElement;
     if (!first_text_node) {
       return null;
     }
-    let target_parent = first_text_node.parent;
+    const target_parent = first_text_node.parent;
     if (!target_parent) {
       return null;
     }
@@ -90,24 +90,24 @@ export class PseudoElement {
   }
 
   static addFirstLetter(element: HtmlElement): HtmlElement | null {
-    let first_text_node = element.firstTextElement;
+    const first_text_node = element.firstTextElement;
     if (!first_text_node) {
       return null;
     }
-    let target_parent = first_text_node.parent;
+    const target_parent = first_text_node.parent;
     if (!target_parent) {
       return null;
     }
-    let text = first_text_node.textContent;
-    let trim_text = text.trim();
-    let target_text = (trim_text.length > 1) ? trim_text : text;
-    let first_text = target_text.substring(0, 1);
-    let next_text = text.substring(1);
-    let first_letter = element.root.createElement(PseudoElementTagName.FIRST_LETTER);
+    const text = first_text_node.textContent;
+    const trim_text = text.trim();
+    const target_text = (trim_text.length > 1) ? trim_text : text;
+    const first_text = target_text.substring(0, 1);
+    const next_text = text.substring(1);
+    const first_letter = element.root.createElement(PseudoElementTagName.FIRST_LETTER);
     first_letter.appendChild(element.root.createTextNode(first_text));
-    let next_node = element.root.createTextNode(next_text);
+    const next_node = element.root.createTextNode(next_text);
     next_node.appendChild(element.root.createTextNode(next_text));
-    let base_node = first_text_node.nextSibling;
+    const base_node = first_text_node.nextSibling;
     target_parent.removeChild(first_text_node);
     target_parent.insertBefore(next_node, base_node);
     target_parent.insertBefore(first_letter, next_node);
