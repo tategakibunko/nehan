@@ -51,13 +51,12 @@ export class HtmlDocument {
     this.body.parent = this.documentElement;
     // console.timeEnd("html-parse");
 
+    // before css loading, initialize pseudo elements and set spec-styles to them.
     this.body.acceptEffectorAll(new PseudoElementInitializer(this.specStyleSheet.getPseudoRules()));
 
     // console.time("CssLoader.loadAll");
     CssLoader.loadAll(this.body);
     // console.timeEnd("CssLoader.loadAll");
-
-    // this.body.acceptEffectorAll(new ListMarkInitializer());
   }
 
   public createBodyGenerator(): BodyGenerator {
