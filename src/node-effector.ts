@@ -123,47 +123,47 @@ export class PseudoElementInitializer implements NodeEffector {
   }
 
   private addFirstLine(element: HtmlElement): HtmlElement | null {
-    const first_line = element.root.createElement(PseudoElementTagName.FIRST_LINE);
-    const first_text_node = element.firstTextElement;
-    if (!first_text_node) {
+    const firstLine = element.root.createElement(PseudoElementTagName.FIRST_LINE);
+    const firstTextNode = element.firstTextElement;
+    if (!firstTextNode) {
       return null;
     }
-    const target_parent = first_text_node.parent;
-    if (!target_parent) {
+    const targetParent = firstTextNode.parent;
+    if (!targetParent) {
       return null;
     }
-    first_line.appendChild(first_text_node);
-    target_parent.replaceChild(first_line, first_text_node);
-    return first_line;
+    firstLine.appendChild(firstTextNode);
+    targetParent.replaceChild(firstLine, firstTextNode);
+    return firstLine;
   }
 
   private addFirstLetter(element: HtmlElement): HtmlElement | null {
-    const first_text_node = element.firstTextElement;
-    if (!first_text_node) {
+    const firstTextNode = element.firstTextElement;
+    if (!firstTextNode) {
       return null;
     }
-    const target_parent = first_text_node.parent;
-    if (!target_parent) {
+    const targetParent = firstTextNode.parent;
+    if (!targetParent) {
       return null;
     }
-    const text = first_text_node.textContent;
-    const trim_text = text.trim();
-    const target_text = (trim_text.length > 1) ? trim_text : text;
-    const first_text = target_text.substring(0, 1);
-    const next_text = text.substring(1);
-    const first_letter = element.root.createElement(PseudoElementTagName.FIRST_LETTER);
-    first_letter.appendChild(element.root.createTextNode(first_text));
-    const next_node = element.root.createTextNode(next_text);
-    next_node.appendChild(element.root.createTextNode(next_text));
-    const base_node = first_text_node.nextSibling;
-    target_parent.removeChild(first_text_node);
-    target_parent.insertBefore(next_node, base_node);
-    target_parent.insertBefore(first_letter, next_node);
-    return first_letter;
+    const text = firstTextNode.textContent;
+    const trimText = text.trim();
+    const target_text = (trimText.length > 1) ? trimText : text;
+    const firstText = target_text.substring(0, 1);
+    const nextText = text.substring(1);
+    const firstLetter = element.root.createElement(PseudoElementTagName.FIRST_LETTER);
+    firstLetter.appendChild(element.root.createTextNode(firstText));
+    const nextNode = element.root.createTextNode(nextText);
+    nextNode.appendChild(element.root.createTextNode(nextText));
+    const baseNode = firstTextNode.nextSibling;
+    targetParent.removeChild(firstTextNode);
+    targetParent.insertBefore(nextNode, baseNode);
+    targetParent.insertBefore(firstLetter, nextNode);
+    return firstLetter;
   }
 
-  private addPseudoElement(element: HtmlElement, pe_tag_name: string): HtmlElement | null {
-    switch (pe_tag_name) {
+  private addPseudoElement(element: HtmlElement, peTagName: string): HtmlElement | null {
+    switch (peTagName) {
       case PseudoElementTagName.MARKER:
         return this.addMarker(element);
       case PseudoElementTagName.BEFORE:
@@ -175,7 +175,7 @@ export class PseudoElementInitializer implements NodeEffector {
       case PseudoElementTagName.FIRST_LINE:
         return this.addFirstLine(element);
     }
-    throw new Error("undefined pseudo element:" + pe_tag_name);
+    throw new Error("undefined pseudo element:" + peTagName);
   }
 
   visit(element: HtmlElement) {
