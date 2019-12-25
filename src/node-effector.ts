@@ -22,8 +22,6 @@ import {
   ReplacedElement,
   PhysicalSize,
   WritingMode,
-  ListStyle,
-  SpaceChar,
 } from './public-api'
 
 // treat side-effect
