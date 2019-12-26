@@ -13,10 +13,10 @@ import {
 // url - https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration
 export class CssStyleDeclaration {
   private styles: Map<string, string>; // (css_property, CssSpecifiedValue) set
-  private dynamicStyles: DynamicStyle []; // dynamically declared style (function)
-  private domCallbacks: DomCallback []; // @oncreate function for dom creation.
+  private dynamicStyles: DynamicStyle[]; // dynamically declared style (function)
+  private domCallbacks: DomCallback[]; // @oncreate function for dom creation.
 
-  constructor(){
+  constructor() {
     this.styles = new Map<string, string>();
     this.dynamicStyles = [];
     this.domCallbacks = [];
@@ -28,7 +28,7 @@ export class CssStyleDeclaration {
       this.domCallbacks.length === 0;
   }
 
-  public callDomCallbacks(box: LogicalBox, dom: HTMLElement){
+  public callDomCallbacks(box: LogicalBox, dom: HTMLElement) {
     this.domCallbacks.forEach(callback => callback.call(box, dom));
   }
 
@@ -39,7 +39,7 @@ export class CssStyleDeclaration {
   public setProperty(prop: string, value: string): CssStyleDeclaration {
     // Notice that declaration is many if css is shorthanded.
     let css_prop = new CssProp(prop);
-    let css_text = new CssText({prop:css_prop.value, value:value});
+    let css_text = new CssText({ prop: css_prop.value, value: value });
     let declrs = CssParser.parseDeclaration(css_prop, css_text);
     return declrs.reduce((acm, declr) => {
       acm.styles.set(declr.prop, declr.value);
@@ -83,7 +83,7 @@ export class CssStyleDeclaration {
   }
 
   public getDynamicStyle(element: HtmlElement, parent_ctx?: FlowContext):
-  CssStyleDeclaration {
+    CssStyleDeclaration {
     return this.dynamicStyles.reduce((style, dynamic) => {
       let dynamic_style = dynamic.call(element, parent_ctx) || {};
       return style.mergeFrom(dynamic_style);

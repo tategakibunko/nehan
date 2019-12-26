@@ -3,7 +3,7 @@ import {
   CssCascade,
 } from "./public-api";
 
-export type PositionValue = "static" | "relative" | "absolute"
+export type PositionValue = "static" | "relative" | "absolute" | "fixed"
 
 export class Position {
   public value: PositionValue;
@@ -27,5 +27,9 @@ export class Position {
 
   public isStatic(): boolean {
     return this.value === "static";
+  }
+
+  public isFixed(): boolean {
+    return this.value === "fixed";
   }
 }

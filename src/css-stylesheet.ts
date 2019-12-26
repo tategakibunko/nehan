@@ -2,8 +2,9 @@ import {
   HtmlElement,
   CssRule,
   CssStyleDeclaration,
-  CssParser, CssRules, CssDeclarationBlock,
-  PseudoElement
+  CssParser,
+  CssRules,
+  CssDeclarationBlock,
 } from "./public-api";
 
 export class CssStyleSheet {
