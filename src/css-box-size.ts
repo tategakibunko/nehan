@@ -3,8 +3,8 @@ import {
   HtmlElement,
   CssLength,
   CssCascade,
+  LogicalPadding,
 } from "./public-api";
-import { LogicalPadding } from "./logical-padding";
 
 export class CssBoxSize extends CssLength {
   public boxDimension: BoxDimension;
