@@ -1,7 +1,6 @@
 import {
   Utils,
   HtmlElement,
-  FlowContext,
   CssLength,
   Config
 } from "./public-api";
@@ -22,7 +21,7 @@ export class CssLineHeight extends CssLength {
     return Config.defaultLineHeight;
   }
 
-  public computePercentSize(element: HtmlElement, parent_ctx?: FlowContext): number {
+  public computePercentSize(element: HtmlElement): number {
     let percent = this.floatValue;
     let font_size = element.computedStyle.getPropertyValue("font-size");
     if (!font_size) {
