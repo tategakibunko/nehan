@@ -1,4 +1,5 @@
 import {
+  CssLength,
   LogicalBox,
   LogicalBorderStyle,
   LogicalBorderWidth,
@@ -8,7 +9,7 @@ import {
   NativeStyleMap,
   PropValue,
   CssText,
-  CssLength,
+  // CssLength,
 } from "./public-api";
 
 export interface LogicalBorderValue {
@@ -121,7 +122,7 @@ export class LogicalBorder {
     if (LogicalBorderWidth.keywords.indexOf(value) >= 0) {
       return "width";
     }
-    if (new CssLength(value).hasUnit()) {
+    if (CssLength.hasUnit(value)) {
       return "width";
     }
     return "color";

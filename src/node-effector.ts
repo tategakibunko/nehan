@@ -1,27 +1,16 @@
 import {
-  Config,
   HtmlElement,
   Display,
+  CssLength,
   CssRule,
   CssCascade,
   CssParser,
-  CssFontSize,
-  CssEdgeSize,
-  CssBoxSize,
-  CssPhysicalBoxSize,
-  CssBorderWidth,
-  CssLineHeight,
-  CssPosition,
-  LogicalSize,
-  LogicalEdgeDirection,
   LogicalEdgeDirections,
   LogicalBorderRadius,
-  BoxDimension,
   PseudoElement,
   PseudoElementTagName,
-  ReplacedElement,
-  PhysicalSize,
-  WritingMode,
+  OptionalBoxLengthProps,
+  AutableBoxLengthProps,
 } from './public-api'
 
 // treat side-effect
@@ -252,9 +241,7 @@ export class CssComputedValueLoader implements NodeEffector {
   static instance = new CssComputedValueLoader();
 
   private getFontSize(element: HtmlElement): number {
-    let value = CssCascade.getValue(element, "font-size");
-    let size = new CssFontSize(value).computeSize(element);
-    return size;
+    return CssLength.computeFontSize(element);
   }
 
   /*
@@ -266,23 +253,7 @@ export class CssComputedValueLoader implements NodeEffector {
     So we have to keep 'line-height' string-typed.
   */
   private getLineHeightString(element: HtmlElement): string {
-    const specValue = CssCascade.getValue(element, "line-height");
-    const cssLineHeight = new CssLineHeight(specValue);
-    const size = cssLineHeight.computeSize(element);
-    if (cssLineHeight.hasUnit()) { // if there is some unit included, px value is already confirmed.
-      return size + "px";
-    }
-    return String(size); // remain float value
-  }
-
-  private getEdgeSize(element: HtmlElement, prop: string): number {
-    const value = CssCascade.getValue(element, prop);
-    return new CssEdgeSize(value, prop).computeSize(element);
-  }
-
-  private getBorderWidth(element: HtmlElement, prop: string): number {
-    const value = CssCascade.getValue(element, prop);
-    return new CssBorderWidth(value, prop).computeSize(element);
+    return CssLength.computeLineHeight(element);
   }
 
   private setCascadedValue(element: HtmlElement, prop: string): string {
@@ -301,31 +272,26 @@ export class CssComputedValueLoader implements NodeEffector {
     element.computedStyle.setProperty("line-height", lineHeightStr);
   }
 
-  // If value is 'auto', leave it as is.
-  // If value is not 'auto', use it as 'computed value',
-  // In layouting phase, the value may be different depending on the box constraints(called 'used value').
+  private setBoxLength(element: HtmlElement, prop: string) {
+    const size = CssLength.computeBoxLength(element, prop);
+    element.computedStyle.setProperty(prop, size + "px");
+  }
+
   private setMargin(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      const prop = `margin-${direction}`;
-      const value = CssCascade.getValue(element, `margin-${direction}`);
-      const computedValue = value === "auto" ? value : new CssEdgeSize(value, direction).computeSize(element) + "px";
-      element.computedStyle.setProperty(prop, computedValue);
+      this.setAutableBoxLength(element, `margin-${direction}` as AutableBoxLengthProps);
     });
   }
 
   private setPadding(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      const prop = `padding-${direction}`;
-      const size = this.getEdgeSize(element, prop);
-      element.computedStyle.setProperty(prop, size + "px");
+      this.setBoxLength(element, `padding-${direction}`);
     });
   }
 
   private setBorderWidth(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      const prop = `border-${direction}-width`;
-      const size = this.getBorderWidth(element, prop);
-      element.computedStyle.setProperty(prop, size + "px");
+      this.setBoxLength(element, `border-${direction}-width`);
     });
   }
 
@@ -348,63 +314,28 @@ export class CssComputedValueLoader implements NodeEffector {
   private setBorderRadius(element: HtmlElement) {
     LogicalBorderRadius.corners.forEach((corner: string) => {
       const prop = `border-${corner}-radius`;
-      const size = this.getEdgeSize(element, prop);
+      // [TODO] CssLength.computeBorderRadiusLength(element, prop)
+      const size = CssLength.computeBoxLength(element, prop);
       element.computedStyle.setProperty(prop, size + "px");
     });
   }
 
-  private setMeasure(element: HtmlElement) {
-    const value = CssCascade.getValue(element, "measure");
-    const computedValue = (value === "auto") ? value : new CssBoxSize(value, "measure").computeSize(element) + "px";
-    element.computedStyle.setProperty("measure", computedValue);
+  private setPosition(element: HtmlElement) {
+    LogicalEdgeDirections.forEach(direction => {
+      this.setAutableBoxLength(element, direction);
+    });
   }
 
-  private setExtent(element: HtmlElement) {
-    const value = CssCascade.getValue(element, "measure");
-    const computedValue = (value === "auto") ? value : new CssBoxSize(value, "extent").computeSize(element) + "px";
-    element.computedStyle.setProperty("extent", computedValue);
+  private setAutableBoxLength(element: HtmlElement, prop: AutableBoxLengthProps) {
+    const size = CssLength.computeAutableBoxLength(element, prop);
+    const value = (size === "auto") ? size : size + "px";
+    element.computedStyle.setProperty(prop, value);
   }
 
-  private setMinMeasure(element: HtmlElement) {
-    const value = CssCascade.getValue(element, "min-measure");
-    const computedValue = (value === "none") ? value : new CssBoxSize(value, "measure").computeSize(element) + "px";
-    element.computedStyle.setProperty("min-measure", computedValue);
-  }
-
-  private setMaxMeasure(element: HtmlElement) {
-    const value = CssCascade.getValue(element, "max-measure");
-    const computedValue = (value === "none") ? value : new CssBoxSize(value, "measure").computeSize(element) + "px";
-    element.computedStyle.setProperty("max-measure", computedValue);
-  }
-
-  private setMinExtent(element: HtmlElement) {
-    const value = CssCascade.getValue(element, "min-extent");
-    const computedValue = (value === "none") ? value : new CssBoxSize(value, "extent").computeSize(element) + "px";
-    element.computedStyle.setProperty("min-extent", computedValue);
-  }
-
-  private setMaxExtent(element: HtmlElement) {
-    const value = CssCascade.getValue(element, "max-extent");
-    const computedValue = (value === "none") ? value : new CssBoxSize(value, "extent").computeSize(element) + "px";
-    element.computedStyle.setProperty("max-extent", computedValue);
-  }
-
-  private setWidth(element: HtmlElement, writingMode: WritingMode) {
-    const value = CssCascade.getValue(element, "width");
-    const computedValue = (value === "auto") ? value : new CssPhysicalBoxSize(value, "width", writingMode).computeSize(element) + "px";
-    element.computedStyle.setProperty("width", computedValue);
-  }
-
-  private setHeight(element: HtmlElement, writingMode: WritingMode) {
-    const value = CssCascade.getValue(element, "height");
-    const computedValue = (value === "auto") ? value : new CssPhysicalBoxSize(value, "height", writingMode).computeSize(element) + "px";
-    element.computedStyle.setProperty("height", computedValue);
-  }
-
-  private setPosition(element: HtmlElement, direction: LogicalEdgeDirection) {
-    const value = CssCascade.getValue(element, direction);
-    const computedValue = (value === "auto") ? value : new CssPosition(value, direction).computeSize(element) + "px";
-    element.computedStyle.setProperty(direction, computedValue);
+  private setOptionalBoxLength(element: HtmlElement, prop: OptionalBoxLengthProps) {
+    const size = CssLength.computeOptionalBoxLength(element, prop);
+    const value = (size === "none") ? size : size + "px";
+    element.computedStyle.setProperty(prop, value);
   }
 
   visit(element: HtmlElement) {
@@ -417,8 +348,6 @@ export class CssComputedValueLoader implements NodeEffector {
       return;
     }
     this.setCascadedValue(element, "writing-mode");
-    const writingMode = WritingMode.load(element);
-
     this.setFontSize(element);
     this.setLineHeight(element);
 
@@ -428,18 +357,15 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setBorderColor(element);
     this.setBorderRadius(element);
     this.setMargin(element);
-    this.setMeasure(element);
-    this.setExtent(element);
-    this.setMinMeasure(element);
-    this.setMaxMeasure(element);
-    this.setMinExtent(element);
-    this.setMaxExtent(element);
-    this.setWidth(element, writingMode);
-    this.setHeight(element, writingMode);
-    this.setPosition(element, "before");
-    this.setPosition(element, "end");
-    this.setPosition(element, "after");
-    this.setPosition(element, "start");
+    this.setPosition(element);
+    this.setAutableBoxLength(element, "measure");
+    this.setAutableBoxLength(element, "extent");
+    this.setAutableBoxLength(element, "width");
+    this.setAutableBoxLength(element, "height");
+    this.setOptionalBoxLength(element, "min-measure");
+    this.setOptionalBoxLength(element, "max-measure");
+    this.setOptionalBoxLength(element, "min-extent");
+    this.setOptionalBoxLength(element, "max-extent");
 
     this.setCascadedValue(element, "float");
     this.setCascadedValue(element, "font-family");

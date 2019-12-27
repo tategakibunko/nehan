@@ -37,10 +37,10 @@ export enum FontSizeKeywordRelative {
   LARGER = "larger"
 }
 
-export let FontSizeKeywords = Utils.Enum.toValueArray(FontSizeKeyword)
-export let FontSizeKeywordsRelative = Utils.Enum.toValueArray(FontSizeKeywordRelative)
+export const FontSizeKeywords = Utils.Enum.toValueArray(FontSizeKeyword)
+export const FontSizeKeywordsRelative = Utils.Enum.toValueArray(FontSizeKeywordRelative)
 
-export let FontSizeKeywordSize: { [keyword: string]: number } = {
+export const FontSizeKeywordSize: { [keyword: string]: number } = {
   "xx-small": 8,
   "x-small": 10,
   "small": 13,
@@ -50,7 +50,7 @@ export let FontSizeKeywordSize: { [keyword: string]: number } = {
   "xx-large": 33
 }
 
-export let FontSizeKeywordRelativeSize: { [keyword: string]: string } = {
+export const FontSizeKeywordRelativeSize: { [keyword: string]: string } = {
   "smaller": "0.8em",
   "larger": "1.2em",
 }
