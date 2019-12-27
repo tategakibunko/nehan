@@ -57,8 +57,8 @@ test("body.measure", () => {
 
 test("body.fontSize", () => {
   expect(body.computedStyle.getPropertyValue("font-size")).toBe("20px");
-  expect(p_foo.computedStyle.getPropertyValue("font-size")).toBe("10px");
-  expect(div_one.computedStyle.getPropertyValue("font-size")).toBe("20px");
+  expect(p_foo!.computedStyle.getPropertyValue("font-size")).toBe("10px");
+  expect(div_one!.computedStyle.getPropertyValue("font-size")).toBe("20px");
 });
 
 test("body.margin", () => {
@@ -69,27 +69,27 @@ test("body.margin", () => {
 });
 
 test("p.foo", () => {
-  expect(p_foo.computedStyle.getPropertyValue("font-size")).toBe("10px");
-  expect(p_foo.computedStyle.getPropertyValue("line-height")).toBe("20px");
+  expect(p_foo!.computedStyle.getPropertyValue("font-size")).toBe("10px");
+  expect(p_foo!.computedStyle.getPropertyValue("line-height")).toBe("20px");
 });
 
 test("div.one", () => {
-  expect(div_one.computedStyle.getPropertyValue("line-height")).toBe("1.5");
+  expect(div_one!.computedStyle.getPropertyValue("line-height")).toBe("1.5");
 });
 
 test("div.two", () => {
-  expect(div_two.computedStyle.getPropertyValue("line-height")).toBe("1.5");
+  expect(div_two!.computedStyle.getPropertyValue("line-height")).toBe("1.5");
 });
 
 test("div.three", () => {
-  expect(div_three.computedStyle.getPropertyValue("line-height")).toBe("1.5");
+  expect(div_three!.computedStyle.getPropertyValue("line-height")).toBe("1.5");
 });
 
 test("div.hoge", () => {
-  expect(div_hoge.computedStyle.getPropertyValue("line-height")).toBe("40px");
+  expect(div_hoge!.computedStyle.getPropertyValue("line-height")).toBe("40px");
 });
 
 test("div.hige", () => {
-  expect(div_hige.computedStyle.getPropertyValue("line-height")).toBe("40px");
+  expect(div_hige!.computedStyle.getPropertyValue("line-height")).toBe("40px");
 });
 

@@ -120,13 +120,16 @@ export class CssLength {
   static computeLineHeight(element: HtmlElement, directValue?: string): string {
     const value = directValue || CssCascade.getValue(element, "line-height");
     if (value === "normal") {
-      return Config.defaultLineHeight + "px";
+      return String(Config.defaultLineHeight);
     }
-    if (value.endsWith("em") || value.endsWith("rem")) {
+    if (value.endsWith("em")) {
       const ratio = parseFloat(value);
       const fontSizeValue = CssCascade.getValue(element, "font-size");
       const baseSize = this.computeFontSize(element, fontSizeValue);
       return Math.floor(ratio * baseSize) + "px";
+    }
+    if (value.endsWith("rem")) {
+      return this.computeFontSize(element, value) + "px";
     }
     if (value.endsWith("px") || value.endsWith("pt")) {
       const fontSizeValue = CssCascade.getValue(element, "font-size");
