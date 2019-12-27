@@ -299,7 +299,9 @@ export class CssComputedValueLoader implements NodeEffector {
 
   private setBorderWidth(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
-      this.setBoxLength(element, `border-${direction}-width`);
+      const prop = `border-${direction}-width`;
+      const size = CssLength.computeBorderWidth(element, prop);
+      element.computedStyle.setProperty(prop, size + "px");
     });
   }
 
