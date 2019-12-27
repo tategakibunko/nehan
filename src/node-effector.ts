@@ -240,10 +240,6 @@ export class SpecifiedInlineValueLoader implements NodeEffector {
 export class CssComputedValueLoader implements NodeEffector {
   static instance = new CssComputedValueLoader();
 
-  private getFontSize(element: HtmlElement): number {
-    return CssLength.computeFontSize(element);
-  }
-
   /*
     Suppose that font-size is '10px'.
     
@@ -263,7 +259,7 @@ export class CssComputedValueLoader implements NodeEffector {
   }
 
   private setFontSize(element: HtmlElement) {
-    const fontSize = this.getFontSize(element);
+    const fontSize = CssLength.computeFontSize(element);
     element.computedStyle.setProperty("font-size", fontSize + "px");
   }
 
@@ -275,6 +271,18 @@ export class CssComputedValueLoader implements NodeEffector {
   private setBoxLength(element: HtmlElement, prop: string) {
     const size = CssLength.computeBoxLength(element, prop);
     element.computedStyle.setProperty(prop, size + "px");
+  }
+
+  private setAutableBoxLength(element: HtmlElement, prop: AutableBoxLengthProps) {
+    const size = CssLength.computeAutableBoxLength(element, prop);
+    const value = (size === "auto") ? size : size + "px";
+    element.computedStyle.setProperty(prop, value);
+  }
+
+  private setOptionalBoxLength(element: HtmlElement, prop: OptionalBoxLengthProps) {
+    const size = CssLength.computeOptionalBoxLength(element, prop);
+    const value = (size === "none") ? size : size + "px";
+    element.computedStyle.setProperty(prop, value);
   }
 
   private setMargin(element: HtmlElement) {
@@ -324,18 +332,6 @@ export class CssComputedValueLoader implements NodeEffector {
     LogicalEdgeDirections.forEach(direction => {
       this.setAutableBoxLength(element, direction);
     });
-  }
-
-  private setAutableBoxLength(element: HtmlElement, prop: AutableBoxLengthProps) {
-    const size = CssLength.computeAutableBoxLength(element, prop);
-    const value = (size === "auto") ? size : size + "px";
-    element.computedStyle.setProperty(prop, value);
-  }
-
-  private setOptionalBoxLength(element: HtmlElement, prop: OptionalBoxLengthProps) {
-    const size = CssLength.computeOptionalBoxLength(element, prop);
-    const value = (size === "none") ? size : size + "px";
-    element.computedStyle.setProperty(prop, value);
   }
 
   visit(element: HtmlElement) {
