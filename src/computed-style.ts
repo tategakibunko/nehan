@@ -109,7 +109,7 @@ export class ComputedStyle {
   static setBorderWidth(element: HtmlElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-width`;
-      const size = CssLength.computeBoxLength(element, prop);
+      const size = CssLength.computeBorderWidth(element, prop);
       element.computedStyle.setProperty(prop, size + "px");
     });
   }

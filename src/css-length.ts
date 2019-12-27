@@ -4,6 +4,8 @@ import {
   CssCascade,
   PositionValue,
   LogicalPadding,
+  LogicalBorderWidth,
+  LogicalBorderWidthKeywordSize,
   WritingMode,
   FontSizeKeywords,
   FontSizeKeywordsRelative,
@@ -225,5 +227,13 @@ export class CssLength {
       return Math.floor(ratio * baseSize / 100);
     }
     return parseFloat(value);
+  }
+
+  static computeBorderWidth(element: HtmlElement, prop: string, directValue?: string): number {
+    const value = directValue || CssCascade.getValue(element, prop);
+    if (LogicalBorderWidth.keywords.includes(value)) {
+      return LogicalBorderWidthKeywordSize[value];
+    }
+    return this.computeBoxLength(element, prop, value);
   }
 }

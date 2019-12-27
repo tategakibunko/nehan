@@ -1,8 +1,8 @@
-import * as Nehan from '../dist';
+import { HtmlDocument, CssLength } from '../dist';
 
 test("CssEdgeSize(border by keyword value)", () => {
-  let element = new Nehan.HtmlDocument("").createElement("div");
-  expect(new Nehan.CssBorderWidth("thin", "border-start-width").computeSize(element)).toBe(2);
-  expect(new Nehan.CssBorderWidth("medium", "border-start-width").computeSize(element)).toBe(4);
-  expect(new Nehan.CssBorderWidth("thick", "border-start-width").computeSize(element)).toBe(6);
+  let element = new HtmlDocument("").createElement("div");
+  expect(CssLength.computeBorderWidth(element, "border-start-width", "thin")).toBe(2);
+  expect(CssLength.computeBorderWidth(element, "border-start-width", "medium")).toBe(4);
+  expect(CssLength.computeBorderWidth(element, "border-start-width", "thick")).toBe(6);
 });
