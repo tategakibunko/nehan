@@ -253,7 +253,7 @@ export class CssComputedValueLoader implements NodeEffector {
   }
 
   private setCascadedValue(element: HtmlElement, prop: string): string {
-    let value = CssCascade.getValue(element, prop);
+    const value = CssCascade.getValue(element, prop);
     element.computedStyle.setProperty(prop, value);
     return value;
   }
@@ -338,9 +338,8 @@ export class CssComputedValueLoader implements NodeEffector {
     if (element.isTextElement()) {
       return;
     }
-    this.setCascadedValue(element, "display");
-    const display = Display.load(element);
-    if (display.isNone()) {
+    const display = this.setCascadedValue(element, "display");
+    if (display === "none") {
       return;
     }
     this.setCascadedValue(element, "writing-mode");
