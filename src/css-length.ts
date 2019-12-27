@@ -128,12 +128,8 @@ export class CssLength {
       const baseSize = this.computeFontSize(element, fontSizeValue);
       return Math.floor(ratio * baseSize) + "px";
     }
-    if (value.endsWith("rem")) {
-      return this.computeFontSize(element, value) + "px";
-    }
-    if (value.endsWith("px") || value.endsWith("pt")) {
-      const fontSizeValue = CssCascade.getValue(element, "font-size");
-      return this.computeFontSize(element, fontSizeValue) + "px"
+    if (value.endsWith("rem") || value.endsWith("px") || value.endsWith("pt")) {
+      return this.computeFontSize(element, value) + "px"
     }
     if (value.endsWith("vw") || value.endsWith("vh")) {
       return this.computeBoxLength(element, "line-height", value) + "px";
