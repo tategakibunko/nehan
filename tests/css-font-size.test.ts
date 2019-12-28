@@ -1,21 +1,20 @@
-import * as Nehan from '../dist';
+import { HtmlElement, HtmlDocument, CssLength } from '../dist';
 
 test("CssFontSize(absolute size)", () => {
-  let doc = new Nehan.HtmlDocument("dummy");
+  let doc = new HtmlDocument("dummy");
   let element = doc.createElement("div");
-  // let element = new Nehan.HtmlElement("div", doc);
-  expect(new Nehan.CssFontSize("xx-small").computeSize(element)).toBe(8);
-  expect(new Nehan.CssFontSize("x-small").computeSize(element)).toBe(10);
-  expect(new Nehan.CssFontSize("small").computeSize(element)).toBe(13);
-  expect(new Nehan.CssFontSize("medium").computeSize(element)).toBe(16);
-  expect(new Nehan.CssFontSize("large").computeSize(element)).toBe(18);
-  expect(new Nehan.CssFontSize("x-large").computeSize(element)).toBe(24);
-  expect(new Nehan.CssFontSize("xx-large").computeSize(element)).toBe(33);
+  expect(CssLength.computeFontSize(element, "xx-small")).toBe(8);
+  expect(CssLength.computeFontSize(element, "x-small")).toBe(10);
+  expect(CssLength.computeFontSize(element, "small")).toBe(13);
+  expect(CssLength.computeFontSize(element, "medium")).toBe(16);
+  expect(CssLength.computeFontSize(element, "large")).toBe(18);
+  expect(CssLength.computeFontSize(element, "x-large")).toBe(24);
+  expect(CssLength.computeFontSize(element, "xx-large")).toBe(33);
 });
 
 test("CssFontSize(relative size)", () => {
-  let doc = new Nehan.HtmlDocument("<div>foo</div>");
+  let doc = new HtmlDocument("<body style='font-size:16px'><div>foo</div></div>");
   let div = doc.querySelector("div");
-  expect(new Nehan.CssFontSize("smaller").computeSize(div)).toBe(Math.floor(0.8 * 16));
-  expect(new Nehan.CssFontSize("larger").computeSize(div)).toBe(Math.floor(1.2 * 16));
+  expect(CssLength.computeFontSize(div!, "smaller")).toBe(Math.floor(0.8 * 16));
+  expect(CssLength.computeFontSize(div!, "larger")).toBe(Math.floor(1.2 * 16));
 });
