@@ -7,7 +7,7 @@ test("CssParser.parseInlineStyle", () => {
 
 test("CssParser macro1", () => {
   const rule = Nehan.CssParser.parseRule("h1", {
-    "font-size": (s) => { return "30px" }
+    "font-size": (s: any) => { return "30px" }
   })[0];
   expect(rule.getPropertyValue("font-size")).toBe("30px");
 });
@@ -15,7 +15,7 @@ test("CssParser macro1", () => {
 test("CssParser !dynamic", () => {
   const rule = Nehan.CssParser.parseRule("h1", {
     "font-size": "30px",
-    "!dynamic": (context) => {
+    "!dynamic": (context: any) => {
       return { "font-size": "100px" };
     }
   })[0];
@@ -195,64 +195,64 @@ test("border-radius(shorthand)", () => {
   const rule1 = Nehan.CssParser.parseRule("*", {
     "border-radius": "1 2 3 4/5 6 7 8"
   })[0];
-  expect(rule1.getPropertyValue("border-before-start")).toBe("1 5");
-  expect(rule1.getPropertyValue("border-before-end")).toBe("2 6");
-  expect(rule1.getPropertyValue("border-after-end")).toBe("3 7");
-  expect(rule1.getPropertyValue("border-after-start")).toBe("4 8");
+  expect(rule1.getPropertyValue("border-before-start-radius")).toBe("1 5");
+  expect(rule1.getPropertyValue("border-before-end-radius")).toBe("2 6");
+  expect(rule1.getPropertyValue("border-after-end-radius")).toBe("3 7");
+  expect(rule1.getPropertyValue("border-after-start-radius")).toBe("4 8");
 
   const rule2 = Nehan.CssParser.parseRule("*", {
     "border-radius": "1 2 3 4/5"
   })[0];
-  expect(rule2.getPropertyValue("border-before-start")).toBe("1 5");
-  expect(rule2.getPropertyValue("border-before-end")).toBe("2 5");
-  expect(rule2.getPropertyValue("border-after-end")).toBe("3 5");
-  expect(rule2.getPropertyValue("border-after-start")).toBe("4 5");
+  expect(rule2.getPropertyValue("border-before-start-radius")).toBe("1 5");
+  expect(rule2.getPropertyValue("border-before-end-radius")).toBe("2 5");
+  expect(rule2.getPropertyValue("border-after-end-radius")).toBe("3 5");
+  expect(rule2.getPropertyValue("border-after-start-radius")).toBe("4 5");
 
   const rule3 = Nehan.CssParser.parseRule("*", {
     "border-radius": "1 2 3 4/5 6"
   })[0];
-  expect(rule3.getPropertyValue("border-before-start")).toBe("1 5");
-  expect(rule3.getPropertyValue("border-before-end")).toBe("2 6");
-  expect(rule3.getPropertyValue("border-after-end")).toBe("3 5");
-  expect(rule3.getPropertyValue("border-after-start")).toBe("4 6");
+  expect(rule3.getPropertyValue("border-before-start-radius")).toBe("1 5");
+  expect(rule3.getPropertyValue("border-before-end-radius")).toBe("2 6");
+  expect(rule3.getPropertyValue("border-after-end-radius")).toBe("3 5");
+  expect(rule3.getPropertyValue("border-after-start-radius")).toBe("4 6");
 
   const rule4 = Nehan.CssParser.parseRule("*", {
     "border-radius": "1 2 3 4/5 6 7"
   })[0];
-  expect(rule4.getPropertyValue("border-before-start")).toBe("1 5");
-  expect(rule4.getPropertyValue("border-before-end")).toBe("2 6");
-  expect(rule4.getPropertyValue("border-after-end")).toBe("3 6");
-  expect(rule4.getPropertyValue("border-after-start")).toBe("4 7");
+  expect(rule4.getPropertyValue("border-before-start-radius")).toBe("1 5");
+  expect(rule4.getPropertyValue("border-before-end-radius")).toBe("2 6");
+  expect(rule4.getPropertyValue("border-after-end-radius")).toBe("3 6");
+  expect(rule4.getPropertyValue("border-after-start-radius")).toBe("4 7");
 
   const rule5 = Nehan.CssParser.parseRule("*", {
     "border-radius": "1 2 3 4"
   })[0];
-  expect(rule5.getPropertyValue("border-before-start")).toBe("1 1");
-  expect(rule5.getPropertyValue("border-before-end")).toBe("2 2");
-  expect(rule5.getPropertyValue("border-after-end")).toBe("3 3");
-  expect(rule5.getPropertyValue("border-after-start")).toBe("4 4");
+  expect(rule5.getPropertyValue("border-before-start-radius")).toBe("1 1");
+  expect(rule5.getPropertyValue("border-before-end-radius")).toBe("2 2");
+  expect(rule5.getPropertyValue("border-after-end-radius")).toBe("3 3");
+  expect(rule5.getPropertyValue("border-after-start-radius")).toBe("4 4");
 
   const rule6 = Nehan.CssParser.parseRule("*", {
     "border-radius": "1 2 3"
   })[0];
-  expect(rule6.getPropertyValue("border-before-start")).toBe("1 1");
-  expect(rule6.getPropertyValue("border-before-end")).toBe("2 2");
-  expect(rule6.getPropertyValue("border-after-end")).toBe("2 2");
-  expect(rule6.getPropertyValue("border-after-start")).toBe("3 3");
+  expect(rule6.getPropertyValue("border-before-start-radius")).toBe("1 1");
+  expect(rule6.getPropertyValue("border-before-end-radius")).toBe("2 2");
+  expect(rule6.getPropertyValue("border-after-end-radius")).toBe("2 2");
+  expect(rule6.getPropertyValue("border-after-start-radius")).toBe("3 3");
 
   const rule7 = Nehan.CssParser.parseRule("*", {
     "border-radius": "1 2"
   })[0];
-  expect(rule7.getPropertyValue("border-before-start")).toBe("1 1");
-  expect(rule7.getPropertyValue("border-before-end")).toBe("2 2");
-  expect(rule7.getPropertyValue("border-after-end")).toBe("1 1");
-  expect(rule7.getPropertyValue("border-after-start")).toBe("2 2");
+  expect(rule7.getPropertyValue("border-before-start-radius")).toBe("1 1");
+  expect(rule7.getPropertyValue("border-before-end-radius")).toBe("2 2");
+  expect(rule7.getPropertyValue("border-after-end-radius")).toBe("1 1");
+  expect(rule7.getPropertyValue("border-after-start-radius")).toBe("2 2");
 
   const rule8 = Nehan.CssParser.parseRule("*", {
     "border-radius": "1"
   })[0];
-  expect(rule8.getPropertyValue("border-before-start")).toBe("1 1");
-  expect(rule8.getPropertyValue("border-before-end")).toBe("1 1");
-  expect(rule8.getPropertyValue("border-after-end")).toBe("1 1");
-  expect(rule8.getPropertyValue("border-after-start")).toBe("1 1");
+  expect(rule8.getPropertyValue("border-before-start-radius")).toBe("1 1");
+  expect(rule8.getPropertyValue("border-before-end-radius")).toBe("1 1");
+  expect(rule8.getPropertyValue("border-after-end-radius")).toBe("1 1");
+  expect(rule8.getPropertyValue("border-after-start-radius")).toBe("1 1");
 });
