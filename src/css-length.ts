@@ -200,7 +200,7 @@ export class CssLength {
     return this.computeBoxLength(element, prop, value);
   }
 
-  // padding, border
+  // padding, border-width, border-radius
   static computeBoxLength(element: HtmlElement, prop: string, directValue?: string): number {
     const value = directValue || CssCascade.getValue(element, prop);
     if (value.endsWith("em")) {
@@ -235,5 +235,9 @@ export class CssLength {
       return LogicalBorderWidthKeywordSize[value];
     }
     return this.computeBoxLength(element, prop, value);
+  }
+
+  static computeBorderRadius(element: HtmlElement, prop: string, directValue?: string): number {
+    throw new Error("todo");
   }
 }

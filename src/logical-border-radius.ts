@@ -37,19 +37,19 @@ export class PhysicalBorderRadius {
   public bottomRight: number;
   public bottomLeft: number;
 
-  constructor(values: PhysicalBorderRadiusValue){
+  constructor(values: PhysicalBorderRadiusValue) {
     this.topLeft = values.topLeft;
     this.topRight = values.topRight;
     this.bottomRight = values.bottomRight;
     this.bottomLeft = values.bottomLeft;
   }
 
-  public get items(): PropValue<string, number> [] {
+  public get items(): PropValue<string, number>[] {
     return [
-      {prop:"top-left", value:this.topLeft},
-      {prop:"top-right", value:this.topRight},
-      {prop:"bottom-right", value:this.bottomRight},
-      {prop:"bottom-left", value:this.bottomLeft}
+      { prop: "top-left", value: this.topLeft },
+      { prop: "top-right", value: this.topRight },
+      { prop: "bottom-right", value: this.bottomRight },
+      { prop: "bottom-left", value: this.bottomLeft }
     ];
   }
 }
@@ -59,10 +59,10 @@ export class LogicalBorderRadius {
   public beforeEnd: number;
   public afterEnd: number;
   public afterStart: number;
-  static corners: string [] = Utils.Enum.toValueArray(LogicalBorderRadiusCorner);
+  static corners: string[] = Utils.Enum.toValueArray(LogicalBorderRadiusCorner);
 
   // Is it simpler if values are 'number []'?
-  constructor(values: LogicalBorderRadiusValue){
+  constructor(values: LogicalBorderRadiusValue) {
     this.beforeStart = values.beforeStart;
     this.beforeEnd = values.beforeEnd;
     this.afterEnd = values.afterEnd;
@@ -84,10 +84,10 @@ export class LogicalBorderRadius {
 
   static get noneValue(): LogicalBorderRadiusValue {
     return {
-      beforeStart:0,
-      beforeEnd:0,
-      afterEnd:0,
-      afterStart:0
+      beforeStart: 0,
+      beforeEnd: 0,
+      afterEnd: 0,
+      afterStart: 0
     };
   }
 
@@ -101,14 +101,14 @@ export class LogicalBorderRadius {
     return new LogicalBorderRadius(values);
   }
 
-  static parseShorthand(css_text: CssText): PropValue<string, string> [] {
+  static parseShorthand(css_text: CssText): PropValue<string, string>[] {
     let hvs = CssText.getValue4D2(css_text.value);
     let h4 = hvs[0], v4 = hvs[1];
     return [
-      {prop:"border-before-start-radius", value:[h4[0], v4[0]].join(" ")},
-      {prop:"border-before-end-radius",   value:[h4[1], v4[1]].join(" ")},
-      {prop:"border-after-end-radius",    value:[h4[2], v4[2]].join(" ")},
-      {prop:"border-after-start-radius",  value:[h4[3], v4[3]].join(" ")}
+      { prop: "border-before-start-radius", value: [h4[0], v4[0]].join(" ") },
+      { prop: "border-before-end-radius", value: [h4[1], v4[1]].join(" ") },
+      { prop: "border-after-end-radius", value: [h4[2], v4[2]].join(" ") },
+      { prop: "border-after-start-radius", value: [h4[3], v4[3]].join(" ") }
     ];
   }
 
@@ -127,12 +127,12 @@ export class LogicalBorderRadius {
     return new PhysicalBorderRadius(values);
   }
 
-  public get items(): PropValue<string, number> [] {
+  public get items(): PropValue<string, number>[] {
     return [
-      {prop:"before-start", value:this.beforeStart},
-      {prop:"before-end", value:this.beforeEnd},
-      {prop:"after-end", value:this.afterEnd},
-      {prop:"after-start", value:this.afterStart}
+      { prop: "before-start", value: this.beforeStart },
+      { prop: "before-end", value: this.beforeEnd },
+      { prop: "after-end", value: this.afterEnd },
+      { prop: "after-start", value: this.afterStart }
     ];
   }
 
