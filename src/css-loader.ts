@@ -6,7 +6,7 @@ import {
   ComputedStyle,
   Config,
   PseudoElement,
-  MarginCollapse
+  MarginCollapse,
 } from "./public-api";
 
 export class CssLoader {

@@ -36,8 +36,9 @@ export let DefaultStyles: CssRules = {
   "base": {
   },
   /* deprecated
-     "basefont":{
-     },*/
+  "basefont": {
+  },
+  */
   "bdi": {
   },
   "bdo": {
@@ -53,10 +54,11 @@ export let DefaultStyles: CssRules = {
     "unicode-bidi": "bidi-override"
   },
   /* deprecated
-     "big":{
-     "display":"inline",
-     "font-size":"1.17em"
-     },*/
+  "big": {
+    "display": "inline",
+    "font-size": "1.17em"
+  },
+  */
   "blockquote": {
     "display": "block",
     "margin": "1.12em 40px"
@@ -73,10 +75,12 @@ export let DefaultStyles: CssRules = {
   "br": {
     "display": "inline"
   },
+  /*
   "br::before": {
     "content": "\A",
     "white-space": "pre-line"
   },
+  */
   "button": {
   },
   "canvas": {
@@ -86,11 +90,12 @@ export let DefaultStyles: CssRules = {
     "text-align": "center"
   },
   /* deprecated
-     "center":{
-     "display":"block",
-     "unicode-bidi":"embed",
-     "text-align":"center"
-     },*/
+  "center": {
+    "display": "block",
+    "unicode-bidi": "embed",
+    "text-align": "center"
+  },
+  */
   "cite": {
     "display": "inline",
     "font-style": "italic"
@@ -125,10 +130,11 @@ export let DefaultStyles: CssRules = {
   "dialog": {
   },
   /* deprecated
-     "dir":{
-     "display":"block",
-     "unicode-bidi":"embed"
-     },*/
+  "dir": {
+    "display": "block",
+    "unicode-bidi": "embed"
+  },
+  */
   "div": {
     "display": "block"
   },
@@ -160,9 +166,10 @@ export let DefaultStyles: CssRules = {
     "margin": "1em 40px"
   },
   /* deprecated
-     "font":{
-     "display":"inline"
-     },*/
+  "font": {
+    "display": "inline"
+  },
+  */
   "footer": {
     "display": "block"
   },
@@ -172,15 +179,15 @@ export let DefaultStyles: CssRules = {
     "margin-before": "0"
   },
   /* deprecated
-     "frame":{
-     "display":"block",
-     "unicode-bidi":"embed"
-     },*/
-  /* deprecated
-     "frameset":{
-     "display":"block",
-     "unicode-bidi":"embed"
-     },*/
+  "frame": {
+    "display": "block",
+    "unicode-bidi": "embed"
+  },
+  "frameset": {
+    "display": "block",
+    "unicode-bidi": "embed"
+  },
+  */
   "h1": {
     "display": "block",
     "text-align": "start",
@@ -340,9 +347,9 @@ export let DefaultStyles: CssRules = {
     "display": "none"
   },
   /* deprecated
-     "noframes":{
-     "display":"none",
-     },
+  "noframes": {
+    "display": "none",
+  },
   */
   "object": {
   },
@@ -414,10 +421,10 @@ export let DefaultStyles: CssRules = {
     "display": "ruby"
   },
   /* deprecated
-     "s":{
-     "display":"inline",
-     "text-decoration":"line-through"
-     },
+  "s": {
+    "display": "inline",
+    "text-decoration": "line-through"
+  },
   */
   "samp": {
     "display": "inline",
@@ -442,10 +449,10 @@ export let DefaultStyles: CssRules = {
     "display": "inline"
   },
   /* deprecated
-     "strike":{ 
-     "display":"inline",
-     "text-decoration":"line-through"
-     },
+  "strike": {
+    "display": "inline",
+    "text-decoration": "line-through"
+  },
   */
   "strong": {
     "display": "inline",
@@ -534,15 +541,13 @@ export let DefaultStyles: CssRules = {
   "track": {
   },
   /* deprecated
-     "tt":{
-     "display":"none"
-     },
-  */
-  /* deprecated
-     "u":{
-     "display":"inline",
-     "text-decoration":"underline"
-     },
+  "tt": {
+    "display": "none"
+  },
+  "u": {
+    "display": "inline",
+    "text-decoration": "underline"
+  },
   */
   "ul": {
     "display": "block",

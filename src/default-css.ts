@@ -270,11 +270,11 @@ let defaults: { [cssProp: string]: DefaultCssValue } = {
     inherit: false
   },
   "min-extent": {
-    initial: "0",
+    initial: "none",
     inherit: false
   },
   "min-measure": {
-    initial: "0", // ???
+    initial: "none",
     inherit: false
   },
   "overflow-wrap": {
@@ -389,6 +389,10 @@ let defaults: { [cssProp: string]: DefaultCssValue } = {
   },
   "visibility": {
     initial: "inherit",
+    inherit: false
+  },
+  "width": {
+    initial: "auto",
     inherit: false
   },
   "white-space": {
