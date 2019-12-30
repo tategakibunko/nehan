@@ -52,6 +52,7 @@ export class ComputedStyle {
       this.setPosition(element);
     }
 
+    this.setValue(element, "box-sizing");
     this.setValue(element, "font-family");
     this.setValue(element, "font-style");
     this.setValue(element, "font-weight");

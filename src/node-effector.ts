@@ -364,6 +364,7 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setOptionalBoxLength(element, "min-extent");
     this.setOptionalBoxLength(element, "max-extent");
 
+    this.setCascadedValue(element, "box-sizing");
     this.setCascadedValue(element, "float");
     this.setCascadedValue(element, "font-family");
     this.setCascadedValue(element, "font-style");
