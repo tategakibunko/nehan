@@ -7,6 +7,7 @@ import {
   Config,
   PseudoElement,
   MarginCollapse,
+  UsedRegionLoader,
 } from "./public-api";
 
 export class CssLoader {
@@ -41,6 +42,9 @@ export class CssLoader {
 
     // set computed-value to element.computedStyle
     ComputedStyle.setComputedValue(element);
+
+    // computed value -> used value
+    UsedRegionLoader.load(element);
 
     // [TODO] Deprecated in the future
     // set collapse value
