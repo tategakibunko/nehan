@@ -10,9 +10,10 @@ export class ContainingElement {
     let parent = element.parent;
     while (parent) {
       const display = parent.computedStyle.getPropertyValue("position");
-      if (display === "static") {
-        parent = parent.parent;
+      if (display !== "static") {
+        break;
       }
+      parent = parent.parent;
     }
     return parent || element.ownerDocument.body;
   }

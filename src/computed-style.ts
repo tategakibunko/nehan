@@ -143,8 +143,8 @@ export class ComputedStyle {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `margin-${direction}` as AutableBoxLengthProps;
       const computedValue = CssLength.computeAutableBoxLength(element, prop);
-      // [TODO] auto value must be replaced with used value.
       element.computedStyle.setProperty(prop, computedValue === "auto" ? "0" : computedValue + "px");
+      // element.computedStyle.setProperty(prop, computedValue === "auto" ? computedValue : computedValue + "px");
     });
   }
 
