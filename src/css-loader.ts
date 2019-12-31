@@ -8,6 +8,7 @@ import {
   PseudoElement,
   MarginCollapse,
   UsedRegionLoader,
+  CssComputedValueLoader,
 } from "./public-api";
 
 export class CssLoader {
@@ -41,16 +42,19 @@ export class CssLoader {
     element.style.mergeFrom(inline_style);
 
     // set computed-value to element.computedStyle
-    ComputedStyle.setComputedValue(element);
+    // ComputedStyle.setComputedValue(element);
+    element.acceptEffector(CssComputedValueLoader.instance);
 
     // computed value -> used value
     UsedRegionLoader.load(element);
 
+    /*
     // [TODO] Deprecated in the future
     // set collapse value
     if (Config.edgeSkipTags.indexOf(element.tagName) < 0) {
       MarginCollapse.collapse(element);
     }
+    */
   }
 
   static loadDynamic(element: HtmlElement, parent_ctx?: FlowContext): boolean {

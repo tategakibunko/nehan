@@ -1,4 +1,5 @@
 import {
+  Config,
   HtmlElement,
   Display,
   CssLength,
@@ -344,25 +345,39 @@ export class CssComputedValueLoader implements NodeEffector {
     if (display === "none") {
       return;
     }
+
+    if (Config.nonLayoutTags.includes(element.tagName)) {
+      return;
+    }
+
     this.setCascadedValue(element, "writing-mode");
     this.setFontSize(element);
     this.setLineHeight(element);
 
-    this.setPadding(element);
-    this.setBorderWidth(element);
-    this.setBorderStyle(element);
-    this.setBorderColor(element);
-    this.setBorderRadius(element);
-    this.setMargin(element);
-    this.setPosition(element);
-    this.setAutableBoxLength(element, "measure");
-    this.setAutableBoxLength(element, "extent");
-    this.setAutableBoxLength(element, "width");
-    this.setAutableBoxLength(element, "height");
-    this.setOptionalBoxLength(element, "min-measure");
-    this.setOptionalBoxLength(element, "max-measure");
-    this.setOptionalBoxLength(element, "min-extent");
-    this.setOptionalBoxLength(element, "max-extent");
+    if (Config.fontSizeOnlyTags.includes(element.tagName)) {
+      return;
+    }
+
+    if (!Config.edgeSkipTags.includes(element.tagName)) {
+      this.setPadding(element);
+      this.setBorderWidth(element);
+      this.setBorderStyle(element);
+      this.setBorderColor(element);
+      this.setBorderRadius(element);
+    }
+
+    if (!Config.boxSizeSkipTags.includes(element.tagName)) {
+      this.setMargin(element);
+      this.setPosition(element);
+      this.setAutableBoxLength(element, "measure");
+      this.setAutableBoxLength(element, "extent");
+      this.setAutableBoxLength(element, "width");
+      this.setAutableBoxLength(element, "height");
+      this.setOptionalBoxLength(element, "min-measure");
+      this.setOptionalBoxLength(element, "max-measure");
+      this.setOptionalBoxLength(element, "min-extent");
+      this.setOptionalBoxLength(element, "max-extent");
+    }
 
     this.setCascadedValue(element, "box-sizing");
     this.setCascadedValue(element, "float");
