@@ -19,16 +19,16 @@ export class DynamicStyle {
   }
 
   public call(element: HtmlElement, parentCtx?: FlowContext): CssStyleDeclaration {
-    let callbackCtx = new DynamicStyleContext({
+    const callbackCtx = new DynamicStyleContext({
       selector: this.selector,
       name: this.name,
       element: element,
       parentContext: parentCtx
     });
-    let callResult = this.callback(callbackCtx) || {};
+    const callResult = this.callback(callbackCtx) || {};
     if (typeof callResult === "string") {
-      let declr_block = { [this.name]: callResult };
-      return CssParser.parseDeclarationBlock(this.selector, declr_block);
+      const declrBlock = { [this.name]: callResult };
+      return CssParser.parseDeclarationBlock(this.selector, declrBlock);
     }
     return CssParser.parseDeclarationBlock(this.selector, callResult);
   }
