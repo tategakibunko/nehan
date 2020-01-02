@@ -58,7 +58,6 @@ export class LayoutGeneratorFactory {
       let line_break = LayoutControl.createLineBreak();
       return new ConstantGenerator(new ControlContext(element, parent_ctx, line_break));
     }
-    // CssLoader.load(element, parent_ctx);
     CssLoader.loadDynamic(element, parent_ctx);
     let display = Display.load(element);
     if (display.isInlineLevel()) {
