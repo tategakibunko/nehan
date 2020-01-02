@@ -39,10 +39,10 @@ export type CssRules = { [selector: string]: CssDeclarationBlock };
   and css_macro = (selector: string) -> css_text
 
   and dynamic_style = {
-  selector: string,
-  name: string,
-  element: HtmlElement,
-  parentContext: FlowContext
+    selector: string,
+    name: string,
+    element: HtmlElement,
+    parentContext: FlowContext
   } -> css_declr_block
 
   and dom_callback = {
