@@ -59,19 +59,19 @@ export type CssRules = { [selector: string]: CssDeclarationBlock };
       "!dynamic":(context: DynamicStyleContext) => {
         return {"font-size":"20px"};
       },
-    "@oncreate":(context: DomCallbackContext) => {
-      context.dom.onclick = () => {
-        alert("click!");
+      "@oncreate":(context: DomCallbackContext) => {
+        context.dom.onclick = () => {
+          alert("click!");
+        }
       }
-    }
-  },
-  "div.foo":{
-    "font-size":"1em",
-    // this is macro
-    "color":(selector: string) => {
-      return "red";
     },
-    "margin":"1em 2em"
+    "div.foo":{
+      "font-size":"1em",
+      // this is macro
+      "color":(selector: string) => {
+        return "red";
+      },
+      "margin":"1em 2em"
     }
   }
 */
@@ -79,10 +79,10 @@ export type CssRules = { [selector: string]: CssDeclarationBlock };
 export class CssParser {
   /*
     "font-size:1em; margin:1em" => [
-    {prop:"font-size",     value:"1em"}, // CssDeclaration
-    {prop:"margin-before", value:"1em"}, // CssDeclaration
-    ...
-    {prop:"margin-start",   value:"1em"} // CssDeclaration
+      {prop:"font-size",     value:"1em"}, // CssDeclaration
+      {prop:"margin-before", value:"1em"}, // CssDeclaration
+      ...
+      {prop:"margin-start",   value:"1em"} // CssDeclaration
     ]
   */
   static parseInlineStyle(inlineStyle: string): CssStyleDeclaration {
@@ -106,8 +106,8 @@ export class CssParser {
     notice that selector can be many if separated by comma.
 
     "selector1, selector2" -> [
-    CssRule(selector1, CssStyleDeclaration(("font-size", ..)),
-    CssRule(selector2, CssStyleDeclaration(("font-size", ..))
+      CssRule(selector1, CssStyleDeclaration(("font-size", ..)),
+      CssRule(selector2, CssStyleDeclaration(("font-size", ..))
     ]
   */
   static parseRule(selectorSrc: string, declrBlock: CssDeclarationBlock): CssRule[] {
@@ -187,12 +187,12 @@ export class CssParser {
 
     // this process is called 'Reification' in css.
     => [
-    {prop:"font-style",   value:"italic"},
-    {prop:"font-variant", value:"small-caps"},
-    {prop:"font-weight",  value:"bold"},
-    {prop:"font-size",    value:"1em"},
-    {prop:"line-height",  value:"1.5"},
-    {prop:"font-family",  value:"serif"}
+      {prop:"font-style",   value:"italic"},
+      {prop:"font-variant", value:"small-caps"},
+      {prop:"font-weight",  value:"bold"},
+      {prop:"font-size",    value:"1em"},
+      {prop:"line-height",  value:"1.5"},
+      {prop:"font-family",  value:"serif"}
     ]
   */
   static parseDeclaration(cssProp: CssProp, cssText: CssText): PropValue<string, string>[] {
