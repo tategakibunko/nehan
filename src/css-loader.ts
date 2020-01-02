@@ -3,8 +3,8 @@ import {
   FlowContext,
   Config,
   MarginCollapse,
-  SpecifiedValueLoader,
-  SpecifiedInlineValueLoader,
+  CssSpecifiedValueLoader,
+  CssSpecifiedInlineValueLoader,
   CssComputedValueLoader,
   CssUsedRegionLoader,
 } from "./public-api";
@@ -27,11 +27,11 @@ export class CssLoader {
     if (element.isTextElement()) {
       return;
     }
-    // set specified styles
-    element.acceptEffector(SpecifiedValueLoader.instance);
-    element.acceptEffector(SpecifiedInlineValueLoader.instance);
+    // set specified styles(normal + inline)
+    element.acceptEffector(CssSpecifiedValueLoader.instance);
+    element.acceptEffector(CssSpecifiedInlineValueLoader.instance);
 
-    // spec value -> computed value
+    // specified value -> computed value
     element.acceptEffector(CssComputedValueLoader.instance);
 
     // computed value -> used value
@@ -44,9 +44,9 @@ export class CssLoader {
     }
   }
 
-  static loadDynamic(element: HtmlElement, parent_ctx?: FlowContext): boolean {
+  static loadDynamic(element: HtmlElement, parentCtx?: FlowContext): boolean {
     // get new style by latest context.
-    let newStyle = element.style.getDynamicStyle(element, parent_ctx);
+    let newStyle = element.style.getDynamicStyle(element, parentCtx);
     if (newStyle.isEmpty()) {
       return false; // no update
     }
@@ -54,7 +54,7 @@ export class CssLoader {
     element.style.mergeFrom(newStyle);
 
     // inline style always win!
-    element.acceptEffector(SpecifiedInlineValueLoader.instance);
+    element.acceptEffector(CssSpecifiedInlineValueLoader.instance);
 
     // remove old value from current 'computed' styles.
     newStyle.forEach((key, value) => {

@@ -183,8 +183,8 @@ export class PseudoElementInitializer implements NodeEffector {
 }
 
 // Load specified value
-export class SpecifiedValueLoader implements NodeEffector {
-  static instance = new SpecifiedValueLoader();
+export class CssSpecifiedValueLoader implements NodeEffector {
+  static instance = new CssSpecifiedValueLoader();
   private constructor() { }
 
   visit(element: HtmlElement) {
@@ -197,9 +197,9 @@ export class SpecifiedValueLoader implements NodeEffector {
   }
 }
 
-// Load dynamic (specified) value 
-export class SpecifiedDynamicValueLoader implements NodeEffector {
-  static instance = new SpecifiedDynamicValueLoader();
+// Load dynamic (specified) value before layouting.
+export class CssSpecifiedDynamicValueLoader implements NodeEffector {
+  static instance = new CssSpecifiedDynamicValueLoader();
   private constructor() { }
 
   visit(element: HtmlElement) {
@@ -208,11 +208,9 @@ export class SpecifiedDynamicValueLoader implements NodeEffector {
   }
 }
 
-/*
-  Load inline style value after normal/dynamic value loaded.
-*/
-export class SpecifiedInlineValueLoader implements NodeEffector {
-  static instance = new SpecifiedInlineValueLoader();
+// Load inline style (specified) value.
+export class CssSpecifiedInlineValueLoader implements NodeEffector {
+  static instance = new CssSpecifiedInlineValueLoader();
   private constructor() { }
 
   visit(element: HtmlElement) {
@@ -222,9 +220,7 @@ export class SpecifiedInlineValueLoader implements NodeEffector {
   }
 }
 
-/*
-  Load computed value that can be calculated directly from specified value.
-*/
+// Load computed value that can be calculated directly from specified value.
 export class CssComputedValueLoader implements NodeEffector {
   static instance = new CssComputedValueLoader();
 
