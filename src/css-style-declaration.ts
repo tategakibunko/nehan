@@ -38,9 +38,9 @@ export class CssStyleDeclaration {
 
   public setProperty(prop: string, value: string): CssStyleDeclaration {
     // Notice that declaration is many if css is shorthanded.
-    let css_prop = new CssProp(prop);
-    let css_text = new CssText({ prop: css_prop.value, value: value });
-    let declrs = CssParser.parseDeclaration(css_prop, css_text);
+    let cssProp = new CssProp(prop);
+    let cssText = new CssText({ prop: cssProp.value, value: value });
+    let declrs = CssParser.parseDeclaration(cssProp, cssText);
     return declrs.reduce((acm, declr) => {
       acm.styles.set(declr.prop, declr.value);
       return acm;
@@ -82,11 +82,10 @@ export class CssStyleDeclaration {
     return this;
   }
 
-  public getDynamicStyle(element: HtmlElement, parent_ctx?: FlowContext):
-    CssStyleDeclaration {
+  public getDynamicStyle(element: HtmlElement, parentCtx?: FlowContext): CssStyleDeclaration {
     return this.dynamicStyles.reduce((style, dynamic) => {
-      let dynamic_style = dynamic.call(element, parent_ctx) || {};
-      return style.mergeFrom(dynamic_style);
+      let dynamicStyle = dynamic.call(element, parentCtx) || {};
+      return style.mergeFrom(dynamicStyle);
     }, new CssStyleDeclaration());
   }
 }

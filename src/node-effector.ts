@@ -182,18 +182,7 @@ export class PseudoElementInitializer implements NodeEffector {
   }
 }
 
-/*
-  CssLoader
-
-  element
-    .acceptNodeEffector(SpecifiedValueLoader.instance)
-    .acceptNodeEffector(ComputedValueLoader.instance)
-    .acceptNodeEffector(UsedValueLoader.instance)
-*/
-
-/*
-  Load cascading specified value.
-*/
+// Load specified value
 export class SpecifiedValueLoader implements NodeEffector {
   static instance = new SpecifiedValueLoader();
   private constructor() { }
@@ -208,9 +197,7 @@ export class SpecifiedValueLoader implements NodeEffector {
   }
 }
 
-/*
-  Load dynamic value after normal specified value loaded.
-*/
+// Load dynamic (specified) value 
 export class SpecifiedDynamicValueLoader implements NodeEffector {
   static instance = new SpecifiedDynamicValueLoader();
   private constructor() { }

@@ -65,7 +65,7 @@ export class CssLoader {
     element.acceptEffector(CssComputedValueLoader.instance);
 
     // computed value -> used value
-    element.acceptEffector(UsedRegionLoader.instance);
+    element.acceptEffector(CssUsedRegionLoader.instance);
 
     return true; // successfully updated
   }
