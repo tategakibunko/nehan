@@ -85,16 +85,16 @@ export class CssParser {
     {prop:"margin-start",   value:"1em"} // CssDeclaration
     ]
   */
-  static parseInlineStyle(inline_style: string): CssStyleDeclaration {
-    return CssText.normalize(inline_style).split(";").reduce((acm, stext) => {
-      let nvs = stext.split(":");
+  static parseInlineStyle(inlineStyle: string): CssStyleDeclaration {
+    return CssText.normalize(inlineStyle).split(";").reduce((acm, stext) => {
+      const nvs = stext.split(":");
       if (nvs.length === 2 && nvs[0] !== "" && nvs[1] !== "") {
-        let css_prop = new CssProp(nvs[0]);
-        if (Config.IgnoredInlineStyleProps.indexOf(css_prop.value) >= 0) {
+        const cssProp = new CssProp(nvs[0]);
+        if (Config.IgnoredInlineStyleProps.indexOf(cssProp.value) >= 0) {
           return acm;
         }
-        let css_text = new CssText({ prop: css_prop.value, value: nvs[1] });
-        CssParser.parseDeclaration(css_prop, css_text).forEach((declr) => {
+        const cssText = new CssText({ prop: cssProp.value, value: nvs[1] });
+        CssParser.parseDeclaration(cssProp, cssText).forEach((declr) => {
           acm.setProperty(declr.prop, declr.value);
         });
       }
@@ -110,10 +110,10 @@ export class CssParser {
     CssRule(selector2, CssStyleDeclaration(("font-size", ..))
     ]
   */
-  static parseRule(selector_src: string, declr_block: CssDeclarationBlock): CssRule[] {
-    return new SelectorText(selector_src).split().map((stext) => {
+  static parseRule(selectorSrc: string, declrBlock: CssDeclarationBlock): CssRule[] {
+    return new SelectorText(selectorSrc).split().map((stext) => {
       let selector = SelectorParser.parse(stext);
-      let declrs = this.parseDeclarationBlock(stext, declr_block);
+      let declrs = this.parseDeclarationBlock(stext, declrBlock);
       return new CssRule(selector, declrs);
     });
   }
@@ -121,56 +121,55 @@ export class CssParser {
   /*
   // declaration block: CssStyleDeclaration
   {
-  "font-size":"1em", // declaration
-  "color":"red", // declaration
-  "width":(selector) => { return "100px" }, // declaration (as macro)
-  "!dynamic":(ctx) => { // dynamic style
-  return {"font-weight":"bold"}
-  },
-  "@oncreate":(ctx) => { // callback for dom creation
-  ctx.dom.onclick = (e) => { console.log("onclick:" + selector) }
-  }
+    "font-size":"1em", // declaration
+    "color":"red", // declaration
+    "width":(selector) => { return "100px" }, // declaration (as macro)
+    "!dynamic":(ctx) => { // dynamic style
+      return {"font-weight":"bold"}
+    },
+    "@oncreate":(ctx) => { // callback for dom creation
+      ctx.dom.onclick = (e) => { console.log("onclick:" + selector) }
+    }
   } 
   */
-  static parseDeclarationBlock(selector: string, declr_block: CssDeclarationBlock):
-    CssStyleDeclaration {
-    return Object.keys(declr_block).reduce((acm, prop) => {
-      let obj_value = declr_block[prop];
-      let css_prop = new CssProp(prop);
+  static parseDeclarationBlock(selector: string, declrBlock: CssDeclarationBlock): CssStyleDeclaration {
+    return Object.keys(declrBlock).reduce((acm, prop) => {
+      let objValue = declrBlock[prop];
+      let cssProp = new CssProp(prop);
 
       // [example]
       // "color":"red"
-      if (typeof obj_value === "string") {
-        return acm.setProperty(css_prop.value, obj_value);
+      if (typeof objValue === "string") {
+        return acm.setProperty(cssProp.value, objValue);
       }
       // [example]
       // "line-height":1.6
-      if (typeof obj_value === "number") {
-        return acm.setProperty(css_prop.value, String(obj_value));
+      if (typeof objValue === "number") {
+        return acm.setProperty(cssProp.value, String(objValue));
       }
-      if (typeof obj_value === "function") { // macro or dynamic style.
+      if (typeof objValue === "function") { // macro or dynamic style.
         // [example]
         // "!dynamic": function(ctx) => { ... }
-        if (css_prop.isDynamicStyleProp()) {
-          let name = css_prop.getDynamicStylePropName();
-          let callback = obj_value as DynamicStyleCallback;
+        if (cssProp.isDynamicStyleProp()) {
+          let name = cssProp.getDynamicStylePropName();
+          let callback = objValue as DynamicStyleCallback;
           return acm.addDynamicStyle(new DynamicStyle(selector, name, callback));
         }
         // [example]
         // "@oncreate": function(ctx) => { ... }
-        if (css_prop.isDomCallback()) {
-          let name = css_prop.getDomCallbackName();
-          let callback = obj_value as DomCallbackValue;
+        if (cssProp.isDomCallback()) {
+          let name = cssProp.getDomCallbackName();
+          let callback = objValue as DomCallbackValue;
           return acm.addDomCallback(new DomCallback(selector, name, callback));
         }
         // [example]
         // "font-size": function(ctx) => { return "1.5em" }
         // If macro, just call and set.
-        let macro = new CssMacro(obj_value as CssMacroValue);
-        let macro_value = macro.call(selector);
-        if (macro_value !== "") {
-          let css_text = new CssText({ prop: css_prop.value, value: macro_value });
-          return acm.setProperty(css_prop.value, css_text.value);
+        let macro = new CssMacro(objValue as CssMacroValue);
+        let macroValue = macro.call(selector);
+        if (macroValue !== "") {
+          let cssText = new CssText({ prop: cssProp.value, value: macroValue });
+          return acm.setProperty(cssProp.value, cssText.value);
         }
       }
       return acm;
@@ -196,40 +195,40 @@ export class CssParser {
     {prop:"font-family",  value:"serif"}
     ]
   */
-  static parseDeclaration(css_prop: CssProp, css_text: CssText): PropValue<string, string>[] {
-    switch (css_prop.value) {
+  static parseDeclaration(cssProp: CssProp, cssText: CssText): PropValue<string, string>[] {
+    switch (cssProp.value) {
       case "border":
-        return LogicalBorder.parseShorthand(css_text);
+        return LogicalBorder.parseShorthand(cssText);
       case "border-before":
-        return LogicalBorder.parseShorthandEach(css_text, "before");
+        return LogicalBorder.parseShorthandEach(cssText, "before");
       case "border-end":
-        return LogicalBorder.parseShorthandEach(css_text, "end");
+        return LogicalBorder.parseShorthandEach(cssText, "end");
       case "border-after":
-        return LogicalBorder.parseShorthandEach(css_text, "after");
+        return LogicalBorder.parseShorthandEach(cssText, "after");
       case "border-start":
-        return LogicalBorder.parseShorthandEach(css_text, "start");
+        return LogicalBorder.parseShorthandEach(cssText, "start");
       case "border-radius":
-        return LogicalBorderRadius.parseShorthand(css_text);
+        return LogicalBorderRadius.parseShorthand(cssText);
       case "font":
-        return Font.parseShorthand(css_text);
+        return Font.parseShorthand(cssText);
       case "list-style":
-        return ListStyle.parseShorthand(css_text);
+        return ListStyle.parseShorthand(cssText);
       case "margin":
-        return LogicalMargin.parseShorthand(css_text);
+        return LogicalMargin.parseShorthand(cssText);
       case "padding":
-        return LogicalPadding.parseShorthand(css_text);
+        return LogicalPadding.parseShorthand(cssText);
       case "border-width":
-        return LogicalBorderWidth.parseShorthand(css_text);
+        return LogicalBorderWidth.parseShorthand(cssText);
       case "border-color":
-        return LogicalBorderColor.parseShorthand(css_text);
+        return LogicalBorderColor.parseShorthand(cssText);
       case "border-style":
-        return LogicalBorderStyle.parseShorthand(css_text);
+        return LogicalBorderStyle.parseShorthand(cssText);
       case "text-emphasis":
-        return TextEmphasis.parseShorthand(css_text);
+        return TextEmphasis.parseShorthand(cssText);
     }
     return [{
-      prop: css_prop.value,
-      value: css_text.value
+      prop: cssProp.value,
+      value: cssText.value
     }];
   }
 }
