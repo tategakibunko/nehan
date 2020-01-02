@@ -10,10 +10,10 @@ import {
 export class CssStyleSheet {
   private rules: CssRule[];
 
-  constructor(css_rules?: CssRules) {
+  constructor(cssRules?: CssRules) {
     this.rules = [];
-    if (css_rules) {
-      this.addCssRules(css_rules);
+    if (cssRules) {
+      this.addCssRules(cssRules);
     }
   }
 
@@ -41,15 +41,15 @@ export class CssStyleSheet {
 
   public addCssRules(rules: CssRules): CssStyleSheet {
     for (let selector in rules) {
-      let rule_list = CssParser.parseRule(selector, rules[selector]);
-      this.rules = this.rules.concat(rule_list);
+      let addedRules = CssParser.parseRule(selector, rules[selector]);
+      this.rules = this.rules.concat(addedRules);
     }
     return this.sort();
   }
 
-  public addRule(selector: string, declr_block: CssDeclarationBlock): CssStyleSheet {
-    const rule_list = CssParser.parseRule(selector, declr_block);
-    this.rules = this.rules.concat(rule_list);
+  public addRule(selector: string, declrBlock: CssDeclarationBlock): CssStyleSheet {
+    const addedRules = CssParser.parseRule(selector, declrBlock);
+    this.rules = this.rules.concat(addedRules);
     return this.sort();
   }
 }

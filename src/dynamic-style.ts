@@ -18,18 +18,18 @@ export class DynamicStyle {
     this.callback = callback;
   }
 
-  public call(element: HtmlElement, parent_ctx?: FlowContext): CssStyleDeclaration {
-    let callback_context = new DynamicStyleContext({
+  public call(element: HtmlElement, parentCtx?: FlowContext): CssStyleDeclaration {
+    let callbackCtx = new DynamicStyleContext({
       selector: this.selector,
       name: this.name,
       element: element,
-      parentContext: parent_ctx
+      parentContext: parentCtx
     });
-    let call_result = this.callback(callback_context) || {};
-    if (typeof call_result === "string") {
-      let declr_block = { [this.name]: call_result };
+    let callResult = this.callback(callbackCtx) || {};
+    if (typeof callResult === "string") {
+      let declr_block = { [this.name]: callResult };
       return CssParser.parseDeclarationBlock(this.selector, declr_block);
     }
-    return CssParser.parseDeclarationBlock(this.selector, call_result);
+    return CssParser.parseDeclarationBlock(this.selector, callResult);
   }
 }
