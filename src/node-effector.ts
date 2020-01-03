@@ -183,6 +183,7 @@ export class PseudoElementInitializer implements NodeEffector {
 }
 
 // Load specified value
+// (document.styleSheets, element) => CssStyleDeclaration
 export class CssSpecifiedValueLoader implements NodeEffector {
   static instance = new CssSpecifiedValueLoader();
   private constructor() { }
@@ -198,17 +199,20 @@ export class CssSpecifiedValueLoader implements NodeEffector {
 }
 
 // Load dynamic (specified) value before layouting.
+// (CssStyleDeclaration, element) => CssStyleDeclaration
 export class CssSpecifiedDynamicValueLoader implements NodeEffector {
   static instance = new CssSpecifiedDynamicValueLoader();
   private constructor() { }
 
   visit(element: HtmlElement) {
+    // get dynamic specified values from style-declaration (already matched and stored by CssSpecifiedValueLoader).
     const dynamicStyle = element.style.getDynamicStyle(element);
     element.style.mergeFrom(dynamicStyle);
   }
 }
 
-// Load inline style (specified) value.
+// Load inline (specified) value.
+// element.getAttribute("style") => CssStyleDeclaration
 export class CssSpecifiedInlineValueLoader implements NodeEffector {
   static instance = new CssSpecifiedInlineValueLoader();
   private constructor() { }
