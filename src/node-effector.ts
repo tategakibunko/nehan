@@ -13,6 +13,7 @@ import {
   OptionalBoxLengthProps,
   AutableBoxLengthProps,
 } from './public-api'
+import { FlowContext } from './flow-context';
 
 // treat side-effect
 export interface NodeEffector {
@@ -201,13 +202,17 @@ export class CssSpecifiedValueLoader implements NodeEffector {
 // Load dynamic (specified) value before layouting.
 // (CssStyleDeclaration, element) => CssStyleDeclaration
 export class CssSpecifiedDynamicValueLoader implements NodeEffector {
-  static instance = new CssSpecifiedDynamicValueLoader();
-  private constructor() { }
+  constructor(private parentCxt?: FlowContext) { }
 
   visit(element: HtmlElement) {
     // get dynamic specified values from style-declaration (already matched and stored by CssSpecifiedValueLoader).
-    const dynamicStyle = element.style.getDynamicStyle(element);
+    const dynamicStyle = element.style.getDynamicStyle(element, this.parentCxt);
     element.style.mergeFrom(dynamicStyle);
+
+    // remove old value from current 'computed' styles.
+    dynamicStyle.forEach((key, value) => {
+      element.computedStyle.removeProperty(key);
+    });
   }
 }
 

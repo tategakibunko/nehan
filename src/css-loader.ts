@@ -8,6 +8,7 @@ import {
   CssComputedValueLoader,
   CssUsedRegionLoader,
 } from "./public-api";
+import { CssSpecifiedDynamicValueLoader } from "./node-effector";
 
 export class CssLoader {
   static loadAll(element: HtmlElement) {
@@ -45,23 +46,16 @@ export class CssLoader {
   }
 
   static loadDynamic(element: HtmlElement, parentCtx?: FlowContext): boolean {
-    // get new style by latest context.
-    let newStyle = element.style.getDynamicStyle(element, parentCtx);
-    if (newStyle.isEmpty()) {
-      return false; // no update
+    if (!element.style.hasDynamicStyles()) {
+      return false;
     }
-    // update specified style.
-    element.style.mergeFrom(newStyle);
+    // load dynamic specified value.
+    element.acceptEffector(new CssSpecifiedDynamicValueLoader(parentCtx));
 
     // inline style always win!
     element.acceptEffector(CssSpecifiedInlineValueLoader.instance);
 
-    // remove old value from current 'computed' styles.
-    newStyle.forEach((key, value) => {
-      element.computedStyle.removeProperty(key);
-    });
-
-    // update computed style.
+    // specified value -> computed style(update)
     element.acceptEffector(CssComputedValueLoader.instance);
 
     // computed value -> used value

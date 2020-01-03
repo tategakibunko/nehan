@@ -22,6 +22,10 @@ export class CssStyleDeclaration {
     this.domCallbacks = [];
   }
 
+  public hasDynamicStyles(): boolean {
+    return this.dynamicStyles.length > 0;
+  }
+
   public isEmpty(): boolean {
     return this.styles.size === 0 &&
       this.dynamicStyles.length === 0 &&
