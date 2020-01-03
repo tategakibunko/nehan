@@ -62,6 +62,7 @@ export class FlowRegion {
   }
 
   public setMarginAuto(element: HtmlElement) {
+    /*
     let start = element.style.getPropertyValue("margin-start") || "";
     let end = element.style.getPropertyValue("margin-end") || "";
     let measure = LogicalSize.loadMeasure(element);
@@ -78,6 +79,7 @@ export class FlowRegion {
       let auto = this.maxContextBoxMeasure - measure;
       element.computedStyle.setProperty("margin-end", auto + "px");
     }
+    */
   }
 
   public isBlockEmpty(): boolean {
