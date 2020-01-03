@@ -1,7 +1,7 @@
 import {
   Utils,
   HtmlElement,
-  ComputedStyle,
+  CssLength,
   FlowContext
 } from "./public-api";
 
@@ -29,7 +29,7 @@ export class DynamicStyleContext {
   }
 
   public get fontSize(): number {
-    return ComputedStyle.getFontSize(this.element);
+    return CssLength.computeFontSize(this.element);
   }
 
   public get remSize(): number {
@@ -40,7 +40,7 @@ export class DynamicStyleContext {
   }
 
   public get emSize(): number {
-    return ComputedStyle.getFontSize(this.element);
+    return CssLength.computeFontSize(this.element);
   }
 
   public get lineHeight(): number {

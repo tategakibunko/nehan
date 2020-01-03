@@ -54,9 +54,9 @@ export class HtmlDocument {
     // before css loading, initialize pseudo elements and set spec-styles to them.
     this.body.acceptEffectorAll(new PseudoElementInitializer(this.specStyleSheet.getPseudoRules()));
 
-    console.time("CssLoader.loadAll");
+    // console.time("CssLoader.loadAll");
     CssLoader.loadAll(this.body);
-    console.timeEnd("CssLoader.loadAll");
+    // console.timeEnd("CssLoader.loadAll");
   }
 
   public createBodyGenerator(): BodyGenerator {

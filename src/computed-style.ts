@@ -6,7 +6,6 @@ import {
   LogicalBorderRadius,
   CssLength,
   AutableBoxLengthProps,
-  OptionalBoxLengthProps,
 } from "./public-api";
 
 // element.style -> element.computedStyle
