@@ -51,7 +51,6 @@ import {
   If element is absolutely posisioned,
   percentage size is caluclated with respect to size of 'padding-box'.
 */
-// type KeywordOrValue<T extends String, U> = T | U;
 type OptionalNumber = "none" | number;
 type AutableNumber = "auto" | number;
 
