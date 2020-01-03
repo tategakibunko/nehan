@@ -403,11 +403,16 @@ export class CssComputedValueLoader implements NodeEffector {
   }
 }
 
+// Resolve and load used values for some 'none' or 'auto' of computed values.
 export class CssUsedRegionLoader implements NodeEffector {
   static instance = new CssUsedRegionLoader();
   private constructor() { }
 
   visit(element: HtmlElement) {
+    const display = Display.load(element);
+    if (display.isNone()) {
+      return;
+    }
     if (Config.boxSizeSkipTags.includes(element.tagName)) {
       return;
     }
