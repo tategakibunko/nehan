@@ -12,6 +12,10 @@ import {
   PseudoElementTagName,
   OptionalBoxLengthProps,
   AutableBoxLengthProps,
+  ComputedRegion,
+  IRegionResolver,
+  RegionResolverSelector,
+
 } from './public-api'
 import { FlowContext } from './flow-context';
 
@@ -396,6 +400,27 @@ export class CssComputedValueLoader implements NodeEffector {
 
     // Use 'text-align:justify' instead.
     // this.setCascadedValue(element, "text-justify");
+  }
+}
+
+export class CssUsedRegionLoader implements NodeEffector {
+  static instance = new CssUsedRegionLoader();
+  private constructor() { }
+
+  visit(element: HtmlElement) {
+    if (Config.boxSizeSkipTags.includes(element.tagName)) {
+      return;
+    }
+    const computedRegion = ComputedRegion.load(element);
+    if (!computedRegion) {
+      // console.warn("containing meausre for %s is not resolved", element.tagName);
+      return;
+    }
+    const resolver: IRegionResolver = RegionResolverSelector.select(element);
+    // console.log("[%s] resolver:%o", element.tagName, resolver);
+    resolver.resolve(element, computedRegion);
+    // console.log("[%s] measure is resolved to %o", element.tagName, computedRegion.logicalSize.measure.length);
+    computedRegion.save(element.computedStyle);
   }
 }
 
