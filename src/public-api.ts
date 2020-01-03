@@ -181,5 +181,6 @@ export * from "./word-break"
 export * from "./writing-mode"
 export * from "./semantic-style"
 export * from './containing-element'
+export * from './computed-value'
 export * from './used-region'
 export * from './engine7'
