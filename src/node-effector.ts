@@ -13,8 +13,7 @@ import {
   OptionalBoxLengthProps,
   AutableBoxLengthProps,
   ComputedRegion,
-  IRegionResolver,
-  RegionResolverSelector,
+  UsedRegionResolver,
 
 } from './public-api'
 import { FlowContext } from './flow-context';
@@ -421,7 +420,7 @@ export class CssUsedRegionLoader implements NodeEffector {
       // console.warn("containing meausre for %s is not resolved", element.tagName);
       return;
     }
-    const resolver: IRegionResolver = RegionResolverSelector.select(element);
+    const resolver = UsedRegionResolver.select(element);
     // console.log("[%s] resolver:%o", element.tagName, resolver);
     resolver.resolve(element, computedRegion);
     // console.log("[%s] measure is resolved to %o", element.tagName, computedRegion.logicalSize.measure.length);

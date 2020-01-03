@@ -13,7 +13,7 @@ export interface IRegionResolver {
 }
 
 // https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
-export class RegionResolverSelector {
+export class UsedRegionResolver {
   static select(element: HtmlElement) {
     const display = Display.load(element);
     const float = CssCascade.getValue(element, "float") as LogicalFloatValue;
