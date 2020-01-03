@@ -6,7 +6,6 @@ import {
   CssCascade,
   PositionValue,
   ReplacedElement,
-  NodeEffector,
 } from './public-api'
 
 export interface IRegionResolver {
