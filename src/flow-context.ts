@@ -389,10 +389,6 @@ export class FlowContext implements ILayoutContext {
     this.region.clearFloat(clear);
   }
 
-  public setRegionMarginAuto(element: HtmlElement) {
-    this.region.setMarginAuto(element);
-  }
-
   public isBody(): boolean {
     return this.element.tagName === "body";
   }

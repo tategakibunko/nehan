@@ -61,27 +61,6 @@ export class FlowRegion {
     }
   }
 
-  public setMarginAuto(element: HtmlElement) {
-    /*
-    let start = element.style.getPropertyValue("margin-start") || "";
-    let end = element.style.getPropertyValue("margin-end") || "";
-    let measure = LogicalSize.loadMeasure(element);
-    if (measure === null) {
-      return;
-    }
-    if (start === "auto" && end === "auto") {
-      let auto = Math.floor((this.maxContextBoxMeasure - measure) / 2);
-      element.computedStyle.setProperty("margin-start", auto + "px");
-    } else if (start === "auto" && end !== "auto") {
-      let auto = this.maxContextBoxMeasure - measure;
-      element.computedStyle.setProperty("margin-start", auto + "px");
-    } else if (start !== "auto" && end === "auto") {
-      let auto = this.maxContextBoxMeasure - measure;
-      element.computedStyle.setProperty("margin-end", auto + "px");
-    }
-    */
-  }
-
   public isBlockEmpty(): boolean {
     return this.content.isBlockEmpty();
   }

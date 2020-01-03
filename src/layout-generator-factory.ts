@@ -3,7 +3,6 @@ import {
   LayoutSection,
   Image,
   LogicalSize,
-  LogicalFloat,
   LogicalClear,
   PseudoElement,
   PageBreakAfter,
@@ -81,10 +80,6 @@ export class LayoutGeneratorFactory {
         console.log("[%s] empty box(zero size)", element.toString());
       }
       return this.createEmptyBoxGenerator(parent_ctx, element);
-    }
-    let float = LogicalFloat.load(element);
-    if (float.isNone()) {
-      parent_ctx.setRegionMarginAuto(element);
     }
     let page_break_after = PageBreakAfter.load(element);
     if (page_break_after.isAlways()) {
