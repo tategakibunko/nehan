@@ -4,7 +4,9 @@ import {
   DefaultCss,
   HtmlElement,
   CssCascade,
-  CssLoader
+  CssLoader,
+  LogicalFloat,
+  Position,
 } from "./public-api";
 
 export enum DisplayOutside {
@@ -201,8 +203,9 @@ export class Display {
   static load(element: HtmlElement): Display {
     const value = CssCascade.getValue(element, "display");
     const display = new Display(value as DisplayValue);
-    const float = CssCascade.getValue(element, "float");
-    if (float !== "none") {
+    const float = LogicalFloat.load(element);
+    const position = Position.load(element);
+    if (!float.isNone() || position.isAbsolute() || position.isFixed()) {
       display.setFlowRoot();
     }
     // display of <a> is dynamically decided by it's content.
