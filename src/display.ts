@@ -221,6 +221,10 @@ export class Display {
     this.outside = DisplayOutside.BLOCK;
   }
 
+  public setFlowRoot() {
+    this.inside = DisplayInside.FLOW_ROOT;
+  }
+
   public toString(): string {
     return this.value;
   }
