@@ -199,8 +199,12 @@ export class Display {
   }
 
   static load(element: HtmlElement): Display {
-    let value = CssCascade.getValue(element, "display");
-    let display = new Display(value as DisplayValue);
+    const value = CssCascade.getValue(element, "display");
+    const display = new Display(value as DisplayValue);
+    const float = CssCascade.getValue(element, "float");
+    if (float !== "none") {
+      display.setFlowRoot();
+    }
     // display of <a> is dynamically decided by it's content.
     if (element.tagName === "a") {
       return Display.loadDynamicDisplay(element, display);
@@ -208,13 +212,13 @@ export class Display {
     return display;
   }
 
-  static loadDynamicDisplay(element: HtmlElement, init_value: Display): Display {
-    let first_element = element.firstElementChild;
-    if (!first_element) {
-      return init_value;
+  static loadDynamicDisplay(element: HtmlElement, initValue: Display): Display {
+    const firstElement = element.firstElementChild;
+    if (!firstElement) {
+      return initValue;
     }
-    CssLoader.load(first_element);
-    return Display.load(first_element);
+    CssLoader.load(firstElement);
+    return Display.load(firstElement);
   }
 
   public setBlockLevel() {
