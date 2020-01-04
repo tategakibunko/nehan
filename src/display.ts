@@ -208,7 +208,7 @@ export class Display {
     if (!float.isNone() || position.isAbsolute() || position.isFixed()) {
       display.setFlowRoot();
     }
-    // display of <a> is dynamically decided by it's content.
+    // display of <a> is dynamically decided by it's first element.
     if (element.tagName === "a") {
       return Display.loadDynamicDisplay(element, display);
     }
