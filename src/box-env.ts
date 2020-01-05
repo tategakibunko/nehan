@@ -56,7 +56,7 @@ export class BoxEnv {
     this.measure = LogicalSize.loadMeasure(element);
     this.extent = LogicalSize.loadExtent(element);
     this.float = LogicalFloat.load(element);
-    this.display = this.loadDisplay(element, this.float);
+    this.display = Display.load(element);
     this.position = Position.load(element);
     this.absPos = LogicalPos.load(element);
     this.writingMode = WritingMode.load(element);
@@ -74,14 +74,6 @@ export class BoxEnv {
     this.whiteSpace = WhiteSpace.load(element);
     this.pageBreakBefore = PageBreakBefore.load(element);
     this.backgroundPos = LogicalBackgroundPos.load(element);
-  }
-
-  protected loadDisplay(element: HtmlElement, float: LogicalFloat): Display {
-    let display = Display.load(element);
-    if (display.isInlineLevel() && float.isFloat()) {
-      display.setBlockLevel();
-    }
-    return display;
   }
 
   protected loadEdge(element: HtmlElement, display: Display): LogicalBoxEdge {

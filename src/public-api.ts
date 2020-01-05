@@ -183,4 +183,5 @@ export * from "./semantic-style"
 export * from './containing-element'
 export * from './computed-value'
 export * from './used-region-resolver'
+export * from './layout-offset'
 export * from './engine7'

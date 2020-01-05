@@ -208,6 +208,9 @@ export class Display {
     if (!float.isNone() || position.isAbsolute() || position.isFixed()) {
       display.setFlowRoot();
     }
+    if (display.isInlineLevel() && !float.isNone()) {
+      display.setBlockLevel();
+    }
     // display of <a> is dynamically decided by it's first element.
     if (element.tagName === "a") {
       return Display.loadDynamicDisplay(element, display);
