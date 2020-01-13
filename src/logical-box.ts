@@ -438,7 +438,7 @@ export class LogicalBox {
         return Math.max(max, child.maxExtent);
       }
       if (child instanceof Ruby) {
-        return Math.max(max, child.totalExtent);
+        return Math.max(max, child.extent);
       }
       return Math.max(max, child.size.extent);
     }, this.totalExtent);

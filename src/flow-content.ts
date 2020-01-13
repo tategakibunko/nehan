@@ -28,7 +28,7 @@ export class FlowContent {
         return Math.max(max_extent, item.maxExtent);
       }
       if (item instanceof Ruby) {
-        return Math.max(max_extent, item.totalExtent);
+        return Math.max(max_extent, item.extent);
       }
       return Math.max(max_extent, item.size.extent);
     }, 0);

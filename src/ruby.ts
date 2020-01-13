@@ -17,7 +17,7 @@ export class Ruby {
   public rb: LogicalBox;
   public rt: LogicalBox;
 
-  constructor(value: RubyValue){
+  constructor(value: RubyValue) {
     this.element = value.element;
     this.rb = value.rb;
     this.rt = value.rt;
@@ -39,15 +39,15 @@ export class Ruby {
     return this.rb.fontSize;
   }
 
-  public get totalSize(): LogicalSize {
-    return new LogicalSize({measure:this.totalMeasure, extent:this.totalExtent});
+  public get size(): LogicalSize {
+    return new LogicalSize({ measure: this.measure, extent: this.extent });
   }
 
-  public get totalMeasure(): number {
+  public get measure(): number {
     return Math.max(this.rb.totalMeasure, this.rt.totalMeasure);
   }
 
-  public get totalExtent(): number {
+  public get extent(): number {
     return this.rb.totalExtent + this.rt.totalExtent;
   }
 
@@ -60,17 +60,17 @@ export class Ruby {
   }
 
   public toString(): string {
-    return `<ruby>(${this.totalMeasure}x${this.totalExtent}):${this.text}`;
+    return `<ruby>(${this.measure}x${this.extent}):${this.text}`;
   }
 
   public getCssRubyVert(): NativeStyleMap {
-    return this.totalSize.getCssVert();
+    return this.size.getCssVert();
   }
 
   public getCssRbVert(): NativeStyleMap {
     let css = new NativeStyleMap();
     let rb_rt_gap = this.rt.totalMeasure - this.rb.totalMeasure;
-    if(rb_rt_gap > 0){
+    if (rb_rt_gap > 0) {
       css.set("margin-top", Math.floor(rb_rt_gap / 2) + "px");
     }
     return css;

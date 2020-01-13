@@ -73,6 +73,23 @@ export class InvalidBlockSweeper implements NodeEffector {
   }
 }
 
+/*
+  Insert rb tag if not defined in ruby.
+
+  [example]
+
+  <ruby>漢字<rt>かんじ</rt></ruby>
+  
+  =>
+  
+  <ruby><rb>漢字</rb><rt>かんじ</rt></ruby>
+*/
+export class RubyNormalizer implements NodeEffector {
+  visit(rubyElement: HtmlElement) {
+    // TODO
+  }
+}
+
 // Before css loading, create pseudo-elements defined in css,
 // and initialize spec-styles for them.
 export class PseudoElementInitializer implements NodeEffector {

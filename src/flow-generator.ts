@@ -236,7 +236,7 @@ export class FlowGenerator extends LayoutGenerator {
     }
     if (this.context.shiftInlineLevel(ruby)) {
       if (this.context.isEmpty()) {
-        return this.onEmptyInlineLayout(ruby.totalMeasure);
+        return this.onEmptyInlineLayout(ruby.measure);
       }
       if (this.context.isInlineFlow()) {
         return this.reduceLayout(true);

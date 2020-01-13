@@ -21,7 +21,7 @@ export class BoxContentSize {
     if (isCharacter(cont)) {
       return (cont as ICharacter).size;
     } else if (cont instanceof Ruby) {
-      return cont.totalSize;
+      return cont.size;
     } else if (cont instanceof LogicalBox) {
       return cont.totalSize;
     }
