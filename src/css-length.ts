@@ -238,6 +238,6 @@ export class CssLength {
   }
 
   static computeBorderRadius(element: HtmlElement, prop: string, directValue?: string): number {
-    throw new Error("todo");
+    throw new Error("todo(compute border radius)");
   }
 }

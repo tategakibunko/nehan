@@ -33,6 +33,15 @@ export class TextEmphasisStyle {
   public mark: TextEmphasisMark;
   static property: string = "text-emphasis-style";
 
+  static isStrokeValue(value: string): boolean {
+    return StrokeValues.includes(value);
+  }
+
+  static isMarkValue(value: string): boolean {
+    return MarkValues.includes(value);
+  }
+
+  /*
   static isStrokeValue(value: string): value is TextEmphasisStroke {
     return StrokeValues.includes(value);
   }
@@ -40,6 +49,7 @@ export class TextEmphasisStyle {
   static isMarkValue(value: string): value is TextEmphasisMark {
     return MarkValues.includes(value);
   }
+  */
 
   static load(element: HtmlElement): TextEmphasisStyle {
     const value = CssCascade.getValue(element, this.property);
