@@ -18,7 +18,7 @@ import {
 } from "./public-api";
 
 export class HoriLayoutEvaluator extends LayoutEvaluator {
-  protected appendBoxChildAfter(node: HTMLElement, box: LogicalBox, child: BoxContent){
+  protected appendBoxChildAfter(node: HTMLElement, box: LogicalBox, child: BoxContent) {
     // do nothing
   }
 
@@ -27,7 +27,7 @@ export class HoriLayoutEvaluator extends LayoutEvaluator {
     let e_classes = box.classList.values().map(Prefix.addExternal);
     let i_classes = ["horizontal", "block", box.pureTagName].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(box.id){
+    if (box.id) {
       node.id = Prefix.addExternal(box.id);
     }
     box.getCssBlock(parent).apply(node);
@@ -39,7 +39,7 @@ export class HoriLayoutEvaluator extends LayoutEvaluator {
     let e_classes = box.classList.values().map(Prefix.addExternal);
     let i_classes = ["inline", box.pureTagName].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(box.id){
+    if (box.id) {
       node.id = Prefix.addExternal(box.id);
     }
     box.getCssInline(parent).apply(node);
@@ -51,7 +51,7 @@ export class HoriLayoutEvaluator extends LayoutEvaluator {
     let e_classes = box.classList.values().map(Prefix.addExternal);
     let i_classes = ["horizontal", "inline-block", box.pureTagName].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(box.id){
+    if (box.id) {
       node.id = Prefix.addExternal(box.id);
     }
     box.getCssInlineBlock(parent).apply(node);
@@ -90,10 +90,10 @@ export class HoriLayoutEvaluator extends LayoutEvaluator {
     let node = document.createElement("div");
     let rt = this.evalBox(parent, ruby.rt);
     let rb = this.evalBox(parent, ruby.rb);
-    let e_classes = ruby.classList.values().map(Prefix.addExternal);
+    let e_classes = ruby.classes.map(Prefix.addExternal);
     let i_classes = ["ruby"].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(ruby.id){
+    if (ruby.id) {
       node.id = Prefix.addExternal(ruby.id);
     }
     ruby.getCssRbHori().apply(rb);
@@ -104,7 +104,7 @@ export class HoriLayoutEvaluator extends LayoutEvaluator {
 
   protected evalChar(parent: LogicalBox, char: Char): Node {
     //console.log("evalChar:", char);
-    if(char.hasEmphasis){
+    if (char.hasEmphasis) {
       return this.evalEmphasizedCharacter(parent, char);
     }
     return document.createTextNode(char.text);
@@ -163,7 +163,7 @@ export class HoriLayoutEvaluator extends LayoutEvaluator {
     let node = document.createElement("span");
     node.classList.add(Prefix.addInternal("dual-char"));
     node.appendChild(document.createTextNode(char.text));
-    if(char.kerning){
+    if (char.kerning) {
       node.classList.add(Prefix.addInternal("dual-char-kern"));
     }
     return node;

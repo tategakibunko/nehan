@@ -1,38 +1,29 @@
 import {
-  HtmlElement,
-  DomTokenList,
   LogicalBox,
   LogicalSize,
   NativeStyleMap,
 } from "./public-api";
 
-export interface RubyValue {
-  element: HtmlElement,
-  rb: LogicalBox,
-  rt: LogicalBox
-}
-
 export class Ruby {
-  public element: HtmlElement;
+  public id: string;
+  public classes: string[];
   public rb: LogicalBox;
   public rt: LogicalBox;
 
-  constructor(value: RubyValue) {
-    this.element = value.element;
-    this.rb = value.rb;
-    this.rt = value.rt;
+  constructor(args: {
+    id: string;
+    classes: string[];
+    rb: LogicalBox;
+    rt: LogicalBox;
+  }) {
+    this.id = args.id;
+    this.classes = args.classes;
+    this.rb = args.rb;
+    this.rt = args.rt;
   }
 
   public get pureTagName(): string {
     return "ruby";
-  }
-
-  public get id(): string {
-    return this.element.id;
-  }
-
-  public get classList(): DomTokenList {
-    return this.element.classList;
   }
 
   public get fontSize(): number {

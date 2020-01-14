@@ -24,6 +24,44 @@ export interface NodeEffector {
 }
 
 /*
+  1. Insert rb tag if not defined in ruby.
+  2. Remove rp tag if it exists.
+
+  [example]
+
+  <ruby>漢字<rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby>
+  
+  =>
+  
+  <ruby><rb>漢字</rb><rt>かんじ</rt></ruby>
+*/
+export class RubyNormalizer implements NodeEffector {
+  visit(element: HtmlElement) {
+    if (element.tagName !== "ruby") {
+      return;
+    }
+    const doc = element.root;
+    element.childNodes = element.childNodes.filter(node => {
+      if (node.tagName === "rp") {
+        return false;
+      }
+      if (node.isTextElement() && node.textContent.trim() === "") {
+        return false;
+      }
+      return true;
+    });
+    element.childNodes.filter(node => node.isTextElement()).forEach(textNode => {
+      const rb = doc.createElement("rb");
+      rb.parent = element;
+      rb.appendChild(textNode);
+      element.replaceChild(rb, textNode);
+      // console.log("Added rb:%o to %o", rb, element);
+    });
+    console.log("normalized ruby:", element);
+  }
+}
+
+/*
   Sweep out invalid block from inline children.
 
   [example]
@@ -70,23 +108,6 @@ export class InvalidBlockSweeper implements NodeEffector {
         break;
       }
     }
-  }
-}
-
-/*
-  Insert rb tag if not defined in ruby.
-
-  [example]
-
-  <ruby>漢字<rt>かんじ</rt></ruby>
-  
-  =>
-  
-  <ruby><rb>漢字</rb><rt>かんじ</rt></ruby>
-*/
-export class RubyNormalizer implements NodeEffector {
-  visit(rubyElement: HtmlElement) {
-    // TODO
   }
 }
 

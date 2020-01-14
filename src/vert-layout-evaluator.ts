@@ -116,7 +116,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
     let node = document.createElement("div");
     let rb = this.evalBox(parent, ruby.rb);
     let rt = this.evalBox(parent, ruby.rt);
-    let e_classes = ruby.classList.values().map(Prefix.addExternal);
+    let e_classes = ruby.classes.map(Prefix.addExternal);
     let i_classes = ["ruby"].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
     if (ruby.id) {

@@ -11,6 +11,7 @@ import {
   Config,
   PseudoElementInitializer,
 } from "./public-api";
+import { RubyNormalizer } from "./node-effector";
 
 export interface HtmlDocumentOptions {
   styleSheets?: CssStyleSheet[]
@@ -53,6 +54,9 @@ export class HtmlDocument {
 
     // before css loading, initialize pseudo elements and set spec-styles to them.
     this.body.acceptEffectorAll(new PseudoElementInitializer(this.specStyleSheet.getPseudoRules()));
+
+    // normalize ruby element.
+    this.body.acceptEffectorAll(new RubyNormalizer());
 
     // console.time("CssLoader.loadAll");
     CssLoader.loadAll(this.body);
