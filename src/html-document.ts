@@ -44,7 +44,7 @@ export class HtmlDocument {
     // console.time("html-parse");
     this.$document = new DOMParser().parseFromString(this.source, "text/html");
     this.documentElement = this.createElementFromDOM(this.$document.documentElement);
-    let body = this.documentElement.querySelector("body");
+    const body = this.documentElement.querySelector("body");
     if (!body) {
       throw new Error("body not found");
     }
