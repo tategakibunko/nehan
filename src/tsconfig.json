@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    // "target":"es6", // To enable IteratorResult, Map, for ~ of syntax(in generators).
-    "target": "es5",
+    "target": "es6", // To enable IteratorResult, Map, for ~ of syntax(in generators).
     "lib": [
-      "es2017",
+      "es2019",
       "dom",
     ],
     "module": "commonjs",

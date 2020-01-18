@@ -55,9 +55,8 @@ export class RubyNormalizer implements NodeEffector {
       rb.parent = element;
       rb.appendChild(textNode);
       element.replaceChild(rb, textNode);
-      // console.log("Added rb:%o to %o", rb, element);
     });
-    console.log("normalized ruby:", element);
+    // console.log("normalized ruby:", element);
   }
 }
 
