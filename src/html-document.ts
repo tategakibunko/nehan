@@ -31,6 +31,7 @@ export class HtmlDocument {
   protected selectorCache: SelectorCache;
 
   constructor(source: string, options: HtmlDocumentOptions = defaultOptions) {
+    console.time("initializeDocument");
     this.source = Config.normalizeHtml(source);
     this.styleSheets = [
       new CssStyleSheet(DefaultStyles)
@@ -41,7 +42,6 @@ export class HtmlDocument {
     this.selectorCache = new SelectorCache();
     this.selectorCache.clear();
 
-    // console.time("html-parse");
     this.$document = new DOMParser().parseFromString(this.source, "text/html");
     this.documentElement = this.createElementFromDOM(this.$document.documentElement);
     const body = this.documentElement.querySelector("body");
@@ -50,7 +50,6 @@ export class HtmlDocument {
     }
     this.body = body;
     this.body.parent = this.documentElement;
-    // console.timeEnd("html-parse");
 
     // before css loading, initialize pseudo elements and set spec-styles to them.
     this.body.acceptEffectorAll(new PseudoElementInitializer(this.specStyleSheet.getPseudoRules()));
@@ -58,9 +57,8 @@ export class HtmlDocument {
     // normalize ruby element.
     this.body.acceptEffectorAll(new RubyNormalizer());
 
-    // console.time("CssLoader.loadAll");
     CssLoader.loadAll(this.body);
-    // console.timeEnd("CssLoader.loadAll");
+    console.timeEnd("initializeDocument");
   }
 
   public createBodyGenerator(): BodyGenerator {

@@ -1,4 +1,5 @@
 import {
+  Config,
   HtmlElement,
   ComputedRegion,
   Display,
@@ -96,6 +97,10 @@ class FloatRegionResolver implements IRegionResolver {
   private constructor() { }
   resolve(element: HtmlElement, region: ComputedRegion) {
     region.edges.margin.clearAutoInline();
+    if (region.logicalSize.measure.isAuto()) {
+      console.warn(`auto measure for float element is not allowed in nehan, so use ${Config.defaultFloatMeasure}px by default.`);
+      region.logicalSize.measure.length = Config.defaultFloatMeasure;
+    }
   }
 }
 
@@ -104,6 +109,10 @@ class ReFloatRegionResolver implements IRegionResolver {
   private constructor() { }
   resolve(element: HtmlElement, region: ComputedRegion) {
     region.edges.margin.clearAutoInline();
+    if (region.logicalSize.measure.isAuto()) {
+      console.warn(`auto measure for float element is not allowed in nehan, so use ${Config.defaultFloatMeasure}px by default.`);
+      region.logicalSize.measure.length = Config.defaultFloatMeasure;
+    }
   }
 }
 
@@ -128,6 +137,10 @@ class InlineBlockRegionResolver implements IRegionResolver {
   private constructor() { }
   resolve(element: HtmlElement, region: ComputedRegion) {
     region.edges.margin.clearAutoInline();
+    if (region.logicalSize.measure.isAuto()) {
+      console.warn(`auto measure for inline-block element is not allowed in nehan, so use ${Config.defaultInlineBlockMeasure}px by default.`);
+      region.logicalSize.measure.length = Config.defaultInlineBlockMeasure;
+    }
   }
 }
 
@@ -136,6 +149,10 @@ class ReInlineBlockRegionResolver implements IRegionResolver {
   private constructor() { }
   resolve(element: HtmlElement, region: ComputedRegion) {
     region.edges.margin.clearAutoInline();
+    if (region.logicalSize.measure.isAuto()) {
+      console.warn(`auto measure for inline-block element is not allowed in nehan, so use ${Config.defaultInlineBlockMeasure}px by default.`);
+      region.logicalSize.measure.length = Config.defaultInlineBlockMeasure;
+    }
   }
 }
 

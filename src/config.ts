@@ -3,8 +3,8 @@ export namespace Config {
   export let lang = "ja";
 
   // prefix string added to className or id of native DOM.
-  export const internalPrefix = "nehan-i"; // added to internal class or id
-  export const externalPrefix = "nehan-e"; // added to external class or id
+  export let internalPrefix = "nehan-i"; // added to internal class or id
+  export let externalPrefix = "nehan-e"; // added to external class or id
 
   export let normalizeHtml = (html: string): string => {
     return html
@@ -14,7 +14,7 @@ export namespace Config {
       .replace(/\u2015{2}/g, "\u2014\u2014") // HORIZONTAL BAR{2} -> EM DASH{2}
       .replace(/\s+$/, "") // trim end
   };
-  
+
   // Unfortunately, sometimes nehan.js is going to infinite loop,
   // and [maxFlowRollbackCount] restricts retry count of flow-generator.
   export let maxFlowRollbackCount = 3; // too many retry -> abort.
@@ -51,6 +51,8 @@ export namespace Config {
   export let defaultBodyExtent = 480;
   export let defaultLineHeight = 2.0;
   export let defaultBorderColor = "rgba(0,0,0,0.4)";
+  export let defaultFloatMeasure = 100;
+  export let defaultInlineBlockMeasure = 200;
 
   // Zs(separator, space category) characters but not omitted as white-space.
   export let nonOmitWhiteSpaces = [
@@ -76,7 +78,7 @@ export namespace Config {
   // Tags with only font-size settings. Empty by default.
   // Use this settings to speed up your layout engine.
   // For example, normally some kind of tags (ruby, rt, rb etc) requires only font-size.
-  export let fontSizeOnlyTags: string [] = [
+  export let fontSizeOnlyTags: string[] = [
   ]
 
   // Tags with no edge(margin/border/padding).
@@ -105,7 +107,7 @@ export namespace Config {
   //
   // then position of following tag is ignored by Nehan.CssParser::parseInlineStyle.
   // <span style='positoin:abosolute'>foo</span>
-  export let IgnoredInlineStyleProps: string [] = [
+  export let IgnoredInlineStyleProps: string[] = [
   ]
 
   // \u0021-\u007E, block = Basic Latin(without \u0026, \u003B)
