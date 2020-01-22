@@ -1,7 +1,7 @@
 import {
   CssStyleSheet,
   HtmlElement,
-  DefaultStyles,
+  UserAgentStyles,
   SelectorCache,
   CssLoader,
   BodyContext,
@@ -34,7 +34,7 @@ export class HtmlDocument {
     console.time("initializeDocument");
     this.source = Config.normalizeHtml(source);
     this.styleSheets = [
-      new CssStyleSheet(DefaultStyles)
+      new CssStyleSheet(UserAgentStyles)
     ].concat(options.styleSheets || []);
     this.specStyleSheet = this.styleSheets.reduce((acm, stylesheet) => {
       return acm.mergeStyleSheet(stylesheet);
