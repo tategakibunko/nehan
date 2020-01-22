@@ -1,6 +1,6 @@
 import {
   Utils,
-  DefaultCss,
+  BasicStyle,
   HtmlElement,
   CssCascade,
 } from "./public-api";
@@ -22,15 +22,15 @@ export enum OverflowWrapValue {
 
 export class OverflowWrap {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(OverflowWrapValue);
+  static values: string[] = Utils.Enum.toValueArray(OverflowWrapValue);
 
-  constructor(value: OverflowWrapValue){
-    this.value = DefaultCss.selectOrDefault(
+  constructor(value: OverflowWrapValue) {
+    this.value = BasicStyle.selectOrDefault(
       "overflow-wrap", value, OverflowWrap.values
     );
   }
 
-  static load(element: HtmlElement):OverflowWrap {
+  static load(element: HtmlElement): OverflowWrap {
     let value = CssCascade.getValue(element, "overflow-wrap");
     return new OverflowWrap(value as OverflowWrapValue);
   }

@@ -2,7 +2,7 @@ import {
   Utils,
   HtmlElement,
   CssCascade,
-  DefaultCss,
+  BasicStyle,
 } from "./public-api";
 
 export enum TextOrientationValue {
@@ -13,15 +13,15 @@ export enum TextOrientationValue {
 
 export class TextOrientation {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(TextOrientationValue);
+  static values: string[] = Utils.Enum.toValueArray(TextOrientationValue);
 
   static load(element: HtmlElement): TextOrientation {
     let value = CssCascade.getValue(element, "text-orientation");
     return new TextOrientation(value);
   }
 
-  constructor(value: string){
-    this.value = DefaultCss.selectOrDefault(
+  constructor(value: string) {
+    this.value = BasicStyle.selectOrDefault(
       "text-orientation", value, TextOrientation.values
     );
   }

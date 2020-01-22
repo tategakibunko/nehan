@@ -1,6 +1,6 @@
 import {
   Utils,
-  DefaultCss,
+  BasicStyle,
   HtmlElement,
   CssCascade,
 } from "./public-api";
@@ -15,10 +15,10 @@ export enum PageBreakValue {
 
 export class PageBreakAfter {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(PageBreakValue);
+  static values: string[] = Utils.Enum.toValueArray(PageBreakValue);
 
-  constructor(value: PageBreakValue){
-    this.value = DefaultCss.selectOrDefault("page-break-after", value, PageBreakAfter.values);
+  constructor(value: PageBreakValue) {
+    this.value = BasicStyle.selectOrDefault("page-break-after", value, PageBreakAfter.values);
   }
 
   public isAlways(): boolean {
@@ -33,10 +33,10 @@ export class PageBreakAfter {
 
 export class PageBreakBefore {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(PageBreakValue);
+  static values: string[] = Utils.Enum.toValueArray(PageBreakValue);
 
-  constructor(value: PageBreakValue){
-    this.value = DefaultCss.selectOrDefault("page-break-before", value, PageBreakBefore.values);
+  constructor(value: PageBreakValue) {
+    this.value = BasicStyle.selectOrDefault("page-break-before", value, PageBreakBefore.values);
   }
 
   public isAlways(): boolean {

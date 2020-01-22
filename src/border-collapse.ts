@@ -1,7 +1,7 @@
 import {
   HtmlElement,
   Utils,
-  DefaultCss,
+  BasicStyle,
   CssCascade
 } from "./public-api";
 
@@ -28,7 +28,7 @@ export class BorderCollapse {
   static values: BorderCollapseValue[] = Utils.Enum.toValueArray(BorderCollapseValue);
 
   constructor(value: BorderCollapseValue) {
-    this.value = DefaultCss.selectOrDefault(
+    this.value = BasicStyle.selectOrDefault(
       "border-collapse", value, BorderCollapse.values
     ) as BorderCollapseValue;
   }

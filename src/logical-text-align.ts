@@ -1,6 +1,6 @@
 import {
   Utils,
-  DefaultCss,
+  BasicStyle,
   HtmlElement,
   CssCascade,
   LogicalBox,
@@ -16,10 +16,10 @@ export enum LogicalTextAlignValue {
 
 export class LogicalTextAlign {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(LogicalTextAlignValue);
+  static values: string[] = Utils.Enum.toValueArray(LogicalTextAlignValue);
 
-  constructor(value: LogicalTextAlignValue){
-    this.value = DefaultCss.selectOrDefault(
+  constructor(value: LogicalTextAlignValue) {
+    this.value = BasicStyle.selectOrDefault(
       "text-align", value, LogicalTextAlign.values
     );
   }
@@ -46,7 +46,7 @@ export class LogicalTextAlign {
   }
 
   public getCss(box: LogicalBox): NativeStyleMap {
-    if(box.isTextVertical()){
+    if (box.isTextVertical()) {
       return this.getCssVert(box);
     }
     return this.getCssHori(box);
@@ -55,10 +55,10 @@ export class LogicalTextAlign {
   public getCssVert(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
     let gap = box.size.measure - box.autoSize.measure;
-    if(this.isEnd()){
+    if (this.isEnd()) {
       css.set("margin-top", gap + "px");
-    } else if(this.isCenter()){
-      css.set("margin-top", Math.floor(gap/2) + "px");
+    } else if (this.isCenter()) {
+      css.set("margin-top", Math.floor(gap / 2) + "px");
     }
     return css;
   }
@@ -66,10 +66,10 @@ export class LogicalTextAlign {
   public getCssHori(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
     let gap = box.size.measure - box.autoSize.measure;
-    if(this.isEnd()){
+    if (this.isEnd()) {
       css.set("margin-left", gap + "px");
-    } else if(this.isCenter()){
-      css.set("margin-left", Math.floor(gap/2) + "px");
+    } else if (this.isCenter()) {
+      css.set("margin-left", Math.floor(gap / 2) + "px");
     }
     return css;
   }

@@ -1,7 +1,7 @@
 import {
   BoxType,
   Utils,
-  DefaultCss,
+  BasicStyle,
   HtmlElement,
   CssCascade,
   CssLoader,
@@ -96,7 +96,7 @@ export class Display {
     if (Display.boxValues.includes(value)) {
       this.box = value;
     }
-    this.value = DefaultCss.selectOrDefault("display", value, Display.allValues);
+    this.value = BasicStyle.selectOrDefault("display", value, Display.allValues);
 
     switch (this.value) {
       case DisplayValue.NONE:

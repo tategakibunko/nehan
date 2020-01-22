@@ -1,6 +1,6 @@
 import {
   HtmlElement,
-  DefaultCss
+  BasicStyle
 } from "./public-api";
 
 export class CssCascade {
@@ -11,7 +11,7 @@ export class CssCascade {
 
   static getSpecValue(element: HtmlElement, prop: string): string {
     const specValue = element.style.getPropertyValue(prop) || "";
-    const defaultCss = DefaultCss.get(prop);
+    const defaultCss = BasicStyle.get(prop);
     switch (specValue) {
       // no value specified
       case "":

@@ -1,6 +1,6 @@
 import {
   Utils,
-  DefaultCss,
+  BasicStyle,
   Config,
   CssText,
   PropValue,
@@ -65,10 +65,10 @@ export class Font {
   public family: string;
 
   constructor() {
-    this.style = DefaultCss.getInitialValue("font-style");
-    this.variant = DefaultCss.getInitialValue("font-variant");
-    this.weight = DefaultCss.getInitialValue("font-weight");
-    this.stretch = DefaultCss.getInitialValue("font-stretch");
+    this.style = BasicStyle.getInitialValue("font-style");
+    this.variant = BasicStyle.getInitialValue("font-variant");
+    this.weight = BasicStyle.getInitialValue("font-weight");
+    this.stretch = BasicStyle.getInitialValue("font-stretch");
     this.size = Config.defaultFontSize;
     this.lineHeight = String(Config.defaultLineHeight);
     this.family = Config.defaultFontFamily;

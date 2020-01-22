@@ -1,6 +1,6 @@
 import {
   Utils,
-  DefaultCss,
+  BasicStyle,
   HtmlElement,
   CssCascade,
 } from "./public-api";
@@ -14,10 +14,10 @@ export enum TextJustifyValue {
 
 export class TextJustify {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(TextJustifyValue);
+  static values: string[] = Utils.Enum.toValueArray(TextJustifyValue);
 
-  constructor(value: TextJustifyValue){
-    this.value = DefaultCss.selectOrDefault(
+  constructor(value: TextJustifyValue) {
+    this.value = BasicStyle.selectOrDefault(
       "text-justify", value, TextJustify.values
     );
   }

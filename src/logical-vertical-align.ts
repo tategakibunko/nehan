@@ -1,6 +1,6 @@
 import {
   Utils,
-  DefaultCss,
+  BasicStyle,
   HtmlElement,
   CssCascade,
   LogicalBox,
@@ -20,10 +20,10 @@ export enum LogicalVerticalAlignValue {
 
 export class LogicalVerticalAlign {
   public value: string;
-  static values: string [] = Utils.Enum.toValueArray(LogicalVerticalAlignValue);
+  static values: string[] = Utils.Enum.toValueArray(LogicalVerticalAlignValue);
 
-  constructor(value: LogicalVerticalAlignValue){
-    this.value = DefaultCss.selectOrDefault(
+  constructor(value: LogicalVerticalAlignValue) {
+    this.value = BasicStyle.selectOrDefault(
       "vertical-align", value, LogicalVerticalAlign.values
     );
   }
@@ -34,7 +34,7 @@ export class LogicalVerticalAlign {
   }
 
   public getCss(box: LogicalBox): NativeStyleMap {
-    if(box.isTextVertical()){
+    if (box.isTextVertical()) {
       return this.getCssVert(box);
     }
     return this.getCssHori(box);
@@ -42,26 +42,26 @@ export class LogicalVerticalAlign {
 
   public getCssVert(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
-    switch(this.value){
-    case LogicalVerticalAlignValue.BASELINE:
-      css.set("margin-left", "auto");
-      css.set("margin-right", "auto");
-      break;
-    default:
-      console.warn("vertical-align(%s) is not supported yet.", this.value);
+    switch (this.value) {
+      case LogicalVerticalAlignValue.BASELINE:
+        css.set("margin-left", "auto");
+        css.set("margin-right", "auto");
+        break;
+      default:
+        console.warn("vertical-align(%s) is not supported yet.", this.value);
     }
     return css;
   }
 
   public getCssHori(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
-    switch(this.value){
-    case LogicalVerticalAlignValue.BASELINE:
-      css.set("margin-top", "auto");
-      css.set("margin-bottom", "auto");
-      break;
-    default:
-      console.warn("vertical-align(%s) is not supported yet.", this.value);
+    switch (this.value) {
+      case LogicalVerticalAlignValue.BASELINE:
+        css.set("margin-top", "auto");
+        css.set("margin-bottom", "auto");
+        break;
+      default:
+        console.warn("vertical-align(%s) is not supported yet.", this.value);
     }
     return css;
   }
