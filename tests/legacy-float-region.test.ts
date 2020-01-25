@@ -1,12 +1,12 @@
 import {
-  FloatRegion,
+  LegacyFloatRegion,
   LogicalSize,
   SpaceCursorPos,
   LogicalRect,
 } from '../dist';
 
 test("float-region", () => {
-  let region = new FloatRegion(new LogicalSize({ measure: 100, extent: 100 }), 0);
+  let region = new LegacyFloatRegion(new LogicalSize({ measure: 100, extent: 100 }), 0);
   let rect: LogicalRect;
   /*
   ----------------------------------

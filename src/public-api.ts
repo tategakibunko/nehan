@@ -87,7 +87,7 @@ export * from "./dynamic-style-utils"
 export * from "./dynamic-style"
 export * from "./empty-box-context"
 export * from "./first-line-context"
-export * from "./float-region"
+export * from "./legacy-float-region"
 export * from "./font"
 export * from "./hori-layout-evaluator"
 export * from "./hr-context"
@@ -188,6 +188,7 @@ export * from './used-region-resolver'
 export * from './layout-offset'
 export * from './context-box-edge'
 export * from './logical-node-evaluator'
+export * from './logical-css-evaluator'
 export * from './logical-node'
 export * from './layout-result'
 export * from './layout-format-context'

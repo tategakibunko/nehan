@@ -9,7 +9,7 @@ export interface SpaceCursorPos {
   cursor: LogicalCursorPos;
 }
 
-export class FloatRegion {
+export class LegacyFloatRegion {
   public maxRegion: LogicalRect;
   public startRects: LogicalRect[];
   public endRects: LogicalRect[];

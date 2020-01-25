@@ -1,13 +1,13 @@
 import {
   FlowContext,
   FlowRegion,
-  FloatRegion,
+  LegacyFloatRegion,
   LogicalSize,
   LogicalRect,
 } from "./public-api";
 
 export class FlowRootRegion extends FlowRegion {
-  protected floatRegion: FloatRegion | null;
+  protected floatRegion: LegacyFloatRegion | null;
 
   constructor(context: FlowContext) {
     super(context);
@@ -30,12 +30,12 @@ export class FlowRootRegion extends FlowRegion {
     return this.floatRegion !== null;
   }
 
-  protected createFloatRegion(): FloatRegion {
+  protected createFloatRegion(): LegacyFloatRegion {
     let size = new LogicalSize({
       measure: this.maxContextBoxMeasure,
       extent: this.maxContextBoxExtent
     });
-    return new FloatRegion(size, this.cursor.before);
+    return new LegacyFloatRegion(size, this.cursor.before);
   }
 
   public clearFloatRegion() {
@@ -49,7 +49,7 @@ export class FlowRootRegion extends FlowRegion {
     return 0;
   }
 
-  public getFloatRegion(): FloatRegion | null {
+  public getFloatRegion(): LegacyFloatRegion | null {
     return this.floatRegion;
   }
 

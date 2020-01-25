@@ -35,7 +35,7 @@ export class LogicalCursorPos implements LogicalCursorPosValue {
   }
 
   public toString(): string {
-    return `(start=${this.start}, before=${this.before})`;
+    return `(${this.start}, ${this.before})`;
   }
 
   public translate(offset: LogicalCursorPosValue): LogicalCursorPos {

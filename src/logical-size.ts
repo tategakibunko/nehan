@@ -4,6 +4,7 @@ import {
   PhysicalSize,
   WritingMode,
   NativeStyleMap,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 export class LogicalSize {
@@ -91,6 +92,10 @@ export class LogicalSize {
       }
     }
     return new LogicalSize(size);
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitSize(this);
   }
 
   public getCss(is_vert: boolean): NativeStyleMap {

@@ -22,7 +22,7 @@ export class UsedRegionResolver {
     const isRe = ReplacedElement.isReplacedElement(element);
 
     if (float !== "none") {
-      return isRe ? ReFloatRegionResolver.instance : FloatRegionResolver.instance;
+      return isRe ? ReFloatBlockRegionResolver.instance : FloatBlockRegionResolver.instance;
     }
     if (position === "absolute") {
       return isRe ? ReAbsoluteRegionResolver.instance : AbsoluteRegionResolver.instance;
@@ -92,8 +92,8 @@ class ReBlockRegionResolver implements IRegionResolver {
   }
 }
 
-class FloatRegionResolver implements IRegionResolver {
-  static instance = new FloatRegionResolver();
+class FloatBlockRegionResolver implements IRegionResolver {
+  static instance = new FloatBlockRegionResolver();
   private constructor() { }
   resolve(element: HtmlElement, region: ComputedRegion) {
     region.edges.margin.clearAutoInline();
@@ -104,8 +104,8 @@ class FloatRegionResolver implements IRegionResolver {
   }
 }
 
-class ReFloatRegionResolver implements IRegionResolver {
-  static instance = new ReFloatRegionResolver();
+class ReFloatBlockRegionResolver implements IRegionResolver {
+  static instance = new ReFloatBlockRegionResolver();
   private constructor() { }
   resolve(element: HtmlElement, region: ComputedRegion) {
     region.edges.margin.clearAutoInline();

@@ -1,9 +1,8 @@
 import {
   FlowContext,
   FlowContent,
-  FloatRegion,
+  LegacyFloatRegion,
   Config,
-  HtmlElement,
   LogicalBox,
   LogicalBoxEdge,
   LogicalCursorPos,
@@ -22,7 +21,7 @@ export class FlowRegion {
   protected content: FlowContent;
   protected context: FlowContext;
   protected cursor: LogicalCursorPos;
-  protected floatRegion: FloatRegion | null;
+  protected floatRegion: LegacyFloatRegion | null;
 
   constructor(context: FlowContext, content = new FlowContent()) {
     this.context = context;
@@ -207,7 +206,7 @@ export class FlowRegion {
     return this.cursor.before >= max;
   }
 
-  protected createFloatRegion(): FloatRegion {
+  protected createFloatRegion(): LegacyFloatRegion {
     throw new Error("must be overrided by FlowRootRegion");
   }
 
@@ -411,12 +410,12 @@ export class FlowRegion {
     return this.getLocalPosFromRootPos(root_pos);
   }
 
-  protected getSpaceMeasureAt(float_region: FloatRegion, root_before: number): number {
+  protected getSpaceMeasureAt(float_region: LegacyFloatRegion, root_before: number): number {
     const float_measure = float_region.getSideRectMeasureAt(root_before);
     return this.maxContextBoxMeasure - float_measure;
   }
 
-  public getFloatRegion(): FloatRegion | null {
+  public getFloatRegion(): LegacyFloatRegion | null {
     return this.rootRegion.getFloatRegion();
   }
 
