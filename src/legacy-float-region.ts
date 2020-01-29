@@ -114,7 +114,7 @@ export class LegacyFloatRegion {
   }
 
   public pushStart(before: number, size: LogicalSize): LogicalRect {
-    if (this.maxRegion.includeSize(size) === false) {
+    if (this.maxRegion.canContain(size) === false) {
       throw new Error("FloatRegion:too large size");
     }
     this.cursorBefore = Math.max(this.cursorBefore, before);
@@ -143,7 +143,7 @@ export class LegacyFloatRegion {
   }
 
   public pushEnd(before: number, size: LogicalSize): LogicalRect {
-    if (this.maxRegion.includeSize(size) === false) {
+    if (this.maxRegion.canContain(size) === false) {
       throw new Error("FloatRegion:too large size");
     }
     this.cursorBefore = Math.max(this.cursorBefore, before);

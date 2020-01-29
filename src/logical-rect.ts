@@ -1,5 +1,6 @@
 import {
   LogicalCursorPos,
+  LogicalCursorPosValue,
   LogicalSize,
 } from "./public-api";
 
@@ -17,8 +18,12 @@ export class LogicalRect {
     return `rect(${str})`;
   }
 
-  public includeSize(size: LogicalSize): boolean {
-    return (this.measure >= size.measure && this.extent >= size.extent);
+  public canContain(size: LogicalSize): boolean {
+    return this.size.canContain(size);
+  }
+
+  public translate(value: LogicalCursorPosValue): LogicalRect {
+    return new LogicalRect(this.pos.translate(value), this.size);
   }
 
   public collideWith(rect: LogicalRect): boolean {

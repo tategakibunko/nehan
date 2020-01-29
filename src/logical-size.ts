@@ -50,6 +50,10 @@ export class LogicalSize {
     return new LogicalSize({ measure: this.measure, extent: this.extent });
   }
 
+  public canContain(size: LogicalSize): boolean {
+    return (this.measure >= size.measure && this.extent >= size.extent);
+  }
+
   public isZero(): boolean {
     return this.measure === 0 && this.extent === 0;
   }

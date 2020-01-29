@@ -64,7 +64,7 @@ export const UserAgentStyles: CssRules = {
     "margin": "1.12em 40px"
   },
   "body": {
-    "display": "block",
+    "display": "flow-root",
     "text-align": "justify",
     "font-size": "16px",
     "overflow-wrap": "break-word",
