@@ -127,6 +127,15 @@ export class LogicalEdgeSize extends LogicalEdge<number> {
     return this.before === 0 && this.end === 0 && this.after === 0 && this.start === 0;
   }
 
+  public clone(): LogicalEdgeSize {
+    return new LogicalEdgeSize({
+      before: this.before,
+      end: this.end,
+      after: this.after,
+      start: this.start
+    });
+  }
+
   public get extent(): number {
     return this.before + this.after;
   }

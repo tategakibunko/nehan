@@ -38,7 +38,7 @@ export class LegacyFloatRegion {
     return Math.max(this.maxStartRegionExtent, this.maxEndRegionExtent);
   }
 
-  public clear() {
+  public reset() {
     this.clearBoth();
     this.cursorBefore = 0;
   }
