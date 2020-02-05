@@ -2,6 +2,7 @@ import {
   ICharacter,
   LogicalSize,
   Font,
+  TextEmphaData,
 } from "./public-api";
 
 // ligature
@@ -26,6 +27,7 @@ export class MixChar implements ICharacter {
     font: Font;
     isVertical: boolean;
     isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) {
     if (opts.isVertical) {
       this.size.measure = opts.font.size;

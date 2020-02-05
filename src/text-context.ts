@@ -222,10 +222,12 @@ export class TextContext implements ILayoutContext {
     // Note that word token should be called setMetrics always,
     // because any word could be broken by 'overflow-wrap:break-word' or 'word-break:break-all'.
     if (text instanceof Word || text.size.measure === 0) {
+      const empha = this.env.isTextEmphasized() ? this.env.textEmphasis.textEmphaData : undefined;
       text.setMetrics({
         font: this.env.font,
         isVertical: this.env.isTextVertical(),
         isEmphasized: this.env.isTextEmphasized(),
+        empha,
       });
     }
     return { done: false, value: [new LayoutValue(text)] };

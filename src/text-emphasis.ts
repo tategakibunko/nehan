@@ -6,6 +6,11 @@ import {
   HtmlElement,
 } from "./public-api";
 
+export interface TextEmphaData {
+  text: string;
+  styles: string[];
+}
+
 export class TextEmphasis {
   public style!: TextEmphasisStyle;
   public color!: string;
@@ -48,7 +53,13 @@ export class TextEmphasis {
   }
 
   // can't create directly.
-  protected constructor() {
+  protected constructor() { }
+
+  public get textEmphaData(): TextEmphaData {
+    return {
+      text: this.text,
+      styles: this.style.values
+    };
   }
 
   public get text(): string {

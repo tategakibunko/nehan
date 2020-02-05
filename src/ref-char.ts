@@ -2,6 +2,7 @@ import {
   ICharacter,
   LogicalSize,
   Font,
+  TextEmphaData,
 } from "./public-api";
 
 export class RefChar implements ICharacter {
@@ -27,6 +28,7 @@ export class RefChar implements ICharacter {
     font: Font,
     isVertical: boolean;
     isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) {
     this.size.measure = opts.font.size;
     this.size.extent = opts.font.size;

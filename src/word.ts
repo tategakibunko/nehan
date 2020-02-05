@@ -3,6 +3,7 @@ import {
   LogicalSize,
   Tcy,
   Font,
+  TextEmphaData,
 } from "./public-api";
 
 const createDummyElement = (): HTMLElement => {
@@ -59,9 +60,10 @@ export class Word implements ICharacter {
   }
 
   public setMetrics(opts: {
-    font: Font,
-    isVertical: boolean,
-    isEmphasized: boolean
+    font: Font;
+    isVertical: boolean;
+    isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) {
     this.size = Word.getLogicalSize(opts.font, this.text);
   }

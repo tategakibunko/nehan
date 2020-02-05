@@ -3,6 +3,7 @@ import {
   LogicalSize,
   Word,
   Font,
+  TextEmphaData,
 } from "./public-api";
 
 export class Tcy implements ICharacter {
@@ -26,6 +27,7 @@ export class Tcy implements ICharacter {
     font: Font;
     isVertical: boolean;
     isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) {
     if (opts.isVertical) {
       this.size.measure = opts.font.size;

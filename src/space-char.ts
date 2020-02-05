@@ -5,6 +5,7 @@ import {
   SpaceCharTable,
   NativeStyleMap,
   Font,
+  TextEmphaData,
 } from "./public-api";
 
 // more detailed version
@@ -63,6 +64,7 @@ export class SpaceChar implements ICharacter {
     font: Font;
     isVertical: boolean;
     isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) {
     this.size.measure = Math.floor(this.info.advanceRate * opts.font.size);
     this.size.extent = opts.font.size;

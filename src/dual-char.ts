@@ -4,7 +4,8 @@ import {
   LogicalSize,
   DualCharInfo,
   ParenType,
-  KinsokuPos
+  KinsokuPos,
+  TextEmphaData,
 } from "./public-api";
 import { Font } from "./font";
 
@@ -56,6 +57,7 @@ export class DualChar implements ICharacter {
     font: Font,
     isVertical: boolean;
     isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) {
     this.size.measure = opts.font.size;
     this.size.extent = opts.font.size;

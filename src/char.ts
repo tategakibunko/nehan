@@ -2,6 +2,7 @@ import {
   ICharacter,
   LogicalSize,
   Font,
+  TextEmphaData,
 } from "./public-api";
 
 export class Char implements ICharacter {
@@ -11,6 +12,7 @@ export class Char implements ICharacter {
   public kerning: boolean;
   public spacing: number;
   public charCount: number;
+  public empha?: TextEmphaData;
 
   public constructor(str: string) {
     this.text = str;
@@ -25,9 +27,11 @@ export class Char implements ICharacter {
     font: Font;
     isVertical: boolean;
     isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) {
     this.size.measure = opts.font.size;
     this.size.extent = opts.font.size;
+    this.empha = opts.empha;
     if (opts.isEmphasized) {
       this.hasEmphasis = true;
       this.size.extent = opts.font.size * 2;

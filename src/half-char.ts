@@ -3,7 +3,8 @@ import {
   LogicalSize,
   LogicalBox,
   Font,
-  NativeStyleMap
+  NativeStyleMap,
+  TextEmphaData,
 } from "./public-api";
 
 // HALF-WIDTH LETTERS
@@ -14,6 +15,7 @@ export class HalfChar implements ICharacter {
   public kerning: boolean;
   public spacing: number;
   public charCount: number;
+  public empha?: TextEmphaData;
 
   public constructor(str: string) {
     this.text = str;
@@ -28,9 +30,11 @@ export class HalfChar implements ICharacter {
     font: Font;
     isVertical: boolean;
     isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) {
     this.size.measure = opts.isVertical ? opts.font.size : Math.floor(opts.font.size / 2);
     this.size.extent = opts.font.size;
+    this.empha = opts.empha;
     if (opts.isEmphasized) {
       this.hasEmphasis = true;
       this.size.extent = opts.font.size * 2;

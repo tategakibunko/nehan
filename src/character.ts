@@ -10,6 +10,7 @@ import {
   Tcy,
   Word,
   Font,
+  TextEmphaData,
 } from "./public-api";
 
 export interface ICharacter {
@@ -17,12 +18,14 @@ export interface ICharacter {
   size: LogicalSize,
   charCount: number,
   hasEmphasis: boolean,
+  empha?: TextEmphaData,
   kerning: boolean,
   spacing: number,
   setMetrics: (opts: {
     font: Font;
     isVertical: boolean;
     isEmphasized: boolean;
+    empha?: TextEmphaData;
   }) => void,
   toString: () => string
 }
