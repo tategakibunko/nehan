@@ -17,14 +17,12 @@ export interface ICharacter {
   text: string,
   size: LogicalSize,
   charCount: number,
-  hasEmphasis: boolean,
   empha?: TextEmphaData,
   kerning: boolean,
   spacing: number,
   setMetrics: (opts: {
     font: Font;
     isVertical: boolean;
-    isEmphasized: boolean;
     empha?: TextEmphaData;
   }) => void,
   toString: () => string

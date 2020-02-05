@@ -31,7 +31,6 @@ export class TextRegion extends FlowRegion {
     word_head.setMetrics({
       font: this.context.env.font,
       isVertical: this.context.env.isTextVertical(),
-      isEmphasized: this.context.env.isTextEmphasized(),
     });
     word_head.size.measure = rest_measure; // force set measure(just size to fit line-max).
     return word_head;

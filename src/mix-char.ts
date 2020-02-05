@@ -9,7 +9,6 @@ import {
 export class MixChar implements ICharacter {
   public text: string;
   public size: LogicalSize;
-  public hasEmphasis: boolean;
   public kerning: boolean;
   public spacing: number;
   public charCount: number;
@@ -17,7 +16,6 @@ export class MixChar implements ICharacter {
   public constructor(str: string) {
     this.text = str;
     this.size = new LogicalSize({ measure: 0, extent: 0 });
-    this.hasEmphasis = false;
     this.kerning = false;
     this.spacing = 0;
     this.charCount = 1;
@@ -26,7 +24,6 @@ export class MixChar implements ICharacter {
   public setMetrics(opts: {
     font: Font;
     isVertical: boolean;
-    isEmphasized: boolean;
     empha?: TextEmphaData;
   }) {
     if (opts.isVertical) {

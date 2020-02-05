@@ -14,7 +14,6 @@ import {
 export class SpaceChar implements ICharacter {
   public text: string;
   public size: LogicalSize;
-  public hasEmphasis: boolean;
   public info: SpaceCharInfo;
   public kerning: boolean;
   public spacing: number;
@@ -40,7 +39,6 @@ export class SpaceChar implements ICharacter {
   public constructor(str: string) {
     this.text = this.normalize(str);
     this.size = new LogicalSize({ measure: 0, extent: 0 });
-    this.hasEmphasis = false;
     this.info = SpaceCharTable.load(str);
     this.kerning = false;
     this.spacing = 0;
@@ -63,7 +61,6 @@ export class SpaceChar implements ICharacter {
   public setMetrics(opts: {
     font: Font;
     isVertical: boolean;
-    isEmphasized: boolean;
     empha?: TextEmphaData;
   }) {
     this.size.measure = Math.floor(this.info.advanceRate * opts.font.size);

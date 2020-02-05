@@ -226,7 +226,6 @@ export class TextContext implements ILayoutContext {
       text.setMetrics({
         font: this.env.font,
         isVertical: this.env.isTextVertical(),
-        isEmphasized: this.env.isTextEmphasized(),
         empha,
       });
     }

@@ -26,7 +26,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
     if ((child instanceof Char ||
       child instanceof SmpUniChar ||
       child instanceof RefChar) &&
-      child.hasEmphasis === false) {
+      child.empha === undefined) {
       node.appendChild(document.createElement("br"));
     }
     if (isCharacter(child)) {
@@ -134,7 +134,7 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
 
   protected evalChar(parent: LogicalBox, char: Char): Node {
     //console.log("evalChar:", char);
-    if (char.hasEmphasis && char.empha) {
+    if (char.empha) {
       return this.evalEmphasizedCharacter(parent, char, char.empha);
     }
     return document.createTextNode(char.text);
@@ -142,13 +142,11 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
 
   protected evalEmphasizedCharacter(parent: LogicalBox, char: EmphasizableChar, empha: TextEmphaData): Node {
     //console.log("evalEmphasizedCharacter:", char);
-    let node = document.createElement("div");
-    let cnode = document.createElement("div");
-    let enode = document.createElement("div");
-    let mark = empha.text;
-    let mark_style_values = empha.styles;
-    // let mark = parent.env.textEmphasis.text;
-    // let mark_style_values = parent.env.textEmphasis.style.values;
+    const node = document.createElement("div");
+    const cnode = document.createElement("div");
+    const enode = document.createElement("div");
+    const mark = empha.text;
+    const mark_style_values = empha.styles;
     node.className = Prefix.addInternal("empha");
     cnode.className = Prefix.addInternal("empha-src");
     ["empha-mark"].concat(mark_style_values).map(Prefix.addInternal).forEach(klass => {
@@ -172,8 +170,8 @@ export class VertLayoutEvaluator extends LayoutEvaluator {
 
   protected evalRefChar(parent: LogicalBox, char: RefChar): Node {
     //console.log("evalRefChar:", char);
-    if (char.hasEmphasis) {
-      return this.evalEmphasizedCharacter(parent, char);
+    if (char.empha) {
+      return this.evalEmphasizedCharacter(parent, char, char.empha);
     }
     return document.createTextNode(char.text);
   }

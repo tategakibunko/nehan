@@ -13,7 +13,6 @@ import { Font } from "./font";
 export class DualChar implements ICharacter {
   public text: string;
   public size: LogicalSize;
-  public hasEmphasis: boolean;
   public info: DualCharInfo;
   public kerning: boolean;
   public spacing: number;
@@ -22,7 +21,6 @@ export class DualChar implements ICharacter {
   public constructor(str: string, info: DualCharInfo) {
     this.text = str;
     this.size = new LogicalSize({ measure: 0, extent: 0 });
-    this.hasEmphasis = false;
     this.info = info;
     this.kerning = false;
     this.spacing = 0;
@@ -56,7 +54,6 @@ export class DualChar implements ICharacter {
   public setMetrics(opts: {
     font: Font,
     isVertical: boolean;
-    isEmphasized: boolean;
     empha?: TextEmphaData;
   }) {
     this.size.measure = opts.font.size;
