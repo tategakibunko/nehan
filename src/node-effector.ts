@@ -50,16 +50,15 @@ export class TableCellInitializer implements NodeEffector {
       const measure = cell.computedStyle.getPropertyValue("measure") || "0";
       return (measure === "auto") ? 0 : parseInt(measure, 10);
     });
-    const fixedCount = cellMeasures.map(size => size !== 0).length;
+    const autoCells = cells.filter(cell => cell.computedStyle.getPropertyValue("measure") === "auto");
+    const fixedCount = cells.length - autoCells.length;
     const fixedSize = cellMeasures.reduce((sum, size) => sum + size, 0);
     const autoSize = Math.max((parentMeasure - fixedSize - inlineEdgeSize) / (cells.length - fixedCount), 0);
-    console.log("cell auto size:%dpx", autoSize);
-    cells.forEach(cell => {
-      const measure = parseInt(cell.computedStyle.getPropertyValue("measure") || "0", 10);
-      if (measure === 0) {
-        cell.computedStyle.setProperty("measure", autoSize + "px");
-      }
-    });
+    console.log(
+      "cell size:(parent:%d, fixedSize:%d, fixedCount:%d, iedge:%d, auto:%d)",
+      parentMeasure, fixedSize, fixedCount, inlineEdgeSize, autoSize
+    );
+    autoCells.forEach(cell => cell.computedStyle.setProperty("measure", autoSize + "px"));
   }
 }
 

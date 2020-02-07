@@ -138,8 +138,10 @@ class InlineBlockRegionResolver implements IRegionResolver {
   resolve(element: HtmlElement, region: ComputedRegion) {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
-      console.warn(`auto measure for inline-block element is not allowed in nehan, so use ${Config.defaultInlineBlockMeasure}px by default.`);
-      region.logicalSize.measure.length = Config.defaultInlineBlockMeasure;
+      if (element.computedStyle.getPropertyValue("display") !== "table-cell") {
+        console.warn(`auto measure for inline-block element is not allowed in nehan, so use ${Config.defaultInlineBlockMeasure}px by default.`);
+        region.logicalSize.measure.length = Config.defaultInlineBlockMeasure;
+      }
     }
   }
 }
