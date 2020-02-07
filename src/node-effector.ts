@@ -14,13 +14,53 @@ import {
   AutableBoxLengthProps,
   ComputedRegion,
   UsedRegionResolver,
-
+  LogicalBoxEdge,
 } from './public-api'
 import { FlowContext } from './flow-context';
 
 // treat side-effect
 export interface NodeEffector {
   visit: (element: HtmlElement) => void;
+}
+
+export class TableCellInitializer implements NodeEffector {
+  static instance = new TableCellInitializer();
+  private constructor() { }
+
+  visit(element: HtmlElement) {
+    if (!element.parent || element.computedStyle.getPropertyValue("display") !== "table-cell") {
+      return;
+    }
+    const cells = element.parent.children.filter(child => {
+      return child.computedStyle.getPropertyValue("display") === "table-cell";
+    });
+    if (cells.every(cell => cell.computedStyle.getPropertyValue("measure") !== "auto")) {
+      return; // already calculated
+    }
+    // force set margin to zero
+    cells.forEach(cell => {
+      LogicalEdgeDirections.forEach(dir => {
+        cell.computedStyle.setProperty(`margin-${dir}`, "0");
+      })
+    });
+    const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
+    const cellEdges = cells.map(cell => LogicalBoxEdge.load(cell));
+    const inlineEdgeSize = cellEdges[0].start + cellEdges.reduce((sum, cellEdge) => sum + cellEdge.end, 0);
+    const cellMeasures = cells.map(cell => {
+      const measure = cell.computedStyle.getPropertyValue("measure") || "0";
+      return (measure === "auto") ? 0 : parseInt(measure, 10);
+    });
+    const fixedCount = cellMeasures.map(size => size !== 0).length;
+    const fixedSize = cellMeasures.reduce((sum, size) => sum + size, 0);
+    const autoSize = Math.max((parentMeasure - fixedSize - inlineEdgeSize) / (cells.length - fixedCount), 0);
+    console.log("cell auto size:%dpx", autoSize);
+    cells.forEach(cell => {
+      const measure = parseInt(cell.computedStyle.getPropertyValue("measure") || "0", 10);
+      if (measure === 0) {
+        cell.computedStyle.setProperty("measure", autoSize + "px");
+      }
+    });
+  }
 }
 
 /*
@@ -36,6 +76,9 @@ export interface NodeEffector {
   <ruby><rb>漢字</rb><rt>かんじ</rt></ruby>
 */
 export class RubyNormalizer implements NodeEffector {
+  static instance = new RubyNormalizer();
+  private constructor() { }
+
   visit(element: HtmlElement) {
     if (element.tagName !== "ruby") {
       return;
@@ -433,6 +476,7 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setCascadedValue(element, "white-space");
     this.setCascadedValue(element, "page-break-before");
     this.setCascadedValue(element, "position"); // static, relative, absolute
+    this.setCascadedValue(element, "border-collapse");
 
     // Use 'text-align:justify' instead.
     // this.setCascadedValue(element, "text-justify");
@@ -462,16 +506,5 @@ export class CssUsedRegionLoader implements NodeEffector {
     resolver.resolve(element, computedRegion);
     // console.log("[%s] measure is resolved to %o", element.tagName, computedRegion.logicalSize.measure.length);
     computedRegion.save(element.computedStyle);
-  }
-}
-
-// TODO
-// optimize element order of float element.
-// (inline+ float) -> (float inline+)
-export class FloatOptimizer implements NodeEffector {
-  static instance = new FloatOptimizer();
-  private constructor() { }
-
-  visit(element: HtmlElement) {
   }
 }

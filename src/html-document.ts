@@ -54,9 +54,6 @@ export class HtmlDocument {
     // before css loading, initialize pseudo elements and set spec-styles to them.
     this.body.acceptEffectorAll(new PseudoElementInitializer(this.specStyleSheet.getPseudoRules()));
 
-    // normalize ruby element.
-    this.body.acceptEffectorAll(new RubyNormalizer());
-
     CssLoader.loadAll(this.body);
     console.timeEnd("initializeDocument");
   }
