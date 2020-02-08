@@ -45,6 +45,9 @@ export class TableCellInitializer implements NodeEffector {
     });
     const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
     const cellEdges = cells.map(cell => LogicalBoxEdge.load(cell));
+
+    // [TODO]
+    // Currently, we assume that border-collapse is always 'collapse'. We must support 'separate' in the future.
     const inlineEdgeSize = cellEdges[0].start + cellEdges.reduce((sum, cellEdge) => sum + cellEdge.end, 0);
     const cellMeasures = cells.map(cell => {
       const measure = cell.computedStyle.getPropertyValue("measure") || "0";
