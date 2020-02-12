@@ -43,12 +43,23 @@ export class TableCellInitializer implements NodeEffector {
         cell.computedStyle.setProperty(`margin-${dir}`, "0");
       })
     });
+    const parentEdge = LogicalBoxEdge.load(element.parent);
     const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
     const cellEdges = cells.map(cell => LogicalBoxEdge.load(cell));
 
     // [TODO]
     // Currently, we assume that border-collapse is always 'collapse'. We must support 'separate' in the future.
-    const inlineEdgeSize = cellEdges[0].start + cellEdges.reduce((sum, cellEdge) => sum + cellEdge.end, 0);
+    const inlineEdgeSize = cellEdges.reduce((sum, cellEdge, index) => {
+      if (index === 0) {
+        const size = (cellEdge.start > parentEdge.start) ? cellEdge.start - parentEdge.start : 0;
+        return sum + size;
+      } else if (index < cellEdges.length - 1) {
+        return sum + Math.max(cellEdge.end, cellEdges[index + 1].start);
+      } else {
+        const size = (cellEdge.end > parentEdge.end) ? cellEdge.end - parentEdge.end : 0;
+        return sum + size;
+      }
+    }, 0);
     const cellMeasures = cells.map(cell => {
       const measure = cell.computedStyle.getPropertyValue("measure") || "0";
       return (measure === "auto") ? 0 : parseInt(measure, 10);

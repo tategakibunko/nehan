@@ -276,6 +276,11 @@ export class Display {
     return this.internal ? this.internal === DisplayInternal.TABLE_CELL : false;
   }
 
+  public isBorderCollapsable(): boolean {
+    // table-row-group, table-row, table-cell can share border-area with parent border.
+    return this.isTableRowGroup() || this.isTableRow() || this.isTableCell();
+  }
+
   public isRubyChild(): boolean {
     return this.isRubyBase() || this.isRubyText();
   }

@@ -5,10 +5,7 @@ import {
   CssCascade
 } from "./public-api";
 
-export enum BorderCollapseValue {
-  COLLAPSE = "collapse",
-  SEPARATE = "separate",
-}
+export type BorderCollapseValue = "collapse" | "separate";
 
 let border_width = (element: HtmlElement, dir: string): number => {
   let value = element.computedStyle.getPropertyValue(`border-${dir}-width`) || "0";
@@ -25,20 +22,17 @@ let parent_border_width = (element: HtmlElement, dir: string): number => {
 
 export class BorderCollapse {
   public value: BorderCollapseValue;
-  static values: BorderCollapseValue[] = Utils.Enum.toValueArray(BorderCollapseValue);
 
   constructor(value: BorderCollapseValue) {
-    this.value = BasicStyle.selectOrDefault(
-      "border-collapse", value, BorderCollapse.values
-    ) as BorderCollapseValue;
+    this.value = value;
   }
 
   public isCollapse(): boolean {
-    return this.value === BorderCollapseValue.COLLAPSE;
+    return this.value === "collapse";
   }
 
   public isSeparate(): boolean {
-    return this.value === BorderCollapseValue.SEPARATE;
+    return this.value === "separate";
   }
 
   static load(element: HtmlElement) {

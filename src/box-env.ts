@@ -22,6 +22,7 @@ import {
   ListStyle,
   WhiteSpace,
   PageBreakBefore,
+  BorderCollapse,
 } from "./public-api";
 
 // In paged media, displayed box of each element is splited by page.
@@ -50,6 +51,7 @@ export class BoxEnv {
   public whiteSpace: WhiteSpace;
   public pageBreakBefore: PageBreakBefore;
   public backgroundPos: LogicalBackgroundPos;
+  public borderCollapse: BorderCollapse;
 
   constructor(element: HtmlElement) {
     this.element = element;
@@ -74,6 +76,7 @@ export class BoxEnv {
     this.whiteSpace = WhiteSpace.load(element);
     this.pageBreakBefore = PageBreakBefore.load(element);
     this.backgroundPos = LogicalBackgroundPos.load(element);
+    this.borderCollapse = BorderCollapse.load(element);
   }
 
   protected loadEdge(element: HtmlElement, display: Display): LogicalBoxEdge {
