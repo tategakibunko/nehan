@@ -46,13 +46,13 @@
   "author": "Watanabe Masaki",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.12.11",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.27",
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
-    "node-sass": "^4.12.0",
-    "ts-jest": "^24.1.0",
-    "ts-loader": "^6.1.0",
-    "typescript": "^3.6.3"
+    "node-sass": "^4.13.1",
+    "ts-jest": "^24.3.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5"
   }
 }
