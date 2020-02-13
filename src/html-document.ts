@@ -10,6 +10,7 @@ import {
   PageReader,
   Config,
   PseudoElementInitializer,
+  LineBreakInserter,
 } from "./public-api";
 import { RubyNormalizer } from "./node-effector";
 
@@ -55,6 +56,9 @@ export class HtmlDocument {
     this.body.acceptEffectorAll(new PseudoElementInitializer(this.specStyleSheet.getPseudoRules()));
 
     CssLoader.loadAll(this.body);
+
+    // after loading, do some preprocessing...
+    this.body.acceptEffectorAll(LineBreakInserter.instance);
     console.timeEnd("initializeDocument");
   }
 

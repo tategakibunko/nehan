@@ -15,6 +15,8 @@ import {
   ComputedRegion,
   UsedRegionResolver,
   LogicalBoxEdge,
+  LogicalFloat,
+  WhiteSpace,
 } from './public-api'
 import { FlowContext } from './flow-context';
 
@@ -73,6 +75,43 @@ export class TableCellInitializer implements NodeEffector {
       parentMeasure, fixedSize, fixedCount, inlineEdgeSize, autoSize
     );
     autoCells.forEach(cell => cell.computedStyle.setProperty("measure", autoSize + "px"));
+  }
+}
+
+/*
+  Insert <br> between text node and block level element.
+
+  [example]
+
+  this is some text
+  <p>foo</p>
+
+  =>
+
+  this is some text<br>
+  <p>foo</p>
+*/
+export class LineBreakInserter implements NodeEffector {
+  static instance = new LineBreakInserter();
+  private constructor() { }
+
+  visit(element: HtmlElement) {
+    if (element.isTextElement()) {
+      return;
+    }
+    const display = Display.load(element);
+    const float = LogicalFloat.load(element);
+    if (display.isInlineLevel() && float.isNone()) {
+      return;
+    }
+    const prev = element.previousSibling;
+    if (!prev) {
+      return;
+    }
+    if (element.parent && prev.isTextElement() && !WhiteSpace.isWhiteSpaceElement(prev)) {
+      // console.log("insert <br> before %o", element);
+      element.parent.insertBefore(element.ownerDocument.createElement("br"), element);
+    }
   }
 }
 
