@@ -1,0 +1,75 @@
+import {
+  ILogicalNodeGenerator,
+  LayoutResult,
+  ICharacter,
+  Word,
+  ILayoutReducer,
+  TextFormatContext,
+  TextReducer,
+} from './public-api'
+
+// ----------------------------------------------------------------------
+// ICharacter* -> text-box
+// ----------------------------------------------------------------------
+export class TextNodeGenerator implements ILogicalNodeGenerator {
+  private generator: Generator<LayoutResult>;
+
+  constructor(
+    public context: TextFormatContext,
+    private reducer: ILayoutReducer = TextReducer.instance
+  ) {
+    this.generator = this.createGenerator();
+  }
+
+  public getNext(): LayoutResult | undefined {
+    const next = this.generator.next();
+    return next.done ? undefined : next.value;
+  }
+
+  private *createGenerator(): Generator<LayoutResult> {
+    console.group("(text)");
+    const env = this.context.env;
+    const font = this.context.env.font;
+    const empha = env.isTextEmphasized() ? env.textEmphasis.textEmphaData : undefined;
+    const lineExtent = this.context.env.font.lineExtent;
+    const isVertical = env.isTextVertical();
+    const metricsArgs = { font, isVertical, empha };
+
+    while (this.context.lexer.hasNext()) {
+      while (this.context.restExtent < lineExtent) {
+        yield LayoutResult.pageBreak;
+      }
+      // If prepared measure space is not enough for a single fontSize,
+      // send parent generator 'requireMeasure' command to prepare more spaces.
+      // This situation can occur when inline goes to float-space.
+      while (this.context.restMeasure < font.size && this.context.isLineHead()) {
+        console.log(`restM:${this.context.restMeasure} < fontSize:${font.size}`);
+        yield LayoutResult.requestMeasure(font.size);
+      }
+      const token: ICharacter = this.context.lexer.getNext();
+      // console.log("restM:%d, token:%o", this.context.restMeasure, token);
+
+      // We calculate character metrics when
+      // 1. metrics is not set yet(token.size.measure === 0)
+      // 2. target character is Word(can be divided by word-break).
+      if (token.size.measure === 0 || token instanceof Word) {
+        token.setMetrics(metricsArgs);
+      }
+      if (this.context.restMeasure < token.size.measure) {
+        this.context.lexer.pushBack();
+
+        // [TODO] hyphenate characters here.
+        yield this.context.acceptLayoutReducer(this.reducer, true);
+        yield LayoutResult.lineBreak;
+      } else {
+        this.context.addCharacter(token);
+      }
+    } // while(lexer.hasNext())
+
+    if (this.context.children.length > 0) {
+      yield this.context.acceptLayoutReducer(this.reducer, false);
+    }
+    console.groupEnd();
+  }
+}
+
