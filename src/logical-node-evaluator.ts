@@ -74,10 +74,10 @@ export class LogicalNodeEvaluator implements ILogicalNodeEvaluator {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
     });
-    node.style.borderLeftWidth = blockNode.edge.border.width.start + "px";
-    node.style.borderRightWidth = blockNode.edge.border.width.end + "px";
-    node.style.borderTopWidth = blockNode.edge.border.width.before + "px";
-    node.style.borderBottomWidth = blockNode.edge.border.width.after + "px";
+    node.style.borderLeftWidth = blockNode.border.width.start + "px";
+    node.style.borderRightWidth = blockNode.border.width.end + "px";
+    node.style.borderTopWidth = blockNode.border.width.before + "px";
+    node.style.borderBottomWidth = blockNode.border.width.after + "px";
     node.style.borderColor = "black";
     node.style.borderStyle = "solid";
     // blockNode.edge.getCss({} as LogicalBox).apply(node);

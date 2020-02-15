@@ -133,7 +133,8 @@ export class BlockReducer implements ILayoutReducer {
     const extent = context.env.extent || context.cursorPos.before;
     // const size = new LogicalSize({ measure, extent });
     const size = context.paddingBoxSize;
-    const edge = context.contextBoxEdge.currentBorderBoxEdge;
+    // const edge = context.contextBoxEdge.currentBorderBoxEdge;
+    const edge = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.blockNodes;
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, edge, children);
@@ -159,7 +160,8 @@ export class RootBlockReducer implements ILayoutReducer {
       extent = Math.max(extent, context.floatRegion.maxRegionExtent);
     }
     const size = new LogicalSize({ measure, extent });
-    const edge = context.contextBoxEdge.currentBorderBoxEdge;
+    // const edge = context.contextBoxEdge.currentBorderBoxEdge;
+    const edge = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.blockNodes.concat(context.floatNodes);
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, edge, children);

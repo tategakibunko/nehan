@@ -1,5 +1,6 @@
 import {
   BoxEnv,
+  LogicalBorder,
   ILogicalNodeEvaluator,
   LogicalCursorPos,
   LogicalBoxEdge,
@@ -74,12 +75,13 @@ export class LogicalBlockNode implements ILogicalNode {
     public pos: LogicalCursorPos,
     public size: LogicalSize,
     public text: string,
-    public edge: LogicalBoxEdge,
+    // public edge: LogicalBoxEdge,
+    public border: LogicalBorder,
     public children: ILogicalNode[],
   ) { }
 
   get extent(): number {
-    return this.size.extent + this.edge.extent;
+    return this.size.extent + this.border.width.extent;
   }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
