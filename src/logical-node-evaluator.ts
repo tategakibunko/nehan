@@ -1,4 +1,5 @@
 import {
+  LogicalBox,
   LogicalTextNode,
   LogicalRubyNode,
   LogicalInlineNode,
@@ -35,10 +36,12 @@ export class LogicalNodeEvaluator implements ILogicalNodeEvaluator {
     if (lineNode.floatOffset > 0) {
       console.warn("float offset(%d) is applied to lineNode(%s)", lineNode.floatOffset, lineNode.text);
     }
+    node.className = "nehan-line";
+    node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     node.style.top = lineNode.pos.before + "px";
     node.style.left = (lineNode.pos.start + lineNode.floatOffset) + "px";
-    node.style.background = "orange";
+    node.style.background = "skyblue";
     node.style.height = lineNode.size.extent + "px";
     lineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
@@ -58,17 +61,26 @@ export class LogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
     const node = document.createElement("div");
-    node.className = [blockNode.env.element.tagName, blockNode.env.element.indexOfType].join("-");
+    const background: any = { "body": "wheat", "p": "orange", "div": "pink" };
+    node.className = ["nehan", blockNode.env.element.tagName].join("-");
+    node.style.boxSizing = "content-box";
     node.style.position = blockNode.env.element.tagName === "body" ? "relative" : "absolute";
     node.style.top = blockNode.pos.before + "px";
     node.style.left = blockNode.pos.start + "px";
     node.style.width = blockNode.size.measure + "px";
     node.style.height = blockNode.size.extent + "px";
-    node.style.background = "wheat";
+    node.style.background = background[blockNode.env.element.tagName] || "wheat";
     blockNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
     });
+    node.style.borderLeftWidth = blockNode.edge.border.width.start + "px";
+    node.style.borderRightWidth = blockNode.edge.border.width.end + "px";
+    node.style.borderTopWidth = blockNode.edge.border.width.before + "px";
+    node.style.borderBottomWidth = blockNode.edge.border.width.after + "px";
+    node.style.borderColor = "black";
+    node.style.borderStyle = "solid";
+    // blockNode.edge.getCss({} as LogicalBox).apply(node);
     return node;
   }
 }

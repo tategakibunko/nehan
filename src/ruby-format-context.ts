@@ -57,6 +57,10 @@ export class RubyFormatContext implements ILayoutFormatContext {
     return this.parent.localPos.translate(this.cursorPos);
   }
 
+  public get lineHeadPos(): LogicalCursorPos {
+    return this.parent.lineHeadPos;
+  }
+
   public get flowRoot(): IFlowRootFormatContext {
     return this.parent.flowRoot;
   }

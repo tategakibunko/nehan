@@ -78,6 +78,10 @@ export class LogicalBlockNode implements ILogicalNode {
     public children: ILogicalNode[],
   ) { }
 
+  get extent(): number {
+    return this.size.extent + this.edge.extent;
+  }
+
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitBlock(this);
   }

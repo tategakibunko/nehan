@@ -109,20 +109,16 @@ export class LineReducer implements ILayoutReducer {
       return (e.size.extent > acm) ? e.size.extent : acm;
     }, context.env.font.lineExtent);
     const size = new LogicalSize({ measure, extent });
-    // const pos = new LogicalCursorPos({ start: 0, before: context.localPos.before });
-    const pos = new LogicalCursorPos({ start: 0, before: context.cursorPos.before });
+    const pos = context.parent ? context.lineHeadPos : LogicalCursorPos.zero;
     const children = context.inlineNodes;
     const text = context.inlineText;
     const floatOffset = context.floatOffset;
-    if (floatOffset > 0) {
-      console.warn("float offset(%d) is set to line", floatOffset);
-    }
     const lineNode = new LogicalLineNode(pos, size, text, children, floatOffset);
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    console.log("[%s] reduceLine at %s, flowRoot %s, global %s, %o",
-      context.name, pos.toString(), context.flowRootPos.toString(), context.globalPos.toString(), lineNode.text);
+    console.log("[%s] reduceLine(%s) at %s(float offset:%d), %o",
+      context.name, size.toString(), pos.toString(), floatOffset, lineNode.text);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
@@ -132,15 +128,16 @@ export class BlockReducer implements ILayoutReducer {
   private constructor() { }
 
   visit(context: FlowFormatContext): LayoutResult {
-    const pos = context.parent ? context.parent.localPos.clone() : LogicalCursorPos.zero;
+    const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
     const measure = context.maxMeasure;
     const extent = context.env.extent || context.cursorPos.before;
-    const size = new LogicalSize({ measure, extent });
+    // const size = new LogicalSize({ measure, extent });
+    const size = context.paddingBoxSize;
     const edge = context.contextBoxEdge.currentBorderBoxEdge;
     const text = context.text;
     const children = context.blockNodes;
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, edge, children);
-    console.log("[%s] reduceBlock at %s, global %s, %o", context.name, pos.toString(), context.globalPos.toString(), blockNode.text);
+    console.log("[%s] reduceBlock(%s) at %s, global %s, %o", context.name, size.toString(), pos.toString(), context.globalPos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];
     context.cursorPos = LogicalCursorPos.zero;

@@ -43,7 +43,7 @@ export class LogicalSize {
   }
 
   public toString(): string {
-    return `(m=${this.measure}, e=${this.extent})`
+    return `m:${this.measure}, e:${this.extent}`;
   }
 
   public clone(): LogicalSize {

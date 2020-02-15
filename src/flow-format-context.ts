@@ -2,17 +2,17 @@ import {
   BoxEnv,
   ContextBoxEdge,
   LogicalBlockNode,
+  LogicalLineNode,
   LogicalCursorPos,
   LogicalEdgeDirection,
   LayoutResult,
-  LogicalRect,
+  LogicalSize,
   ILayoutFormatContext,
   ILogicalNodeGenerator,
   ILayoutReducer,
   ILogicalNode,
   IFlowFormatContext,
   IFlowRootFormatContext,
-  LogicalFloat,
 } from './public-api'
 
 export class FlowFormatContext implements IFlowFormatContext {
@@ -143,8 +143,13 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.env.extent || this.rootExtent;
   }
 
-  public getContentBoxRect(): LogicalRect {
-    throw new Error("todo");
+  public get paddingBoxSize(): LogicalSize {
+    console.log("[%s] paddingBoxSize: before = %d, padding.extent = %d, borderWidth.extent = %d, maxM = %d",
+      this.name, this.cursorPos.before, this.contextBoxEdge.padding.extent, this.contextBoxEdge.borderWidth.extent, this.maxMeasure);
+    return new LogicalSize({
+      measure: this.maxMeasure - this.contextBoxEdge.borderWidth.measure,
+      extent: (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent
+    });
   }
 
   // localPos = position from start-before-corner of border box.
@@ -175,12 +180,22 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.parent.globalPos.translate(this.localPos);
   }
 
+  public get lineHeadPos(): LogicalCursorPos {
+    console.log(this.contextBoxEdge);
+    return new LogicalCursorPos({
+      start: this.contextBoxEdge.borderBoxStart,
+      before: this.cursorPos.before - this.contextBoxEdge.borderWidth.getSize("before")
+    });
+  }
+
   public addBorderBoxEdge(direction: LogicalEdgeDirection) {
     this.contextBoxEdge.padding.addEdge(direction);
     this.contextBoxEdge.borderWidth.addEdge(direction);
     if (direction === "before" || direction === "after") {
+      const old = this.cursorPos.before;
       this.cursorPos.before += this.contextBoxEdge.padding.getSize(direction);
       this.cursorPos.before += this.contextBoxEdge.borderWidth.getSize(direction);
+      console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
     }
   }
 
@@ -189,10 +204,18 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.cursorPos.before += marginSize;
   }
 
-  public addBlock(block: LogicalBlockNode) {
-    console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.size.extent}`);
+  public addLine(block: LogicalLineNode) {
+    console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + block.size.extent}`);
     this.blockNodes.push(block);
     this.cursorPos.before += block.size.extent;
+    this.text += block.text;
+  }
+
+  public addBlock(block: LogicalBlockNode) {
+    console.log("[%s] addBlock:%o", this.name, block);
+    console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
+    this.blockNodes.push(block);
+    this.cursorPos.before += block.extent;
     this.text += block.text;
   }
 

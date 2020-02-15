@@ -38,22 +38,24 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     console.group(`${this.context.name}`);
 
     if ((this.context.env.measure && this.context.env.measure <= 0) ||
-      this.context.contextBoxEdge.borderBoxExtent > this.context.restExtent) {
+      this.context.env.edge.borderBoxExtent > this.context.restExtent) {
       console.error("This layout can never be included.");
       yield LayoutResult.skip;
       return;
     }
-    while (this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("before")) {
+    while (this.context.restExtent < this.context.env.edge.borderBoxBefore) {
       yield LayoutResult.pageBreak;
     }
     this.context.addBorderBoxEdge("before"); // restExtent shorten
-    // in block element, content size is already calculated in css loading.
-    // this.context.contextBoxEdge.addInlineEdge(); // restMeasure shorten
+    // Add inline edge, but note that maxMeasure doesn't change
+    // because content size of block element is already calculated in css loading.
+    this.context.addBorderBoxEdge("start");
+    this.context.addBorderBoxEdge("end");
     let childElement: HtmlElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
       const display = Display.load(childElement);
       if (display.isNone() || WhiteSpace.isWhiteSpaceElement(childElement)) {
-        console.warn("skip element:", childElement);
+        console.info("skip element:", childElement);
         childElement = childElement.nextSibling;
         continue;
       }
@@ -63,7 +65,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       if ((!float.isNone() || display.isBlockLevel()) && this.context.inlineNodes.length > 0) {
         console.warn("sweep out remaining inlines as line");
         const line = this.context.acceptLayoutReducer(LineReducer.instance);
-        this.context.addBlock(line.body); // never overflows!
+        this.context.addLine(line.body); // never overflows!
       }
       */
       this.context.inlineMargin = InlineMargin.getMarginFromParentBlock(childElement);
@@ -109,7 +111,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         }
         if (value.type === 'line-break') {
           const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
-          this.context.addBlock(line.body);
+          this.context.addLine(line.body);
         } else if (value.type === 'page-break') {
           const block = this.context.acceptLayoutReducer(this.blockReducer);
           if (this.context.env.element.tagName === "body") {
@@ -137,7 +139,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
 
     if (this.context.inlineNodes.length > 0) {
       const line = this.context.acceptLayoutReducer(LineReducer.instance);
-      this.context.addBlock(line.body);
+      this.context.addLine(line.body);
     }
 
     while (this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("after")) {

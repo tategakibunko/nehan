@@ -91,8 +91,8 @@ export class TableCellInitializer implements NodeEffector {
   this is some text<br>
   <p>foo</p>
 */
-export class LineBreakInserter implements NodeEffector {
-  static instance = new LineBreakInserter();
+export class TextNodeNormalizer implements NodeEffector {
+  static instance = new TextNodeNormalizer();
   private constructor() { }
 
   visit(element: HtmlElement) {
@@ -108,9 +108,14 @@ export class LineBreakInserter implements NodeEffector {
     if (!prev) {
       return;
     }
-    if (element.parent && prev.isTextElement() && !WhiteSpace.isWhiteSpaceElement(prev)) {
-      // console.log("insert <br> before %o", element);
-      element.parent.insertBefore(element.ownerDocument.createElement("br"), element);
+    if (element.parent && prev.isTextElement()) {
+      if (WhiteSpace.isWhiteSpaceElement(prev)) {
+        console.info("remove white space before block tag");
+        element.parent.removeChild(prev);
+      } else {
+        console.info("insert <br> before %o", element);
+        element.parent.insertBefore(element.ownerDocument.createElement("br"), element);
+      }
     }
   }
 }

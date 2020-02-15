@@ -17,6 +17,7 @@ export interface ILayoutFormatContext {
   flowRootPos: LogicalCursorPos;
   cursorPos: LogicalCursorPos;
   localPos: LogicalCursorPos;
+  lineHeadPos: LogicalCursorPos;
   flowRoot: IFlowRootFormatContext;
   inlineRoot: IFlowFormatContext;
   rootMeasure: number;
