@@ -20,7 +20,7 @@ export class LogicalPos {
   public after?: number;
   public start?: number;
 
-  constructor(value: LogicalPosValue){
+  constructor(value: LogicalPosValue) {
     this.before = value.before;
     this.end = value.end;
     this.after = value.after;
@@ -38,28 +38,28 @@ export class LogicalPos {
 
   static loadEach(element: HtmlElement, prop: string): number | undefined {
     let value = CssCascade.getValue(element, prop);
-    return (value === "auto")? undefined : Utils.atoi(value, 10);
+    return (value === "auto") ? undefined : Utils.atoi(value, 10);
   }
 
   public hasValue(): boolean {
     return (this.before !== undefined ||
-	    this.end !== undefined ||
-	    this.after !== undefined ||
-	    this.start !== undefined);
+      this.end !== undefined ||
+      this.after !== undefined ||
+      this.start !== undefined);
   }
 
   public getCss(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
-    if(this.before !== undefined){
+    if (this.before !== undefined) {
       css.set(LogicalEdgeMap.mapValue(box.writingMode, "before"), this.before + "px");
     }
-    if(this.end !== undefined){
+    if (this.end !== undefined) {
       css.set(LogicalEdgeMap.mapValue(box.writingMode, "end"), this.end + "px");
     }
-    if(this.after !== undefined){
+    if (this.after !== undefined) {
       css.set(LogicalEdgeMap.mapValue(box.writingMode, "after"), this.after + "px");
     }
-    if(this.start !== undefined){
+    if (this.start !== undefined) {
       css.set(LogicalEdgeMap.mapValue(box.writingMode, "start"), this.start + "px");
     }
     return css;

@@ -9,7 +9,7 @@ import {
   NativeStyleMap,
   PropValue,
   CssText,
-  // CssLength,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 export interface LogicalBorderValue {
@@ -66,6 +66,10 @@ export class LogicalBorder {
     this.color.getCss(box).mergeTo(css);
     this.radius.getCss(box).mergeTo(css);
     return css;
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitLogicalBorder(this);
   }
 
   public clearBefore() {

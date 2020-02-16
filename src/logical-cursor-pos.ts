@@ -1,6 +1,8 @@
 import {
   LogicalBox,
-  NativeStyleMap
+  LogicalPos,
+  NativeStyleMap,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 export interface LogicalCursorPosValue {
@@ -34,6 +36,10 @@ export class LogicalCursorPos implements LogicalCursorPosValue {
     return new LogicalCursorPos({ start: this.start, before: this.before });
   }
 
+  public get logicalPos(): LogicalPos {
+    return new LogicalPos({ before: this.before, start: this.start });
+  }
+
   public toString(): string {
     return `(${this.start}, ${this.before})`;
   }
@@ -43,6 +49,10 @@ export class LogicalCursorPos implements LogicalCursorPosValue {
       before: this.before + offset.before,
       start: this.start + offset.start
     });
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitPos(this);
   }
 
   public getCss(box: LogicalBox): NativeStyleMap {

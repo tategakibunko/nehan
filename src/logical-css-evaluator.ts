@@ -1,32 +1,75 @@
 import {
   LogicalSize,
+  LogicalCursorPos,
+  LogicalBorder,
+  WritingMode,
   NativeStyleMap,
 } from './public-api'
 
 export interface ILogicalCssEvaluator {
   visitSize: (size: LogicalSize) => NativeStyleMap;
+  visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
+  visitLogicalBorder: (border: LogicalBorder) => NativeStyleMap;
 }
 
-export class VertCssEvaluator implements ILogicalCssEvaluator {
-  public instance = new VertCssEvaluator();
-  private constructor() { }
+class LogicalCssEvaluator implements ILogicalCssEvaluator {
+  constructor(public writingMode: WritingMode) { }
 
   visitSize(size: LogicalSize): NativeStyleMap {
-    let css = new NativeStyleMap();
-    css.set("width", size.extent + "px");
-    css.set("height", size.measure + "px");
+    throw new Error("must be overrided");
+  }
+
+  visitPos(pos: LogicalCursorPos): NativeStyleMap {
+    throw new Error("must be overrided");
+  }
+
+  visitLogicalBorder(border: LogicalBorder): NativeStyleMap {
+    const css = new NativeStyleMap();
+    border.width.getPhysicalEdge(this.writingMode).items.forEach(item => {
+      css.set(border.width.getPropByLogicalDirection(item.prop), item.value + "px");
+    });
+    border.style.getPhysicalEdge(this.writingMode).items.forEach(item => {
+      css.set(border.style.getPropByLogicalDirection(item.prop), String(item.value));
+    });
+    border.color.getPhysicalEdge(this.writingMode).items.forEach(item => {
+      css.set(border.color.getPropByLogicalDirection(item.prop), String(item.value));
+    });
+    border.radius.getPhysicalBorderRadius(this.writingMode).items.forEach(item => {
+      return css.set(`border-${item.prop}-radius`, String(item.value));
+    });
     return css;
   }
 }
 
-export class HoriCssEvaluator implements ILogicalCssEvaluator {
-  public instance = new HoriCssEvaluator();
-  private constructor() { }
-
+export class VertCssEvaluator extends LogicalCssEvaluator {
   visitSize(size: LogicalSize): NativeStyleMap {
-    let css = new NativeStyleMap();
+    const css = new NativeStyleMap();
+    css.set("width", size.extent + "px");
+    css.set("height", size.measure + "px");
+    return css;
+  }
+
+  visitPos(pos: LogicalCursorPos): NativeStyleMap {
+    const css = new NativeStyleMap();
+    const beforeProp = this.writingMode.isVerticalRl() ? "right" : "left";
+    css.set("top", pos.start + "px");
+    css.set(beforeProp, pos.before + "px");
+    return css;
+  }
+}
+
+export class HoriCssEvaluator extends LogicalCssEvaluator {
+  visitSize(size: LogicalSize): NativeStyleMap {
+    const css = new NativeStyleMap();
     css.set("width", size.measure + "px");
     css.set("height", size.extent + "px");
+    return css;
+  }
+
+  visitPos(pos: LogicalCursorPos): NativeStyleMap {
+    const css = new NativeStyleMap();
+    css.set("top", pos.before + "px");
+    css.set("left", pos.start + "px");
     return css;
   }
 }

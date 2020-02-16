@@ -23,7 +23,7 @@ export class NativeStyleMap extends Map<string, string> {
 export class NativeStyleMap {
   _map: Map<string, string>;
 
-  constructor(){
+  constructor() {
     this._map = new Map<string, string>();
   }
 
@@ -48,10 +48,18 @@ export class NativeStyleMap {
     return dst;
   }
 
+  // legacy
   public apply(dom: HTMLElement): NativeStyleMap {
     let style: any = dom.style;
     this.forEach((value, key) => {
       style[key] = value;
+    });
+    return this;
+  }
+
+  public applyTo(style: CSSStyleDeclaration): NativeStyleMap {
+    this._map.forEach((value, key) => {
+      style.setProperty(key, value);
     });
     return this;
   }
