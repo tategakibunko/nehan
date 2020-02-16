@@ -129,15 +129,11 @@ export class BlockReducer implements ILayoutReducer {
 
   visit(context: FlowFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
-    const measure = context.maxMeasure;
-    const extent = context.env.extent || context.cursorPos.before;
-    // const size = new LogicalSize({ measure, extent });
     const size = context.paddingBoxSize;
-    // const edge = context.contextBoxEdge.currentBorderBoxEdge;
-    const edge = context.contextBoxEdge.currentBorder;
+    const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.blockNodes;
-    const blockNode = new LogicalBlockNode(context.env, pos, size, text, edge, children);
+    const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
     console.log("[%s] reduceBlock(%s) at %s, global %s, %o", context.name, size.toString(), pos.toString(), context.globalPos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];
@@ -160,11 +156,10 @@ export class RootBlockReducer implements ILayoutReducer {
       extent = Math.max(extent, context.floatRegion.maxRegionExtent);
     }
     const size = new LogicalSize({ measure, extent });
-    // const edge = context.contextBoxEdge.currentBorderBoxEdge;
-    const edge = context.contextBoxEdge.currentBorder;
+    const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.blockNodes.concat(context.floatNodes);
-    const blockNode = new LogicalBlockNode(context.env, pos, size, text, edge, children);
+    const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
     console.log("[%s] reduceRootBlock at %s, global %s, %o", context.name, pos.toString(), context.globalPos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];

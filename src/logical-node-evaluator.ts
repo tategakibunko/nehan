@@ -34,9 +34,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitLine(lineNode: LogicalLineNode): HTMLElement {
     const node = document.createElement("div");
-    if (lineNode.floatOffset > 0) {
-      console.warn("float offset(%d) is applied to lineNode(%s)", lineNode.floatOffset, lineNode.text);
-    }
     node.className = "nehan-line";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
@@ -74,15 +71,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
     });
-    /*
-    node.style.borderLeftWidth = blockNode.border.width.start + "px";
-    node.style.borderRightWidth = blockNode.border.width.end + "px";
-    node.style.borderTopWidth = blockNode.border.width.before + "px";
-    node.style.borderBottomWidth = blockNode.border.width.after + "px";
-    node.style.borderColor = "black";
-    node.style.borderStyle = "solid";
-    // blockNode.edge.getCss({} as LogicalBox).apply(node);
-    */
     return node;
   }
 }

@@ -75,7 +75,6 @@ export class LogicalBlockNode implements ILogicalNode {
     public pos: LogicalCursorPos,
     public size: LogicalSize,
     public text: string,
-    // public edge: LogicalBoxEdge,
     public border: LogicalBorder,
     public children: ILogicalNode[],
   ) { }

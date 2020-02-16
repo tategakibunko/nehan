@@ -22,6 +22,7 @@ import {
   FlowRootFormatContext,
   TableCellInitializer,
 } from './public-api'
+import { TableCellsGenerator, TableCellsFormatContext } from './table-cells-generator';
 
 export interface ILogicalNodeGenerator {
   context: ILayoutFormatContext;
@@ -67,6 +68,14 @@ export class LogicalNodeGenerator {
     }
     if (display.isTableCell()) {
       element.acceptEffector(TableCellInitializer.instance);
+      /*
+      if (element.parent) {
+        const cells = element.parent.children.filter(child => Display.load(child).isTableCell());
+        return new TableCellsGenerator(
+          new TableCellsFormatContext(env, cells, parentContext)
+        );
+      }
+      */
     }
     if (display.isInlineLevel()) {
       if (element.tagName === "br") {
