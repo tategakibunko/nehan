@@ -29,7 +29,8 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
     console.group("ruby");
     let childElement: HtmlElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
-      this.context.child = LogicalNodeGenerator.createChild(childElement, this.context);
+      const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
+      this.context.child = childGen.generator;
       while (true) {
         const value: LayoutResult | undefined = this.context.child.getNext();
         if (!value) {
@@ -44,7 +45,7 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
             break;
         }
       }
-      childElement = childElement.nextSibling;
+      childElement = childGen.nextElement;
     }
     for (let rubyGroup of this.context.rubyGroups) {
       const ruby = this.context.acceptLayoutReducer(this.reducer, rubyGroup);

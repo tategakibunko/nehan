@@ -77,7 +77,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       while (this.context.restExtent < beforeMargin) {
         yield LayoutResult.pageBreak;
       }
-      this.context.child = LogicalNodeGenerator.createChild(childElement, this.context);
+      const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
+      this.context.child = childGen.generator;
       const clear = LogicalClear.load(childElement);
       if (!clear.isNone()) {
         this.context.flowRoot.clearFloat(clear);
@@ -134,7 +135,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           throw "todo(request-measure)";
         }
       } // while(true)
-      childElement = childElement!.nextSibling;
+      childElement = childGen.nextElement;
     } // while (childElement !== null)
 
     if (this.context.inlineNodes.length > 0) {

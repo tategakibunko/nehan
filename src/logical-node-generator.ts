@@ -24,6 +24,11 @@ import {
 } from './public-api'
 import { TableCellsGenerator, TableCellsFormatContext } from './table-cells-generator';
 
+export interface ChildGenerator {
+  generator: ILogicalNodeGenerator;
+  nextElement: HtmlElement | null;
+}
+
 export interface ILogicalNodeGenerator {
   context: ILayoutFormatContext;
   getNext(): LayoutResult | undefined;
@@ -36,12 +41,14 @@ export class LogicalNodeGenerator {
     return new BlockNodeGenerator(rootContext, RootBlockReducer.instance);
   }
 
-  static createChild(element: HtmlElement, parentContext: ILayoutFormatContext): ILogicalNodeGenerator {
+  static createChild(element: HtmlElement, parentContext: ILayoutFormatContext): ChildGenerator {
     if (element.isTextElement()) {
       const lexer = new TextLexer(element.textContent);
-      return new TextNodeGenerator(
+      const nextElement = element.nextSibling;
+      const generator = new TextNodeGenerator(
         new TextFormatContext(parentContext.env, lexer, parentContext)
       );
+      return { generator, nextElement };
     }
     const display = Display.load(element);
     CssLoader.loadDynamic(element);
@@ -50,51 +57,65 @@ export class LogicalNodeGenerator {
     if (display.isFlowRuby()) {
       // normalize ruby element.
       env.element.acceptEffector(RubyNormalizer.instance);
-      return new RubyNodeGenerator(
+      const generator = new RubyNodeGenerator(
         new RubyFormatContext(env, parentContext)
       );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
     }
     if (display.isRubyBase()) {
-      return new InlineNodeGenerator(
+      const generator = new InlineNodeGenerator(
         new RubyChildFormatContext(env, parentContext),
         RubyBaseReducer.instance
       );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
     }
     if (display.isRubyText()) {
-      return new InlineNodeGenerator(
+      const generator = new InlineNodeGenerator(
         new RubyChildFormatContext(env, parentContext),
         RubyTextReducer.instance
       );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
     }
     if (display.isTableCell()) {
       element.acceptEffector(TableCellInitializer.instance);
-      /*
       if (element.parent) {
         const cells = element.parent.children.filter(child => Display.load(child).isTableCell());
-        return new TableCellsGenerator(
-          new TableCellsFormatContext(env, cells, parentContext)
+        const generator = new TableCellsGenerator(
+          new TableCellsFormatContext(cells, parentContext.env, parentContext.parent)
         );
+        const nextElement = cells[cells.length - 1].nextSibling;
+        return { generator, nextElement };
       }
-      */
     }
     if (display.isInlineLevel()) {
       if (element.tagName === "br") {
-        return new LineBreakGenerator(
+        const generator = new LineBreakGenerator(
           new FlowFormatContext(env, parentContext)
         );
+        const nextElement = element.nextSibling;
+        return { generator, nextElement };
       }
-      return new InlineNodeGenerator(
+      const generator = new InlineNodeGenerator(
         new FlowFormatContext(env, parentContext)
       );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
     }
     if (display.isFlowRoot()) {
-      return new BlockNodeGenerator(
+      const generator = new BlockNodeGenerator(
         new FlowRootFormatContext(env, parentContext)
       );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
     }
-    return new BlockNodeGenerator(
+    const generator = new BlockNodeGenerator(
       new FlowFormatContext(env, parentContext)
     );
+    const nextElement = element.nextSibling;
+    return { generator, nextElement };
   }
 }
 

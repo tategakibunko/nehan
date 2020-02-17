@@ -174,8 +174,3 @@ export class RootBlockReducer implements ILayoutReducer {
   }
 }
 
-export class TableCellReducer implements ILayoutReducer {
-  visit(context: FlowRootFormatContext): LayoutResult {
-    throw new Error("todo");
-  }
-}

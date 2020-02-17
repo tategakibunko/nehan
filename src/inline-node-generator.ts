@@ -56,7 +56,8 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
     while (childElement !== null) {
       const inlineMargin = InlineMargin.getMarginFromLastInline(childElement);
       this.context.cursorPos.start += inlineMargin;
-      this.context.child = LogicalNodeGenerator.createChild(childElement, this.context);
+      const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
+      this.context.child = childGen.generator;
       while (true) {
         const value = this.context.child.getNext();
         if (!value) {
@@ -87,7 +88,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
           this.context.addInline(value.body);
         }
       }
-      childElement = childElement!.nextSibling;
+      childElement = childGen.nextElement;
     }
 
     const endEdgeSize = this.context.contextBoxEdge.getBorderBoxEdgeSize("end");

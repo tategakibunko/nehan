@@ -1,33 +1,35 @@
 import {
   ILogicalNodeGenerator,
   ILayoutFormatContext,
-  LogicalNodeGenerator,
+  ILogicalNode,
   LayoutResult,
   HtmlElement,
   BoxEnv,
-  Display,
-  LogicalClear,
-  LogicalFloat,
-  InlineMargin,
-  BlockMargin,
+  BlockNodeGenerator,
+  FlowRootFormatContext,
   ILayoutReducer,
   FlowFormatContext,
-  LineReducer,
-  BlockReducer,
-  WhiteSpace,
 } from './public-api';
+import { RootBlockReducer } from './layout-reducer';
 
 export class TableCellsFormatContext extends FlowFormatContext {
+  public maxCellExtent: number;
+  public cells: ILogicalNode[];
+
   constructor(
+    public elements: HtmlElement[],
     public env: BoxEnv,
-    public cells: HtmlElement[],
     public parent?: ILayoutFormatContext,
   ) {
     super(env, parent);
+    this.maxCellExtent = 0;
     this.cells = [];
   }
 
-  addCell(cell: any) {
+  addCell(cell: any, index: number) {
+    this.cells.push(cell);
+    this.cursorPos.start += cell.measure;
+    this.maxCellExtent = Math.max(this.maxCellExtent, cell.extent);
   }
 }
 
@@ -36,6 +38,7 @@ export class TableCellsReducer implements ILayoutReducer {
   private constructor() { }
 
   visit(context: TableCellsFormatContext): any {
+    console.log("cells reducer:", context);
     throw new Error("todo");
   }
 }
@@ -56,13 +59,38 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
   }
 
   *createGenerator(): Generator<LayoutResult> {
-    this.context.cells.forEach(cell => {
-      const cellGen = LogicalNodeGenerator.createChild(cell, this.context);
-      const value = cellGen.getNext();
-      if (value) {
-        this.context.addCell(value.body);
-      }
+    const cellGenerators = this.context.elements.map(cellElement => {
+      const env = new BoxEnv(cellElement);
+      const context = new FlowRootFormatContext(env, this.context);
+      return new BlockNodeGenerator(context);
     });
+
+    // [todo] overflow check
+    this.context.addBorderBoxEdge("before");
+    this.context.addBorderBoxEdge("start");
+    this.context.addBorderBoxEdge("end");
+    for (let loopCount = 0; ; loopCount++) {
+      const values = cellGenerators.map(cellGen => cellGen.getNext());
+      if (values.every(value => value === undefined)) {
+        break;
+      }
+      if (loopCount % 2 === 0) {
+        values.forEach((value, index) => {
+          if (value) {
+            if (value.type === "block") {
+              this.context.addCell(value.body, index);
+            }
+          } else {
+            const emptyCell = cellGenerators[index].context.acceptLayoutReducer(RootBlockReducer.instance);
+            this.context.addCell(emptyCell, index);
+          }
+        });
+      } else {
+        yield this.context.acceptLayoutReducer(this.reducer);
+        yield LayoutResult.pageBreak;
+      }
+    } // for(loopCount)
+    this.context.addBorderBoxEdge("after");
     yield this.context.acceptLayoutReducer(this.reducer);
   }
 }
