@@ -149,7 +149,7 @@ export class RootBlockReducer implements ILayoutReducer {
 
   visit(context: FlowRootFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos.clone() : LogicalCursorPos.zero;
-    const measure = context.maxMeasure;
+    const measure = context.cursorPos.start;
     let extent = context.env.extent || context.cursorPos.before;
     // this block must wrap whole elements(even if some child is floated).
     if (context.floatRegion) {
