@@ -1,8 +1,9 @@
 import {
   ILogicalNodeGenerator,
   ILayoutFormatContext,
-  ILogicalNode,
+  LogicalSize,
   LogicalBlockNode,
+  LogicalTableCellsNode,
   LayoutResult,
   HtmlElement,
   BoxEnv,
@@ -10,12 +11,13 @@ import {
   FlowRootFormatContext,
   ILayoutReducer,
   FlowFormatContext,
+  RootBlockReducer,
+  LogicalCursorPos,
 } from './public-api';
-import { RootBlockReducer } from './layout-reducer';
 
 export class TableCellsFormatContext extends FlowFormatContext {
   public maxCellExtent: number;
-  public cells: ILogicalNode[];
+  public cells: LogicalBlockNode[];
 
   constructor(
     public elements: HtmlElement[],
@@ -27,19 +29,28 @@ export class TableCellsFormatContext extends FlowFormatContext {
     this.cells = [];
   }
 
-  acceptLayoutReducer(reducer: TableCellsReducer, isFirst: boolean, isLast: boolean): LayoutResult {
-    return reducer.visit(this, isFirst, isLast);
+  acceptLayoutReducer(reducer: TableCellsReducer, isFirstRow: boolean, isLastRow: boolean): LayoutResult {
+    return reducer.visit(this, isFirstRow, isLastRow);
   }
 
-  addCell(cell: LogicalBlockNode, index: number) {
-    cell.pos.start = this.cursorPos.start;
-    if (/*this.env.borderCollapse.isCollapse()*/ true) {
-      const collapseSize = Math.min(this.contextBoxEdge.borderWidth.getSize("start"), cell.border.width.start);
-      cell.pos.start -= collapseSize;
-    }
-    this.cells.push(cell);
-    this.cursorPos.start += cell.measure;
-    this.maxCellExtent = Math.max(this.maxCellExtent, cell.extent);
+  setCells(cells: LogicalBlockNode[]) {
+    const isCollapse = this.env.borderCollapse.isCollapse();
+    this.cells = cells;
+    this.maxCellExtent = Math.max(...cells.map(cell => cell.size.extent));
+    this.cells.forEach((cell, index) => {
+      cell.size.extent = this.maxCellExtent;
+      cell.pos.start = this.cursorPos.start;
+      this.cursorPos.start += cell.measure;
+      // Collapse border of inline level.
+      // Note that block level collapsing is done by reducer.
+      if (isCollapse) {
+        const prevBorderSize = (index === 0) ? this.env.edge.border.width.start : this.cells[index - 1].border.width.end;
+        const inlineCollapseSize = Math.min(prevBorderSize, cell.border.width.start);
+        console.log("collapse size:%d", inlineCollapseSize);
+        cell.pos.start -= inlineCollapseSize;
+        this.cursorPos.start -= inlineCollapseSize;
+      }
+    });
   }
 }
 
@@ -47,9 +58,14 @@ export class TableCellsReducer implements ILayoutReducer {
   static instance = new TableCellsReducer();
   private constructor() { }
 
-  visit(context: TableCellsFormatContext, isFirst: boolean, isLast: boolean): any {
-    console.log("cells reducer:", context);
-    throw new Error("todo");
+  visit(context: TableCellsFormatContext, isFirstRow: boolean, isLastRow: boolean): any {
+    const measure = context.maxMeasure;
+    const extent = Math.max(...context.cells.map(cell => cell.extent));
+    const size = new LogicalSize({ measure, extent });
+    const pos = LogicalCursorPos.zero;
+    const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
+    const block = new LogicalTableCellsNode(size, pos, text, context.cells, isFirstRow, isLastRow);
+    return LayoutResult.logicalNode("table-cells", block);
   }
 }
 
@@ -81,16 +97,13 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
         break;
       }
       if (loopCount % 2 === 0) {
-        values.forEach((value, index) => {
-          if (value) {
-            if (value.type === "block") {
-              this.context.addCell(value.body, index);
-            }
-          } else {
-            const emptyResult = cellGenerators[index].context.acceptLayoutReducer(RootBlockReducer.instance);
-            this.context.addCell(emptyResult.body, index);
+        const cellBlocks = values.map((value, index) => {
+          if (value && value.type === "block") {
+            return value.body;
           }
+          return cellGenerators[index].context.acceptLayoutReducer(RootBlockReducer.instance).body;
         });
+        this.context.setCells(cellBlocks);
       } else {
         yield this.context.acceptLayoutReducer(this.reducer, loopCount === 1, false);
         yield LayoutResult.pageBreak;

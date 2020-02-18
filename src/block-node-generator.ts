@@ -123,6 +123,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           }
         } else if (value.type === 'block') {
           this.context.addBlock(value.body);
+        } else if (value.type === 'table-cells') {
+          this.context.addBlock(value.body);
         } else if (value.type === 'inline') {
           this.context.addInline(value.body);
         } else if (value.type === 'text') {

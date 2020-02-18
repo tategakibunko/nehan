@@ -5,6 +5,7 @@ import {
   LogicalLineNode,
   LogicalBlockNode,
   ILogicalCssEvaluator,
+  LogicalTableCellsNode,
 } from './public-api'
 
 export interface ILogicalNodeEvaluator {
@@ -13,6 +14,7 @@ export interface ILogicalNodeEvaluator {
   visitLine: (...args: any[]) => HTMLElement;
   visitInline: (...args: any[]) => HTMLElement;
   visitBlock: (...args: any[]) => HTMLElement;
+  visitTableCells: (...args: any[]) => HTMLElement;
 }
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
@@ -68,6 +70,20 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.children.forEach(child => {
+      const childNode = child.acceptEvaluator(this);
+      node.appendChild(childNode);
+    });
+    return node;
+  }
+
+  visitTableCells(tableCells: LogicalTableCellsNode): HTMLElement {
+    const node = document.createElement("div");
+    node.className = "nehan-cells";
+    node.style.boxSizing = "content-box";
+    node.style.position = "absolute";
+    tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    tableCells.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    tableCells.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
     });

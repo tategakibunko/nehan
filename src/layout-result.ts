@@ -8,6 +8,7 @@ type LogicalNodeType =
   'inline' |
   'text' |
   'table-cell' |
+  'table-cells' |
   'empha' |
   'ruby' |
   'ruby-text' |

@@ -91,3 +91,26 @@ export class LogicalBlockNode implements ILogicalNode {
     return visitor.visitBlock(this);
   }
 }
+
+export class LogicalTableCellsNode implements ILogicalNode {
+  constructor(
+    public size: LogicalSize,
+    public pos: LogicalCursorPos,
+    public text: string,
+    public children: LogicalBlockNode[],
+    public isFirstRow: boolean,
+    public isLastRow: boolean,
+  ) { }
+
+  get extent(): number {
+    return this.size.extent;
+  }
+
+  get measure(): number {
+    return this.size.measure;
+  }
+
+  acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
+    return visitor.visitTableCells(this);
+  }
+}
