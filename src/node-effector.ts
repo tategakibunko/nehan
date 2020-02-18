@@ -19,8 +19,9 @@ import {
   LogicalFloat,
   WhiteSpace,
 } from './public-api'
+import { BorderCollapse } from './border-collapse';
 
-// treat side-effect
+// side effect visitor
 export interface NodeEffector {
   visit: (element: HtmlElement) => void;
 }
@@ -28,6 +29,17 @@ export interface NodeEffector {
 export class TableCellInitializer implements NodeEffector {
   static instance = new TableCellInitializer();
   private constructor() { }
+
+  getCollapsedInternalEdgeSize(cellEdges: LogicalBoxEdge[], parentEdge: LogicalBoxEdge): number {
+    let internalEdgeSize = cellEdges.reduce((sum, cellEdge, index) => {
+      sum += cellEdge.padding.measure;
+      return (index < cellEdges.length - 1) ? sum + Math.max(cellEdge.border.width.end, cellEdges[index + 1].border.width.start) : sum;
+    }, 0);
+    // if first or last border of cell is larger than parent one, it reduces parent content measure.
+    internalEdgeSize += Math.max(0, cellEdges[0].border.width.start - parentEdge.border.width.start);
+    internalEdgeSize += Math.max(0, cellEdges[cellEdges.length - 1].border.width.end - parentEdge.border.width.end);
+    return internalEdgeSize;
+  }
 
   visit(element: HtmlElement) {
     if (!element.parent || element.computedStyle.getPropertyValue("display") !== "table-cell") {
@@ -39,28 +51,19 @@ export class TableCellInitializer implements NodeEffector {
     if (cells.every(cell => cell.computedStyle.getPropertyValue("measure") !== "auto")) {
       return; // already calculated
     }
-    // force set margin to zero
+    // Force set margin of table-cell to zero
     cells.forEach(cell => {
       LogicalEdgeDirections.forEach(dir => {
         cell.computedStyle.setProperty(`margin-${dir}`, "0");
       })
     });
     const parentEdge = LogicalBoxEdge.load(element.parent);
-    const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
     const cellEdges = cells.map(cell => LogicalBoxEdge.load(cell));
-
-    // [TODO]
-    // Currently, we assume that border-collapse is always 'collapse'. We must support 'separate' in the future.
-    let internalBorderSize = cellEdges.reduce((sum, cellEdge, index) => {
-      return (index < cellEdges.length - 1) ? sum + Math.max(cellEdge.border.width.end, cellEdges[index + 1].border.width.start) : sum;
-    }, 0);
-    // if first and last border of cell is larger than parent one, it reduces parent content measure.
-    internalBorderSize += Math.max(0, cellEdges[0].border.width.start - parentEdge.border.width.start);
-    internalBorderSize += Math.max(0, cellEdges[cellEdges.length - 1].border.width.end - parentEdge.border.width.end);
-    const internalPaddingSize = cellEdges.reduce((sum, cellEdge) => {
-      return sum + cellEdge.padding.measure;
-    }, 0);
-    const internalEdgeSize = internalBorderSize + internalPaddingSize;
+    const borderCollapse = BorderCollapse.load(element);
+    const internalEdgeSize = borderCollapse.isCollapse() ?
+      this.getCollapsedInternalEdgeSize(cellEdges, parentEdge) :
+      cellEdges.reduce((sum, cellEdge) => sum + cellEdge.measure, 0);
+    const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
     const cellMeasures = cells.map(cell => {
       const measure = cell.computedStyle.getPropertyValue("measure") || "0";
       return (measure === "auto") ? 0 : parseInt(measure, 10);
