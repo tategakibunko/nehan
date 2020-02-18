@@ -16,7 +16,6 @@ import {
 } from './public-api';
 
 export class TableCellsFormatContext extends FlowFormatContext {
-  public maxCellExtent: number;
   public cells: LogicalBlockNode[];
 
   constructor(
@@ -25,7 +24,6 @@ export class TableCellsFormatContext extends FlowFormatContext {
     public parent?: ILayoutFormatContext,
   ) {
     super(env, parent);
-    this.maxCellExtent = 0;
     this.cells = [];
   }
 
@@ -36,9 +34,11 @@ export class TableCellsFormatContext extends FlowFormatContext {
   setCells(cells: LogicalBlockNode[]) {
     const isCollapse = this.env.borderCollapse.isCollapse();
     this.cells = cells;
-    this.maxCellExtent = Math.max(...cells.map(cell => cell.size.extent));
+    const maxContentExtent = Math.max(...cells.map(cell => cell.size.extent));
+    const maxTotalExtent = Math.max(...cells.map(cell => cell.extent));
     this.cells.forEach((cell, index) => {
-      cell.size.extent = this.maxCellExtent;
+      cell.size.extent = maxContentExtent;
+      cell.size.extent += maxTotalExtent - cell.extent;
       cell.pos.start = this.cursorPos.start;
       this.cursorPos.start += cell.measure;
       // Collapse border of inline level.
@@ -46,7 +46,7 @@ export class TableCellsFormatContext extends FlowFormatContext {
       if (isCollapse) {
         const prevBorderSize = (index === 0) ? this.env.edge.border.width.start : this.cells[index - 1].border.width.end;
         const inlineCollapseSize = Math.min(prevBorderSize, cell.border.width.start);
-        console.log("collapse size:%d", inlineCollapseSize);
+        // console.log("inline collapse size:%d", inlineCollapseSize);
         cell.pos.start -= inlineCollapseSize;
         this.cursorPos.start -= inlineCollapseSize;
       }
@@ -59,7 +59,8 @@ export class TableCellsReducer implements ILayoutReducer {
   private constructor() { }
 
   visit(context: TableCellsFormatContext, isFirstRow: boolean, isLastRow: boolean): any {
-    const measure = context.maxMeasure;
+    // const measure = context.parent ? context.parent.maxMeasure : context.paddingBoxSize.measure;
+    const measure = 0;
     const extent = Math.max(...context.cells.map(cell => cell.extent));
     const size = new LogicalSize({ measure, extent });
     const pos = LogicalCursorPos.zero;

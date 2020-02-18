@@ -45,22 +45,13 @@ export class TableCellInitializer implements NodeEffector {
         cell.computedStyle.setProperty(`margin-${dir}`, "0");
       })
     });
-    const parentEdge = LogicalBoxEdge.load(element.parent);
     const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
     const cellEdges = cells.map(cell => LogicalBoxEdge.load(cell));
 
     // [TODO]
     // Currently, we assume that border-collapse is always 'collapse'. We must support 'separate' in the future.
-    const inlineEdgeSize = cellEdges.reduce((sum, cellEdge, index) => {
-      if (index === 0) {
-        const size = (cellEdge.start > parentEdge.start) ? cellEdge.start - parentEdge.start : 0;
-        return sum + size;
-      } else if (index < cellEdges.length - 1) {
-        return sum + Math.max(cellEdge.end, cellEdges[index + 1].start);
-      } else {
-        const size = (cellEdge.end > parentEdge.end) ? cellEdge.end - parentEdge.end : 0;
-        return sum + size;
-      }
+    const internalEdgeSize = cellEdges.reduce((sum, cellEdge, index) => {
+      return (index < cellEdges.length - 1) ? sum + Math.max(cellEdge.end, cellEdges[index + 1].start) : sum;
     }, 0);
     const cellMeasures = cells.map(cell => {
       const measure = cell.computedStyle.getPropertyValue("measure") || "0";
@@ -69,10 +60,10 @@ export class TableCellInitializer implements NodeEffector {
     const autoCells = cells.filter(cell => cell.computedStyle.getPropertyValue("measure") === "auto");
     const fixedCount = cells.length - autoCells.length;
     const fixedSize = cellMeasures.reduce((sum, size) => sum + size, 0);
-    const autoSize = Math.max((parentMeasure - fixedSize - inlineEdgeSize) / (cells.length - fixedCount), 0);
+    const autoSize = Math.max(Math.floor((parentMeasure - fixedSize - internalEdgeSize) / (cells.length - fixedCount)), 0);
     console.log(
       "cell size:(parent:%d, fixedSize:%d, fixedCount:%d, iedge:%d, auto:%d)",
-      parentMeasure, fixedSize, fixedCount, inlineEdgeSize, autoSize
+      parentMeasure, fixedSize, fixedCount, internalEdgeSize, autoSize
     );
     autoCells.forEach(cell => cell.computedStyle.setProperty("measure", autoSize + "px"));
   }

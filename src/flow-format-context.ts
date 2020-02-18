@@ -2,6 +2,7 @@ import {
   BoxEnv,
   ContextBoxEdge,
   LogicalBlockNode,
+  LogicalTableCellsNode,
   LogicalLineNode,
   LogicalCursorPos,
   LogicalEdgeDirection,
@@ -147,7 +148,8 @@ export class FlowFormatContext implements IFlowFormatContext {
     console.log("[%s] paddingBoxSize: before = %d, padding.extent = %d, borderWidth.extent = %d, maxM = %d",
       this.name, this.cursorPos.before, this.contextBoxEdge.padding.extent, this.contextBoxEdge.borderWidth.extent, this.maxMeasure);
     return new LogicalSize({
-      measure: this.maxMeasure - this.contextBoxEdge.borderWidth.measure,
+      // measure: this.maxMeasure - this.contextBoxEdge.borderWidth.measure,
+      measure: this.maxMeasure,
       extent: (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent
     });
   }
