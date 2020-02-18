@@ -6,6 +6,7 @@ import {
   CssRule,
   CssCascade,
   CssParser,
+  FlowContext,
   LogicalEdgeDirections,
   LogicalBorderRadius,
   PseudoElement,
@@ -18,7 +19,6 @@ import {
   LogicalFloat,
   WhiteSpace,
 } from './public-api'
-import { FlowContext } from './flow-context';
 
 // treat side-effect
 export interface NodeEffector {
@@ -45,14 +45,22 @@ export class TableCellInitializer implements NodeEffector {
         cell.computedStyle.setProperty(`margin-${dir}`, "0");
       })
     });
+    const parentEdge = LogicalBoxEdge.load(element.parent);
     const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
     const cellEdges = cells.map(cell => LogicalBoxEdge.load(cell));
 
     // [TODO]
     // Currently, we assume that border-collapse is always 'collapse'. We must support 'separate' in the future.
-    const internalEdgeSize = cellEdges.reduce((sum, cellEdge, index) => {
-      return (index < cellEdges.length - 1) ? sum + Math.max(cellEdge.end, cellEdges[index + 1].start) : sum;
+    let internalBorderSize = cellEdges.reduce((sum, cellEdge, index) => {
+      return (index < cellEdges.length - 1) ? sum + Math.max(cellEdge.border.width.end, cellEdges[index + 1].border.width.start) : sum;
     }, 0);
+    // if first and last border of cell is larger than parent one, it reduces parent content measure.
+    internalBorderSize += Math.max(0, cellEdges[0].border.width.start - parentEdge.border.width.start);
+    internalBorderSize += Math.max(0, cellEdges[cellEdges.length - 1].border.width.end - parentEdge.border.width.end);
+    const internalPaddingSize = cellEdges.reduce((sum, cellEdge) => {
+      return sum + cellEdge.padding.measure;
+    }, 0);
+    const internalEdgeSize = internalBorderSize + internalPaddingSize;
     const cellMeasures = cells.map(cell => {
       const measure = cell.computedStyle.getPropertyValue("measure") || "0";
       return (measure === "auto") ? 0 : parseInt(measure, 10);
