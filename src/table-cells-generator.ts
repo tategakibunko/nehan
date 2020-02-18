@@ -2,6 +2,7 @@ import {
   ILogicalNodeGenerator,
   ILayoutFormatContext,
   ILogicalNode,
+  LogicalBlockNode,
   LayoutResult,
   HtmlElement,
   BoxEnv,
@@ -26,7 +27,16 @@ export class TableCellsFormatContext extends FlowFormatContext {
     this.cells = [];
   }
 
-  addCell(cell: any, index: number) {
+  acceptLayoutReducer(reducer: TableCellsReducer, isFirst: boolean, isLast: boolean): LayoutResult {
+    return reducer.visit(this, isFirst, isLast);
+  }
+
+  addCell(cell: LogicalBlockNode, index: number) {
+    cell.pos.start = this.cursorPos.start;
+    if (/*this.env.borderCollapse.isCollapse()*/ true) {
+      const collapseSize = Math.min(this.contextBoxEdge.borderWidth.getSize("start"), cell.border.width.start);
+      cell.pos.start -= collapseSize;
+    }
     this.cells.push(cell);
     this.cursorPos.start += cell.measure;
     this.maxCellExtent = Math.max(this.maxCellExtent, cell.extent);
@@ -37,7 +47,7 @@ export class TableCellsReducer implements ILayoutReducer {
   static instance = new TableCellsReducer();
   private constructor() { }
 
-  visit(context: TableCellsFormatContext): any {
+  visit(context: TableCellsFormatContext, isFirst: boolean, isLast: boolean): any {
     console.log("cells reducer:", context);
     throw new Error("todo");
   }
@@ -64,12 +74,8 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
       const context = new FlowRootFormatContext(env, this.context);
       return new BlockNodeGenerator(context);
     });
-
-    // [todo] overflow check
-    this.context.addBorderBoxEdge("before");
-    this.context.addBorderBoxEdge("start");
-    this.context.addBorderBoxEdge("end");
-    for (let loopCount = 0; ; loopCount++) {
+    let loopCount = 0;
+    while (true) {
       const values = cellGenerators.map(cellGen => cellGen.getNext());
       if (values.every(value => value === undefined)) {
         break;
@@ -81,16 +87,16 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
               this.context.addCell(value.body, index);
             }
           } else {
-            const emptyCell = cellGenerators[index].context.acceptLayoutReducer(RootBlockReducer.instance);
-            this.context.addCell(emptyCell, index);
+            const emptyResult = cellGenerators[index].context.acceptLayoutReducer(RootBlockReducer.instance);
+            this.context.addCell(emptyResult.body, index);
           }
         });
       } else {
-        yield this.context.acceptLayoutReducer(this.reducer);
+        yield this.context.acceptLayoutReducer(this.reducer, loopCount === 1, false);
         yield LayoutResult.pageBreak;
       }
+      loopCount++;
     } // for(loopCount)
-    this.context.addBorderBoxEdge("after");
-    yield this.context.acceptLayoutReducer(this.reducer);
+    yield this.context.acceptLayoutReducer(this.reducer, loopCount === 1, true);
   }
 }

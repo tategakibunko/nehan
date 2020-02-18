@@ -79,16 +79,14 @@ export class LogicalNodeGenerator {
       const nextElement = element.nextSibling;
       return { generator, nextElement };
     }
-    if (display.isTableCell()) {
-      element.acceptEffector(TableCellInitializer.instance);
-      if (element.parent) {
-        const cells = element.parent.children.filter(child => Display.load(child).isTableCell());
-        const generator = new TableCellsGenerator(
-          new TableCellsFormatContext(cells, parentContext.env, parentContext.parent)
-        );
-        const nextElement = cells[cells.length - 1].nextSibling;
-        return { generator, nextElement };
-      }
+    if (display.isTableCell() && element.parent) {
+      element.acceptEffector(TableCellInitializer.instance); // set cell partition
+      const cells = element.parent.children.filter(child => Display.load(child).isTableCell());
+      const generator = new TableCellsGenerator(
+        new TableCellsFormatContext(cells, parentContext.env, parentContext) // use parent env
+      );
+      const nextElement = cells[cells.length - 1].nextSibling;
+      return { generator, nextElement };
     }
     if (display.isInlineLevel()) {
       if (element.tagName === "br") {

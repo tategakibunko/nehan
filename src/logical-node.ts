@@ -84,7 +84,7 @@ export class LogicalBlockNode implements ILogicalNode {
   }
 
   get measure(): number {
-    return this.size.extent + this.border.width.measure;
+    return this.size.measure + this.border.width.measure;
   }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
