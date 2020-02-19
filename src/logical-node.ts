@@ -32,7 +32,7 @@ export class LogicalLineNode implements ILogicalNode {
     public size: LogicalSize,
     public text: string,
     public children: ILogicalNode[],
-    public floatOffset: number,
+    public lineStartOffset: number,
   ) { }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {

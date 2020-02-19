@@ -87,12 +87,13 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.restMeasure;
   }
 
-  public get floatOffset(): number {
-    if (!this.flowRoot.floatRegion) {
-      return 0;
+  public get lineStartOffset(): number {
+    let offset = 0;
+    if (this.flowRoot.floatRegion) {
+      const startEdgeSize = this.contextBoxEdge.getBorderBoxEdgeSize("start");
+      offset += this.flowRoot.floatRegion.getSpacePosFromStartBound(this.flowRootPos.before) - startEdgeSize;
     }
-    const startEdgeSize = this.contextBoxEdge.getBorderBoxEdgeSize("start");
-    return this.flowRoot.floatRegion.getSpacePosFromStartBound(this.flowRootPos.before) - startEdgeSize;
+    return offset;
   }
 
   public get restMeasure(): number {

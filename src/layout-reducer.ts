@@ -113,13 +113,13 @@ export class LineReducer implements ILayoutReducer {
     const pos = context.parent ? context.lineHeadPos : LogicalCursorPos.zero;
     const children = context.inlineNodes;
     const text = context.inlineText;
-    const floatOffset = context.floatOffset;
-    const lineNode = new LogicalLineNode(pos, size, text, children, floatOffset);
+    const startOffset = context.lineStartOffset;
+    const lineNode = new LogicalLineNode(pos, size, text, children, startOffset);
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
     console.log("[%s] reduceLine(%s) at %s(float offset:%d), %o",
-      context.name, size.toString(), pos.toString(), floatOffset, lineNode.text);
+      context.name, size.toString(), pos.toString(), startOffset, lineNode.text);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
