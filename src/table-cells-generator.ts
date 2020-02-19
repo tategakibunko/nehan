@@ -96,6 +96,11 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
       if (values.every(value => value === undefined)) {
         break;
       }
+      // if some cell yields page-break at the beginning of layout, then yield nothing but page-break.
+      if (loopCount === 0 && values.some(value => value && value.type === "page-break")) {
+        yield LayoutResult.pageBreak;
+        continue; // Note that loopCount remains 0.
+      }
       if (loopCount % 2 === 0) {
         const cellBlocks = values.map((value, index) => {
           if (value && value.type === "block") {
