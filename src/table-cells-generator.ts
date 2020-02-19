@@ -42,7 +42,7 @@ export class TableCellsFormatContext extends FlowFormatContext {
       cell.pos.start = this.cursorPos.start;
       this.cursorPos.start += cell.measure;
       // Collapse border of inline level.
-      // Note that block level collapsing is done by reducer.
+      // Note that block level collapsing is done by parent context.
       if (isCollapse) {
         const prevBorderSize = (index === 0) ? this.env.edge.border.width.start : this.cells[index - 1].border.width.end;
         const inlineCollapseSize = Math.min(prevBorderSize, cell.border.width.start);
@@ -58,9 +58,8 @@ export class TableCellsReducer implements ILayoutReducer {
   static instance = new TableCellsReducer();
   private constructor() { }
 
-  visit(context: TableCellsFormatContext, isFirstRow: boolean, isLastRow: boolean): any {
-    // const measure = context.parent ? context.parent.maxMeasure : context.paddingBoxSize.measure;
-    const measure = 0;
+  visit(context: TableCellsFormatContext, isFirstRow: boolean, isLastRow: boolean): LayoutResult {
+    const measure = context.maxMeasure;
     const extent = Math.max(...context.cells.map(cell => cell.extent));
     const size = new LogicalSize({ measure, extent });
     const pos = LogicalCursorPos.zero;
