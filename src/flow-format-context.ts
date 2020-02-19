@@ -218,7 +218,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addTableCells(cells: LogicalTableCellsNode) {
-    if (this.env.borderCollapse.isCollapse()) {
+    if (this.env.borderCollapse.isCollapse() && cells.isFirstRow) {
       const cellBeforeBorderSizes = cells.children.map(cell => cell.border.width.before);
       const beforeBorderSize = this.contextBoxEdge.borderWidth.getSize("before");
       if (Math.min(...cellBeforeBorderSizes) > 0 && beforeBorderSize > 0) {
