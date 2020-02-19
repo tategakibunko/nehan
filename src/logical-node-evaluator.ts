@@ -82,7 +82,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    // tableCells.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    tableCells.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCells.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);

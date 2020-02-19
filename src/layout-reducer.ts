@@ -8,6 +8,7 @@ import {
   TextFormatContext,
   LogicalTextNode,
   LogicalBlockNode,
+  LogicalTableCellsNode,
   LogicalInlineNode,
   LogicalLineNode,
   LogicalRubyNode,
@@ -129,10 +130,20 @@ export class BlockReducer implements ILayoutReducer {
 
   visit(context: FlowFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
-    const size = context.paddingBoxSize;
+    const size = context.contentBoxSize;
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.blockNodes;
+    const cells = children.find(child => child instanceof LogicalTableCellsNode) as LogicalTableCellsNode;
+    if (context.env.borderCollapse.isCollapse() && cells && cells.isLastRow) {
+      const cellAfterBorderSizes = cells.children.map(cell => cell.border.width.after);
+      const afterBorderSize = context.contextBoxEdge.borderWidth.getSize("after");
+      if (Math.min(...cellAfterBorderSizes) > 0 && afterBorderSize > 0) {
+        const collapseSize = Math.min(afterBorderSize, ...cellAfterBorderSizes);
+        size.extent -= collapseSize;
+        console.log("collapsed size for after edge = %d", collapseSize);
+      }
+    }
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
     console.log("[%s] reduceBlock(%s) at %s, global %s, %o", context.name, size.toString(), pos.toString(), context.globalPos.toString(), blockNode.text);
     context.text = "";
@@ -149,9 +160,12 @@ export class RootBlockReducer implements ILayoutReducer {
 
   visit(context: FlowRootFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos.clone() : LogicalCursorPos.zero;
-    const size = context.paddingBoxSize;
+    const size = context.contentBoxSize;
     if (context.floatRegion) {
       size.extent = Math.max(size.extent, context.floatRegion.maxRegionExtent);
+    }
+    if (context.env.borderCollapse.isCollapse()) {
+
     }
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;

@@ -144,7 +144,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.env.extent || this.rootExtent;
   }
 
-  public get paddingBoxSize(): LogicalSize {
+  public get contentBoxSize(): LogicalSize {
     return new LogicalSize({
       measure: this.maxMeasure,
       extent: (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent
@@ -215,6 +215,21 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.blockNodes.push(block);
     this.cursorPos.before += block.extent;
     this.text += block.text;
+  }
+
+  public addTableCells(cells: LogicalTableCellsNode) {
+    if (this.env.borderCollapse.isCollapse()) {
+      const cellBeforeBorderSizes = cells.children.map(cell => cell.border.width.before);
+      const beforeBorderSize = this.contextBoxEdge.borderWidth.getSize("before");
+      if (Math.min(...cellBeforeBorderSizes) > 0 && beforeBorderSize > 0) {
+        const collapseSize = Math.min(beforeBorderSize, ...cellBeforeBorderSizes);
+        cells.pos.before -= collapseSize;
+        this.cursorPos.before -= collapseSize;
+      }
+    }
+    this.blockNodes.push(cells);
+    this.cursorPos.before += cells.extent;
+    this.text += cells.text;
   }
 
   public addInline(inline: ILogicalNode) {
