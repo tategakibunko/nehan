@@ -40,7 +40,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     node.style.top = lineNode.pos.before + "px";
-    node.style.left = (lineNode.pos.start + lineNode.lineStartOffset) + "px";
+    node.style.left = (lineNode.pos.start + lineNode.lineBoxStartOffset) + "px";
     node.style.background = "skyblue";
     node.style.height = lineNode.size.extent + "px";
     lineNode.children.forEach(child => {
@@ -52,6 +52,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
     const node = document.createElement("span");
+    node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);

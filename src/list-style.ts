@@ -53,10 +53,11 @@ export class ListStyle {
       return;
     }
     if (markerElement.firstChild && markerElement.firstChild.isTextElement()) {
-      return;
+      return; // already inserted
     }
     let markerText = this.getMarkerText(element.indexOfType);
-    if (element.querySelectorAll("li").length > 0) {
+    // if nested list-item exists, outer marker-text is set to space.
+    if (element.querySelector("li")) {
       markerText = SpaceChar.markerSpace;
     }
     const markerTextNode = element.root.createTextNode(markerText);

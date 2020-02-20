@@ -52,8 +52,9 @@ export class InlineReducer implements ILayoutReducer {
     const children = context.inlineNodes;
     const text = context.inlineText;
     const size = new LogicalSize({ measure, extent });
-    const edge = context.contextBoxEdge.currentBorderBoxEdge;
+    const edge = context.contextBoxEdge.currentMarginBoxEdge;
     const inlineNode = new LogicalInlineNode(size, text, edge, children);
+    context.contextBoxEdge.clear();
     context.inlineNodes = [];
     context.inlineText = "";
     if (indent) {
@@ -106,7 +107,6 @@ export class ListMarkerReducer extends InlineReducer {
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
     const layout = super.visit(context, indent);
     layout.type = 'list-marker';
-    console.log("reduced list marker:", layout);
     return layout;
   }
 }
@@ -124,12 +124,12 @@ export class LineReducer implements ILayoutReducer {
     const pos = context.parent ? context.lineHeadPos : LogicalCursorPos.zero;
     const children = context.inlineNodes;
     const text = context.inlineText;
-    const startOffset = context.lineStartOffset;
+    const startOffset = context.lineBoxStartOffset;
     const lineNode = new LogicalLineNode(pos, size, text, children, startOffset);
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    console.log("[%s] reduceLine(%s) at %s(float offset:%d), %o",
+    console.log("[%s] reduceLine(%s) at %s(startOffst:%d), %o",
       context.name, size.toString(), pos.toString(), startOffset, lineNode.text);
     return LayoutResult.logicalNode('line', lineNode);
   }

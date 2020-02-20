@@ -55,6 +55,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
 
     while (childElement !== null) {
       const inlineMargin = InlineMargin.getMarginFromLastInline(childElement);
+      this.context.contextBoxEdge.margin.addEdge("start");
       this.context.cursorPos.start += inlineMargin;
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
@@ -79,7 +80,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'inline') {
           this.context.addInline(value.body);
         } else if (value.type === 'text') {
-          this.context.addInline(value.body);
+          this.context.addText(value.body);
         } else if (value.type === 'ruby') {
           this.context.addInline(value.body);
         } else if (value.type === 'empha') {
@@ -95,7 +96,10 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
     if (endEdgeSize < this.context.restMeasure) {
       this.context.addBorderBoxEdge("end"); // cursorPos.start += endEdgeSize
     }
-
+    const endMarginSize = this.context.contextBoxEdge.margin.getSize("end");
+    if (endMarginSize < this.context.restMeasure) {
+      this.context.contextBoxEdge.margin.addEdge("end");
+    }
     yield this.context.acceptLayoutReducer(this.reducer, false);
     console.groupEnd();
   }

@@ -28,11 +28,16 @@ export interface NodeEffector {
   visit: (element: HtmlElement) => void;
 }
 
+// marker-element is inserted by pseudo-element-initializer
+// but css is not still loaded when pseudo-element-initializer works,
+// (then list-style value is not property obtained at that time).
+// so we must insert marker-text when list-item-generator is created.
 export class ListItemInitializer implements NodeEffector {
   static instance = new ListItemInitializer();
   private constructor() { }
 
   visit(element: HtmlElement) {
+    // at this time, computed value is already loaded to element(li).
     const display = Display.load(element);
     if (!display.isListItem() || display.isNone() || !element.parent) {
       return;
@@ -46,13 +51,12 @@ export class ListItemInitializer implements NodeEffector {
     if (element.querySelector("li")) {
       markerText = SpaceChar.markerSpace;
     }
-    const listTextNode = element.ownerDocument.createTextNode(markerText);
-    const markerElement = element.ownerDocument.createElement(PseudoElementTagName.MARKER);
-    if (listStyle.isTcyMarker()) {
-      markerElement.classList.add('tcy');
+    const markerElement = element.firstChild;
+    if (!markerElement || markerElement.tagName !== PseudoElementTagName.MARKER) {
+      throw new Error("marker element is not created yet!");
     }
+    const listTextNode = element.ownerDocument.createTextNode(markerText);
     markerElement.appendChild(listTextNode);
-    element.insertBefore(markerElement, element.firstChild);
   }
 }
 
@@ -251,27 +255,38 @@ export class PseudoElementInitializer implements NodeEffector {
     this.pseudoRules = pseudoRules;
   }
 
+  /*
   private findMarkerParent(element: HtmlElement): HtmlElement {
-    let first_child = element.firstChild;
-    if (!first_child || first_child.isTextElement()) {
+    const firstChild = element.firstChild;
+    if (!firstChild || firstChild.isTextElement()) {
       return element;
     }
-    if (first_child.tagName === "img") {
+    if (firstChild.tagName === "img") {
       return element;
     }
-    return this.findMarkerParent(first_child);
+    return this.findMarkerParent(firstChild);
   }
+  */
 
   private addMarker(element: HtmlElement): HtmlElement {
+    const markerElement = element.root.createElement(PseudoElementTagName.MARKER);
+    markerElement.parent = element;
+    element.insertBefore(markerElement, element.firstChild);
+    return markerElement;
+  }
+
+  /*
+  private addMarker(element: HtmlElement): HtmlElement {
     const markerParent = this.findMarkerParent(element);
-    if (markerParent.tagName === "::marker") {
+    if (markerParent.tagName === PseudoElementTagName.MARKER) {
       return markerParent; // already created!
     }
-    const markerElement = element.root.createElement("::marker");
+    const markerElement = element.root.createElement(PseudoElementTagName.MARKER);
     markerElement.parent = markerParent;
     markerParent.insertBefore(markerElement, markerParent.firstChild);
     return markerElement;
   }
+  */
 
   private addBefore(element: HtmlElement): HtmlElement {
     const before = element.root.createElement(PseudoElementTagName.BEFORE);

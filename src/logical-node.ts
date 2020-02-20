@@ -32,7 +32,7 @@ export class LogicalLineNode implements ILogicalNode {
     public size: LogicalSize,
     public text: string,
     public children: ILogicalNode[],
-    public lineStartOffset: number,
+    public lineBoxStartOffset: number,
   ) { }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
@@ -63,6 +63,10 @@ export class LogicalInlineNode implements ILogicalNode {
     public edge: LogicalBoxEdge,
     public children: ILogicalNode[],
   ) { }
+
+  public get measure(): number {
+    return this.size.measure + this.edge.measure;
+  }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitInline(this);

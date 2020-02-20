@@ -2,6 +2,7 @@ import {
   BoxEnv,
   ContextBoxEdge,
   LogicalBlockNode,
+  LogicalInlineNode,
   LogicalTableCellsNode,
   LogicalLineNode,
   LogicalCursorPos,
@@ -26,6 +27,8 @@ export class FlowFormatContext implements IFlowFormatContext {
   public blockNodes: ILogicalNode[];
   public inlineNodes: ILogicalNode[];
   public inlineText: string;
+  public listMarker?: LogicalInlineNode;
+  public lineCount: number;
   public text: string;
 
   constructor(
@@ -41,6 +44,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineNodes = [];
     this.inlineText = "";
     this.text = "";
+    this.lineCount = 0;
   }
 
   public get inlineRoot(): IFlowFormatContext {
@@ -79,29 +83,41 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.maxExtent - this.cursorPos.before;
   }
 
+  private get textStartPos(): number {
+    let startPos = this.cursorPos.start;
+    if (this.listMarker && this.lineCount > 0) {
+      startPos += this.listMarker.measure;
+      // console.log("textStartPos:%d, lineCount:%d", startPos, this.lineCount);
+    }
+    return startPos;
+  }
+
   // this value is referenced from text-fmt-context, ruby-fmt-context etc.
   public get contextRestMeasure(): number {
     if (this.flowRoot.floatRegion) {
-      const floatSpace = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before);
-      return Math.min(floatSpace, this.maxMeasure) - this.cursorPos.start;
+      const floatSpaceSize = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before);
+      return Math.min(floatSpaceSize, this.maxMeasure) - this.textStartPos;
     }
     return this.restMeasure;
   }
 
-  public get lineStartOffset(): number {
+  public get lineBoxStartOffset(): number {
     let offset = 0;
     if (this.flowRoot.floatRegion) {
       const startEdgeSize = this.contextBoxEdge.getBorderBoxEdgeSize("start");
       offset += this.flowRoot.floatRegion.getSpacePosFromStartBound(this.flowRootPos.before) - startEdgeSize;
+    }
+    if (this.listMarker && this.lineCount > 0) {
+      offset += this.listMarker.size.measure;
     }
     return offset;
   }
 
   public get restMeasure(): number {
     if (this.parent) {
-      return this.parent.restMeasure - this.cursorPos.start;
+      return this.parent.restMeasure - this.textStartPos;
     }
-    return this.maxMeasure - this.cursorPos.start;
+    return this.maxMeasure - this.textStartPos;
   }
 
   public get rootMeasure(): number {
@@ -209,6 +225,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.blockNodes.push(block);
     this.cursorPos.before += block.size.extent;
     this.text += block.text;
+    this.lineCount++;
   }
 
   public addBlock(block: LogicalBlockNode) {
@@ -234,17 +251,19 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.text += cells.text;
   }
 
-  public addInline(inline: ILogicalNode) {
+  public addInline(inline: LogicalInlineNode) {
+    // console.log("addInline:%o, measure:%d", inline, inline.measure);
     this.inlineNodes.push(inline);
-    this.cursorPos.start += inline.size.measure;
+    this.cursorPos.start += inline.measure;
     this.inlineText += inline.text;
   }
 
   // Note that marker text is not included to inlineText.
-  public addListMarker(marker: ILogicalNode) {
+  public addListMarker(marker: LogicalInlineNode) {
     this.inlineNodes.push(marker);
     this.cursorPos.start += marker.size.measure;
-    console.log("added list marker:", marker);
+    this.listMarker = marker;
+    console.log("[%s] added list marker:", this.name, marker);
   }
 
   public addText(text: ILogicalNode) {
