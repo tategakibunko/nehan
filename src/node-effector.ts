@@ -1,6 +1,7 @@
 import {
   Config,
   HtmlElement,
+  SpaceChar,
   Display,
   CssLength,
   CssRule,
@@ -18,12 +19,41 @@ import {
   LogicalBoxEdge,
   LogicalFloat,
   WhiteSpace,
+  ListStyle,
 } from './public-api'
 import { BorderCollapse } from './border-collapse';
 
 // side effect visitor
 export interface NodeEffector {
   visit: (element: HtmlElement) => void;
+}
+
+export class ListItemInitializer implements NodeEffector {
+  static instance = new ListItemInitializer();
+  private constructor() { }
+
+  visit(element: HtmlElement) {
+    const display = Display.load(element);
+    if (!display.isListItem() || display.isNone() || !element.parent) {
+      return;
+    }
+    const listStyle = ListStyle.load(element);
+    if (listStyle.isNone()) {
+      return;
+    }
+    let markerText = listStyle.getMarkerText(element.indexOfType);
+    // if nested list-item exists, outer marker-text is set to space.
+    if (element.querySelector("li")) {
+      markerText = SpaceChar.markerSpace;
+    }
+    const listTextNode = element.ownerDocument.createTextNode(markerText);
+    const markerElement = element.ownerDocument.createElement(PseudoElementTagName.MARKER);
+    if (listStyle.isTcyMarker()) {
+      markerElement.classList.add('tcy');
+    }
+    markerElement.appendChild(listTextNode);
+    element.insertBefore(markerElement, element.firstChild);
+  }
 }
 
 export class TableCellInitializer implements NodeEffector {

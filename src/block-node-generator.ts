@@ -127,6 +127,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           this.context.addTableCells(value.body);
         } else if (value.type === 'inline') {
           this.context.addInline(value.body);
+        } else if (value.type === 'list-marker') {
+          this.context.addListMarker(value.body);
         } else if (value.type === 'text') {
           this.context.addText(value.body);
         } else if (value.type === 'ruby') {

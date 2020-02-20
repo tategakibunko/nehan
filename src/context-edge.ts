@@ -127,11 +127,11 @@ export class ContextBoxEdge {
     return this.borderWidth.getSize(direction) + this.padding.getSize(direction) + this.margin.getSize(direction);
   }
 
-  get borderBoxAfter(): number {
+  get borderBoxAfterSize(): number {
     return this.borderWidth.getSize("after") + this.padding.getSize("after");
   }
 
-  get borderBoxStart(): number {
+  get borderBoxStartSize(): number {
     return this.borderWidth.getSize("start") + this.padding.getSize("start");
   }
 

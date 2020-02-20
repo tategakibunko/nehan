@@ -26,6 +26,10 @@ export class ListStyleType {
     this.value = value;
   }
 
+  public isNone(): boolean {
+    return this.value === "none";
+  }
+
   public isTcyMarker(): boolean {
     return this.value === "decimal";
   }

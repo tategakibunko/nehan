@@ -79,6 +79,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.maxExtent - this.cursorPos.before;
   }
 
+  // this value is referenced from text-fmt-context, ruby-fmt-context etc.
   public get contextRestMeasure(): number {
     if (this.flowRoot.floatRegion) {
       const floatSpace = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before);
@@ -182,7 +183,7 @@ export class FlowFormatContext implements IFlowFormatContext {
 
   public get lineHeadPos(): LogicalCursorPos {
     return new LogicalCursorPos({
-      start: this.contextBoxEdge.borderBoxStart,
+      start: this.contextBoxEdge.borderBoxStartSize,
       before: this.cursorPos.before - this.contextBoxEdge.borderWidth.getSize("before")
     });
   }
@@ -237,6 +238,13 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineNodes.push(inline);
     this.cursorPos.start += inline.size.measure;
     this.inlineText += inline.text;
+  }
+
+  // Note that marker text is not included to inlineText.
+  public addListMarker(marker: ILogicalNode) {
+    this.inlineNodes.push(marker);
+    this.cursorPos.start += marker.size.measure;
+    console.log("added list marker:", marker);
   }
 
   public addText(text: ILogicalNode) {

@@ -13,6 +13,7 @@ type LogicalNodeType =
   'ruby' |
   'ruby-text' |
   'ruby-base' |
+  'list-marker' |
   'tcy'
 
 type LayoutValueType =

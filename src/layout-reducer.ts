@@ -60,7 +60,7 @@ export class InlineReducer implements ILayoutReducer {
       context.cursorPos.start = 0;
     }
     // console.log("reduceInline:%o", inline);
-    return LayoutResult.logicalNode('inline', inlineNode); // TODO
+    return LayoutResult.logicalNode('inline', inlineNode);
   }
 }
 
@@ -84,9 +84,9 @@ export class RubyBaseReducer extends InlineReducer {
   static instance = new RubyBaseReducer();
 
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
-    const result = super.visit(context, indent);
-    result.type = 'ruby-base'; // inline-box -> ruby-base
-    return result;
+    const layout = super.visit(context, indent);
+    layout.type = 'ruby-base';
+    return layout;
   }
 }
 
@@ -94,9 +94,20 @@ export class RubyTextReducer extends InlineReducer {
   static instance = new RubyTextReducer();
 
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
-    const result = super.visit(context, indent);
-    result.type = 'ruby-text'; // inline-box -> ruby-text
-    return result;
+    const layout = super.visit(context, indent);
+    layout.type = 'ruby-text';
+    return layout;
+  }
+}
+
+export class ListMarkerReducer extends InlineReducer {
+  static instance = new ListMarkerReducer();
+
+  visit(context: FlowFormatContext, indent: boolean): LayoutResult {
+    const layout = super.visit(context, indent);
+    layout.type = 'list-marker';
+    console.log("reduced list marker:", layout);
+    return layout;
   }
 }
 

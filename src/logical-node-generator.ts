@@ -21,8 +21,12 @@ import {
   RootBlockReducer,
   FlowRootFormatContext,
   TableCellInitializer,
+  TableCellsGenerator,
+  TableCellsFormatContext,
+  ListItemInitializer,
+  PseudoElementTagName,
+  ListMarkerReducer,
 } from './public-api'
-import { TableCellsGenerator, TableCellsFormatContext } from './table-cells-generator';
 
 export interface ChildGenerator {
   generator: ILogicalNodeGenerator;
@@ -79,6 +83,14 @@ export class LogicalNodeGenerator {
       const nextElement = element.nextSibling;
       return { generator, nextElement };
     }
+    if (element.tagName === PseudoElementTagName.MARKER) {
+      const generator = new InlineNodeGenerator(
+        new FlowFormatContext(env, parentContext),
+        ListMarkerReducer.instance
+      );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
     if (display.isTableCell() && element.parent) {
       element.acceptEffector(TableCellInitializer.instance); // set cell partition
       const cells = element.parent.children.filter(child => Display.load(child).isTableCell());
@@ -108,6 +120,9 @@ export class LogicalNodeGenerator {
       );
       const nextElement = element.nextSibling;
       return { generator, nextElement };
+    }
+    if (display.isListItem()) {
+      element.acceptEffector(ListItemInitializer.instance);
     }
     const generator = new BlockNodeGenerator(
       new FlowFormatContext(env, parentContext)
