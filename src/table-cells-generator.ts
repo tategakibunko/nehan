@@ -1,73 +1,13 @@
 import {
   ILogicalNodeGenerator,
-  ILayoutFormatContext,
-  LogicalSize,
-  LogicalBlockNode,
-  LogicalTableCellsNode,
   LayoutResult,
-  HtmlElement,
   BoxEnv,
   BlockNodeGenerator,
   FlowRootFormatContext,
-  ILayoutReducer,
-  FlowFormatContext,
   RootBlockReducer,
-  LogicalCursorPos,
+  TableCellsFormatContext,
+  TableCellsReducer,
 } from './public-api';
-
-export class TableCellsFormatContext extends FlowFormatContext {
-  public cells: LogicalBlockNode[];
-
-  constructor(
-    public elements: HtmlElement[],
-    public env: BoxEnv,
-    public parent?: ILayoutFormatContext,
-  ) {
-    super(env, parent);
-    this.cells = [];
-  }
-
-  acceptLayoutReducer(reducer: TableCellsReducer, isFirstRow: boolean, isLastRow: boolean): LayoutResult {
-    return reducer.visit(this, isFirstRow, isLastRow);
-  }
-
-  setCells(cells: LogicalBlockNode[]) {
-    const isCollapse = this.env.borderCollapse.isCollapse();
-    this.cells = cells;
-    const maxContentExtent = Math.max(...cells.map(cell => cell.size.extent));
-    const maxTotalExtent = Math.max(...cells.map(cell => cell.extent));
-    this.cells.forEach((cell, index) => {
-      cell.size.extent = maxContentExtent;
-      cell.size.extent += maxTotalExtent - cell.extent;
-      cell.pos.start = this.cursorPos.start;
-      this.cursorPos.start += cell.measure;
-      // Collapse border of inline level.
-      // Note that block level collapsing is done by parent context.
-      if (isCollapse) {
-        const prevBorderSize = (index === 0) ? this.env.edge.border.width.start : this.cells[index - 1].border.width.end;
-        const inlineCollapseSize = Math.min(prevBorderSize, cell.border.width.start);
-        // console.log("inline collapse size:%d", inlineCollapseSize);
-        cell.pos.start -= inlineCollapseSize;
-        this.cursorPos.start -= inlineCollapseSize;
-      }
-    });
-  }
-}
-
-export class TableCellsReducer implements ILayoutReducer {
-  static instance = new TableCellsReducer();
-  private constructor() { }
-
-  visit(context: TableCellsFormatContext, isFirstRow: boolean, isLastRow: boolean): LayoutResult {
-    const measure = context.maxMeasure;
-    const extent = Math.max(...context.cells.map(cell => cell.extent));
-    const size = new LogicalSize({ measure, extent });
-    const pos = LogicalCursorPos.zero;
-    const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
-    const block = new LogicalTableCellsNode(size, pos, text, context.cells, isFirstRow, isLastRow);
-    return LayoutResult.logicalNode("table-cells", block);
-  }
-}
 
 export class TableCellsGenerator implements ILogicalNodeGenerator {
   private generator: Generator<LayoutResult>;

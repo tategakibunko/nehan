@@ -13,6 +13,7 @@ import {
   LogicalLineNode,
   LogicalRubyNode,
   RubyGroup,
+  TableCellsFormatContext,
 } from './public-api'
 
 export interface ILayoutReducer {
@@ -195,4 +196,20 @@ export class RootBlockReducer implements ILayoutReducer {
     return LayoutResult.logicalNode('block', blockNode);
   }
 }
+
+export class TableCellsReducer implements ILayoutReducer {
+  static instance = new TableCellsReducer();
+  private constructor() { }
+
+  visit(context: TableCellsFormatContext, isFirstRow: boolean, isLastRow: boolean): LayoutResult {
+    const measure = context.maxMeasure;
+    const extent = Math.max(...context.cells.map(cell => cell.extent));
+    const size = new LogicalSize({ measure, extent });
+    const pos = LogicalCursorPos.zero;
+    const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
+    const block = new LogicalTableCellsNode(size, pos, text, context.cells, isFirstRow, isLastRow);
+    return LayoutResult.logicalNode("table-cells", block);
+  }
+}
+
 
