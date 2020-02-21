@@ -69,7 +69,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       this.context.inlineMargin = InlineMargin.getMarginFromParentBlock(childElement);
       const beforeMargin = BlockMargin.getMarginFromLastBlock(childElement);
       if (beforeMargin > 0) {
-        this.context.addMarginEdge("before", beforeMargin);
+        this.context.addBlockMarginEdge("before", beforeMargin);
         console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
       }
       while (this.context.restExtent < beforeMargin) {
@@ -152,7 +152,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     this.context.addBorderBoxEdge("after");
     const marginAfter = this.context.contextBoxEdge.margin.getSize("after");
     if (!this.context.env.float.isNone() && this.context.restExtent >= marginAfter) {
-      this.context.addMarginEdge("after", marginAfter);
+      this.context.addBlockMarginEdge("after", marginAfter);
     }
 
     yield this.context.acceptLayoutReducer(this.blockReducer);

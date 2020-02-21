@@ -215,7 +215,12 @@ export class FlowFormatContext implements IFlowFormatContext {
     }
   }
 
-  public addMarginEdge(direction: LogicalEdgeDirection, marginSize: number) {
+  public addInlineMarginEdge(direction: "start" | "end", marginSize: number) {
+    this.contextBoxEdge.margin.addEdge(direction);
+    this.cursorPos.start += marginSize;
+  }
+
+  public addBlockMarginEdge(direction: "before" | "after", marginSize: number) {
     this.contextBoxEdge.margin.addEdge(direction);
     this.cursorPos.before += marginSize;
   }

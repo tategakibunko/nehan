@@ -54,10 +54,9 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
     let childElement: HtmlElement | null = this.context.env.element.firstChild;
 
     while (childElement !== null) {
-      const inlineMargin = InlineMargin.getMarginFromLastInline(childElement);
-      if (inlineMargin > 0 && this.context.restMeasure > inlineMargin) {
-        this.context.contextBoxEdge.margin.addEdge("start");
-        this.context.cursorPos.start += inlineMargin;
+      const inlineMarginSize = InlineMargin.getMarginFromLastInline(childElement);
+      if (inlineMarginSize > 0 && this.context.restMeasure > inlineMarginSize) {
+        this.context.addInlineMarginEdge("start", inlineMarginSize);
       }
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
@@ -100,7 +99,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
     }
     const endMarginSize = this.context.contextBoxEdge.margin.getSize("end");
     if (endMarginSize < this.context.restMeasure) {
-      this.context.contextBoxEdge.margin.addEdge("end");
+      this.context.addInlineMarginEdge("end", endMarginSize);
     }
     yield this.context.acceptLayoutReducer(this.reducer, false);
     console.groupEnd();

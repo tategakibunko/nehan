@@ -208,8 +208,7 @@ export class TableCellsReducer implements ILayoutReducer {
     const pos = LogicalCursorPos.zero;
     const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
     const block = new LogicalTableCellsNode(size, pos, text, context.cells, isFirstRow, isLastRow);
+    console.log("[%s] reduceTableCells:", context.name, block);
     return LayoutResult.logicalNode("table-cells", block);
   }
 }
-
-

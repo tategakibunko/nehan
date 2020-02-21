@@ -142,7 +142,7 @@ export class TextNodeNormalizer implements NodeEffector {
     }
     if (element.parent && prev.isTextElement()) {
       if (WhiteSpace.isWhiteSpaceElement(prev)) {
-        console.info("remove white space before block tag");
+        console.info("remove white space before block:", element);
         element.parent.removeChild(prev);
       } else {
         console.info("insert <br> before %o", element);
