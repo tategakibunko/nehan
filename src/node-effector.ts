@@ -47,10 +47,6 @@ export class ListItemInitializer implements NodeEffector {
       return;
     }
     let markerText = listStyle.getMarkerText(element.indexOfType);
-    // if nested list-item exists, outer marker-text is set to space.
-    if (element.querySelector("li")) {
-      markerText = SpaceChar.markerSpace;
-    }
     const markerElement = element.firstChild;
     if (!markerElement || markerElement.tagName !== PseudoElementTagName.MARKER) {
       throw new Error("marker element is not created yet!");
