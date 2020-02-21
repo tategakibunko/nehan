@@ -60,7 +60,7 @@ export class InlineReducer implements ILayoutReducer {
     if (indent) {
       context.cursorPos.start = 0;
     }
-    // console.log("reduceInline:%o", inline);
+    console.log("reduceInline:%o", inlineNode);
     return LayoutResult.logicalNode('inline', inlineNode);
   }
 }

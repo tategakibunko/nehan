@@ -59,15 +59,13 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         childElement = childElement.nextSibling;
         continue;
       }
-
+      const float = LogicalFloat.load(childElement);
       // before switching to next block, check there is inlines that are not still wrapped by anon-line-box.
-      /*
       if ((!float.isNone() || display.isBlockLevel()) && this.context.inlineNodes.length > 0) {
         console.warn("sweep out remaining inlines as line");
         const line = this.context.acceptLayoutReducer(LineReducer.instance);
         this.context.addLine(line.body); // never overflows!
       }
-      */
       this.context.inlineMargin = InlineMargin.getMarginFromParentBlock(childElement);
       const beforeMargin = BlockMargin.getMarginFromLastBlock(childElement);
       if (beforeMargin > 0) {
@@ -83,7 +81,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       if (!clear.isNone()) {
         this.context.flowRoot.clearFloat(clear);
       }
-      const float = LogicalFloat.load(childElement);
+      // const float = LogicalFloat.load(childElement);
       while (true) {
         // Before yielding child generator, resume suspended generators if it exists.
         this.context.suspendedGens = this.context.suspendedGens.filter(generator => {
