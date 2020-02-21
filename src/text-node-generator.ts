@@ -39,12 +39,15 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       while (this.context.restExtent < lineExtent) {
         yield LayoutResult.pageBreak;
       }
-      // If prepared measure space is not enough for a single fontSize,
-      // send parent generator 'requireMeasure' command to prepare more spaces.
-      // This situation can occur when inline goes to float-space.
-      while (this.context.restMeasure < font.size && this.context.isLineHead()) {
-        console.log(`restM:${this.context.restMeasure} < fontSize:${font.size}`);
-        yield LayoutResult.requestMeasure(font.size);
+      if (this.context.isLineHead()) {
+        if (this.context.maxMeasure < font.size) {
+          console.warn("too narrow space, skip:", this.context);
+          yield LayoutResult.skip;
+          break;
+        }
+        while (this.context.restMeasure < font.size) {
+          yield LayoutResult.lineBreak;
+        }
       }
       const token: ICharacter = this.context.lexer.getNext();
       // console.log("restM:%d, token:%o", this.context.restMeasure, token);

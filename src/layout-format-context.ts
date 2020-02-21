@@ -6,6 +6,7 @@ import {
   LayoutResult,
   ILogicalNode,
   LogicalBlockNode,
+  LogicalInlineNode,
   LogicalFloat,
   LogicalClear,
 } from './public-api'
@@ -13,6 +14,7 @@ import {
 export interface ILayoutFormatContext {
   env: BoxEnv;
   parent?: ILayoutFormatContext;
+  listMarker?: LogicalInlineNode;
   globalPos: LogicalCursorPos;
   flowRootPos: LogicalCursorPos;
   cursorPos: LogicalCursorPos;
