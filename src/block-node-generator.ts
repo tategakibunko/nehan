@@ -67,6 +67,9 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         this.context.addLine(line.body); // never overflows!
       }
       this.context.inlineMargin = InlineMargin.getMarginFromParentBlock(childElement);
+      if (this.context.env.element.tagName === "tbody") {
+        debugger;
+      }
       const beforeMargin = BlockMargin.getMarginFromLastBlock(childElement);
       if (beforeMargin > 0) {
         this.context.addBlockMarginEdge("before", beforeMargin);
