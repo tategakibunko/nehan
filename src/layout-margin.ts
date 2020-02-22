@@ -1,7 +1,6 @@
 import {
   HtmlElement,
   Display,
-  LogicalEdgeDirection,
   LogicalFloat,
   Position,
 } from './public-api'
