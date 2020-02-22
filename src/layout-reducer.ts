@@ -3,6 +3,7 @@ import {
   LogicalCursorPos,
   ILogicalNode,
   LayoutResult,
+  LogicalNodeType,
   FlowFormatContext,
   FlowRootFormatContext,
   TextFormatContext,
@@ -42,8 +43,10 @@ export class TextReducer implements ILayoutReducer {
 }
 
 export class InlineReducer implements ILayoutReducer {
-  static instance = new InlineReducer();
-  protected constructor() { }
+  static instance = new InlineReducer('inline');
+  protected constructor(
+    public type: LogicalNodeType
+  ) { }
 
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
     const measure = context.cursorPos.start;
@@ -83,33 +86,15 @@ export class RubyReducer implements ILayoutReducer {
 }
 
 export class RubyBaseReducer extends InlineReducer {
-  static instance = new RubyBaseReducer();
-
-  visit(context: FlowFormatContext, indent: boolean): LayoutResult {
-    const layout = super.visit(context, indent);
-    layout.type = 'ruby-base';
-    return layout;
-  }
+  static instance = new RubyBaseReducer('ruby-base');
 }
 
 export class RubyTextReducer extends InlineReducer {
-  static instance = new RubyTextReducer();
-
-  visit(context: FlowFormatContext, indent: boolean): LayoutResult {
-    const layout = super.visit(context, indent);
-    layout.type = 'ruby-text';
-    return layout;
-  }
+  static instance = new RubyTextReducer('ruby-text');
 }
 
 export class ListMarkerReducer extends InlineReducer {
-  static instance = new ListMarkerReducer();
-
-  visit(context: FlowFormatContext, indent: boolean): LayoutResult {
-    const layout = super.visit(context, indent);
-    layout.type = 'list-marker';
-    return layout;
-  }
+  static instance = new ListMarkerReducer('list-marker');
 }
 
 export class LineReducer implements ILayoutReducer {

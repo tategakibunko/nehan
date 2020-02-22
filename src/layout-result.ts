@@ -2,7 +2,7 @@ import {
   ILogicalNode,
 } from './public-api'
 
-type LogicalNodeType =
+export type LogicalNodeType =
   'block' |
   'line' |
   'inline' |

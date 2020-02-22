@@ -50,19 +50,6 @@ export class BlockMargin {
     return lastChildren;
   }
 
-  static getParentsUntilBody(element: HtmlElement): HtmlElement[] {
-    let parents = [];
-    let parent = element.parent;
-    while (parent) {
-      if (parent.tagName === "body" || !isFlowElement(parent)) {
-        break;
-      }
-      parents.push(parent);
-      parent = parent.parent;
-    }
-    return parents;
-  }
-
   static getFirstChildren(element: HtmlElement): HtmlElement[] {
     let children = element.children.filter(isFlowElement);
     let firstChildren = [];
@@ -74,36 +61,42 @@ export class BlockMargin {
     return firstChildren;
   }
 
-  static getAfterElements(element: HtmlElement): HtmlElement[] {
-    return this.getParentsUntilBody(element).concat(element).concat(this.getLastChildren(element));
-  }
-
   static getBeforeElements(element: HtmlElement): HtmlElement[] {
-    return this.getParentsUntilBody(element).concat(element).concat(this.getFirstChildren(element));
-  }
-
-  static getMaxMarginFrom(elements: HtmlElement[], direction: LogicalEdgeDirection): number {
-    return elements.map(e => {
-      return parseInt(e.computedStyle.getPropertyValue(`margin-${direction}`) || "0", 10);
-    }).reduce((max, margin) => {
-      return margin > max ? margin : max;
-    }, 0);
-  }
-
-  static getMaxAfterMargin(element: HtmlElement): number {
-    if (element.isTextElement()) {
-      return 0;
+    let elements = this.getFirstChildren(element).concat(element);
+    if (!element.isFirstElementChild()) {
+      return elements;
     }
-    const elements = this.getAfterElements(element);
-    return this.getMaxMarginFrom(elements, 'after');
+    let parent = element.parent;
+    while (parent) {
+      if (!isFlowElement(parent)) {
+        break;
+      }
+      if (!parent.isFirstElementChild()) {
+        break;
+      }
+      elements.push(parent);
+      parent = parent.parent;
+    }
+    return elements;
   }
 
-  static getMaxBeforeMargin(element: HtmlElement): number {
-    if (element.isTextElement()) {
-      return 0;
+  static getAfterElements(element: HtmlElement): HtmlElement[] {
+    let elements = this.getLastChildren(element).concat(element);
+    if (!element.isLastElementChild()) {
+      return elements;
     }
-    const elements = this.getBeforeElements(element);
-    return this.getMaxMarginFrom(elements, 'before');
+    let parent = element.parent;
+    while (parent) {
+      if (!isFlowElement(parent)) {
+        break;
+      }
+      if (!parent.isLastElementChild()) {
+        break;
+      }
+      elements.push(parent);
+      parent = parent.parent;
+    }
+    return elements;
   }
 
   static getMarginFromLastBlock(element: HtmlElement): number {
@@ -115,18 +108,13 @@ export class BlockMargin {
       return 0;
     }
     const float = LogicalFloat.load(element);
-    if (!float.isNone()) {
+    const prevElement = element.previousElementSibling;
+    if (!float.isNone() || !prevElement) {
       return parseInt(element.computedStyle.getPropertyValue("margin-before") || "0", 10);
     }
-    if (element.isFirstElementChild() && element.parent && element.parent.tagName === "body") {
-      return this.getMaxBeforeMargin(element);
-    }
-    const prevElement = element.previousElementSibling;
-    if (prevElement && isFlowElement(prevElement)) {
-      return Math.max(this.getMaxBeforeMargin(element), this.getMaxAfterMargin(prevElement));
-    }
-    // offset is already added by parent layout.
-    return 0;
+    const maxBefore = Math.max(...this.getBeforeElements(element).map(e => parseInt(e.computedStyle.getPropertyValue("margin-before") || "0")));
+    const maxPrevAfter = Math.max(...this.getAfterElements(prevElement).map(e => parseInt(e.computedStyle.getPropertyValue("margin-after") || "0")));
+    return Math.max(maxBefore, maxPrevAfter);
   }
 }
 
