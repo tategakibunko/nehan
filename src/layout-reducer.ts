@@ -44,9 +44,7 @@ export class TextReducer implements ILayoutReducer {
 
 export class InlineReducer implements ILayoutReducer {
   static instance = new InlineReducer('inline');
-  protected constructor(
-    public type: LogicalNodeType
-  ) { }
+  protected constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
     const measure = context.cursorPos.start;
@@ -65,7 +63,7 @@ export class InlineReducer implements ILayoutReducer {
       context.cursorPos.start = 0;
     }
     console.log("reduceInline:%o", inlineNode);
-    return LayoutResult.logicalNode('inline', inlineNode);
+    return LayoutResult.logicalNode(this.type, inlineNode);
   }
 }
 
@@ -122,8 +120,8 @@ export class LineReducer implements ILayoutReducer {
 }
 
 export class BlockReducer implements ILayoutReducer {
-  static instance = new BlockReducer();
-  private constructor() { }
+  static instance = new BlockReducer('block');
+  private constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
@@ -147,13 +145,13 @@ export class BlockReducer implements ILayoutReducer {
     context.blockNodes = [];
     context.cursorPos = LogicalCursorPos.zero;
     context.contextBoxEdge.clear();
-    return LayoutResult.logicalNode('block', blockNode);
+    return LayoutResult.logicalNode(this.type, blockNode);
   }
 }
 
 export class RootBlockReducer implements ILayoutReducer {
-  static instance = new RootBlockReducer();
-  private constructor() { }
+  static instance = new RootBlockReducer('block');
+  private constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowRootFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos.clone() : LogicalCursorPos.zero;
@@ -178,7 +176,7 @@ export class RootBlockReducer implements ILayoutReducer {
       delete context.floatRegion;
       context.floatRegion = undefined;
     }
-    return LayoutResult.logicalNode('block', blockNode);
+    return LayoutResult.logicalNode(this.type, blockNode);
   }
 }
 
