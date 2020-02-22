@@ -27,6 +27,7 @@ import {
   PseudoElementTagName,
   ListMarkerReducer,
 } from './public-api'
+import { TcyLexer } from './text-lexer';
 
 export interface ChildGenerator {
   generator: ILogicalNodeGenerator;
@@ -47,7 +48,8 @@ export class LogicalNodeGenerator {
 
   static createChild(element: HtmlElement, parentContext: ILayoutFormatContext): ChildGenerator {
     if (element.isTextElement()) {
-      const lexer = new TextLexer(element.textContent);
+      const text = element.textContent;
+      const lexer = parentContext.env.textCombineUpright.isNone() ? new TextLexer(text) : new TcyLexer(text);
       const nextElement = element.nextSibling;
       const generator = new TextNodeGenerator(
         new TextFormatContext(parentContext.env, lexer, parentContext)

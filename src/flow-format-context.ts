@@ -283,10 +283,4 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.cursorPos.start += ruby.size.measure;
     this.inlineText += ruby.text;
   }
-
-  public addEmpha(empha: ILogicalNode) {
-    this.inlineNodes.push(empha);
-    this.cursorPos.start += empha.size.measure;
-    this.inlineText += empha.text;
-  }
 }

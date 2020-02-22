@@ -160,45 +160,54 @@ export class TextLexer extends Lexer<ICharacter>{
 
   protected createToken(): ICharacter {
     // try to parse dual-char to prevent treating half-size dual-char(like U+0029) as word.
-    let p1 = this.peekChar();
-    let half_dual_char = this.getDualChar(p1);
+    const p1 = this.peekChar();
+    const half_dual_char = this.getDualChar(p1);
     if (half_dual_char !== null) {
       this.stepBuff(1);
       return half_dual_char;
     }
-    let tcy = this.getTcy();
+    const tcy = this.getTcy();
     if (tcy !== null) {
       return tcy;
     }
-    let word_or_tcy = this.getWordOrTcy();
+    const word_or_tcy = this.getWordOrTcy();
     if (word_or_tcy !== null) {
       return word_or_tcy;
     }
-    let space_char = this.getSpaceChar();
+    const space_char = this.getSpaceChar();
     if (space_char !== null) {
       return space_char;
     }
-    let ref_char = this.getRefChar();
+    const ref_char = this.getRefChar();
     if (ref_char !== null) {
       return ref_char;
     }
-    let half_char = this.getHalfChar();
+    const half_char = this.getHalfChar();
     if (half_char !== null) {
       return half_char;
     }
-    let smp_uni_char = this.getSmpUniChar();
+    const smp_uni_char = this.getSmpUniChar();
     if (smp_uni_char !== null) {
       return smp_uni_char;
     }
-    let c1 = this.getChar();
-    let mix_char = this.getMixChar(c1);
+    const c1 = this.getChar();
+    const mix_char = this.getMixChar(c1);
     if (mix_char !== null) {
       return mix_char;
     }
-    let dual_char = this.getDualChar(c1);
+    const dual_char = this.getDualChar(c1);
     if (dual_char !== null) {
       return dual_char;
     }
     return new Char(c1);
+  }
+}
+
+// text-compine: upright
+export class TcyLexer extends TextLexer {
+  public createToken(): ICharacter {
+    let tcy = new Tcy(this.src);
+    this.stepBuff(this.src.length);
+    return tcy;
   }
 }

@@ -131,8 +131,6 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           this.context.addText(value.body);
         } else if (value.type === 'ruby') {
           this.context.addRuby(value.body);
-        } else if (value.type === 'empha') {
-          this.context.addEmpha(value.body);
         }
       } // while(true)
       childElement = childGen.nextElement;

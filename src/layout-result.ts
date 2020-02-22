@@ -7,14 +7,11 @@ export type LogicalNodeType =
   'line' |
   'inline' |
   'text' |
-  'table-cell' |
   'table-cells' |
-  'empha' |
   'ruby' |
   'ruby-text' |
   'ruby-base' |
-  'list-marker' |
-  'tcy'
+  'list-marker'
 
 type LayoutValueType =
   'skip' |
