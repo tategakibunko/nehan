@@ -26,6 +26,9 @@ import {
   ListItemInitializer,
   PseudoElementTagName,
   ListMarkerReducer,
+  TableReducer,
+  TableRowGroupReducer,
+  TableRowReducer,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
 
@@ -100,6 +103,30 @@ export class LogicalNodeGenerator {
         new TableCellsFormatContext(cells, parentContext.env, parentContext) // use parent env
       );
       const nextElement = cells[cells.length - 1].nextSibling;
+      return { generator, nextElement };
+    }
+    if (display.isTable()) {
+      const generator = new BlockNodeGenerator(
+        new FlowFormatContext(env, parentContext),
+        TableReducer.instance
+      );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
+    if (display.isTableRowGroup()) {
+      const generator = new BlockNodeGenerator(
+        new FlowFormatContext(env, parentContext),
+        TableRowGroupReducer.instance
+      );
+      const nextElement = element.nextElementSibling;
+      return { generator, nextElement };
+    }
+    if (display.isTableRow()) {
+      const generator = new BlockNodeGenerator(
+        new FlowFormatContext(env, parentContext),
+        TableRowReducer.instance
+      );
+      const nextElement = element.nextElementSibling;
       return { generator, nextElement };
     }
     if (display.isInlineLevel()) {

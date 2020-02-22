@@ -241,6 +241,18 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.text += block.text;
   }
 
+  public addTable(block: LogicalBlockNode) {
+    this.addBlock(block); // TODO
+  }
+
+  public addTableRowGroup(block: LogicalBlockNode) {
+    this.addBlock(block); // TODO
+  }
+
+  public addTableRow(block: LogicalBlockNode) {
+    this.addBlock(block); // TODO
+  }
+
   public addTableCells(cells: LogicalTableCellsNode) {
     if (this.env.borderCollapse.isCollapse() && cells.isFirstRow) {
       const cellBeforeBorderSizes = cells.children.map(cell => cell.border.width.before);

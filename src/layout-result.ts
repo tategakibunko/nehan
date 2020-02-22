@@ -8,6 +8,9 @@ export type LogicalNodeType =
   'inline' |
   'text' |
   'table-cells' |
+  'table-row' |
+  'table-row-group' |
+  'table' |
   'ruby' |
   'ruby-text' |
   'ruby-base' |

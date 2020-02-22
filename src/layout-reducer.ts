@@ -121,7 +121,7 @@ export class LineReducer implements ILayoutReducer {
 
 export class BlockReducer implements ILayoutReducer {
   static instance = new BlockReducer('block');
-  private constructor(public type: LogicalNodeType) { }
+  protected constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
@@ -140,7 +140,7 @@ export class BlockReducer implements ILayoutReducer {
       }
     }
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
-    console.log("[%s] reduceBlock(%s) at %s, global %s, %o", context.name, size.toString(), pos.toString(), context.globalPos.toString(), blockNode.text);
+    console.log("[%s] reduceBlock(%s) as %s at %s, global %s, %o", context.name, size.toString(), this.type, pos.toString(), context.globalPos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];
     context.cursorPos = LogicalCursorPos.zero;
@@ -195,3 +195,16 @@ export class TableCellsReducer implements ILayoutReducer {
     return LayoutResult.logicalNode("table-cells", block);
   }
 }
+
+export class TableReducer extends BlockReducer {
+  static instance = new TableReducer("table");
+}
+
+export class TableRowGroupReducer extends BlockReducer {
+  static instance = new TableRowGroupReducer("table-row-group");
+}
+
+export class TableRowReducer extends BlockReducer {
+  static instance = new TableRowReducer("table-row");
+}
+
