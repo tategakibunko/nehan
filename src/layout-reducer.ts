@@ -138,7 +138,7 @@ export class BlockReducer implements ILayoutReducer {
       if (Math.min(...cellAfterBorderSizes) > 0 && afterBorderSize > 0) {
         const collapseSize = Math.min(afterBorderSize, ...cellAfterBorderSizes);
         size.extent -= collapseSize;
-        console.log("collapsed size for after edge = %d", collapseSize);
+        console.log("[%s] collapsed size for after edge = %d", context.name, collapseSize);
       }
     }
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);

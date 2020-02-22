@@ -249,6 +249,7 @@ export class FlowFormatContext implements IFlowFormatContext {
         const collapseSize = Math.min(beforeBorderSize, ...cellBeforeBorderSizes);
         cells.pos.before -= collapseSize;
         this.cursorPos.before -= collapseSize;
+        console.log("[%s] collapse before %d", this.name, collapseSize);
       }
     }
     this.blockNodes.push(cells);
