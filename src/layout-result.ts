@@ -18,7 +18,6 @@ export type LogicalNodeType =
 
 type LayoutValueType =
   'skip' |
-  'request-measure' |
   'page-break' |
   'line-break' |
   LogicalNodeType
@@ -32,9 +31,5 @@ export class LayoutResult {
 
   static logicalNode(type: LogicalNodeType, node: ILogicalNode): LayoutResult {
     return new LayoutResult(type, node);
-  }
-
-  static requestMeasure(measure: number): LayoutResult {
-    return new LayoutResult('request-measure', measure);
   }
 }

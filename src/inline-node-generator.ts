@@ -46,7 +46,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
 
     const startEdgeSize = this.context.contextBoxEdge.getBorderBoxEdgeSize("start");
     while (this.context.restMeasure < startEdgeSize) {
-      yield LayoutResult.requestMeasure(startEdgeSize);
+      yield LayoutResult.lineBreak;
     }
 
     this.context.addBorderBoxEdge("start"); // context.cursorPos.start += startEdgeSize
