@@ -145,12 +145,17 @@ export class TableCellInitializer implements NodeEffector {
     const autoCells = cells.filter(cell => cell.computedStyle.getPropertyValue("measure") === "auto");
     const fixedCount = cells.length - autoCells.length;
     const fixedSize = cellMeasures.reduce((sum, size) => sum + size, 0);
-    const autoSize = Math.max(Math.floor((parentMeasure - fixedSize - internalEdgeSize) / (cells.length - fixedCount)), 0);
+    const autoMeasure = parentMeasure - fixedSize - internalEdgeSize;
+    const autoCellSize = Math.max(Math.floor(autoMeasure / autoCells.length), 0);
+    const autoFraction = autoMeasure % autoCells.length;
     console.log(
-      "cell size:(parent:%d, fixedSize:%d, fixedCount:%d, iedge:%d, auto:%d)",
-      parentMeasure, fixedSize, fixedCount, internalEdgeSize, autoSize
+      "cell size:(parent:%d, fixedSize:%d, fixedCount:%d, iedge:%d, auto:%d(fraction:%d))",
+      parentMeasure, fixedSize, fixedCount, internalEdgeSize, autoCellSize, autoFraction
     );
-    autoCells.forEach(cell => cell.computedStyle.setProperty("measure", autoSize + "px"));
+    autoCells.forEach((cell, index) => {
+      const usedAutoSize = (index < autoCells.length - 1) ? autoCellSize : autoCellSize + autoFraction;
+      cell.computedStyle.setProperty("measure", usedAutoSize + "px")
+    });
   }
 }
 
