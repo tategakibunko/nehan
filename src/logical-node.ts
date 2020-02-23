@@ -11,7 +11,7 @@ import {
 export interface ILogicalNode {
   size: LogicalSize;
   text: string;
-  acceptEvaluator: (visitor: ILogicalNodeEvaluator) => HTMLElement | Node;
+  acceptEvaluator: (visitor: ILogicalNodeEvaluator, ...args: any[]) => HTMLElement | Node;
 }
 
 export class LogicalTextNode implements ILogicalNode {
@@ -102,7 +102,6 @@ export class LogicalTableCellsNode implements ILogicalNode {
     public pos: LogicalCursorPos,
     public text: string,
     public children: LogicalBlockNode[],
-    public isLastRow: boolean,
   ) { }
 
   get extent(): number {

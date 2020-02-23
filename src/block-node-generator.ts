@@ -81,7 +81,6 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       if (!clear.isNone()) {
         this.context.flowRoot.clearFloat(clear);
       }
-      // const float = LogicalFloat.load(childElement);
       while (true) {
         // Before yielding child generator, resume suspended generators if it exists.
         this.context.suspendedGens = this.context.suspendedGens.filter(generator => {
@@ -143,7 +142,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     } // while (childElement !== null)
 
     if (this.context.inlineNodes.length > 0) {
-      const line = this.context.acceptLayoutReducer(LineReducer.instance);
+      const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
       this.context.addLine(line.body);
     }
 

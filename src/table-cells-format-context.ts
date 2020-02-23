@@ -20,8 +20,8 @@ export class TableCellsFormatContext extends FlowFormatContext {
     this.cells = [];
   }
 
-  acceptLayoutReducer(reducer: TableCellsReducer, isLastRow: boolean): LayoutResult {
-    return reducer.visit(this, isLastRow);
+  acceptLayoutReducer(reducer: TableCellsReducer): LayoutResult {
+    return reducer.visit(this);
   }
 
   setCells(cells: LogicalBlockNode[]) {

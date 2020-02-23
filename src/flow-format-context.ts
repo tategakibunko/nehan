@@ -255,25 +255,34 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.addBlock(block);
   }
 
+  // parent: table
   public addTableRowGroup(block: LogicalBlockNode) {
     this.addBlock(block);
-    if (this.env.borderCollapse.isCollapse() && this.parent) {
+    // collapse before
+    if (this.env.borderCollapse.isCollapse() && block.border.width.before > 0) {
+      // TODO
+      // const collapseTarget = this.parent;
       block.pos.start = -1;
       block.pos.before -= 1;
       this.cursorPos.before -= 1;
     }
   }
 
+  // parent: table-row-group
   public addTableRow(block: LogicalBlockNode) {
     this.addBlock(block);
-    block.pos.start = -1; // TODO
-    block.pos.before -= 1;
-    this.cursorPos.before -= 1;
+    if (this.env.borderCollapse.isCollapse() && block.border.width.before > 0) {
+      block.pos.start = -1; // TODO
+      block.pos.before -= 1;
+      this.cursorPos.before -= 1;
+    }
   }
 
+  // parent: table-row
+  // collapse target: firstChild -> table-row.before, else prev.after
+  // where prev = this.blocks[this.blocks.length - 1]
   public addTableCells(cells: LogicalTableCellsNode) {
-    const isFirstRow = !this.nodeHistory.some(node => node instanceof LogicalTableCellsNode);
-    if (this.env.borderCollapse.isCollapse() && isFirstRow) {
+    if (this.env.borderCollapse.isCollapse() && cells.children.some(cell => cell.border.width.before > 0)) {
       const cellBeforeBorderSizes = cells.children.map(cell => cell.border.width.before);
       const beforeBorderSize = this.contextBoxEdge.borderWidth.getSize("before");
       if (Math.min(...cellBeforeBorderSizes) > 0 && beforeBorderSize > 0) {

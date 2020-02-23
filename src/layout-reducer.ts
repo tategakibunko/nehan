@@ -130,7 +130,7 @@ export class BlockReducer implements ILayoutReducer {
     const text = context.text;
     const children = context.blockNodes;
     const cells = children.find(child => child instanceof LogicalTableCellsNode) as LogicalTableCellsNode;
-    if (context.env.borderCollapse.isCollapse() && cells && cells.isLastRow) {
+    if (context.env.borderCollapse.isCollapse() && cells && cells.children.some(node => node.border.width.after > 0)) {
       const cellAfterBorderSizes = cells.children.map(cell => cell.border.width.after);
       const afterBorderSize = context.contextBoxEdge.borderWidth.getSize("after");
       if (Math.min(...cellAfterBorderSizes) > 0 && afterBorderSize > 0) {
@@ -184,13 +184,13 @@ export class TableCellsReducer implements ILayoutReducer {
   static instance = new TableCellsReducer();
   private constructor() { }
 
-  visit(context: TableCellsFormatContext, isLastRow: boolean): LayoutResult {
+  visit(context: TableCellsFormatContext): LayoutResult {
     const measure = context.maxMeasure;
     const extent = Math.max(...context.cells.map(cell => cell.extent));
     const size = new LogicalSize({ measure, extent });
     const pos = LogicalCursorPos.zero;
     const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
-    const block = new LogicalTableCellsNode(size, pos, text, context.cells, isLastRow);
+    const block = new LogicalTableCellsNode(size, pos, text, context.cells);
     console.log("[%s] reduceTableCells:", context.name, block);
     return LayoutResult.logicalNode("table-cells", block);
   }

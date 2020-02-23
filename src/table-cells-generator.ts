@@ -50,11 +50,11 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
         });
         this.context.setCells(cellBlocks);
       } else {
-        yield this.context.acceptLayoutReducer(this.reducer, false);
+        yield this.context.acceptLayoutReducer(this.reducer);
         yield LayoutResult.pageBreak;
       }
       loopCount++;
     } // for(loopCount)
-    yield this.context.acceptLayoutReducer(this.reducer, true);
+    yield this.context.acceptLayoutReducer(this.reducer);
   }
 }
