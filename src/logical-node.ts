@@ -102,7 +102,6 @@ export class LogicalTableCellsNode implements ILogicalNode {
     public pos: LogicalCursorPos,
     public text: string,
     public children: LogicalBlockNode[],
-    public isFirstRow: boolean,
     public isLastRow: boolean,
   ) { }
 

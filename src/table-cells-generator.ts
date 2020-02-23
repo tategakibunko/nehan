@@ -39,7 +39,7 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
       // if some cell yields page-break at the beginning of layout, then yield nothing but page-break.
       if (loopCount === 0 && values.some(value => value && value.type === "page-break")) {
         yield LayoutResult.pageBreak;
-        continue; // Note that loopCount remains 0.
+        continue; // In this case, loopCount remains 0.
       }
       if (loopCount % 2 === 0) {
         const cellBlocks = values.map((value, index) => {
@@ -50,11 +50,11 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
         });
         this.context.setCells(cellBlocks);
       } else {
-        yield this.context.acceptLayoutReducer(this.reducer, loopCount === 1, false);
+        yield this.context.acceptLayoutReducer(this.reducer, false);
         yield LayoutResult.pageBreak;
       }
       loopCount++;
     } // for(loopCount)
-    yield this.context.acceptLayoutReducer(this.reducer, loopCount === 1, true);
+    yield this.context.acceptLayoutReducer(this.reducer, true);
   }
 }
