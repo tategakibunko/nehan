@@ -21,6 +21,7 @@ import {
   ListStyle,
 } from './public-api'
 import { BorderCollapse } from './border-collapse';
+import { LogicalBorderWidth } from './logical-border-width';
 
 // side effect visitor
 export interface NodeEffector {
@@ -55,19 +56,25 @@ export class ListItemInitializer implements NodeEffector {
   }
 }
 
-export class TableInitializer implements NodeEffector {
-  static instance = new TableInitializer();
-  private constructor() { }
-
-  visit(element: HtmlElement) {
-  }
-}
-
 export class TableRowGroupInitializer implements NodeEffector {
   static instance = new TableRowGroupInitializer();
   private constructor() { }
 
   visit(element: HtmlElement) {
+    const parent = element.parent;
+    const borderCollapse = BorderCollapse.load(element);
+    if (!borderCollapse.isCollapse() || !parent) {
+      return;
+    }
+    const measure = parseInt(element.computedStyle.getPropertyValue("measure") || "0");
+    const parentMeasure = parseInt(parent.computedStyle.getPropertyValue("measure") || "0");
+    const parentBorderSize = LogicalBorderWidth.load(parent).measure;
+    const borderSize = LogicalBorderWidth.load(element).measure;
+    const collapsedMeasure = parentMeasure - Math.max(0, borderSize - parentBorderSize);
+    element.computedStyle.setProperty("measure", collapsedMeasure + "px");
+    if (measure !== collapsedMeasure) {
+      console.log("[%s] update measure by collapse from %d -> %d", element.toString(true), measure, collapsedMeasure);
+    }
   }
 }
 
@@ -76,6 +83,20 @@ export class TableRowInitializer implements NodeEffector {
   private constructor() { }
 
   visit(element: HtmlElement) {
+    const parent = element.parent;
+    const borderCollapse = BorderCollapse.load(element);
+    if (!borderCollapse.isCollapse() || !parent) {
+      return;
+    }
+    const measure = parseInt(element.computedStyle.getPropertyValue("measure") || "0");
+    const parentMeasure = parseInt(parent.computedStyle.getPropertyValue("measure") || "0");
+    const parentBorderSize = LogicalBorderWidth.load(parent).measure;
+    const borderSize = LogicalBorderWidth.load(element).measure;
+    const collapsedMeasure = parentMeasure - Math.max(0, borderSize - parentBorderSize);
+    element.computedStyle.setProperty("measure", collapsedMeasure + "px");
+    if (measure !== collapsedMeasure) {
+      console.log("[%s] update measure by collapse from %d -> %d", element.toString(true), measure, collapsedMeasure);
+    }
   }
 }
 

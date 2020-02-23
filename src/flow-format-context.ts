@@ -26,9 +26,9 @@ export class FlowFormatContext implements IFlowFormatContext {
   public inlineMargin: number;
   public blockNodes: ILogicalNode[];
   public inlineNodes: ILogicalNode[];
+  public nodeHistory: ILogicalNode[];
   public inlineText: string;
   public listMarker?: LogicalInlineNode;
-  public lineCount: number;
   public text: string;
 
   constructor(
@@ -42,9 +42,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineMargin = 0;
     this.blockNodes = [];
     this.inlineNodes = [];
+    this.nodeHistory = [];
     this.inlineText = "";
     this.text = "";
-    this.lineCount = 0;
   }
 
   public get inlineRoot(): IFlowFormatContext {
@@ -83,12 +83,26 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.maxExtent - this.cursorPos.before;
   }
 
+  private get listMarkerOffset(): number {
+    if (!this.listMarker) {
+      return 0;
+    }
+    const isFirstLine = !this.nodeHistory.some(node => node instanceof LogicalLineNode);
+    return isFirstLine ? 0 : this.listMarker.measure;
+  }
+
+  private get floatStartOffset(): number {
+    if (!this.flowRoot.floatRegion) {
+      return 0;
+    }
+    const startEdgeSize = this.contextBoxEdge.getBorderBoxEdgeSize("start");
+    const floatStartPos = this.flowRoot.floatRegion.getSpacePosFromStartBound(this.flowRootPos.before);
+    return startEdgeSize > floatStartPos ? startEdgeSize : floatStartPos - startEdgeSize;
+  }
+
   private get textStartPos(): number {
     let startPos = this.cursorPos.start;
-    if (this.listMarker && this.lineCount > 0) {
-      startPos += this.listMarker.measure;
-      // console.log("textStartPos:%d, lineCount:%d", startPos, this.lineCount);
-    }
+    startPos += this.listMarkerOffset;
     return startPos;
   }
 
@@ -103,13 +117,8 @@ export class FlowFormatContext implements IFlowFormatContext {
 
   public get lineBoxStartOffset(): number {
     let offset = 0;
-    if (this.flowRoot.floatRegion) {
-      const startEdgeSize = this.contextBoxEdge.getBorderBoxEdgeSize("start");
-      offset += this.flowRoot.floatRegion.getSpacePosFromStartBound(this.flowRootPos.before) - startEdgeSize;
-    }
-    if (this.listMarker && this.lineCount > 0) {
-      offset += this.listMarker.size.measure;
-    }
+    offset += this.floatStartOffset;
+    offset += this.listMarkerOffset;
     return offset;
   }
 
@@ -228,32 +237,43 @@ export class FlowFormatContext implements IFlowFormatContext {
   public addLine(block: LogicalLineNode) {
     console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + block.size.extent}`);
     this.blockNodes.push(block);
+    this.nodeHistory.push(block);
     this.cursorPos.before += block.size.extent;
     this.text += block.text;
-    this.lineCount++;
   }
 
   public addBlock(block: LogicalBlockNode) {
     console.log("[%s] addBlock:%o", this.name, block);
     console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
     this.blockNodes.push(block);
+    this.nodeHistory.push(block);
     this.cursorPos.before += block.extent;
     this.text += block.text;
   }
 
   public addTable(block: LogicalBlockNode) {
-    this.addBlock(block); // TODO
+    this.addBlock(block);
   }
 
   public addTableRowGroup(block: LogicalBlockNode) {
-    this.addBlock(block); // TODO
+    this.addBlock(block);
+    if (this.env.borderCollapse.isCollapse() && this.parent) {
+      block.pos.start = -1;
+      block.pos.before -= 1;
+      this.cursorPos.before -= 1;
+    }
   }
 
   public addTableRow(block: LogicalBlockNode) {
-    this.addBlock(block); // TODO
+    this.addBlock(block);
+    block.pos.start = -1; // TODO
+    block.pos.before -= 1;
+    this.cursorPos.before -= 1;
   }
 
   public addTableCells(cells: LogicalTableCellsNode) {
+    const isFirstRow = !this.nodeHistory.some(node => node instanceof LogicalTableCellsNode);
+    console.log("addTableCells, isFirstRow:%o, cells.isFirstRow: %o", isFirstRow, cells.isFirstRow);
     if (this.env.borderCollapse.isCollapse() && cells.isFirstRow) {
       const cellBeforeBorderSizes = cells.children.map(cell => cell.border.width.before);
       const beforeBorderSize = this.contextBoxEdge.borderWidth.getSize("before");
@@ -265,6 +285,7 @@ export class FlowFormatContext implements IFlowFormatContext {
       }
     }
     this.blockNodes.push(cells);
+    this.nodeHistory.push(cells);
     this.cursorPos.before += cells.extent;
     this.text += cells.text;
   }

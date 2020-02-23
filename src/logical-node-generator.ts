@@ -29,7 +29,6 @@ import {
   TableReducer,
   TableRowGroupReducer,
   TableRowReducer,
-  TableInitializer,
   TableRowGroupInitializer,
   TableRowInitializer,
 } from './public-api'
@@ -109,7 +108,6 @@ export class LogicalNodeGenerator {
       return { generator, nextElement };
     }
     if (display.isTable()) {
-      element.acceptEffector(TableInitializer.instance);
       const generator = new BlockNodeGenerator(
         new FlowFormatContext(env, parentContext),
         TableReducer.instance
