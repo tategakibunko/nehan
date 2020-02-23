@@ -1,7 +1,6 @@
 import {
   Config,
   HtmlElement,
-  SpaceChar,
   Display,
   CssLength,
   CssRule,
@@ -53,6 +52,30 @@ export class ListItemInitializer implements NodeEffector {
     }
     const listTextNode = element.ownerDocument.createTextNode(markerText);
     markerElement.appendChild(listTextNode);
+  }
+}
+
+export class TableInitializer implements NodeEffector {
+  static instance = new TableInitializer();
+  private constructor() { }
+
+  visit(element: HtmlElement) {
+  }
+}
+
+export class TableRowGroupInitializer implements NodeEffector {
+  static instance = new TableRowGroupInitializer();
+  private constructor() { }
+
+  visit(element: HtmlElement) {
+  }
+}
+
+export class TableRowInitializer implements NodeEffector {
+  static instance = new TableRowInitializer();
+  private constructor() { }
+
+  visit(element: HtmlElement) {
   }
 }
 

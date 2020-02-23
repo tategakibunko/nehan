@@ -29,6 +29,9 @@ import {
   TableReducer,
   TableRowGroupReducer,
   TableRowReducer,
+  TableInitializer,
+  TableRowGroupInitializer,
+  TableRowInitializer,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
 
@@ -106,6 +109,7 @@ export class LogicalNodeGenerator {
       return { generator, nextElement };
     }
     if (display.isTable()) {
+      element.acceptEffector(TableInitializer.instance);
       const generator = new BlockNodeGenerator(
         new FlowFormatContext(env, parentContext),
         TableReducer.instance
@@ -114,6 +118,7 @@ export class LogicalNodeGenerator {
       return { generator, nextElement };
     }
     if (display.isTableRowGroup()) {
+      element.acceptEffector(TableRowGroupInitializer.instance);
       const generator = new BlockNodeGenerator(
         new FlowFormatContext(env, parentContext),
         TableRowGroupReducer.instance
@@ -122,6 +127,7 @@ export class LogicalNodeGenerator {
       return { generator, nextElement };
     }
     if (display.isTableRow()) {
+      element.acceptEffector(TableRowInitializer.instance);
       const generator = new BlockNodeGenerator(
         new FlowFormatContext(env, parentContext),
         TableRowReducer.instance
