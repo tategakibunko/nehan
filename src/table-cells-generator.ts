@@ -49,7 +49,7 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
           if (value && value.type === "table-cell") {
             return value.body;
           }
-          return cellGenerators[index].context.acceptLayoutReducer(RootBlockReducer.instance).body;
+          return cellGenerators[index].context.acceptLayoutReducer(TableCellReducer.instance).body;
         });
         this.context.setCells(cellBlocks);
       } else {
