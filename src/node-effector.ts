@@ -142,6 +142,7 @@ export class TableCellInitializer implements NodeEffector {
     if (cells.every(cell => cell.computedStyle.getPropertyValue("measure") !== "auto")) {
       return; // already calculated
     }
+    // If cells is wrapped by table-row, cell-partition of same dimention is inherited by previous table-row.
     if (Display.load(parent).isTableRow()) {
       const prevCells = this.findPrevCells(parent, cells.length);
       if (prevCells) {
