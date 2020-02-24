@@ -6,6 +6,7 @@ import {
   FlowRootFormatContext,
   RootBlockReducer,
   TableCellsFormatContext,
+  TableCellReducer,
   TableCellsReducer,
 } from './public-api';
 
@@ -27,8 +28,10 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
   *createGenerator(): Generator<LayoutResult> {
     const cellGenerators = this.context.elements.map(cellElement => {
       const env = new BoxEnv(cellElement);
-      const context = new FlowRootFormatContext(env, this.context);
-      return new BlockNodeGenerator(context);
+      return new BlockNodeGenerator(
+        new FlowRootFormatContext(env, this.context),
+        TableCellReducer.instance
+      );
     });
     let loopCount = 0;
     while (true) {
@@ -43,7 +46,7 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
       }
       if (loopCount % 2 === 0) {
         const cellBlocks = values.map((value, index) => {
-          if (value && value.type === "block") {
+          if (value && value.type === "table-cell") {
             return value.body;
           }
           return cellGenerators[index].context.acceptLayoutReducer(RootBlockReducer.instance).body;

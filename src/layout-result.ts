@@ -8,6 +8,7 @@ export type LogicalNodeType =
   'inline' |
   'text' |
   'inline-block' |
+  'table-cell' |
   'table-cells' |
   'table-row' |
   'table-row-group' |

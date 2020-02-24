@@ -178,6 +178,10 @@ export class InlineBlockReducer extends RootBlockReducer {
   static instance = new InlineBlockReducer("inline-block");
 }
 
+export class TableCellReducer extends RootBlockReducer {
+  static instance = new TableCellReducer("table-cell");
+}
+
 export class TableCellsReducer implements ILayoutReducer {
   static instance = new TableCellsReducer();
   private constructor() { }
