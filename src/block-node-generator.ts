@@ -16,7 +16,7 @@ import {
 } from './public-api';
 
 // ----------------------------------------------------------------------
-// (text-box | inline-box | block-box | line-break | page-break)* -> block-box
+// (text | inline-block | block | line-break | page-break)* -> block
 // ----------------------------------------------------------------------
 export class BlockNodeGenerator implements ILogicalNodeGenerator {
   private generator: Generator<LayoutResult>;
@@ -120,6 +120,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           }
         } else if (value.type === 'block') {
           this.context.addBlock(value.body);
+        } else if (value.type === 'inline-block') {
+          this.context.addInlineBlock(value.body);
         } else if (value.type === 'table') {
           this.context.addTable(value.body);
         } else if (value.type === 'table-row-group') {

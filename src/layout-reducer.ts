@@ -148,7 +148,7 @@ export class BlockReducer implements ILayoutReducer {
 
 export class RootBlockReducer implements ILayoutReducer {
   static instance = new RootBlockReducer('block');
-  private constructor(public type: LogicalNodeType) { }
+  protected constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowRootFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos.clone() : LogicalCursorPos.zero;
@@ -156,12 +156,9 @@ export class RootBlockReducer implements ILayoutReducer {
     if (context.floatRegion) {
       size.extent = Math.max(size.extent, context.floatRegion.maxRegionExtent);
     }
-    if (context.env.borderCollapse.isCollapse()) {
-
-    }
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
-    const children = context.blockNodes.concat(context.floatNodes);
+    const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
     console.log("[%s] reduceRootBlock at %s, global %s, %o", context.name, pos.toString(), context.globalPos.toString(), blockNode.text);
     context.text = "";
@@ -175,6 +172,10 @@ export class RootBlockReducer implements ILayoutReducer {
     }
     return LayoutResult.logicalNode(this.type, blockNode);
   }
+}
+
+export class InlineBlockReducer extends RootBlockReducer {
+  static instance = new InlineBlockReducer("inline-block");
 }
 
 export class TableCellsReducer implements ILayoutReducer {

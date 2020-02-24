@@ -31,6 +31,7 @@ import {
   TableRowReducer,
   TableRowGroupInitializer,
   TableRowInitializer,
+  InlineBlockReducer,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
 
@@ -131,6 +132,14 @@ export class LogicalNodeGenerator {
         TableRowReducer.instance
       );
       const nextElement = element.nextElementSibling;
+      return { generator, nextElement };
+    }
+    if (display.isInlineBlockFlow()) {
+      const generator = new BlockNodeGenerator(
+        new FlowFormatContext(env, parentContext),
+        InlineBlockReducer.instance
+      );
+      const nextElement = element.nextSibling;
       return { generator, nextElement };
     }
     if (display.isInlineLevel()) {

@@ -14,6 +14,7 @@ export interface ILogicalNodeEvaluator {
   visitLine: (...args: any[]) => HTMLElement;
   visitInline: (...args: any[]) => HTMLElement;
   visitBlock: (...args: any[]) => HTMLElement;
+  visitInlineBlock: (...args: any[]) => HTMLElement;
   visitTableCells: (...args: any[]) => HTMLElement;
 }
 
@@ -54,6 +55,21 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("span");
     node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.children.forEach(child => {
+      const childNode = child.acceptEvaluator(this);
+      node.appendChild(childNode);
+    });
+    return node;
+  }
+
+  visitInlineBlock(blockNode: LogicalBlockNode): HTMLElement {
+    const node = document.createElement("div");
+    node.className = ["nehan", blockNode.env.element.tagName].join("-");
+    node.style.display = "inline-block";
+    node.style.boxSizing = "content-box";
+    node.style.position = "relative";
+    blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    blockNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
     });

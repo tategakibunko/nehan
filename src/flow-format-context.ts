@@ -334,6 +334,12 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.text += cells.text;
   }
 
+  public addInlineBlock(inlineBlock: LogicalBlockNode) {
+    this.inlineNodes.push(inlineBlock);
+    this.cursorPos.start += inlineBlock.measure;
+    this.inlineText += inlineBlock.text;
+  }
+
   public addInline(inline: LogicalInlineNode) {
     // console.log("addInline:%o, measure:%d", inline, inline.measure);
     this.inlineNodes.push(inline);
