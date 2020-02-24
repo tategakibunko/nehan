@@ -136,7 +136,7 @@ export class LogicalNodeGenerator {
     }
     if (display.isInlineBlockFlow()) {
       const generator = new BlockNodeGenerator(
-        new FlowFormatContext(env, parentContext),
+        new FlowRootFormatContext(env, parentContext),
         InlineBlockReducer.instance
       );
       const nextElement = element.nextSibling;
