@@ -153,7 +153,7 @@ export class TableCellInitializer implements NodeEffector {
       parentMeasure, fixedSize, fixedCount, internalEdgeSize, autoCellSize, autoFraction
     );
     autoCells.forEach((cell, index) => {
-      const usedAutoSize = (index < autoCells.length - 1) ? autoCellSize : autoCellSize + autoFraction;
+      const usedAutoSize = (index === 0) ? autoCellSize + autoFraction : autoCellSize;
       cell.computedStyle.setProperty("measure", usedAutoSize + "px")
     });
   }
