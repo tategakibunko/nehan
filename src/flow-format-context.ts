@@ -256,27 +256,26 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   private getBorderCollapseBeforeSize(block: LogicalBlockNode): number {
-    const lastBlock = this.blockNodes[this.blockNodes.length - 1];
-    if (lastBlock && lastBlock instanceof LogicalBlockNode) {
-      return Math.min(lastBlock.border.width.after, block.border.width.before);
+    const lastChild = this.blockNodes[this.blockNodes.length - 1];
+    if (lastChild instanceof LogicalBlockNode) {
+      return Math.min(lastChild.border.width.after, block.border.width.before);
     }
     return Math.min(this.contextBoxEdge.borderWidth.getSize("before"), block.border.width.before);
   }
 
   // called by reducer of this context.
   public getBorderCollapseAfterSize(): number {
-    const cells = this.blockNodes.find(child => child instanceof LogicalTableCellsNode) as LogicalTableCellsNode;
-    if (cells && cells.children.some(node => node.border.width.after > 0)) {
-      const cellAfterBorderSizes = cells.children.map(cell => cell.border.width.after);
-      const afterBorderSize = this.contextBoxEdge.borderWidth.getSize("after");
-      if (Math.min(...cellAfterBorderSizes) > 0 && afterBorderSize > 0) {
-        return Math.min(afterBorderSize, ...cellAfterBorderSizes);
-      }
+    const afterBorderSize = this.contextBoxEdge.borderWidth.getSize("after");
+    if (afterBorderSize <= 0) {
       return 0;
     }
-    const lastBlock = this.blockNodes[this.blockNodes.length - 1];
-    if (lastBlock instanceof LogicalBlockNode) {
-      return Math.min(lastBlock.border.width.after, this.contextBoxEdge.borderWidth.getSize("after"));
+    const cells = this.blockNodes.find(child => child instanceof LogicalTableCellsNode);
+    if (cells instanceof LogicalTableCellsNode) {
+      return Math.min(afterBorderSize, ...cells.children.map(cell => cell.border.width.after));
+    }
+    const lastChild = this.blockNodes[this.blockNodes.length - 1];
+    if (lastChild instanceof LogicalBlockNode) {
+      return Math.min(lastChild.border.width.after, afterBorderSize);
     }
     return 0;
   }
