@@ -104,7 +104,7 @@ export class TableCellInitializer implements NodeEffector {
   static instance = new TableCellInitializer();
   private constructor() { }
 
-  getCollapsedInternalEdgeSize(cellEdges: LogicalBoxEdge[], parentEdge: LogicalBoxEdge): number {
+  private getCollapsedInternalEdgeSize(cellEdges: LogicalBoxEdge[], parentEdge: LogicalBoxEdge): number {
     let internalEdgeSize = cellEdges.reduce((sum, cellEdge, index) => {
       sum += cellEdge.padding.measure;
       return (index < cellEdges.length - 1) ? sum + Math.max(cellEdge.border.width.end, cellEdges[index + 1].border.width.start) : sum;
@@ -115,15 +115,46 @@ export class TableCellInitializer implements NodeEffector {
     return internalEdgeSize;
   }
 
-  visit(element: HtmlElement) {
-    if (!element.parent || element.computedStyle.getPropertyValue("display") !== "table-cell") {
-      return;
-    }
-    const cells = element.parent.children.filter(child => {
+  private getTableCells(element: HtmlElement): HtmlElement[] {
+    return element.children.filter(child => {
       return child.computedStyle.getPropertyValue("display") === "table-cell";
     });
+  }
+
+  private findPrevCells(parent: HtmlElement, cellDims: number): HtmlElement[] | undefined {
+    let prevParent = parent.previousElementSibling;
+    while (prevParent) {
+      const prevCells = this.getTableCells(prevParent);
+      if (prevCells.length === cellDims) {
+        return prevCells;
+      }
+      prevParent = prevParent.previousElementSibling;
+    }
+    return undefined;
+  }
+
+  visit(element: HtmlElement) {
+    const parent = element.parent;
+    if (!parent || element.computedStyle.getPropertyValue("display") !== "table-cell") {
+      return;
+    }
+    const cells = this.getTableCells(parent);
     if (cells.every(cell => cell.computedStyle.getPropertyValue("measure") !== "auto")) {
       return; // already calculated
+    }
+    if (Display.load(parent).isTableRow()) {
+      const prevCells = this.findPrevCells(parent, cells.length);
+      if (prevCells) {
+        // console.log("cell partition is already defined in previous row, so use it.")
+        cells.forEach((cell, index) => {
+          const prevMeasure = prevCells[index].computedStyle.getPropertyValue("measure");
+          if (!prevMeasure) {
+            throw new Error("cell partition is not defined properly.");
+          }
+          cell.computedStyle.setProperty("measure", prevMeasure);
+        });
+        return;
+      }
     }
     // Force set margin of table-cell to zero
     cells.forEach(cell => {
@@ -131,13 +162,13 @@ export class TableCellInitializer implements NodeEffector {
         cell.computedStyle.setProperty(`margin-${dir}`, "0");
       })
     });
-    const parentEdge = LogicalBoxEdge.load(element.parent);
+    const parentEdge = LogicalBoxEdge.load(parent);
     const cellEdges = cells.map(cell => LogicalBoxEdge.load(cell));
     const borderCollapse = BorderCollapse.load(element);
     const internalEdgeSize = borderCollapse.isCollapse() ?
       this.getCollapsedInternalEdgeSize(cellEdges, parentEdge) :
       cellEdges.reduce((sum, cellEdge) => sum + cellEdge.measure, 0);
-    const parentMeasure = parseInt(element.parent.computedStyle.getPropertyValue("measure") || "0", 10);
+    const parentMeasure = parseInt(parent.computedStyle.getPropertyValue("measure") || "0", 10);
     const cellMeasures = cells.map(cell => {
       const measure = cell.computedStyle.getPropertyValue("measure") || "0";
       return (measure === "auto") ? 0 : parseInt(measure, 10);
