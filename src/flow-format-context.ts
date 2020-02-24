@@ -251,31 +251,63 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.text += block.text;
   }
 
+  private getBorderCollapseStartSize(block: LogicalBlockNode): number {
+    return Math.min(this.contextBoxEdge.borderWidth.getSize("start"), block.border.width.start);
+  }
+
+  private getBorderCollapseBeforeSize(block: LogicalBlockNode): number {
+    const lastBlock = this.blockNodes[this.blockNodes.length - 1];
+    if (lastBlock && lastBlock instanceof LogicalBlockNode) {
+      return Math.min(lastBlock.border.width.after, block.border.width.before);
+    }
+    return Math.min(this.contextBoxEdge.borderWidth.getSize("before"), block.border.width.before);
+  }
+
+  // called by reducer of this context.
+  public getBorderCollapseAfterSize(): number {
+    const cells = this.blockNodes.find(child => child instanceof LogicalTableCellsNode) as LogicalTableCellsNode;
+    if (cells && cells.children.some(node => node.border.width.after > 0)) {
+      const cellAfterBorderSizes = cells.children.map(cell => cell.border.width.after);
+      const afterBorderSize = this.contextBoxEdge.borderWidth.getSize("after");
+      if (Math.min(...cellAfterBorderSizes) > 0 && afterBorderSize > 0) {
+        return Math.min(afterBorderSize, ...cellAfterBorderSizes);
+      }
+      return 0;
+    }
+    const lastBlock = this.blockNodes[this.blockNodes.length - 1];
+    if (lastBlock instanceof LogicalBlockNode) {
+      return Math.min(lastBlock.border.width.after, this.contextBoxEdge.borderWidth.getSize("after"));
+    }
+    return 0;
+  }
+
+  private collapseBeforeStartBorder(block: LogicalBlockNode) {
+    const startCollapseSize = this.getBorderCollapseStartSize(block);
+    const beforeCollapseSize = this.getBorderCollapseBeforeSize(block);
+    block.pos.start = -startCollapseSize;
+    block.pos.before -= block.border.width.before + beforeCollapseSize;
+    this.cursorPos.before -= beforeCollapseSize;
+    console.log("[%s] collapseBeforeStartBorder(before = %d, start = %d)", this.name, beforeCollapseSize, startCollapseSize);
+  }
+
   public addTable(block: LogicalBlockNode) {
     this.addBlock(block);
   }
 
   // parent: table
   public addTableRowGroup(block: LogicalBlockNode) {
-    this.addBlock(block);
-    // collapse before
-    if (this.env.borderCollapse.isCollapse() && block.border.width.before > 0) {
-      // TODO
-      // const collapseTarget = this.parent;
-      block.pos.start = -1;
-      block.pos.before -= 1;
-      this.cursorPos.before -= 1;
+    if (this.env.borderCollapse.isCollapse()) {
+      this.collapseBeforeStartBorder(block);
     }
+    this.addBlock(block);
   }
 
   // parent: table-row-group
   public addTableRow(block: LogicalBlockNode) {
-    this.addBlock(block);
-    if (this.env.borderCollapse.isCollapse() && block.border.width.before > 0) {
-      block.pos.start = -1; // TODO
-      block.pos.before -= 1;
-      this.cursorPos.before -= 1;
+    if (this.env.borderCollapse.isCollapse()) {
+      this.collapseBeforeStartBorder(block);
     }
+    this.addBlock(block);
   }
 
   // parent: table-row

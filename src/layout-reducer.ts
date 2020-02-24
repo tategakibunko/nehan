@@ -129,12 +129,9 @@ export class BlockReducer implements ILayoutReducer {
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.blockNodes;
-    const cells = children.find(child => child instanceof LogicalTableCellsNode) as LogicalTableCellsNode;
-    if (context.env.borderCollapse.isCollapse() && cells && cells.children.some(node => node.border.width.after > 0)) {
-      const cellAfterBorderSizes = cells.children.map(cell => cell.border.width.after);
-      const afterBorderSize = context.contextBoxEdge.borderWidth.getSize("after");
-      if (Math.min(...cellAfterBorderSizes) > 0 && afterBorderSize > 0) {
-        const collapseSize = Math.min(afterBorderSize, ...cellAfterBorderSizes);
+    if (context.env.borderCollapse.isCollapse()) {
+      const collapseSize = context.getBorderCollapseAfterSize();
+      if (collapseSize > 0) {
         size.extent -= collapseSize;
         console.log("[%s] collapsed size for after edge = %d", context.name, collapseSize);
       }
