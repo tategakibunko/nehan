@@ -188,7 +188,7 @@ export class Display {
         break;
 
       case DisplayInternal.TABLE_CELL:
-        this.outside = DisplayOutside.INLINE;
+        this.outside = DisplayOutside.INLINE; // [CAUTION] must be removed in new engine(v7).
         this.inside = DisplayInside.FLOW_ROOT;
         break;
 
