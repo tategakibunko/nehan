@@ -285,7 +285,8 @@ export class FlowFormatContext implements IFlowFormatContext {
     const startCollapseSize = this.getBorderCollapseStartSize(block);
     const beforeCollapseSize = this.getBorderCollapseBeforeSize(block);
     block.pos.start = -startCollapseSize;
-    block.pos.before -= block.border.width.before + beforeCollapseSize;
+    // block.pos.before -= block.border.width.before + beforeCollapseSize;
+    block.pos.before -= beforeCollapseSize;
     this.cursorPos.before -= beforeCollapseSize;
     console.log("[%s] collapseBeforeStartBorder(before = %d, start = %d)", this.name, beforeCollapseSize, startCollapseSize);
   }
