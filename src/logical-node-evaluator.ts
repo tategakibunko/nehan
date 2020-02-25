@@ -113,8 +113,14 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockImage(img: LogicalReNode): HTMLElement {
-    console.log(img);
-    throw new Error("todo");
+    const node = document.createElement("img");
+    node.style.position = "absolute";
+    node.style.width = img.physicalSize.width + "px";
+    node.style.height = img.physicalSize.height + "px";
+    node.src = img.env.element.getAttribute("src") || "";
+    img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    img.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    return node;
   }
 
   visitBlockVideo(video: LogicalReNode): HTMLElement {

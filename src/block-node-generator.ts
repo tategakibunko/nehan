@@ -98,7 +98,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         if (!value) {
           break;
         }
-        if (!float.isNone() && value.type === 'block') {
+        if (!float.isNone() && value.isFloatable) {
           this.context.flowRoot.addFloat(value.body, float, this.context.maxMeasure);
           this.context.suspendedGens.push(this.context.child);
           break;

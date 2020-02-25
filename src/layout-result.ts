@@ -30,10 +30,19 @@ export class LayoutResult {
   static skip = new LayoutResult('skip');
   static pageBreak = new LayoutResult('page-break');
   static lineBreak = new LayoutResult('line-break');
-
-  constructor(public type: LayoutValueType, public body?: any) { }
-
   static logicalNode(type: LogicalNodeType, node: ILogicalNode): LayoutResult {
     return new LayoutResult(type, node);
+  }
+
+  private constructor(public type: LayoutValueType, public body?: any) { }
+
+  get isFloatable(): boolean {
+    switch (this.type) {
+      case 'block':
+      case 'inline-block':
+      case 're-block':
+        return true;
+    }
+    return false;
   }
 }
