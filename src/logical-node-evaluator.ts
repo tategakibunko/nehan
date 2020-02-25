@@ -123,8 +123,12 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineImage(img: LogicalReNode): HTMLElement {
-    console.log(img);
-    throw new Error("todo");
+    const node = document.createElement("img");
+    node.style.width = img.physicalSize.width + "px";
+    node.style.height = img.physicalSize.height + "px";
+    node.src = img.env.element.getAttribute("src") || "";
+    img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    return node;
   }
 
   visitInlineVideo(video: LogicalReNode): HTMLElement {

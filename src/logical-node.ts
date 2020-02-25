@@ -10,7 +10,6 @@ import {
 } from './public-api'
 
 export interface ILogicalNode {
-  // size: LogicalSize;
   measure: number;
   extent: number;
   text: string;

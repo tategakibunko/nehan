@@ -110,6 +110,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   public get contextRestMeasure(): number {
     if (this.flowRoot.floatRegion) {
       const floatSpaceSize = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before);
+      console.log("contextRestMeasure at %d = %d", this.flowRootPos.before, floatSpaceSize);
       return Math.min(floatSpaceSize, this.maxMeasure) - this.textStartPos;
     }
     return this.restMeasure;
