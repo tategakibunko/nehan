@@ -124,9 +124,6 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get restMeasure(): number {
-    if (this.parent) {
-      return this.parent.restMeasure - this.textStartPos;
-    }
     return this.maxMeasure - this.textStartPos;
   }
 
