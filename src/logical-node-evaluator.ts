@@ -45,11 +45,13 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.className = "nehan-line";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
+    node.style.overflow = "visible";
     node.style.top = lineNode.pos.before + "px";
     node.style.left = (lineNode.pos.start + lineNode.lineBoxStartOffset) + "px";
     node.style.fontSize = lineNode.env.font.size + "px";
     node.style.background = "skyblue";
     node.style.height = lineNode.size.extent + "px";
+    lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
