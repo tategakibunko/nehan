@@ -47,6 +47,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.position = "absolute";
     node.style.top = lineNode.pos.before + "px";
     node.style.left = (lineNode.pos.start + lineNode.lineBoxStartOffset) + "px";
+    node.style.fontSize = lineNode.env.font.size + "px";
     node.style.background = "skyblue";
     node.style.height = lineNode.size.extent + "px";
     lineNode.children.forEach(child => {

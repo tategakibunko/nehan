@@ -38,6 +38,7 @@ export class LogicalTextNode implements ILogicalNode {
 
 export class LogicalLineNode implements ILogicalNode {
   constructor(
+    public env: BoxEnv,
     public pos: LogicalCursorPos,
     public size: LogicalSize,
     public text: string,
