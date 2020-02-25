@@ -155,7 +155,7 @@ export class LogicalTableCellsNode implements ILogicalNode {
 export class LogicalReNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
-    public size: LogicalSize,
+    public size: LogicalSize, // logical content size
     public physicalSize: PhysicalSize,
     public edge: LogicalBoxEdge,
     public pos: LogicalCursorPos,
