@@ -15,10 +15,12 @@ import {
   LogicalRubyNode,
   RubyGroup,
   TableCellsFormatContext,
+  LogicalReNode,
+  PhysicalSize,
 } from './public-api'
 
 export interface ILayoutReducer {
-  visit: (...args: any) => LayoutResult; // TODO
+  visit: (...args: any[]) => LayoutResult; // TODO
 }
 
 export class TextReducer implements ILayoutReducer {
@@ -48,14 +50,12 @@ export class InlineReducer implements ILayoutReducer {
 
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
     const measure = context.cursorPos.start;
-    const extent = context.inlineNodes.reduce((acm, e: ILogicalNode) => {
-      return (e.size.extent > acm) ? e.size.extent : acm;
-    }, context.env.font.lineExtent);
+    const extent = Math.max(context.env.font.lineExtent, ...context.inlineNodes.map(node => node.extent));
     const children = context.inlineNodes;
     const text = context.inlineText;
     const size = new LogicalSize({ measure, extent });
     const edge = context.contextBoxEdge.currentMarginBoxEdge;
-    const inlineNode = new LogicalInlineNode(size, text, edge, children);
+    const inlineNode = new LogicalInlineNode(context.env, size, text, edge, children);
     context.contextBoxEdge.clear();
     context.inlineNodes = [];
     context.inlineText = "";
@@ -101,9 +101,7 @@ export class LineReducer implements ILayoutReducer {
 
   visit(context: FlowFormatContext): LayoutResult {
     const measure = context.cursorPos.start;
-    const extent = context.inlineNodes.reduce((acm, e: ILogicalNode) => {
-      return (e.size.extent > acm) ? e.size.extent : acm;
-    }, context.env.font.lineExtent);
+    const extent = Math.max(context.env.font.lineExtent, ...context.inlineNodes.map(node => node.extent));
     const size = new LogicalSize({ measure, extent });
     const pos = context.parent ? context.lineHeadPos : LogicalCursorPos.zero;
     const children = context.inlineNodes;
@@ -219,3 +217,17 @@ export class TableRowReducer extends BlockReducer {
   static instance = new TableRowReducer("table-row");
 }
 
+export class ReReducer implements ILayoutReducer {
+  static instance = new ReReducer();
+  private constructor() { }
+
+  visit(context: FlowFormatContext, logicalSize: LogicalSize, physicalSize: PhysicalSize): LayoutResult {
+    console.log("ReReducer, logicalSize:%o, physicalSize:%o", logicalSize, physicalSize);
+    const type = context.env.display.isBlockLevel() ? 're-block' : 're-inline';
+    const edge = context.env.edge;
+    const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
+    const text = `(${context.env.element.tagName})`;
+    const re = new LogicalReNode(context.env, logicalSize, physicalSize, edge, pos, text);
+    return LayoutResult.logicalNode(type, re);
+  }
+}

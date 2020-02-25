@@ -73,7 +73,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public acceptLayoutReducer(visitor: ILayoutReducer, ...args: any): LayoutResult {
-    return visitor.visit(this, args);
+    return visitor.visit(this, ...args);
   }
 
   public get restExtent(): number {
@@ -238,7 +238,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + block.size.extent}`);
     this.blockNodes.push(block);
     this.nodeHistory.push(block);
-    this.cursorPos.before += block.size.extent;
+    this.cursorPos.before += block.extent;
     this.text += block.text;
   }
 
@@ -349,20 +349,20 @@ export class FlowFormatContext implements IFlowFormatContext {
   // Note that marker text is not included to inlineText.
   public addListMarker(marker: LogicalInlineNode) {
     this.inlineNodes.push(marker);
-    this.cursorPos.start += marker.size.measure;
+    this.cursorPos.start += marker.measure;
     this.listMarker = marker;
     console.log("[%s] added list marker:", this.name, marker);
   }
 
   public addText(text: ILogicalNode) {
     this.inlineNodes.push(text);
-    this.cursorPos.start += text.size.measure;
+    this.cursorPos.start += text.measure;
     this.inlineText += text.text;
   }
 
   public addRuby(ruby: ILogicalNode) {
     this.inlineNodes.push(ruby);
-    this.cursorPos.start += ruby.size.measure;
+    this.cursorPos.start += ruby.measure;
     this.inlineText += ruby.text;
   }
 }

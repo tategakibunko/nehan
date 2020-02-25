@@ -34,6 +34,7 @@ import {
   InlineBlockReducer,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
+import { ReNodeGenerator } from './re-node-generator';
 
 export interface ChildGenerator {
   generator: ILogicalNodeGenerator;
@@ -66,6 +67,13 @@ export class LogicalNodeGenerator {
     CssLoader.loadDynamic(element);
     const env = new BoxEnv(element);
 
+    if (element.tagName === "img" || element.tagName === "video") {
+      const generator = new ReNodeGenerator(
+        new FlowFormatContext(env, parentContext)
+      );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
     if (display.isFlowRuby()) {
       // normalize ruby element.
       env.element.acceptEffector(RubyNormalizer.instance);

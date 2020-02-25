@@ -6,6 +6,7 @@ import {
   LogicalBlockNode,
   ILogicalCssEvaluator,
   LogicalTableCellsNode,
+  LogicalReNode,
 } from './public-api'
 
 export interface ILogicalNodeEvaluator {
@@ -16,6 +17,10 @@ export interface ILogicalNodeEvaluator {
   visitBlock: (...args: any[]) => HTMLElement;
   visitInlineBlock: (...args: any[]) => HTMLElement;
   visitTableCells: (...args: any[]) => HTMLElement;
+  visitBlockImage: (...args: any[]) => HTMLElement;
+  visitBlockVideo: (...args: any[]) => HTMLElement;
+  visitInlineImage: (...args: any[]) => HTMLElement;
+  visitInlineVideo: (...args: any[]) => HTMLElement;
 }
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
@@ -105,5 +110,25 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
       node.appendChild(childNode);
     });
     return node;
+  }
+
+  visitBlockImage(img: LogicalReNode): HTMLElement {
+    console.log(img);
+    throw new Error("todo");
+  }
+
+  visitBlockVideo(video: LogicalReNode): HTMLElement {
+    console.log(video);
+    throw new Error("todo");
+  }
+
+  visitInlineImage(img: LogicalReNode): HTMLElement {
+    console.log(img);
+    throw new Error("todo");
+  }
+
+  visitInlineVideo(video: LogicalReNode): HTMLElement {
+    console.log(video);
+    throw new Error("todo");
   }
 }
