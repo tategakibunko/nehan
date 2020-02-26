@@ -23,7 +23,7 @@ export type LayoutParent = LogicalBox | null;
 export class LayoutEvaluator {
   public bodyContext: FlowContext;
 
-  constructor(body_context: FlowContext){
+  constructor(body_context: FlowContext) {
     this.bodyContext = body_context;
   }
 
@@ -33,11 +33,11 @@ export class LayoutEvaluator {
 
   protected evalBox(parent: LayoutParent, box: LogicalBox): HTMLElement {
     //console.log("evalBox:(%s, %s):", box.tagName, box.boxType, box);
-    switch(box.boxType){
-    case BoxType.TABLE_ROW:
-      return this.evalTableRow(parent, box);
-    default:
-      return this.evalFlowBox(parent, box);
+    switch (box.boxType) {
+      case BoxType.TABLE_ROW:
+        return this.evalTableRow(parent, box);
+      default:
+        return this.evalFlowBox(parent, box);
     }
   }
 
@@ -65,15 +65,15 @@ export class LayoutEvaluator {
     let element = box.element;
     let href = element.getAttribute("href") || "";
     let title = element.getAttribute("title") || "";
-    let anchor_name = (href.charAt(0) === "#")? href.substring(1) : "";
+    let anchor_name = (href.charAt(0) === "#") ? href.substring(1) : "";
     let outline = this.bodyContext.outline;
     let anchor = outline.getAnchor(anchor_name);
-    let anchor_page_index = anchor? anchor.pageIndex : box.pageIndex;
+    let anchor_page_index = anchor ? anchor.pageIndex : box.pageIndex;
     let page_index = box.pageIndex;
     let e_classes = box.classList.values().map(Prefix.addExternal);
     let i_classes = ["inline", "a"].map(Prefix.addInternal);
     i_classes.concat(e_classes).forEach(klass => node.classList.add(klass));
-    if(box.id){
+    if (box.id) {
       node.id = Prefix.addExternal(box.id);
     }
     node.setAttribute("href", href);
@@ -94,29 +94,29 @@ export class LayoutEvaluator {
 
   protected createFlowNode(parent: LayoutParent, box: LogicalBox): HTMLElement {
     //console.log("createFlowNode(%s, %s):", box.tagName, box.boxType, box);
-    switch(box.boxType){
-    case BoxType.LINE:
-      return this.createLineNode(parent, box);
-    case BoxType.BASELINE:
-      return this.createBaselineNode(parent, box);
-    case BoxType.TEXT:
-      return this.createTextNode(parent, box);
-    case BoxType.INLINE:
-      switch(box.tagName){
-      case "a":
-	return this.createInlineLinkNode(parent, box);
-      default:
-	return this.createInlineNode(parent, box);
-      }
-    case BoxType.INLINE_BLOCK:
-      return this.createInlineBlockNode(parent, box);
-    case BoxType.BLOCK:
-      return this.createBlockNode(parent, box);
-    case BoxType.TABLE:
-    case BoxType.TABLE_ROW_GROUP:
-    case BoxType.TABLE_ROW:
-    case BoxType.TABLE_CELL:
-      return this.createBlockNode(parent, box); // TODO
+    switch (box.boxType) {
+      case BoxType.LINE:
+        return this.createLineNode(parent, box);
+      case BoxType.BASELINE:
+        return this.createBaselineNode(parent, box);
+      case BoxType.TEXT:
+        return this.createTextNode(parent, box);
+      case BoxType.INLINE:
+        switch (box.tagName) {
+          case "a":
+            return this.createInlineLinkNode(parent, box);
+          default:
+            return this.createInlineNode(parent, box);
+        }
+      case BoxType.INLINE_BLOCK:
+        return this.createInlineBlockNode(parent, box);
+      case BoxType.BLOCK:
+        return this.createBlockNode(parent, box);
+      case BoxType.TABLE:
+      case BoxType.TABLE_ROW_GROUP:
+      case BoxType.TABLE_ROW:
+      case BoxType.TABLE_CELL:
+        return this.createBlockNode(parent, box); // TODO
     }
     console.error("unsupported box:", box);
     //return this.createBlockNode(parent, box);
@@ -126,12 +126,12 @@ export class LayoutEvaluator {
   protected evalFlowBox(parent: LayoutParent, box: LogicalBox): HTMLElement {
     //console.log("evalBox(%s, %s):", box.tagName, box.boxType, box);
     let node: HTMLElement = this.createFlowNode(parent, box);
-    if(!box.isLine() && !box.isBaseline()){
+    if (!box.isLine() && !box.isBaseline()) {
       box.element.style.callDomCallbacks(box, node);
     }
-    if(Config.debugElementByClick){
+    if (Config.debugElementByClick) {
       node.addEventListener("click", (e) => {
-	console.info(box);
+        console.info(box);
       });
     }
     node = box.getChildren().reduce((node, child) => {
@@ -144,7 +144,7 @@ export class LayoutEvaluator {
     return node;
   }
 
-  protected appendBoxChildAfter(node: HTMLElement, box: LogicalBox, child: BoxContent){
+  protected appendBoxChildAfter(node: HTMLElement, box: LogicalBox, child: BoxContent) {
   }
 
   protected evalTableRow(parent: LayoutParent, box: LogicalBox): HTMLElement {
@@ -158,7 +158,7 @@ export class LayoutEvaluator {
     let element = document.createElement("img") as HTMLImageElement;
     let ph_size = image.physicalSize;
     let e_classes = image.classList.values().map(Prefix.addExternal);
-    if($node.id){
+    if ($node.id) {
       element.id = Prefix.addExternal($node.id);
     }
     element.src = $node.src;
@@ -166,10 +166,10 @@ export class LayoutEvaluator {
     element.height = ph_size.height;
     element.classList.add(Prefix.addInternal("img"));
 
-    if(image.isBlockLevel()){
+    if (image.isBlockLevel()) {
       element.classList.add(Prefix.addInternal("block"));
       image.getCssBlockRe(parent).apply(element);
-    } else if(parent && parent.isTextVertical()){
+    } else if (parent && parent.isTextVertical()) {
       let css = image.getCssInlineVertRe(parent);
       css.apply(element);
       element.classList.add(Prefix.addInternal("inline"));
@@ -180,40 +180,40 @@ export class LayoutEvaluator {
   }
 
   protected evalFlowChild(parent: LogicalBox, child: LayoutValueType): Node {
-    if(child instanceof LogicalBox){
-      if(child.isImage()){
-	return this.evalImage(parent, child);
+    if (child instanceof LogicalBox) {
+      if (child.isImage()) {
+        return this.evalImage(parent, child);
       }
       return this.evalBox(parent, child);
     }
-    if(child instanceof Word){
+    if (child instanceof Word) {
       return this.evalWord(parent, child);
     }
-    if(child instanceof Char){
+    if (child instanceof Char) {
       return this.evalChar(parent, child);
     }
-    if(child instanceof SpaceChar){
+    if (child instanceof SpaceChar) {
       return this.evalSpaceChar(parent, child);
     }
-    if(child instanceof RefChar){
+    if (child instanceof RefChar) {
       return this.evalRefChar(parent, child);
     }
-    if(child instanceof HalfChar){
+    if (child instanceof HalfChar) {
       return this.evalHalfChar(parent, child);
     }
-    if(child instanceof SmpUniChar){
+    if (child instanceof SmpUniChar) {
       return this.evalSmpUniChar(parent, child);
     }
-    if(child instanceof MixChar){
+    if (child instanceof MixChar) {
       return this.evalMixChar(parent, child);
     }
-    if(child instanceof DualChar){
+    if (child instanceof DualChar) {
       return this.evalDualChar(parent, child);
     }
-    if(child instanceof Ruby){
+    if (child instanceof Ruby) {
       return this.evalRuby(parent, child);
     }
-    if(child instanceof Tcy){
+    if (child instanceof Tcy) {
       return this.evalTcy(parent, child);
     }
     throw new Error("undefined layout value");
