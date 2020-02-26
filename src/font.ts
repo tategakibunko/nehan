@@ -9,7 +9,8 @@ import {
   LayoutParent,
   NativeStyleMap,
   PseudoElement,
-  LogicalBox
+  LogicalBox,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 export interface FontShorthand {
@@ -168,6 +169,10 @@ export class Font {
     font.size = Utils.atoi(CssCascade.getValue(element, "font-size"));
     font.lineHeight = CssCascade.getValue(element, "line-height");
     return font;
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitFont(this);
   }
 
   // [NOTE]

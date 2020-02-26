@@ -2,7 +2,7 @@ import {
   ILogicalNodeGenerator,
   LayoutResult,
   ILayoutReducer,
-  ReNodeFormatContext,
+  ReFormatContext,
   LogicalSize,
   PhysicalSize,
   ReReducer,
@@ -12,7 +12,7 @@ export class ReNodeGenerator implements ILogicalNodeGenerator {
   private generator: Generator<LayoutResult>;
 
   constructor(
-    public context: ReNodeFormatContext,
+    public context: ReFormatContext,
     protected reducer: ILayoutReducer = ReReducer.instance,
   ) {
     this.generator = this.createGenerator();

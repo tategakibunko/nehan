@@ -1,4 +1,5 @@
 import {
+  Font,
   LogicalSize,
   LogicalCursorPos,
   LogicalBorder,
@@ -7,6 +8,7 @@ import {
 } from './public-api'
 
 export interface ILogicalCssEvaluator {
+  visitFont: (font: Font) => NativeStyleMap;
   visitSize: (size: LogicalSize) => NativeStyleMap;
   visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
   visitLogicalBorder: (border: LogicalBorder) => NativeStyleMap;
@@ -14,6 +16,17 @@ export interface ILogicalCssEvaluator {
 
 class LogicalCssEvaluator implements ILogicalCssEvaluator {
   constructor(public writingMode: WritingMode) { }
+
+  visitFont(font: Font): NativeStyleMap {
+    const css = new NativeStyleMap();
+    css.set("font-style", font.style);
+    css.set("font-variant", font.variant);
+    css.set("font-weight", font.weight);
+    css.set("font-stretch", font.stretch);
+    css.set("font-size", font.size + "px");
+    css.set("font-family", font.family);
+    return css;
+  }
 
   visitSize(size: LogicalSize): NativeStyleMap {
     throw new Error("must be overrided");

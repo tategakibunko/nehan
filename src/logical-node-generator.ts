@@ -32,7 +32,7 @@ import {
   TableRowGroupInitializer,
   TableRowInitializer,
   InlineBlockReducer,
-  ReNodeFormatContext,
+  ReFormatContext,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
 import { ReNodeGenerator } from './re-node-generator';
@@ -70,7 +70,7 @@ export class LogicalNodeGenerator {
 
     if (element.tagName === "img" || element.tagName === "video") {
       const generator = new ReNodeGenerator(
-        new ReNodeFormatContext(env, parentContext)
+        new ReFormatContext(env, parentContext)
       );
       const nextElement = element.nextSibling;
       return { generator, nextElement };

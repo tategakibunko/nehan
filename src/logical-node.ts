@@ -172,10 +172,9 @@ export class LogicalReNode implements ILogicalNode {
   }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
-    const display = this.env.display;
+    const isBlockLevel = this.env.display.isBlockLevel();
     switch (this.env.element.tagName) {
-      case "img": return display.isBlockLevel() ? visitor.visitBlockImage(this) : visitor.visitInlineImage(this);
-      case "video": return display.isBlockLevel() ? visitor.visitBlockVideo(this) : visitor.visitInlineVideo(this);
+      case "img": return isBlockLevel ? visitor.visitBlockImage(this) : visitor.visitInlineImage(this);
     }
     console.error("unsupported replaced element:", this);
     throw new Error("unsupported replaced element");

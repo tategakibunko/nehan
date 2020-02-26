@@ -18,9 +18,7 @@ export interface ILogicalNodeEvaluator {
   visitInlineBlock: (...args: any[]) => HTMLElement;
   visitTableCells: (...args: any[]) => HTMLElement;
   visitBlockImage: (...args: any[]) => HTMLElement;
-  visitBlockVideo: (...args: any[]) => HTMLElement;
   visitInlineImage: (...args: any[]) => HTMLElement;
-  visitInlineVideo: (...args: any[]) => HTMLElement;
 }
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
@@ -48,9 +46,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.overflow = "visible";
     node.style.top = lineNode.pos.before + "px";
     node.style.left = (lineNode.pos.start + lineNode.lineBoxStartOffset) + "px";
-    node.style.fontSize = lineNode.env.font.size + "px";
     node.style.background = "skyblue";
     node.style.height = lineNode.size.extent + "px";
+    lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
@@ -126,11 +124,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  visitBlockVideo(video: LogicalReNode): HTMLElement {
-    console.log(video);
-    throw new Error("todo");
-  }
-
   visitInlineImage(img: LogicalReNode): HTMLElement {
     const node = document.createElement("img");
     node.style.width = img.physicalSize.width + "px";
@@ -138,10 +131,5 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.src = img.env.element.getAttribute("src") || "";
     img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
-  }
-
-  visitInlineVideo(video: LogicalReNode): HTMLElement {
-    console.log(video);
-    throw new Error("todo");
   }
 }
