@@ -20,7 +20,7 @@ export type LogicalNodeType =
   'ruby-base' |
   'list-marker'
 
-type LayoutResultType =
+export type LayoutResultType =
   'skip' |
   'page-break' |
   'line-break' |
