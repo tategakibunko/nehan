@@ -20,7 +20,7 @@ export type LogicalNodeType =
   'ruby-base' |
   'list-marker'
 
-type LayoutValueType =
+type LayoutResultType =
   'skip' |
   'page-break' |
   'line-break' |
@@ -34,7 +34,7 @@ export class LayoutResult {
     return new LayoutResult(type, node);
   }
 
-  private constructor(public type: LayoutValueType, public body?: any) { }
+  private constructor(public type: LayoutResultType, public body?: any) { }
 
   get isFloatable(): boolean {
     switch (this.type) {
