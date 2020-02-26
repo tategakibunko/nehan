@@ -50,7 +50,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
         }
       }
       const token: ICharacter = this.context.lexer.getNext();
-      console.log("restM:%d, token:%o", this.context.restMeasure, token);
+      // console.log("restM:%d, token:%o", this.context.restMeasure, token);
 
       // We calculate character metrics when
       // 1. metrics is not set yet(token.size.measure === 0)

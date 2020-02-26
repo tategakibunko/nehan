@@ -44,6 +44,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       return;
     }
     while (this.context.restExtent < this.context.env.edge.borderBoxBefore) {
+      console.log("before border can't be included");
       yield LayoutResult.pageBreak;
     }
     this.context.addBorderBoxEdge("before"); // restExtent shorten
@@ -73,7 +74,12 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
       }
       while (this.context.restExtent < beforeMargin) {
-        yield LayoutResult.pageBreak;
+        console.log("[%s] page-break: before margin can't be included.", this.context.name);
+        if (this.context.env.element.tagName === "body") {
+          yield this.context.acceptLayoutReducer(this.blockReducer);
+        } else {
+          yield LayoutResult.pageBreak;
+        }
       }
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
@@ -111,8 +117,10 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
           this.context.addLine(line.body);
         } else if (value.type === 'page-break') {
+          console.log("[%s] accept page-break", this.context.name);
           const block = this.context.acceptLayoutReducer(this.blockReducer);
           if (this.context.env.element.tagName === "body") {
+            console.log("page-break on body");
             yield block;
           } else {
             yield block;
@@ -153,6 +161,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     }
 
     while (this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("after")) {
+      console.log("after border can't be included");
       yield LayoutResult.pageBreak;
     }
 
