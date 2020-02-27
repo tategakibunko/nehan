@@ -129,11 +129,7 @@ export class BlockReducer implements ILayoutReducer {
     const text = context.text;
     const children = context.blockNodes;
     if (context.env.borderCollapse.isCollapse()) {
-      const collapseSize = context.getBorderCollapseAfterSize();
-      if (collapseSize > 0) {
-        size.extent -= collapseSize;
-        console.log("[%s] collapsed size for after edge = %d", context.name, collapseSize);
-      }
+      size.extent -= context.getBorderCollapseAfterSize();
     }
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
     console.log("[%s] reduceBlock(%s) as %s at %s, global %s, %o", context.name, size.toString(), this.type, pos.toString(), context.globalPos.toString(), blockNode.text);
@@ -158,15 +154,6 @@ export class RootBlockReducer implements ILayoutReducer {
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
-    /*
-    if (context.env.borderCollapse.isCollapse()) {
-      const collapseSize = context.getBorderCollapseAfterSize();
-      if (collapseSize > 0) {
-        size.extent -= collapseSize;
-        console.log("[%s] collapsed size for after edge = %d", context.name, collapseSize);
-      }
-    }
-    */
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
     console.log("[%s] reduceRootBlock at %s, global %s, %o", context.name, pos.toString(), context.globalPos.toString(), blockNode.text);
     context.text = "";
