@@ -72,7 +72,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       }
     } // while(lexer.hasNext())
 
-    if (this.context.children.length > 0) {
+    if (this.context.characters.length > 0) {
       yield this.context.acceptLayoutReducer(this.reducer, false);
     }
     console.groupEnd();

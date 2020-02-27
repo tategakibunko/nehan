@@ -13,7 +13,7 @@ import { TextLexer } from './text-lexer';
 export class TextFormatContext implements ILayoutFormatContext {
   public name = "(text)";
   public cursorPos: LogicalCursorPos;
-  public children: ICharacter[];
+  public characters: ICharacter[];
   public text: string;
 
   constructor(
@@ -22,7 +22,7 @@ export class TextFormatContext implements ILayoutFormatContext {
     public parent: ILayoutFormatContext,
   ) {
     this.cursorPos = LogicalCursorPos.zero;
-    this.children = [];
+    this.characters = [];
     this.text = "";
   }
 
@@ -84,7 +84,7 @@ export class TextFormatContext implements ILayoutFormatContext {
   }
 
   public addCharacter(char: ICharacter) {
-    this.children.push(char);
+    this.characters.push(char);
     this.cursorPos.start += char.size.measure;
     this.text += char.text;
   }

@@ -1,5 +1,5 @@
 import {
-  Config,
+  DualChar,
   Lexer,
   ICharacter,
   TextFormatContext,
@@ -14,41 +14,35 @@ export class Hyphenator implements IHyphenator {
   private constructor() { }
 
   public hyphenate(context: TextFormatContext) {
-  }
-  /*
-  public hyphenate() {
-    let offset = this.getHyphenatePos();
-    // if offset is minus, it's 'OI-DASHI'.
-    if (offset < 0) {
-      if (Config.debugLayout) {
-        console.log("OI-DASHI:", offset);
+    const lexer = context.lexer;
+    const moveCount = this.getHyphenateCount(lexer);
+
+    // if moveCount is minus, it's 'OI-DASHI'.
+    if (moveCount < 0) {
+      // console.log("OI-DASHI:", moveCount);
+      const popCount = -moveCount;
+      if (popCount >= context.characters.length) {
+        return;
       }
-      let pop_count = -offset;
-      // prevent from popping all inlines.
-      pop_count = this.region.roundHyphenationPopCount(pop_count);
-      for (var i = 0; i < pop_count; i++) {
-        //let char = this.region.popInline();
-        this.region.popCharacter();
-        this.pushBack();
+      for (let i = 0; i < popCount; i++) {
+        context.characters.pop();
+        context.text = context.text.slice(0, -1);
+        lexer.setPos(lexer.getPos() - 1);
       }
     }
     // if offst is plus, it's 'BURA-SAGARI'.
-    else if (offset > 0) {
-      this.brasagari = true;
-      if (Config.debugLayout) {
-        console.log("BURA-SAGARI:", offset);
-      }
-      let push_count = offset;
-      for (var i = 0; i < push_count; i++) {
-        this.region.pushCharacter(this.lexer.getNext());
+    else if (moveCount > 0) {
+      // console.log("BURA-SAGARI:", moveCount);
+      for (let i = 0; i < moveCount; i++) {
+        context.addCharacter(lexer.getNext());
       }
     }
   }
 
-  protected getHyphenatePos(): number {
-    let tail = this.lexer.peek(-1);
-    let head = this.lexer.peek(0);
-    let next1 = this.lexer.peek(+1);
+  private getHyphenateCount(lexer: Lexer<ICharacter>): number {
+    const tail = lexer.peek(-1);
+    const head = lexer.peek(0);
+    const next1 = lexer.peek(+1);
 
     // c ... [prev2][prev1][tail] <br>
     // [head(NG)][next1]
@@ -83,7 +77,7 @@ export class Hyphenator implements IHyphenator {
     if (tail instanceof DualChar && tail.isTailNg()) {
       let move = -1;
       while (true) {
-        let prev = this.lexer.peek(move - 1); // prev1(-2), prev2(-3) ...
+        let prev = lexer.peek(move - 1); // prev1(-2), prev2(-3) ...
         if (!prev) {
           break;
         }
@@ -99,5 +93,4 @@ export class Hyphenator implements IHyphenator {
     }
     return 0;
   }
-  */
 }

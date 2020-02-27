@@ -31,10 +31,10 @@ export class TextReducer implements ILayoutReducer {
     const extent = context.env.font.lineExtent;
     const size = new LogicalSize({ measure, extent });
     const text = context.text;
-    const children = context.children;
+    const children = context.characters;
     const textNode = new LogicalTextNode(size, text, children);
     // console.log("reduceText:%o", textNode);
-    context.children = [];
+    context.characters = [];
     context.text = "";
     if (indent) {
       context.cursorPos.start = 0;
