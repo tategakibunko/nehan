@@ -58,40 +58,40 @@ export class LogicalSize {
     return this.measure === 0 && this.extent === 0;
   }
 
-  public getPhysicalSize(writing_mode: WritingMode): PhysicalSize {
+  public getPhysicalSize(writingMode: WritingMode): PhysicalSize {
     return new PhysicalSize({
-      width: this.getWidth(writing_mode),
-      height: this.getHeight(writing_mode)
+      width: this.getWidth(writingMode),
+      height: this.getHeight(writingMode)
     });
   }
 
-  public getWidth(writing_mode: WritingMode): number {
-    return writing_mode.isTextVertical() ? this.extent : this.measure;
+  public getWidth(writingMode: WritingMode): number {
+    return writingMode.isTextVertical() ? this.extent : this.measure;
   }
 
-  public getHeight(writing_mode: WritingMode): number {
-    return writing_mode.isTextVertical() ? this.measure : this.extent;
+  public getHeight(writingMode: WritingMode): number {
+    return writingMode.isTextVertical() ? this.measure : this.extent;
   }
 
-  public resize(max_size: LogicalSize): LogicalSize {
-    if (this.measure <= max_size.measure && this.extent <= max_size.extent) {
+  public resize(maxSize: LogicalSize): LogicalSize {
+    if (this.measure <= maxSize.measure && this.extent <= maxSize.extent) {
       return this.clone();
     }
     const size = { measure: this.measure, extent: this.extent };
     //console.log("resize from (%d,%d)", this.measure, this.extent);
-    //console.log("resize max (%d,%d)", max_size.measure, max_size.extent);
-    const e_per_m = this.extent / this.measure;
-    const m_per_e = this.measure / this.extent;
-    while (size.measure > max_size.measure || size.extent > max_size.extent) {
-      const d_measure = size.measure - max_size.measure;
-      const d_extent = size.extent - max_size.extent;
-      if (d_measure > d_extent) {
-        size.measure = max_size.measure;
-        size.extent = size.extent - d_measure * e_per_m;
+    //console.log("resize max (%d,%d)", maxSize.measure, maxSize.extent);
+    const ePerM = this.extent / this.measure;
+    const mPerE = this.measure / this.extent;
+    while (size.measure > maxSize.measure || size.extent > maxSize.extent) {
+      const dMeasure = size.measure - maxSize.measure;
+      const dExtent = size.extent - maxSize.extent;
+      if (dMeasure > dExtent) {
+        size.measure = maxSize.measure;
+        size.extent = size.extent - dMeasure * ePerM;
         //console.log("resize to (%d,%d)", size.measure, size.extent);
       } else {
-        size.extent = max_size.extent;
-        size.measure = size.measure - d_extent * m_per_e;
+        size.extent = maxSize.extent;
+        size.measure = size.measure - dExtent * mPerE;
         //console.log("resize to (%d,%d)", size.measure, size.extent);
       }
     }
