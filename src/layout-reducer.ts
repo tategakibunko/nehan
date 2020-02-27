@@ -1,7 +1,6 @@
 import {
   LogicalSize,
   LogicalCursorPos,
-  ILogicalNode,
   LayoutResult,
   LogicalNodeType,
   FlowFormatContext,
@@ -103,7 +102,6 @@ export class LineReducer implements ILayoutReducer {
     const measure = context.cursorPos.start;
     const extent = Math.max(context.env.font.lineExtent, ...context.inlineNodes.map(node => node.extent));
     const size = new LogicalSize({ measure, extent });
-    // const pos = context.parent ? context.lineHeadPos : context.localPos;
     const pos = context.lineHeadPos;
     const children = context.inlineNodes;
     const text = context.inlineText;
