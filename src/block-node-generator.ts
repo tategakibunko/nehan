@@ -1,4 +1,5 @@
 import {
+  Config,
   ILogicalNodeGenerator,
   LogicalNodeGenerator,
   LayoutResult,
@@ -36,6 +37,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
 
   protected *createGenerator(): Generator<LayoutResult> {
     console.group(`${this.context.name}`);
+
+    const isPageRoot = this.context.env.element.tagName === Config.pageRoot;
 
     if ((this.context.env.measure && this.context.env.measure <= 0) ||
       this.context.env.edge.borderBoxExtent > this.context.restExtent) {
@@ -75,7 +78,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       }
       while (this.context.restExtent < beforeMargin) {
         console.log("[%s] page-break: before margin can't be included.", this.context.name);
-        if (this.context.env.element.tagName === "body") {
+        if (isPageRoot) {
           yield this.context.acceptLayoutReducer(this.blockReducer);
         } else {
           yield LayoutResult.pageBreak;
@@ -119,7 +122,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'page-break') {
           console.log("[%s] accept page-break", this.context.name);
           const block = this.context.acceptLayoutReducer(this.blockReducer);
-          if (this.context.env.element.tagName === "body") {
+          if (isPageRoot) {
             console.log("page-break on body");
             yield block;
           } else {

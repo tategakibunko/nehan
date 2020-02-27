@@ -75,27 +75,30 @@ export class LogicalSize {
 
   public resize(max_size: LogicalSize): LogicalSize {
     if (this.measure <= max_size.measure && this.extent <= max_size.extent) {
-      return this;
+      return this.clone();
     }
-    let size = { measure: this.measure, extent: this.extent };
+    const size = { measure: this.measure, extent: this.extent };
     //console.log("resize from (%d,%d)", this.measure, this.extent);
     //console.log("resize max (%d,%d)", max_size.measure, max_size.extent);
-    let e_per_m = this.extent / this.measure;
-    let m_per_e = this.measure / this.extent;
+    const e_per_m = this.extent / this.measure;
+    const m_per_e = this.measure / this.extent;
     while (size.measure > max_size.measure || size.extent > max_size.extent) {
-      let d_measure = size.measure - max_size.measure;
-      let d_extent = size.extent - max_size.extent;
+      const d_measure = size.measure - max_size.measure;
+      const d_extent = size.extent - max_size.extent;
       if (d_measure > d_extent) {
         size.measure = max_size.measure;
-        size.extent = Math.floor(size.extent - d_measure * e_per_m);
+        size.extent = size.extent - d_measure * e_per_m;
         //console.log("resize to (%d,%d)", size.measure, size.extent);
       } else {
         size.extent = max_size.extent;
-        size.measure = Math.floor(size.measure - d_extent * m_per_e);
+        size.measure = size.measure - d_extent * m_per_e;
         //console.log("resize to (%d,%d)", size.measure, size.extent);
       }
     }
-    return new LogicalSize(size);
+    return new LogicalSize({
+      measure: Math.floor(size.measure),
+      extent: Math.floor(size.extent)
+    });
   }
 
   public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {

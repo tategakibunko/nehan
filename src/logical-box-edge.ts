@@ -1,4 +1,5 @@
 import {
+  Config,
   LogicalBox,
   LogicalPadding,
   LogicalBorder,
@@ -26,14 +27,13 @@ export class LogicalBoxEdge {
   }
 
   static load(element: HtmlElement): LogicalBoxEdge {
-    // If body, ignore border and margin.
-    // Because target of nehan layouting is 'inside' of body content.
-    // And margin and border for body are not targets of nehan layouting.
-    let is_body = element.tagName === "body";
+    // If page-root, ignore border and margin.
+    // Because layout target of nehan is 'inside' of page-root content.
+    let is_root = element.tagName === Config.pageRoot;
     return new LogicalBoxEdge({
       padding: LogicalPadding.load(element),
-      border: is_body ? LogicalBorder.none : LogicalBorder.load(element),
-      margin: is_body ? LogicalMargin.none : LogicalMargin.load(element)
+      border: is_root ? LogicalBorder.none : LogicalBorder.load(element),
+      margin: is_root ? LogicalMargin.none : LogicalMargin.load(element)
     });
   }
 

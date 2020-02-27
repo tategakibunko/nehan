@@ -2,6 +2,9 @@ export namespace Config {
   // Language setting.
   export let lang = "ja";
 
+  // Tag name of page root.
+  export let pageRoot = "body";
+
   // prefix string added to className or id of native DOM.
   export let internalPrefix = "nehan-i"; // added to internal class or id
   export let externalPrefix = "nehan-e"; // added to external class or id

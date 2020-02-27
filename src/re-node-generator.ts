@@ -8,12 +8,26 @@ import {
   ReReducer,
 } from './public-api';
 
+export interface IReResizer {
+  resize: (context: ReFormatContext, originalSize: LogicalSize, maxSize: LogicalSize) => LogicalSize;
+}
+
+export class ReNormalResizer implements IReResizer {
+  static instance = new ReNormalResizer();
+  protected constructor() { }
+
+  resize(context: ReFormatContext, originalSize: LogicalSize, maxSize: LogicalSize): LogicalSize {
+    return originalSize.resize(maxSize);
+  }
+}
+
 export class ReNodeGenerator implements ILogicalNodeGenerator {
   private generator: Generator<LayoutResult>;
 
   constructor(
     public context: ReFormatContext,
     protected reducer: ILayoutReducer = ReReducer.instance,
+    protected resizer: IReResizer = ReNormalResizer.instance,
   ) {
     this.generator = this.createGenerator();
   }
@@ -33,7 +47,7 @@ export class ReNodeGenerator implements ILogicalNodeGenerator {
     let physicalSize = PhysicalSize.load(this.context.env.element);
     let logicalSize = physicalSize.getLogicalSize(writingMode);
     if (logicalSize.extent > maxSize.extent || logicalSize.measure > maxSize.measure) {
-      logicalSize = logicalSize.resize(maxSize);
+      logicalSize = this.resizer.resize(this.context, logicalSize, maxSize);
       physicalSize = logicalSize.getPhysicalSize(writingMode);
     }
     while (this.context.restExtent < logicalSize.extent) {
