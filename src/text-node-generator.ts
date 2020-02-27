@@ -6,7 +6,10 @@ import {
   ILayoutReducer,
   TextFormatContext,
   TextReducer,
+  IHyphenator,
+  Hyphenator,
 } from './public-api'
+
 
 // ----------------------------------------------------------------------
 // ICharacter* -> text-box
@@ -16,7 +19,8 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
 
   constructor(
     public context: TextFormatContext,
-    private reducer: ILayoutReducer = TextReducer.instance
+    private reducer: ILayoutReducer = TextReducer.instance,
+    private hyphenator: IHyphenator = Hyphenator.instance,
   ) {
     this.generator = this.createGenerator();
   }
@@ -60,8 +64,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       }
       if (this.context.restMeasure < token.size.measure) {
         this.context.lexer.pushBack();
-
-        // [TODO] hyphenate characters here.
+        this.hyphenator.hyphenate(this.context);
         yield this.context.acceptLayoutReducer(this.reducer, true);
         yield LayoutResult.lineBreak;
       } else {
