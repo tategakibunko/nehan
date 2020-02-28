@@ -53,6 +53,7 @@ export class Word implements ICharacter {
     return new Word(headText);
   }
 
+  // [Deprecated]
   public restoreBrokenWord(word: Word) {
     //console.log("restore broken word!: [%s]->[%s]", this.text, word.text + this.text);
     this.text = word.text + this.text;
