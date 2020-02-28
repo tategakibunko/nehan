@@ -13,6 +13,7 @@ export * from "./space-char-info"
 export * from "./space-char-table"
 export * from "./space-char"
 export * from "./tcy"
+export * from './text-measure'
 export * from "./word"
 export * from "./mix-char"
 export * from "./ruby"

@@ -4,37 +4,8 @@ import {
   Tcy,
   Font,
   TextEmphaData,
+  TextMeasure,
 } from "./public-api";
-
-const createDummyElement = (): HTMLElement => {
-  if (typeof document !== "undefined") {
-    return document.createElement("span"); // for browser
-  }
-  return { style: {}, innerHTML: "" } as HTMLElement; // for node.js(local stub)
-};
-
-// HTMLElement to get advance size of word.
-const __word_span = createDummyElement();
-const __word_style = __word_span.style;
-__word_style.display = "inline";
-__word_style.margin = "0";
-__word_style.padding = "0";
-__word_style.borderWidth = "0";
-__word_style.lineHeight = "1";
-__word_style.width = "auto";
-__word_style.height = "auto";
-__word_style.visibility = "hidden";
-
-const createOffscreenCanvasContext2d = (): OffscreenCanvasRenderingContext2D | null => {
-  if (typeof OffscreenCanvas === "undefined") {
-    return null;
-  }
-  const canvas: OffscreenCanvas = new OffscreenCanvas(0, 0);
-  const offCanvasCtx: OffscreenCanvasRenderingContext2D | null = canvas.getContext("2d");
-  return offCanvasCtx;
-}
-
-const offCanvasCtx: OffscreenCanvasRenderingContext2D | null = createOffscreenCanvasContext2d();
 
 export class Word implements ICharacter {
   public text: string;
@@ -62,7 +33,8 @@ export class Word implements ICharacter {
     isVertical: boolean;
     empha?: TextEmphaData;
   }) {
-    this.size = Word.getLogicalSize(opts.font, this.text);
+    //this.size = Word.getLogicalSize(opts.font, this.text);
+    this.size = TextMeasure.getWordSize(opts.font, this.text);
   }
 
   public convertTcys(): Tcy[] {
@@ -75,9 +47,9 @@ export class Word implements ICharacter {
 
   // overflow-wrap:break-word
   public breakWord(measure: number): Word {
-    let head_len = Math.floor(this.text.length * measure / this.size.measure);
-    let head_text = this.text.substring(0, head_len);
-    let tail_text = this.text.substring(head_len);
+    const head_len = Math.floor(this.text.length * measure / this.size.measure);
+    const head_text = this.text.substring(0, head_len);
+    const tail_text = this.text.substring(head_len);
     this.text = tail_text;
     return new Word(head_text);
   }
@@ -85,33 +57,5 @@ export class Word implements ICharacter {
   public restoreBrokenWord(word: Word) {
     //console.log("restore broken word!: [%s]->[%s]", this.text, word.text + this.text);
     this.text = word.text + this.text;
-  }
-
-  static getLogicalSize(font: Font, word: string): LogicalSize {
-    if (offCanvasCtx) {
-      offCanvasCtx.font = font.css;
-      const metrics: TextMetrics = offCanvasCtx.measureText(word);
-      return new LogicalSize({
-        measure: Math.round(metrics.width),
-        extent: font.size
-      });
-    }
-    if (typeof document !== "undefined") {
-      // if offscreen canvas is not supported, use dummy DOM.
-      __word_style.font = font.css;
-      __word_span.innerHTML = word;
-      document.body.appendChild(__word_span);
-      const rect = __word_span.getBoundingClientRect();
-      document.body.removeChild(__word_span);
-      return new LogicalSize({
-        measure: Math.round(rect.width),
-        extent: font.size // rect.height is too large, but I don't know why.
-        //extent: Math.round(rect.height)
-      });
-    }
-    return new LogicalSize({
-      measure: Math.round(word.length * font.size / 2),
-      extent: font.size
-    });
   }
 }

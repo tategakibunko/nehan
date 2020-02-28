@@ -1,9 +1,9 @@
 import {
   ICharacter,
   LogicalSize,
-  Word,
   Font,
   TextEmphaData,
+  TextMeasure,
 } from "./public-api";
 
 export class Tcy implements ICharacter {
@@ -30,7 +30,7 @@ export class Tcy implements ICharacter {
       this.size.measure = opts.font.size;
       this.size.extent = opts.font.size;
     } else {
-      this.size = Word.getLogicalSize(opts.font, this.text);
+      this.size = TextMeasure.getWordSize(opts.font, this.text);
     }
   }
 
