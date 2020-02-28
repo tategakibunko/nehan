@@ -63,10 +63,24 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
         token.setMetrics(metricsArgs);
       }
       if (this.context.restMeasure < token.size.measure) {
-        this.context.lexer.pushBack();
-        this.hyphenator.hyphenate(this.context);
-        yield this.context.acceptLayoutReducer(this.reducer, true);
-        yield LayoutResult.lineBreak;
+        if (token instanceof Word) {
+          // word-break: break-all
+          if (env.wordBreak.isBreakAll()) {
+            this.context.lexer.pushBack();
+            this.context.addCharacter(token.breakWord(this.context.restMeasure));
+          } else if (this.context.isLineHead()) { // line-head, but too long word.
+            this.context.addCharacter(token); // will overflow, but ignore!
+          } else {
+            this.context.lexer.pushBack();
+          }
+          yield this.context.acceptLayoutReducer(this.reducer, true);
+          yield LayoutResult.lineBreak;
+        } else {
+          this.context.lexer.pushBack();
+          this.hyphenator.hyphenate(this.context);
+          yield this.context.acceptLayoutReducer(this.reducer, true);
+          yield LayoutResult.lineBreak;
+        }
       } else {
         this.context.addCharacter(token);
       }
