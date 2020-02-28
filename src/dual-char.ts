@@ -63,6 +63,7 @@ export class DualChar implements ICharacter {
     }
   }
 
+  // [Deprecated]
   public setKerning(env: BoxEnv, enable: boolean) {
     if (this.info.kernEnable) {
       this.kerning = enable;

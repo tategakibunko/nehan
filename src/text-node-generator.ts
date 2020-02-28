@@ -3,11 +3,14 @@ import {
   LayoutResult,
   ICharacter,
   Word,
+  DualChar,
   ILayoutReducer,
   TextFormatContext,
   TextReducer,
   IHyphenator,
   Hyphenator,
+  IKerning,
+  Kerning,
 } from './public-api'
 
 
@@ -21,6 +24,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
     public context: TextFormatContext,
     private reducer: ILayoutReducer = TextReducer.instance,
     private hyphenator: IHyphenator = Hyphenator.instance,
+    private kerning: IKerning = Kerning.instance,
   ) {
     this.generator = this.createGenerator();
   }
@@ -34,6 +38,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
     console.group("(text)");
     const env = this.context.env;
     const font = this.context.env.font;
+    const lexer = this.context.lexer;
     const empha = env.isTextEmphasized() ? env.textEmphasis.textEmphaData : undefined;
     const lineExtent = this.context.env.font.lineExtent;
     const isVertical = env.isTextVertical();
@@ -53,7 +58,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           yield LayoutResult.lineBreak;
         }
       }
-      const token: ICharacter = this.context.lexer.getNext();
+      const token: ICharacter = lexer.getNext();
       // console.log("restM:%d, token:%o", this.context.restMeasure, token);
 
       // We calculate character metrics when
@@ -62,21 +67,28 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       if (token.size.measure === 0 || token instanceof Word) {
         token.setMetrics(metricsArgs);
       }
+      // try to set kerning
+      if (token instanceof DualChar && token.isKernEnable()) {
+        const prev = lexer.peek(-2); // lexer pos is already added by getNext, so get prev of prev.
+        if (prev instanceof DualChar && this.kerning.set(token, prev)) {
+          token.setMetrics(metricsArgs); // calc metrics again.
+        }
+      }
       if (this.context.restMeasure < token.size.measure) {
         if (token instanceof Word) {
           // word-break: break-all
           if (env.wordBreak.isBreakAll()) {
-            this.context.lexer.pushBack();
+            lexer.pushBack();
             this.context.addCharacter(token.breakWord(this.context.restMeasure));
           } else if (this.context.isLineHead()) { // line-head, but too long word.
             this.context.addCharacter(token); // will overflow, but ignore!
           } else {
-            this.context.lexer.pushBack();
+            lexer.pushBack();
           }
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield LayoutResult.lineBreak;
         } else {
-          this.context.lexer.pushBack();
+          lexer.pushBack();
           this.hyphenator.hyphenate(this.context);
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield LayoutResult.lineBreak;

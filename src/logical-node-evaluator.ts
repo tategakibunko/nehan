@@ -49,7 +49,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.background = "skyblue";
     node.style.height = lineNode.size.extent + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    // lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
