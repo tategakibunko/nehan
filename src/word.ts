@@ -33,7 +33,6 @@ export class Word implements ICharacter {
     isVertical: boolean;
     empha?: TextEmphaData;
   }) {
-    //this.size = Word.getLogicalSize(opts.font, this.text);
     this.size = TextMeasure.getWordSize(opts.font, this.text);
   }
 
@@ -47,11 +46,11 @@ export class Word implements ICharacter {
 
   // overflow-wrap:break-word
   public breakWord(measure: number): Word {
-    const head_len = Math.floor(this.text.length * measure / this.size.measure);
-    const head_text = this.text.substring(0, head_len);
-    const tail_text = this.text.substring(head_len);
-    this.text = tail_text;
-    return new Word(head_text);
+    const headLen = Math.floor(this.text.length * measure / this.size.measure);
+    const headText = this.text.substring(0, headLen);
+    const tailText = this.text.substring(headLen);
+    this.text = tailText;
+    return new Word(headText);
   }
 
   public restoreBrokenWord(word: Word) {
