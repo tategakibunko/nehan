@@ -87,6 +87,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (!this.listMarker) {
       return 0;
     }
+    if (this.env.listStyle.isPositionInside()) {
+      return 0;
+    }
     const isFirstLine = !this.nodeHistory.some(node => node instanceof LogicalLineNode);
     return isFirstLine ? 0 : this.listMarker.measure;
   }
