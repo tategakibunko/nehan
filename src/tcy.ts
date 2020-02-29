@@ -4,6 +4,7 @@ import {
   Font,
   TextEmphaData,
   TextMeasure,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 export class Tcy implements ICharacter {
@@ -36,5 +37,9 @@ export class Tcy implements ICharacter {
 
   public toString(): string {
     return this.text;
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    return visitor.visitTcy(this);
   }
 }

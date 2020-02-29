@@ -3,6 +3,7 @@ import {
   LogicalSize,
   Font,
   TextEmphaData,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 export class RefChar implements ICharacter {
@@ -34,5 +35,12 @@ export class RefChar implements ICharacter {
 
   public toString(): string {
     return this.text;
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    if (this.empha) {
+      return visitor.visitRefCharEmpha(this, this.empha);
+    }
+    return visitor.visitRefChar(this);
   }
 }

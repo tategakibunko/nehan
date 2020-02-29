@@ -5,6 +5,7 @@ import {
   Font,
   NativeStyleMap,
   TextEmphaData,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 // HALF-WIDTH LETTERS
@@ -48,5 +49,9 @@ export class HalfChar implements ICharacter {
 
   public toString(): string {
     return this.text;
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    return visitor.visitHalfChar(this);
   }
 }

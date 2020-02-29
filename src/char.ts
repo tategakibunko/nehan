@@ -3,6 +3,7 @@ import {
   LogicalSize,
   Font,
   TextEmphaData,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 export class Char implements ICharacter {
@@ -36,5 +37,12 @@ export class Char implements ICharacter {
 
   public toString(): string {
     return this.text;
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): Node {
+    if (this.empha) {
+      return visitor.visitCharEmpha(this, this.empha);
+    }
+    return visitor.visitChar(this);
   }
 }

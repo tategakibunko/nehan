@@ -1,4 +1,13 @@
 import {
+  Char,
+  SpaceChar,
+  HalfChar,
+  MixChar,
+  Tcy,
+  Word,
+  SmpUniChar,
+  RefChar,
+  DualChar,
   LogicalTextNode,
   LogicalRubyNode,
   LogicalInlineNode,
@@ -7,13 +16,27 @@ import {
   ILogicalCssEvaluator,
   LogicalTableCellsNode,
   LogicalReNode,
+  TextEmphaData,
 } from './public-api'
 
 export interface ILogicalNodeEvaluator {
-  visitText: (...args: any[]) => Node;
-  visitRuby: (...args: any[]) => HTMLElement;
-  visitLine: (...args: any[]) => HTMLElement;
-  visitInline: (...args: any[]) => HTMLElement;
+  visitChar: (char: Char) => HTMLElement | Node;
+  visitCharEmpha: (char: Char, emphaData: TextEmphaData) => HTMLElement | Node;
+  visitRefChar: (refChar: RefChar) => HTMLElement | Node;
+  visitRefCharEmpha: (refChar: RefChar, emphaData: TextEmphaData) => HTMLElement | Node;
+  visitSpaceChar: (spaceChar: SpaceChar) => HTMLElement | Node;
+  visitHalfChar: (halfChar: HalfChar) => HTMLElement | Node;
+  visitMixChar: (mixChar: MixChar) => HTMLElement | Node;
+  visitDualChar: (dchar: DualChar) => HTMLElement | Node;
+  visitDualCharKern: (dchar: DualChar) => HTMLElement | Node;
+  visitSmpUniChar: (uniChar: SmpUniChar) => HTMLElement | Node;
+  visitTcy: (tcy: Tcy) => HTMLElement | Node;
+  visitWord: (word: Word) => HTMLElement | Node;
+  visitRuby: (ruby: LogicalRubyNode) => HTMLElement;
+  visitText: (textNode: LogicalTextNode) => HTMLElement;
+  visitInline: (inlineNode: LogicalInlineNode) => HTMLElement;
+  visitInlineEmpha: (inlineNode: LogicalInlineNode) => HTMLElement;
+  visitLine: (lineNode: LogicalLineNode) => HTMLElement;
   visitBlock: (...args: any[]) => HTMLElement;
   visitInlineBlock: (...args: any[]) => HTMLElement;
   visitTableCells: (...args: any[]) => HTMLElement;
@@ -24,8 +47,76 @@ export interface ILogicalNodeEvaluator {
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(public cssVisitor: ILogicalCssEvaluator) { }
 
-  visitText(textNode: LogicalTextNode): Node {
-    const node = document.createTextNode(textNode.text);
+  visitChar(char: Char): HTMLElement | Node {
+    return document.createTextNode(char.text);
+  }
+
+  visitCharEmpha(char: Char, empha: TextEmphaData): HTMLElement | Node {
+    const node = document.createElement("div");
+    const emphaNode = document.createElement("div");
+    const textNode = document.createElement("div");
+    emphaNode.appendChild(document.createTextNode(empha.text));
+    textNode.appendChild(document.createTextNode(char.text));
+    node.style.display = "inline-block";
+    node.appendChild(emphaNode);
+    node.appendChild(textNode);
+    return node;
+  }
+
+  visitRefChar(refChar: RefChar): HTMLElement | Node {
+    return document.createTextNode(refChar.text);
+  }
+
+  visitRefCharEmpha(refChar: RefChar): HTMLElement | Node {
+    return document.createTextNode(refChar.text);
+  }
+
+  visitSpaceChar(spaceChar: SpaceChar): HTMLElement | Node {
+    return document.createTextNode(spaceChar.text);
+  }
+
+  visitHalfChar(halfChar: HalfChar): HTMLElement | Node {
+    return document.createTextNode(halfChar.text);
+  }
+
+  visitMixChar(mixChar: MixChar): HTMLElement | Node {
+    return document.createTextNode(mixChar.text);
+  }
+
+  visitDualChar(dualChar: DualChar): HTMLElement | Node {
+    return document.createTextNode(dualChar.text);
+  }
+
+  visitDualCharKern(dualChar: DualChar): HTMLElement | Node {
+    return document.createTextNode(dualChar.text);
+  }
+
+  visitSmpUniChar(uniChar: SmpUniChar): HTMLElement | Node {
+    return document.createTextNode(uniChar.text);
+  }
+
+  visitTcy(tcy: Tcy): HTMLElement | Node {
+    return document.createTextNode(tcy.text);
+  }
+
+  visitWord(word: Word): HTMLElement | Node {
+    return document.createTextNode(word.text);
+  }
+
+  visitText(textNode: LogicalTextNode): HTMLElement {
+    console.log("visitText:%o", textNode.text);
+    const node = document.createElement("div");
+    node.className = "text";
+    node.style.display = "inline-block";
+    node.style.lineHeight = "1";
+    textNode.children.forEach(char => {
+      node.appendChild(char.acceptEvaluator(this));
+      if (char.spacing) {
+        // [TODO] added spacing node.
+        console.log(`spacing:${char.spacing}`);
+      }
+    });
+    node.normalize();
     return node;
   }
 
@@ -39,6 +130,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitLine(lineNode: LogicalLineNode): HTMLElement {
+    console.log("visitLine:", lineNode.text);
     const node = document.createElement("div");
     node.className = "nehan-line";
     node.style.boxSizing = "content-box";
@@ -51,23 +143,35 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     // lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.children.forEach(child => {
-      const childNode = child.acceptEvaluator(this);
-      node.appendChild(childNode);
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
 
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
+    console.log("visitInline:", inlineNode.text);
     const node = document.createElement("span");
     node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.children.forEach(child => {
-      const childNode = child.acceptEvaluator(this);
-      node.appendChild(childNode);
+      node.appendChild(child.acceptEvaluator(this));
+    });
+    return node;
+  }
+
+  // TODO: if empha enable for this inline, use other wrapper element instead of "span".
+  visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
+    console.log("visitInlineEmpha:", inlineNode.text);
+    const node = document.createElement("div");
+    node.style.display = "inline-block";
+    node.style.marginRight = inlineNode.edge.margin.end + "px";
+    inlineNode.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
 
   visitInlineBlock(blockNode: LogicalBlockNode): HTMLElement {
+    console.log("visitInlineBlock:", blockNode);
     const node = document.createElement("div");
     node.className = ["nehan", blockNode.env.element.tagName].join("-");
     node.style.display = "inline-block";
@@ -83,6 +187,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
+    console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
     const background: any = { "body": "wheat", "p": "orange", "div": "pink" };
     node.className = ["nehan", blockNode.env.element.tagName].join("-");

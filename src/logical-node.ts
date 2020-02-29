@@ -18,6 +18,7 @@ export interface ILogicalNode {
 
 export class LogicalTextNode implements ILogicalNode {
   constructor(
+    public env: BoxEnv,
     public size: LogicalSize,
     public text: string,
     public children: ICharacter[],
@@ -31,7 +32,7 @@ export class LogicalTextNode implements ILogicalNode {
     return this.size.extent;
   }
 
-  acceptEvaluator(visitor: ILogicalNodeEvaluator): Node {
+  acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitText(this);
   }
 }
@@ -101,6 +102,9 @@ export class LogicalInlineNode implements ILogicalNode {
   }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
+    if (!this.env.textEmphasis.isNone()) {
+      return visitor.visitInlineEmpha(this);
+    }
     return visitor.visitInline(this);
   }
 }

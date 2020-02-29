@@ -3,6 +3,7 @@ import {
   LogicalSize,
   Font,
   TextEmphaData,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 // Unicode on Supplementary Multilingual Plane(SMP).
@@ -37,5 +38,9 @@ export class SmpUniChar implements ICharacter {
 
   public toString(): string {
     return this.text;
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    return visitor.visitSmpUniChar(this);
   }
 }

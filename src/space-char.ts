@@ -6,6 +6,7 @@ import {
   NativeStyleMap,
   Font,
   TextEmphaData,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 // more detailed version
@@ -85,5 +86,9 @@ export class SpaceChar implements ICharacter {
 
   public isLineFeed(): boolean {
     return this.text === "\u000A"; // LF
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): Node {
+    return visitor.visitSpaceChar(this);
   }
 }

@@ -5,6 +5,7 @@ import {
   Font,
   TextEmphaData,
   TextMeasure,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 export class Word implements ICharacter {
@@ -57,5 +58,9 @@ export class Word implements ICharacter {
   public restoreBrokenWord(word: Word) {
     //console.log("restore broken word!: [%s]->[%s]", this.text, word.text + this.text);
     this.text = word.text + this.text;
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    return visitor.visitWord(this);
   }
 }

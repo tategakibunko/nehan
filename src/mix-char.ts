@@ -3,6 +3,7 @@ import {
   LogicalSize,
   Font,
   TextEmphaData,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 // ligature
@@ -37,5 +38,9 @@ export class MixChar implements ICharacter {
 
   public toString(): string {
     return this.text;
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    return visitor.visitMixChar(this);
   }
 }

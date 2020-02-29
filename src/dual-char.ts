@@ -1,4 +1,5 @@
 import {
+  Font,
   ICharacter,
   BoxEnv,
   LogicalSize,
@@ -6,8 +7,8 @@ import {
   ParenType,
   KinsokuPos,
   TextEmphaData,
+  ILogicalNodeEvaluator,
 } from "./public-api";
-import { Font } from "./font";
 
 // characters that depend on writing-mode(vertical or horizontal).
 export class DualChar implements ICharacter {
@@ -74,5 +75,12 @@ export class DualChar implements ICharacter {
 
   public toString(): string {
     return this.text;
+  }
+
+  public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    if (this.kerning) {
+      return visitor.visitDualCharKern(this);
+    }
+    return visitor.visitDualChar(this);
   }
 }
