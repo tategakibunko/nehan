@@ -86,6 +86,8 @@ export class Font {
     ].join(" ");
   }
 
+  // computed value of line-height is ${float} or ${number}px format.
+  // so this getter returns correct px value after css loading of this element.
   public get lineExtent(): number {
     if (this.lineHeight.indexOf("px") >= 0) {
       return Utils.atoi(this.lineHeight);

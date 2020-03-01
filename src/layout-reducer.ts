@@ -77,7 +77,7 @@ export class RubyReducer implements ILayoutReducer {
     const extent = rb.size.extent + rt.size.extent;
     const size = new LogicalSize({ measure, extent });
     const text = rb.text;
-    const rubyNode = new LogicalRubyNode(size, text, rb, rt);
+    const rubyNode = new LogicalRubyNode(context.env, size, text, rb, rt);
     return LayoutResult.logicalNode('ruby', rubyNode);
   }
 }
@@ -100,7 +100,9 @@ export class LineReducer implements ILayoutReducer {
 
   visit(context: FlowFormatContext): LayoutResult {
     const measure = context.cursorPos.start;
-    const extent = Math.max(context.env.font.lineExtent, ...context.inlineNodes.map(node => node.extent));
+    const maxLineExtent = Math.max(context.env.font.lineExtent, ...context.inlineNodes.map(node => node.env.font.lineExtent));
+    const maxChildExtent = Math.max(maxLineExtent, ...context.inlineNodes.map(node => node.extent));
+    const extent = Math.max(maxLineExtent, maxChildExtent);
     const size = new LogicalSize({ measure, extent });
     const pos = context.lineHeadPos;
     const children = context.inlineNodes;
@@ -185,7 +187,7 @@ export class TableCellsReducer implements ILayoutReducer {
     const size = new LogicalSize({ measure, extent });
     const pos = LogicalCursorPos.zero;
     const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
-    const block = new LogicalTableCellsNode(size, pos, text, context.cells);
+    const block = new LogicalTableCellsNode(context.env, size, pos, text, context.cells);
     console.log("[%s] reduceTableCells:", context.name, block);
     return LayoutResult.logicalNode("table-cells", block);
   }

@@ -10,6 +10,7 @@ import {
 } from './public-api'
 
 export interface ILogicalNode {
+  env: BoxEnv;
   measure: number;
   extent: number;
   text: string;
@@ -64,6 +65,7 @@ export class LogicalRubyNode implements ILogicalNode {
   public children: any[] = [];
 
   constructor(
+    public env: BoxEnv,
     public size: LogicalSize,
     public text: string,
     public rb: LogicalInlineNode,
@@ -138,6 +140,7 @@ export class LogicalBlockNode implements ILogicalNode {
 
 export class LogicalTableCellsNode implements ILogicalNode {
   constructor(
+    public env: BoxEnv,
     public size: LogicalSize,
     public pos: LogicalCursorPos,
     public text: string,

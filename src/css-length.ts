@@ -119,6 +119,21 @@ export class CssLength {
     return Config.defaultFontSize;
   }
 
+  /*
+    [Notice]
+    Note that computed value of 'line-height' is '${number}px' | '${float}'.
+
+    Suppose that font-size is '10px'.
+
+    If line-height is '2em', it's calculated to 20px, and children inherit line-height '20px'(as number)
+    If line-height is '2.0', is's calculated to 20px, and children inherit line-height '2.0'(as string)
+
+    So we have to keep 'line-height' string-typed.
+
+    [Example]
+    element1.computedValue.getProperty("line-height") => '2.0'
+    element2.computedValue.getProperty("line-height") => '16px'
+  */
   static computeLineHeight(element: HtmlElement, directValue?: string): string {
     const value = directValue || CssCascade.getValue(element, "line-height");
     if (value === "normal") {

@@ -497,14 +497,6 @@ export class CssSpecifiedInlineValueLoader implements NodeEffector {
 export class CssComputedValueLoader implements NodeEffector {
   static instance = new CssComputedValueLoader();
 
-  /*
-    Suppose that font-size is '10px'.
-    
-    If line-height is '2em', it's calculated to 20px, and children inherit line-height '20px'(as number)
-    If line-height is '2.0', is's calculated to 20px, and children inherit line-height '2.0'(as string)
-
-    So we have to keep 'line-height' string-typed.
-  */
   private getLineHeightString(element: HtmlElement): string {
     return CssLength.computeLineHeight(element);
   }
