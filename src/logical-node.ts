@@ -3,6 +3,7 @@ import {
   LogicalBorder,
   ILogicalNodeEvaluator,
   LogicalCursorPos,
+  LogicalLineMetrics,
   LogicalBoxEdge,
   LogicalSize,
   PhysicalSize,
@@ -45,7 +46,7 @@ export class LogicalLineNode implements ILogicalNode {
     public size: LogicalSize,
     public text: string,
     public children: ILogicalNode[],
-    public lineBoxStartOffset: number,
+    public metrics: LogicalLineMetrics,
   ) { }
 
   get measure(): number {

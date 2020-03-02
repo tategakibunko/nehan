@@ -1,6 +1,7 @@
 import {
   LogicalSize,
   LogicalCursorPos,
+  LogicalLineMetrics,
   LayoutResult,
   LogicalNodeType,
   FlowFormatContext,
@@ -99,21 +100,31 @@ export class LineReducer implements ILayoutReducer {
   private constructor() { }
 
   visit(context: FlowFormatContext): LayoutResult {
-    const measure = context.cursorPos.start;
-    const maxLineExtent = Math.max(context.env.font.lineExtent, ...context.inlineNodes.map(node => node.env.font.lineExtent));
-    const maxChildExtent = Math.max(maxLineExtent, ...context.inlineNodes.map(node => node.extent));
-    const extent = Math.max(maxLineExtent, maxChildExtent);
-    const size = new LogicalSize({ measure, extent });
-    const pos = context.lineHeadPos;
     const children = context.inlineNodes;
+    const measure = context.cursorPos.start;
+    const maxFont = children.reduce((acm, node) => {
+      return node.env.font.size > acm.size ? node.env.font : acm;
+    }, context.env.font);
+    const baseLineExtent = maxFont.size;
+    const maxLineExtent = maxFont.lineExtent;
+    const maxChildExtent = Math.max(maxLineExtent, ...children.map(node => node.extent));
+    const maxBeforeFontExtent = maxFont.size + (maxLineExtent - maxFont.size) / 2;
+    const maxBeforeDecoratedExtent = Math.max(
+      ...children.filter(node => !node.env.textEmphasis.isNone()).map(node => node.env.font.size * 2)
+    );
+    const lineExtent = Math.max(maxLineExtent, maxChildExtent);
+    const size = new LogicalSize({ measure, extent: lineExtent });
+    const pos = context.lineHeadPos;
     const text = context.inlineText;
     const startOffset = context.lineBoxStartOffset;
-    const lineNode = new LogicalLineNode(context.env, pos, size, text, children, startOffset);
+    const beforeOffset = Math.max(0, maxBeforeDecoratedExtent - maxBeforeFontExtent);
+    const metrics: LogicalLineMetrics = { baseLineExtent, lineExtent, startOffset, beforeOffset };
+    const lineNode = new LogicalLineNode(context.env, pos, size, text, children, metrics);
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    console.log("[%s] reduceLine(%s) at %s(startOffset:%d), %o",
-      context.name, size.toString(), pos.toString(), startOffset, lineNode.text);
+    console.log("[%s] reduceLine(%s) at %s(metrics:%o), %o",
+      context.name, size.toString(), pos.toString(), metrics, lineNode.text);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
