@@ -2,7 +2,6 @@ import {
   Font,
   LogicalSize,
   LogicalCursorPos,
-  LogicalBaseLineMetrics,
   LogicalBorder,
   WritingMode,
   NativeStyleMap,
@@ -37,10 +36,6 @@ class LogicalCssEvaluator implements ILogicalCssEvaluator {
     throw new Error("must be overrided");
   }
 
-  visitLineMetrics(metrics: LogicalBaseLineMetrics): NativeStyleMap {
-    throw new Error("must be overrided");
-  }
-
   visitLogicalBorder(border: LogicalBorder): NativeStyleMap {
     const css = new NativeStyleMap();
     border.width.getPhysicalEdge(this.writingMode).items.forEach(item => {
@@ -72,14 +67,6 @@ export class VertCssEvaluator extends LogicalCssEvaluator {
     const beforeProp = this.writingMode.isVerticalRl() ? "right" : "left";
     css.set("top", pos.start + "px");
     css.set(beforeProp, pos.before + "px");
-    return css;
-  }
-
-  visitLineMetrics(metrics: LogicalBaseLineMetrics): NativeStyleMap {
-    const css = new NativeStyleMap();
-    if (metrics.blockOffset > 0) {
-      css.set("right", Math.floor(metrics.blockOffset / 2) + "px");
-    }
     return css;
   }
 }
