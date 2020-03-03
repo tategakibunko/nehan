@@ -131,7 +131,8 @@ export class LineReducer implements ILayoutReducer {
     const metrics = new LogicalBaseLineMetrics(baseLineExtent, startOffset, baseLineOffset);
     const lastNode = (context.nodeHistory.length > 0) ? context.nodeHistory[context.nodeHistory.length - 1] : null;
     const isContinuousLine = lastNode && lastNode instanceof LogicalLineNode;
-    // if not continuous line, set before offset to line.
+    // If it's not continuous line, but it has some decorated text like empha, ruby,
+    // set before offset to line to prevent line from overflow of parent block.
     if (maxFont.size < maxDecoratedExtent && !isContinuousLine) {
       pos.before += baseLineOffset;
       context.cursorPos.before += baseLineOffset;
