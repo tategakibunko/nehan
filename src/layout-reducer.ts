@@ -1,7 +1,7 @@
 import {
   LogicalSize,
   LogicalCursorPos,
-  LogicalLineMetrics,
+  LogicalBaseLineMetrics,
   LayoutResult,
   LogicalNodeType,
   FlowFormatContext,
@@ -100,25 +100,42 @@ export class LineReducer implements ILayoutReducer {
   private constructor() { }
 
   visit(context: FlowFormatContext): LayoutResult {
+    const pos = context.lineHeadPos;
     const children = context.inlineNodes;
-    const measure = context.cursorPos.start;
+    const decoratedChildren = children.filter(node => !node.env.textEmphasis.isNone() || node instanceof LogicalRubyNode);
+    // const measure = context.cursorPos.start;
+    const measure = context.maxMeasure;
     const maxFont = children.reduce((acm, node) => {
       return node.env.font.size > acm.size ? node.env.font : acm;
     }, context.env.font);
-    const baseLineExtent = maxFont.size;
+    const maxDecoratedExtent = Math.max(
+      ...decoratedChildren.map(node => {
+        if (!node.env.textEmphasis.isNone()) {
+          return node.env.font.size * 2;
+        }
+        if (node instanceof LogicalRubyNode) {
+          return node.extent;
+        }
+        return 0;
+      })
+    );
+    const baseLineExtent = Math.max(maxFont.size, maxDecoratedExtent);
     const maxLineExtent = maxFont.lineExtent;
     const maxChildExtent = Math.max(maxLineExtent, ...children.map(node => node.extent));
-    const maxBeforeFontExtent = maxFont.size + (maxLineExtent - maxFont.size) / 2;
-    const maxBeforeDecoratedExtent = Math.max(
-      ...children.filter(node => !node.env.textEmphasis.isNone()).map(node => node.env.font.size * 2)
-    );
+    const baseLineOffset = (maxLineExtent - maxFont.size) / 2;
     const lineExtent = Math.max(maxLineExtent, maxChildExtent);
     const size = new LogicalSize({ measure, extent: lineExtent });
-    const pos = context.lineHeadPos;
     const text = context.inlineText;
     const startOffset = context.lineBoxStartOffset;
-    const beforeOffset = Math.max(0, maxBeforeDecoratedExtent - maxBeforeFontExtent);
-    const metrics: LogicalLineMetrics = { baseLineExtent, lineExtent, startOffset, beforeOffset };
+    // Adjustment size of sticking out from lineExtent by text-emphasis or ruby.
+    const metrics = new LogicalBaseLineMetrics(baseLineExtent, startOffset, baseLineOffset);
+    const lastNode = (context.nodeHistory.length > 0) ? context.nodeHistory[context.nodeHistory.length - 1] : null;
+    const isContinuousLine = lastNode && lastNode instanceof LogicalLineNode;
+    // if not continuous line, set before offset to line.
+    if (maxFont.size < maxDecoratedExtent && !isContinuousLine) {
+      pos.before += baseLineOffset;
+      context.cursorPos.before += baseLineOffset;
+    }
     const lineNode = new LogicalLineNode(context.env, pos, size, text, children, metrics);
     context.cursorPos.start = 0;
     context.inlineNodes = [];

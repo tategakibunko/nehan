@@ -2,6 +2,7 @@ import {
   Font,
   LogicalSize,
   LogicalCursorPos,
+  LogicalBaseLineMetrics,
   LogicalBorder,
   WritingMode,
   NativeStyleMap,
@@ -12,6 +13,7 @@ export interface ILogicalCssEvaluator {
   visitSize: (size: LogicalSize) => NativeStyleMap;
   visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
   visitLogicalBorder: (border: LogicalBorder) => NativeStyleMap;
+  visitLineMetrics: (metrics: LogicalBaseLineMetrics) => NativeStyleMap;
 }
 
 class LogicalCssEvaluator implements ILogicalCssEvaluator {
@@ -33,6 +35,10 @@ class LogicalCssEvaluator implements ILogicalCssEvaluator {
   }
 
   visitPos(pos: LogicalCursorPos): NativeStyleMap {
+    throw new Error("must be overrided");
+  }
+
+  visitLineMetrics(metrics: LogicalBaseLineMetrics): NativeStyleMap {
     throw new Error("must be overrided");
   }
 
@@ -69,6 +75,14 @@ export class VertCssEvaluator extends LogicalCssEvaluator {
     css.set(beforeProp, pos.before + "px");
     return css;
   }
+
+  visitLineMetrics(metrics: LogicalBaseLineMetrics): NativeStyleMap {
+    const css = new NativeStyleMap();
+    if (metrics.blockOffset > 0) {
+      css.set("right", Math.floor(metrics.blockOffset / 2) + "px");
+    }
+    return css;
+  }
 }
 
 export class HoriCssEvaluator extends LogicalCssEvaluator {
@@ -83,6 +97,14 @@ export class HoriCssEvaluator extends LogicalCssEvaluator {
     const css = new NativeStyleMap();
     css.set("top", pos.before + "px");
     css.set("left", pos.start + "px");
+    return css;
+  }
+
+  visitLineMetrics(metrics: LogicalBaseLineMetrics): NativeStyleMap {
+    const css = new NativeStyleMap();
+    if (metrics.blockOffset > 0) {
+      css.set("bottom", metrics.blockOffset + "px");
+    }
     return css;
   }
 }

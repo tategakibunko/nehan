@@ -135,23 +135,18 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.className = "nehan-line";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
+    node.style.background = "skyblue";
     node.style.overflow = "visible";
     node.style.top = lineNode.pos.before + "px";
-    // node.style.left = (lineNode.pos.start + lineNode.metrics.startOffset) + "px";
-    node.style.background = "skyblue";
-    node.style.width = "100%";
-    node.style.height = lineNode.size.extent + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    // lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
 
     const baseLineNode = document.createElement("div");
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
-    if (lineNode.metrics.beforeOffset > 0) {
-      baseLineNode.style.top = -lineNode.metrics.beforeOffset + "px";
-    }
-    baseLineNode.style.left = (lineNode.pos.start + lineNode.metrics.startOffset) + "px";
-    baseLineNode.style.height = lineNode.metrics.baseLineExtent + "px";
+    baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
+    baseLineNode.style.height = lineNode.baseline.extent + "px";
+    lineNode.baseline.acceptCssEvaluator(this.cssVisitor).applyTo(baseLineNode.style);
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
