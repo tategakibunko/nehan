@@ -88,7 +88,10 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitDualCharKern(dualChar: DualChar): HTMLElement | Node {
-    return document.createTextNode(dualChar.text);
+    const node = document.createElement("span");
+    node.style.marginLeft = "-0.5em";
+    node.appendChild(document.createTextNode(dualChar.text));
+    return node;
   }
 
   visitSmpUniChar(uniChar: SmpUniChar): HTMLElement | Node {
@@ -104,7 +107,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitText(textNode: LogicalTextNode): HTMLElement {
-    console.log("visitText:%o", textNode.text);
     const node = document.createElement("div");
     node.className = "text";
     node.style.display = "inline-block";
@@ -121,11 +123,14 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitRuby(rubyNode: LogicalRubyNode): HTMLElement {
+    console.log("visitRuby:", rubyNode);
     const node = document.createElement("div");
-    const rbNode = this.visitInline(rubyNode.rb);
-    const rtNode = this.visitInline(rubyNode.rt);
+    const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
+    const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
     node.appendChild(rtNode);
     node.appendChild(rbNode);
+    node.style.display = "inline-block";
+    rubyNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
 
@@ -161,6 +166,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     console.log("visitInline:", inlineNode.text);
     const node = document.createElement("span");
     node.style.marginRight = inlineNode.edge.margin.end + "px";
+    inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });

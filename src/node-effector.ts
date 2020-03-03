@@ -266,7 +266,8 @@ export class RubyNormalizer implements NodeEffector {
     element.childNodes.filter(node => node.isTextElement()).forEach(textNode => {
       const rb = doc.createElement("rb");
       rb.parent = element;
-      rb.appendChild(textNode);
+      // rb.appendChild(textNode);
+      rb.appendChild(doc.createTextNode(textNode.textContent));
       element.replaceChild(rb, textNode);
     });
     // console.log("normalized ruby:", element);
