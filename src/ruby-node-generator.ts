@@ -27,6 +27,7 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
 
   private *createGenerator(): Generator<LayoutResult> {
     console.group("ruby");
+    debugger;
     let childElement: HtmlElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);

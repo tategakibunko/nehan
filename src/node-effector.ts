@@ -1,5 +1,6 @@
 import {
   Config,
+  CssLoader,
   HtmlElement,
   Display,
   CssLength,
@@ -263,12 +264,16 @@ export class RubyNormalizer implements NodeEffector {
       }
       return true;
     });
-    element.childNodes.filter(node => node.isTextElement()).forEach(textNode => {
+    element.childNodes = element.childNodes.map(node => {
+      if (!node.isTextElement()) {
+        return node;
+      }
       const rb = doc.createElement("rb");
       rb.parent = element;
-      // rb.appendChild(textNode);
-      rb.appendChild(doc.createTextNode(textNode.textContent));
-      element.replaceChild(rb, textNode);
+      rb.appendChild(node);
+      // rb is dynamically created, so we must load style at this point.
+      CssLoader.load(rb);
+      return rb;
     });
     // console.log("normalized ruby:", element);
   }
