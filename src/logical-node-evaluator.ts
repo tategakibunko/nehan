@@ -135,7 +135,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.className = "nehan-line";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
-    node.style.background = "skyblue";
+    node.style.background = "pink";
     node.style.overflow = "visible";
     node.style.top = lineNode.pos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -144,6 +144,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const baseLineNode = document.createElement("div");
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
+    baseLineNode.style.background = "skyblue";
     baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
     baseLineNode.style.width = "100%";
     baseLineNode.style.height = lineNode.baseline.extent + "px";
