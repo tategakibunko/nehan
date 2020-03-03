@@ -13,7 +13,6 @@ export interface ILogicalCssEvaluator {
   visitSize: (size: LogicalSize) => NativeStyleMap;
   visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
   visitLogicalBorder: (border: LogicalBorder) => NativeStyleMap;
-  visitLineMetrics: (metrics: LogicalBaseLineMetrics) => NativeStyleMap;
 }
 
 class LogicalCssEvaluator implements ILogicalCssEvaluator {
@@ -97,14 +96,6 @@ export class HoriCssEvaluator extends LogicalCssEvaluator {
     const css = new NativeStyleMap();
     css.set("top", pos.before + "px");
     css.set("left", pos.start + "px");
-    return css;
-  }
-
-  visitLineMetrics(metrics: LogicalBaseLineMetrics): NativeStyleMap {
-    const css = new NativeStyleMap();
-    if (metrics.blockOffset > 0) {
-      css.set("bottom", metrics.blockOffset + "px");
-    }
     return css;
   }
 }

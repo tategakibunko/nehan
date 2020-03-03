@@ -103,7 +103,6 @@ export class LineReducer implements ILayoutReducer {
     const pos = context.lineHeadPos;
     const children = context.inlineNodes;
     const decoratedChildren = children.filter(node => !node.env.textEmphasis.isNone() || node instanceof LogicalRubyNode);
-    // const measure = context.cursorPos.start;
     const measure = context.maxMeasure;
     const maxFont = children.reduce((acm, node) => {
       return node.env.font.size > acm.size ? node.env.font : acm;
@@ -128,7 +127,7 @@ export class LineReducer implements ILayoutReducer {
     const text = context.inlineText;
     const startOffset = context.lineBoxStartOffset;
     // Adjustment size of sticking out from lineExtent by text-emphasis or ruby.
-    const metrics = new LogicalBaseLineMetrics(baseLineExtent, startOffset, baseLineOffset);
+    const metrics = { extent: baseLineExtent, startOffset, blockOffset: baseLineOffset };
     const lastNode = (context.nodeHistory.length > 0) ? context.nodeHistory[context.nodeHistory.length - 1] : null;
     const isContinuousLine = lastNode && lastNode instanceof LogicalLineNode;
     // If it's not continuous line, but it has some decorated text like empha, ruby,

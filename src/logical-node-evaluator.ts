@@ -145,8 +145,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
     baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
+    baseLineNode.style.width = "100%";
     baseLineNode.style.height = lineNode.baseline.extent + "px";
-    lineNode.baseline.acceptCssEvaluator(this.cssVisitor).applyTo(baseLineNode.style);
+    baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
