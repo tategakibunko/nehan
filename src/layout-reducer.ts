@@ -1,4 +1,5 @@
 import {
+  ILogicalNode,
   LogicalSize,
   LogicalCursorPos,
   LogicalBaseLineMetrics,
@@ -17,6 +18,7 @@ import {
   TableCellsFormatContext,
   LogicalReNode,
   PhysicalSize,
+  ReplacedElement,
 } from './public-api'
 
 export interface ILayoutReducer {
@@ -99,49 +101,56 @@ export class LineReducer implements ILayoutReducer {
   static instance = new LineReducer();
   private constructor() { }
 
+  isDecoratedText(node: ILogicalNode): boolean {
+    return !node.env.textEmphasis.isNone() || node instanceof LogicalRubyNode;
+  }
+
+  getDecoratedExtent(node: ILogicalNode): number {
+    if (!node.env.textEmphasis.isNone()) {
+      return node.env.font.size * 2;
+    }
+    if (node instanceof LogicalRubyNode) {
+      return node.extent;
+    }
+    return 0;
+  }
+
   visit(context: FlowFormatContext): LayoutResult {
     const pos = context.lineHeadPos;
-    const children = context.inlineNodes;
-    const decoratedChildren = children.filter(node => !node.env.textEmphasis.isNone() || node instanceof LogicalRubyNode);
     const measure = context.maxMeasure;
-    const maxFont = children.reduce((acm, node) => {
-      return node.env.font.size > acm.size ? node.env.font : acm;
-    }, context.env.font);
-    const maxDecoratedExtent = Math.max(
-      ...decoratedChildren.map(node => {
-        if (!node.env.textEmphasis.isNone()) {
-          return node.env.font.size * 2;
-        }
-        if (node instanceof LogicalRubyNode) {
-          return node.extent;
-        }
-        return 0;
-      })
-    );
-    const baseLineExtent = Math.max(maxFont.size, maxDecoratedExtent);
+    const children = context.inlineNodes;
+    const reChildren = children.filter(node => ReplacedElement.isReplacedElement(node.env.element));
+    const decoratedChildren = children.filter(node => this.isDecoratedText(node));
+    const maxFont = children.reduce((acm, node) => node.env.font.size > acm.size ? node.env.font : acm, context.env.font);
+    const maxDecoratedExtent = Math.max(...decoratedChildren.map(node => this.getDecoratedExtent(node)));
+    const maxReExtent = Math.max(...reChildren.map(node => node.extent));
+    const baseLineExtent = Math.max(maxFont.size, maxDecoratedExtent, maxReExtent);
     const maxLineExtent = maxFont.lineExtent;
     const maxChildExtent = Math.max(maxLineExtent, ...children.map(node => node.extent));
     const baseLineOffset = (maxLineExtent - maxFont.size) / 2;
-    const lineExtent = Math.max(maxLineExtent, maxChildExtent);
-    const size = new LogicalSize({ measure, extent: lineExtent });
+    const lineBodyExtent = Math.max(maxLineExtent, maxChildExtent);
+    const extent = (lineBodyExtent === maxReExtent) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
+    const size = new LogicalSize({ measure, extent });
     const text = context.inlineText;
-    const startOffset = context.lineBoxStartOffset;
-    // Adjustment size of sticking out from lineExtent by text-emphasis or ruby.
-    const metrics = { extent: baseLineExtent, startOffset, blockOffset: baseLineOffset };
+    const baseline = {
+      extent: baseLineExtent,
+      startOffset: context.lineBoxStartOffset,
+      blockOffset: baseLineOffset
+    };
     const lastNode = (context.nodeHistory.length > 0) ? context.nodeHistory[context.nodeHistory.length - 1] : null;
     const isContinuousLine = lastNode && lastNode instanceof LogicalLineNode;
     // If it's not continuous line, but it has some decorated text like empha, ruby,
     // set before offset to line to prevent line from overflow of parent block.
-    if (maxFont.size < maxDecoratedExtent && !isContinuousLine) {
+    if (baseLineExtent === maxDecoratedExtent && !isContinuousLine) {
       pos.before += baseLineOffset;
       context.cursorPos.before += baseLineOffset;
     }
-    const lineNode = new LogicalLineNode(context.env, pos, size, text, children, metrics);
+    const lineNode = new LogicalLineNode(context.env, pos, size, text, children, baseline);
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    console.log("[%s] reduceLine(%s) at %s(metrics:%o), %o",
-      context.name, size.toString(), pos.toString(), metrics, lineNode.text);
+    console.log("[%s] reduceLine(%s) at %s(baseline:%o), %o",
+      context.name, size.toString(), pos.toString(), baseline, lineNode.text);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }

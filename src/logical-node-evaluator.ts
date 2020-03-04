@@ -58,6 +58,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     emphaNode.appendChild(document.createTextNode(empha.text));
     textNode.appendChild(document.createTextNode(char.text));
     node.style.display = "inline-block";
+    node.style.textAlign = "center";
     node.appendChild(emphaNode);
     node.appendChild(textNode);
     return node;
@@ -130,6 +131,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.appendChild(rtNode);
     node.appendChild(rbNode);
     node.style.display = "inline-block";
+    node.style.textAlign = "center";
     rubyNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
@@ -179,6 +181,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     node.style.display = "inline-block";
     node.style.marginRight = inlineNode.edge.margin.end + "px";
+    inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
@@ -234,6 +237,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockImage(img: LogicalReNode): HTMLElement {
+    console.log("visitBlockImage");
     const node = document.createElement("img");
     node.style.position = "absolute";
     node.style.width = img.physicalSize.width + "px";
@@ -245,7 +249,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineImage(img: LogicalReNode): HTMLElement {
+    console.log("visitInlineImage");
     const node = document.createElement("img");
+    node.style.display = "inline";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
     node.src = img.env.element.getAttribute("src") || "";
