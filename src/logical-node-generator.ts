@@ -33,6 +33,7 @@ import {
   TableRowInitializer,
   InlineBlockReducer,
   ReFormatContext,
+  FirstLineFormatContext,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
 import { ReNodeGenerator } from './re-node-generator';
@@ -60,7 +61,8 @@ export class LogicalNodeGenerator {
       const lexer = parentContext.env.textCombineUpright.isNone() ? new TextLexer(text) : new TcyLexer(text);
       const nextElement = element.nextSibling;
       const generator = new TextNodeGenerator(
-        new TextFormatContext(parentContext.env, lexer, parentContext)
+        // new TextFormatContext(parentContext.env, lexer, parentContext)
+        new TextFormatContext(lexer, parentContext)
       );
       return { generator, nextElement };
     }
@@ -100,6 +102,15 @@ export class LogicalNodeGenerator {
       const nextElement = element.nextSibling;
       return { generator, nextElement };
     }
+    // ::first-line
+    if (element.tagName === PseudoElementTagName.FIRST_LINE) {
+      const generator = new BlockNodeGenerator(
+        new FirstLineFormatContext(env, parentContext)
+      );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
+    // ::marker
     if (element.tagName === PseudoElementTagName.MARKER) {
       const generator = new InlineNodeGenerator(
         new FlowFormatContext(env, parentContext),

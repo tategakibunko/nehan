@@ -36,16 +36,16 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
 
   private *createGenerator(): Generator<LayoutResult> {
     console.group("(text)");
-    const env = this.context.env;
-    const font = this.context.env.font;
     const lexer = this.context.lexer;
-    const empha = env.isTextEmphasized() ? env.textEmphasis.textEmphaData : undefined;
-    const lineExtent = this.context.env.font.lineExtent;
-    const isVertical = env.isTextVertical();
-    const metricsArgs = { font, isVertical, empha };
 
     while (this.context.lexer.hasNext()) {
-      while (this.context.restExtent < lineExtent) {
+      const font = this.context.env.font;
+      const empha = this.context.env.isTextEmphasized() ? this.context.env.textEmphasis.textEmphaData : undefined;
+      const isVertical = this.context.env.isTextVertical();
+      // Note that metrics can be updated when parent is <::first-line>.
+      const metricsArgs = { font, isVertical, empha };
+
+      while (this.context.restExtent < font.lineExtent) {
         yield LayoutResult.pageBreak;
       }
       if (this.context.isLineHead()) {
@@ -71,13 +71,13 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       if (token instanceof DualChar && token.isKernEnable()) {
         const prev = lexer.peek(-2); // lexer pos is already added by getNext, so get prev of prev.
         if (prev instanceof DualChar && this.kerning.set(token, prev)) {
-          token.setMetrics(metricsArgs); // calc metrics again.
+          token.setMetrics(metricsArgs); // calc metrics again
         }
       }
       if (this.context.restMeasure < token.size.measure) {
         if (token instanceof Word) {
           // word-break: break-all
-          if (env.wordBreak.isBreakAll()) {
+          if (this.context.env.wordBreak.isBreakAll()) {
             lexer.pushBack();
             this.context.addCharacter(token.breakWord(this.context.restMeasure));
           } else if (this.context.isLineHead()) { // line-head, but too long word.

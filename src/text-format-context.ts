@@ -1,5 +1,6 @@
 import {
   BoxEnv,
+  TextLexer,
   LayoutResult,
   LogicalCursorPos,
   ICharacter,
@@ -7,8 +8,8 @@ import {
   ILayoutReducer,
   IFlowRootFormatContext,
   IFlowFormatContext,
+  FlowFormatContext,
 } from './public-api'
-import { TextLexer } from './text-lexer';
 
 export class TextFormatContext implements ILayoutFormatContext {
   public name = "(text)";
@@ -17,13 +18,17 @@ export class TextFormatContext implements ILayoutFormatContext {
   public text: string;
 
   constructor(
-    public env: BoxEnv,
+    // public env: BoxEnv,
     public lexer: TextLexer,
     public parent: ILayoutFormatContext,
   ) {
     this.cursorPos = LogicalCursorPos.zero;
     this.characters = [];
     this.text = "";
+  }
+
+  public get env(): BoxEnv {
+    return this.parent.env;
   }
 
   public get globalPos(): LogicalCursorPos {

@@ -27,8 +27,8 @@ export interface ILogicalNodeEvaluator {
   visitSpaceChar: (spaceChar: SpaceChar) => HTMLElement | Node;
   visitHalfChar: (halfChar: HalfChar) => HTMLElement | Node;
   visitMixChar: (mixChar: MixChar) => HTMLElement | Node;
-  visitDualChar: (dchar: DualChar) => HTMLElement | Node;
-  visitDualCharKern: (dchar: DualChar) => HTMLElement | Node;
+  visitDualChar: (dualChar: DualChar) => HTMLElement | Node;
+  visitDualCharKern: (dualChar: DualChar) => HTMLElement | Node;
   visitSmpUniChar: (uniChar: SmpUniChar) => HTMLElement | Node;
   visitTcy: (tcy: Tcy) => HTMLElement | Node;
   visitWord: (word: Word) => HTMLElement | Node;
@@ -37,11 +37,11 @@ export interface ILogicalNodeEvaluator {
   visitInline: (inlineNode: LogicalInlineNode) => HTMLElement;
   visitInlineEmpha: (inlineNode: LogicalInlineNode) => HTMLElement;
   visitLine: (lineNode: LogicalLineNode) => HTMLElement;
-  visitBlock: (...args: any[]) => HTMLElement;
-  visitInlineBlock: (...args: any[]) => HTMLElement;
-  visitTableCells: (...args: any[]) => HTMLElement;
-  visitBlockImage: (...args: any[]) => HTMLElement;
-  visitInlineImage: (...args: any[]) => HTMLElement;
+  visitBlock: (blockNode: LogicalBlockNode) => HTMLElement;
+  visitInlineBlock: (blockNode: LogicalBlockNode) => HTMLElement;
+  visitTableCells: (tableCellsNode: LogicalTableCellsNode) => HTMLElement;
+  visitBlockImage: (imgNode: LogicalReNode) => HTMLElement;
+  visitInlineImage: (imgNode: LogicalReNode) => HTMLElement;
 }
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
@@ -68,8 +68,8 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return document.createTextNode(refChar.text);
   }
 
-  visitRefCharEmpha(refChar: RefChar): HTMLElement | Node {
-    return document.createTextNode(refChar.text);
+  visitRefCharEmpha(refChar: RefChar, empha: TextEmphaData): HTMLElement | Node {
+    return this.visitCharEmpha(refChar as Char, empha);
   }
 
   visitSpaceChar(spaceChar: SpaceChar): HTMLElement | Node {
@@ -175,7 +175,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  // TODO: if empha enable for this inline, use other wrapper element instead of "span".
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
     console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");

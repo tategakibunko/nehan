@@ -83,6 +83,10 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.maxExtent - this.cursorPos.before;
   }
 
+  public isLineCreated(): boolean {
+    return this.nodeHistory.some(node => node instanceof LogicalLineNode);
+  }
+
   private get listMarkerOffset(): number {
     if (!this.listMarker) {
       return 0;
@@ -90,8 +94,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (this.env.listStyle.isPositionInside()) {
       return 0;
     }
-    const isFirstLine = !this.nodeHistory.some(node => node instanceof LogicalLineNode);
-    return isFirstLine ? 0 : this.listMarker.measure;
+    return !this.isLineCreated() ? 0 : this.listMarker.measure;
   }
 
   private get floatStartOffset(): number {
