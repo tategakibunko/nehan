@@ -242,12 +242,12 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.cursorPos.before += marginSize;
   }
 
-  public addLine(block: LogicalLineNode) {
-    console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + block.size.extent}`);
-    this.blockNodes.push(block);
-    this.nodeHistory.push(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
+  public addLine(line: LogicalLineNode) {
+    console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
+    this.blockNodes.push(line);
+    this.nodeHistory.push(line);
+    this.cursorPos.before += line.extent;
+    this.text += line.text;
   }
 
   public addBlock(block: LogicalBlockNode) {
