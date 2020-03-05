@@ -34,8 +34,9 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     textNode.appendChild(document.createTextNode(char.text));
     emphaNode.appendChild(document.createTextNode(empha.text));
     node.style.textAlign = "center";
-    node.appendChild(emphaNode);
+    node.style.display = "flex";
     node.appendChild(textNode);
+    node.appendChild(emphaNode);
     return node;
   }
 
@@ -184,7 +185,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");
     node.className = "nehan7-empha";
-    node.style.display = "flex";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
