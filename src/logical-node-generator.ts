@@ -66,7 +66,7 @@ export class LogicalNodeGenerator {
       );
       return { generator, nextElement };
     }
-    CssLoader.loadDynamic(element);
+    CssLoader.loadDynamic(element, parentContext);
     const env = new BoxEnv(element);
     const display = env.display;
 

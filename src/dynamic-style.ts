@@ -2,7 +2,6 @@ import {
   DynamicStyleCallback,
   DynamicStyleContext,
   HtmlElement,
-  FlowContext,
   CssParser,
   CssStyleDeclaration
 } from "./public-api";
