@@ -13,7 +13,6 @@ import {
   LogicalInlineNode,
   LogicalLineNode,
   LogicalBlockNode,
-  ILogicalCssEvaluator,
   LogicalTableCellsNode,
   LogicalReNode,
   TextEmphaData,
