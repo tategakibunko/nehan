@@ -31,8 +31,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     const emphaNode = document.createElement("div");
     const textNode = document.createElement("div");
-    emphaNode.appendChild(document.createTextNode(empha.text));
     textNode.appendChild(document.createTextNode(char.text));
+    emphaNode.appendChild(document.createTextNode(empha.text));
     node.style.textAlign = "center";
     node.appendChild(emphaNode);
     node.appendChild(textNode);
@@ -100,8 +100,10 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitWord(word: Word): HTMLElement | Node {
     const node = document.createElement("div");
     node.className = "nehan7-word";
+    node.style.writingMode = "vertical-rl";
     node.style.textOrientation = "sideways";
-    return document.createTextNode(word.text);
+    node.appendChild(document.createTextNode(word.text));
+    return node;
   }
 
   visitText(textNode: LogicalTextNode): HTMLElement {
@@ -129,8 +131,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
-    node.appendChild(rtNode);
     node.appendChild(rbNode);
+    node.appendChild(rtNode);
     node.className = "nehan7-ruby";
     node.style.display = "flex";
     node.style.textAlign = "center";
@@ -146,7 +148,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.position = "absolute";
     node.style.background = "lightblue";
     node.style.overflow = "visible";
-    node.style.top = lineNode.pos.before + "px";
+    node.style.right = lineNode.pos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
 
@@ -155,9 +157,9 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.style.position = "absolute";
     baseLineNode.style.background = "aliceblue";
     baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
-    baseLineNode.style.width = "100%";
-    baseLineNode.style.height = lineNode.baseline.extent + "px";
-    baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
+    baseLineNode.style.height = "100%";
+    baseLineNode.style.width = lineNode.baseline.extent + "px";
+    baseLineNode.style.left = lineNode.baseline.blockOffset + "px";
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
