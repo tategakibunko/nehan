@@ -66,9 +66,9 @@ export class LogicalNodeGenerator {
       );
       return { generator, nextElement };
     }
-    const display = Display.load(element);
     CssLoader.loadDynamic(element);
     const env = new BoxEnv(element);
+    const display = env.display;
 
     if (element.tagName === "img" || element.tagName === "video") {
       const generator = new ReNodeGenerator(

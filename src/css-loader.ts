@@ -45,7 +45,7 @@ export class CssLoader {
     }
   }
 
-  static loadDynamic(element: HtmlElement, parentCtx?: FlowContext): boolean {
+  static loadDynamic(element: HtmlElement, parentCtx?: any): boolean {
     if (!element.style.hasDynamicStyles()) {
       return false;
     }

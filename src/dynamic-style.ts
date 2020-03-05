@@ -18,7 +18,7 @@ export class DynamicStyle {
     this.callback = callback;
   }
 
-  public call(element: HtmlElement, parentCtx?: FlowContext): CssStyleDeclaration {
+  public call(element: HtmlElement, parentCtx?: any): CssStyleDeclaration {
     const callbackCtx = new DynamicStyleContext({
       selector: this.selector,
       name: this.name,

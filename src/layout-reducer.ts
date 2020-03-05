@@ -2,7 +2,6 @@ import {
   ILogicalNode,
   LogicalSize,
   LogicalCursorPos,
-  LogicalBaseLineMetrics,
   LayoutResult,
   LogicalNodeType,
   FlowFormatContext,

@@ -2,14 +2,13 @@ import {
   Utils,
   HtmlElement,
   CssLength,
-  FlowContext
 } from "./public-api";
 
 export interface DynamicStyleContextValue {
-  selector: string,
-  name: string,
-  element: HtmlElement,
-  parentContext?: FlowContext
+  selector: string;
+  name: string;
+  element: HtmlElement;
+  parentContext?: any;
 }
 
 // dynamic context is called after CssLoader::loadSpecifiedStyle,
@@ -19,7 +18,7 @@ export class DynamicStyleContext {
   public selector: string;
   public name: string;
   public element: HtmlElement;
-  public parentContext?: FlowContext;
+  public parentContext?: any;
 
   constructor(value: DynamicStyleContextValue) {
     this.selector = value.selector;

@@ -472,7 +472,7 @@ export class CssSpecifiedValueLoader implements NodeEffector {
 // Load dynamic (specified) value before layouting.
 // (CssStyleDeclaration, element) => CssStyleDeclaration
 export class CssSpecifiedDynamicValueLoader implements NodeEffector {
-  constructor(private parentCxt?: FlowContext) { }
+  constructor(private parentCxt?: any) { }
 
   visit(element: HtmlElement) {
     // get dynamic specified values from style-declaration (already matched and stored by CssSpecifiedValueLoader).
