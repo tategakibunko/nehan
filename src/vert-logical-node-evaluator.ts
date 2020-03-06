@@ -50,7 +50,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitSpaceChar(spaceChar: SpaceChar): HTMLElement | Node {
     const node = document.createElement("div");
-    node.className = "nehan7-space";
     node.style.height = spaceChar.size.extent + "px";
     // return document.createTextNode(spaceChar.text);
     return node;
@@ -58,7 +57,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitHalfChar(halfChar: HalfChar): HTMLElement | Node {
     const node = document.createElement("div");
-    node.className = "nehan7-half-char";
     node.appendChild(document.createTextNode(halfChar.text));
     node.style.textAlign = "center";
     return node;
@@ -66,14 +64,12 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitMixChar(mixChar: MixChar): HTMLElement | Node {
     const node = document.createElement("div");
-    node.className = "nehan7-mix-char";
     node.appendChild(document.createTextNode(mixChar.text));
     return node;
   }
 
   visitDualChar(dualChar: DualChar): HTMLElement | Node {
     const node = document.createElement("div");
-    node.className = "nehan7-dual-char";
     node.style.writingMode = "vertical-rl";
     node.appendChild(document.createTextNode(dualChar.text));
     return node;
@@ -92,7 +88,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitTcy(tcy: Tcy): HTMLElement | Node {
     const node = document.createElement("div");
-    node.className = "nehan7-tcy";
     node.style.textCombineUpright = "upright";
     node.appendChild(document.createTextNode(tcy.text));
     return node;
@@ -100,7 +95,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitWord(word: Word): HTMLElement | Node {
     const node = document.createElement("div");
-    node.className = "nehan7-word";
     node.style.writingMode = "vertical-rl";
     node.style.textOrientation = "sideways";
     node.appendChild(document.createTextNode(word.text));
@@ -109,7 +103,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitText(textNode: LogicalTextNode): HTMLElement {
     const node = document.createElement("div");
-    node.className = "nehan7-text";
     node.style.display = "inline-block";
     node.style.lineHeight = "1";
     textNode.children.forEach(char => {
@@ -134,7 +127,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
     node.appendChild(rbNode);
     node.appendChild(rtNode);
-    node.className = "nehan7-ruby";
     node.style.display = "flex";
     node.style.textAlign = "center";
     rubyNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -144,7 +136,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitLine(lineNode: LogicalLineNode): HTMLElement {
     console.log("visitLine:", lineNode.text);
     const node = document.createElement("div");
-    node.className = "nehan7-line";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     node.style.background = "lightblue";
@@ -154,7 +145,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
 
     const baseLineNode = document.createElement("div");
-    baseLineNode.className = "nehan7-baseline";
     baseLineNode.style.position = "absolute";
     baseLineNode.style.background = "aliceblue";
     baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
@@ -164,10 +154,9 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
+      const childNode = child.acceptEvaluator(this);
       const textBodyExtent = child instanceof LogicalReNode ? child.extent : child.env.font.size;
       const baselineGap = Math.floor((lineNode.baseline.textBodyExtent - textBodyExtent) / 2);
-      const childNode = child.acceptEvaluator(this);
-      console.log("baselineGap for %s is %d", child.text, baselineGap);
       if (baselineGap === 0) {
         baseLineNode.appendChild(childNode);
       } else {
@@ -183,7 +172,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
     console.log("visitInline:", inlineNode.text);
     const node = document.createElement("div");
-    node.className = "nehan7-inline";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
@@ -195,7 +183,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
     console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");
-    node.className = "nehan7-empha";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
@@ -207,7 +194,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineBlock(blockNode: LogicalBlockNode): HTMLElement {
     console.log("visitInlineBlock:", blockNode);
     const node = document.createElement("div");
-    node.className = `nehan7-${blockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
     node.style.position = "relative";
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -223,7 +209,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
     const background: any = { "body": "wheat", "p": "orange", "div": "pink" };
-    node.className = `nehan7-${blockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
     node.style.background = background[blockNode.env.element.tagName] || "wheat";
     node.style.position = blockNode.env.element.tagName === "body" ? "relative" : "absolute";
@@ -239,7 +224,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitTableCells(tableCells: LogicalTableCellsNode): HTMLElement {
     const node = document.createElement("div");
-    node.className = "nehan7-cells";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -254,7 +238,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlockImage(img: LogicalReNode): HTMLElement {
     console.log("visitBlockImage");
     const node = document.createElement("img");
-    node.className = "nehan7-block-image";
     node.style.position = "absolute";
     node.style.display = "block";
     node.style.width = img.physicalSize.width + "px";
@@ -268,7 +251,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineImage(img: LogicalReNode): HTMLElement {
     console.log("visitInlineImage");
     const node = document.createElement("img");
-    node.className = "nehan7-inline-image";
     node.style.display = "block";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
