@@ -1,5 +1,6 @@
 import {
   FloatRegion,
+  LogicalCursorPos,
   LogicalSize,
   LogicalFloat,
   LogicalClear,
@@ -47,10 +48,13 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
       const rect = float.isStart() ?
         this.floatRegion.pushStart(this.cursorPos.before, floatSize, contextMeasure) :
         this.floatRegion.pushEnd(this.cursorPos.before, floatSize, contextMeasure);
-      block.pos = rect.pos;
+      block.pos = new LogicalCursorPos({
+        start: rect.start + block.env.edge.margin.start,
+        before: rect.before + block.env.edge.margin.before
+      });
       this.floatNodes.push(block);
-      // console.log("addFloat(size=%o, pos=%o)", floatSize, block.pos);
-      // console.log("spaceMeasure at %d = %d", block.pos.before, this.floatRegion.getSpaceMeasureAt(block.pos.before));
+      console.log("addFloat(size=%o, pos=%o)", floatSize, block.pos);
+      console.log("spaceMeasure at %d = %d", block.pos.before, this.floatRegion.getSpaceMeasureAt(block.pos.before));
     } catch (err) {
       console.error(err);
     }
