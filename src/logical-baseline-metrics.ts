@@ -1,6 +1,10 @@
+import {
+  LogicalSize
+} from "./public-api";
+
 export interface LogicalBaseLineMetrics {
-  extent: number;
-  textBodyExtent: number;
+  size: LogicalSize;
+  textBodySize: LogicalSize;
   startOffset: number;
   blockOffset: number;
 }

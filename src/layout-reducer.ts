@@ -133,8 +133,8 @@ export class LineReducer implements ILayoutReducer {
     const size = new LogicalSize({ measure, extent });
     const text = context.inlineText;
     const baseline = {
-      extent: baseLineExtent,
-      textBodyExtent,
+      size: new LogicalSize({ measure, extent: baseLineExtent }),
+      textBodySize: new LogicalSize({ measure: context.cursorPos.start, extent: textBodyExtent }),
       startOffset: context.lineBoxStartOffset,
       blockOffset: baseLineOffset
     };

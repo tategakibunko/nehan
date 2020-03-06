@@ -77,6 +77,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitDualCharKern(dualChar: DualChar): HTMLElement | Node {
     const node = document.createElement("div");
+    node.style.writingMode = "vertical-rl";
     node.style.marginTop = "-0.5em";
     node.appendChild(document.createTextNode(dualChar.text));
     return node;
@@ -150,14 +151,14 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     // baseLineNode.style.background = "aliceblue";
     baseLineNode.style.top = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
     baseLineNode.style.height = "100%";
-    baseLineNode.style.width = lineNode.baseline.extent + "px";
+    baseLineNode.style.width = lineNode.baseline.size.extent + "px";
     baseLineNode.style.left = lineNode.baseline.blockOffset + "px";
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       const textBodyExtent = child instanceof LogicalReNode ? child.extent : child.env.font.size;
-      const baselineGap = Math.floor((lineNode.baseline.textBodyExtent - textBodyExtent) / 2);
+      const baselineGap = Math.floor((lineNode.baseline.textBodySize.extent - textBodyExtent) / 2);
       if (baselineGap === 0) {
         baseLineNode.appendChild(childNode);
       } else {

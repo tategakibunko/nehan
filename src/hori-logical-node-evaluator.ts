@@ -128,7 +128,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.style.background = "aliceblue";
     baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
     baseLineNode.style.width = "100%";
-    baseLineNode.style.height = lineNode.baseline.extent + "px";
+    baseLineNode.style.height = lineNode.baseline.size.extent + "px";
     baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
 
     node.appendChild(baseLineNode);
