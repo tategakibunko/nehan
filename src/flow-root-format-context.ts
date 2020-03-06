@@ -50,7 +50,8 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
         this.floatRegion.pushEnd(this.cursorPos.before, floatSize, contextMeasure);
       block.pos = new LogicalCursorPos({
         start: rect.start + block.env.edge.margin.start,
-        before: rect.before + block.env.edge.margin.before
+        // before: rect.before + block.env.edge.margin.before
+        before: rect.before
       });
       this.floatNodes.push(block);
       console.log("addFloat(size=%o, pos=%o)", floatSize, block.pos);
