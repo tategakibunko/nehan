@@ -1,10 +1,12 @@
 import {
+  Config,
   Font,
   LogicalSize,
   LogicalCursorPos,
   LogicalBorder,
   WritingMode,
   NativeStyleMap,
+  CssStyleDeclaration,
 } from './public-api'
 
 export interface ILogicalCssEvaluator {
@@ -12,10 +14,22 @@ export interface ILogicalCssEvaluator {
   visitSize: (size: LogicalSize) => NativeStyleMap;
   visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
   visitLogicalBorder: (border: LogicalBorder) => NativeStyleMap;
+  visitUnmanagedCssProps: (style: CssStyleDeclaration) => NativeStyleMap;
 }
 
 class LogicalCssEvaluator implements ILogicalCssEvaluator {
   constructor(public writingMode: WritingMode) { }
+
+  visitUnmanagedCssProps(style: CssStyleDeclaration): NativeStyleMap {
+    const css = new NativeStyleMap();
+    Config.unmanagedCssProps.forEach(prop => {
+      const unmanagedValue = style.getPropertyValue(prop);
+      if (unmanagedValue !== null) {
+        css.set(prop, unmanagedValue);
+      }
+    });
+    return css;
+  }
 
   visitFont(font: Font): NativeStyleMap {
     const css = new NativeStyleMap();

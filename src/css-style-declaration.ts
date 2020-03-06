@@ -6,6 +6,8 @@ import {
   CssParser,
   CssProp,
   CssText,
+  ILogicalCssEvaluator,
+  NativeStyleMap,
 } from "./public-api";
 
 // Original abstraction of CSSStyleDeclaration in nehan.js
@@ -90,5 +92,9 @@ export class CssStyleDeclaration {
       const dynamicStyle = dynamic.call(element, parentCtx) || {};
       return style.mergeFrom(dynamicStyle);
     }, new CssStyleDeclaration());
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitUnmanagedCssProps(this);
   }
 }
