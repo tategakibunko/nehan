@@ -108,6 +108,9 @@ export class BlockMargin {
     }
     const float = LogicalFloat.load(element);
     const prevElement = element.previousElementSibling;
+    if (prevElement && !LogicalFloat.load(prevElement).isNone()) {
+      return 0;
+    }
     if (!float.isNone() || !prevElement) {
       return parseInt(element.computedStyle.getPropertyValue("margin-before") || "0", 10);
     }
