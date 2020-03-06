@@ -130,6 +130,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.display = "flex";
     node.style.textAlign = "center";
     rubyNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    rubyNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
 
@@ -174,6 +175,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
@@ -185,6 +187,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
@@ -198,6 +201,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.position = "relative";
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
@@ -246,6 +250,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.src = img.env.element.getAttribute("src") || "";
     img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     img.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
 
@@ -257,6 +262,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.height = img.physicalSize.height + "px";
     node.src = img.env.element.getAttribute("src") || "";
     img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
 }
