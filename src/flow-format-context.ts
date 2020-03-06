@@ -110,6 +110,16 @@ export class FlowFormatContext implements IFlowFormatContext {
     return startEdgeSize > floatStartPos ? startEdgeSize : floatStartPos - startEdgeSize;
   }
 
+  private get textAlignOffset(): number {
+    if (this.env.textAlign.isEnd()) {
+      return this.maxMeasure - this.textStartPos;
+    }
+    if (this.env.textAlign.isCenter()) {
+      return Math.floor((this.maxMeasure - this.textStartPos) / 2);
+    }
+    return 0;
+  }
+
   private get textStartPos(): number {
     let startPos = this.cursorPos.start;
     startPos += this.listMarkerOffset;
@@ -130,11 +140,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     let offset = 0;
     offset += this.floatStartOffset;
     offset += this.listMarkerOffset;
-    if (this.env.textAlign.isEnd()) {
-      offset += this.maxMeasure - this.textStartPos;
-    } else if (this.env.textAlign.isCenter()) {
-      offset += Math.floor((this.maxMeasure - this.textStartPos) / 2);
-    }
+    offset += this.textAlignOffset;
     return offset;
   }
 
@@ -194,8 +200,8 @@ export class FlowFormatContext implements IFlowFormatContext {
   // localPos = position from start-before-corner of border box.
   // Convert inline cursor(0 ~ this.maxMeasure) to (delta ~ delta + this.maxMeasure)
   // where delta = this.inlineMargin + this.contextBoxEdge.measure.
-  // Note that contextBoxEdge.measure is added by this.inlineMargin in this logic,
-  // but contextBoxEdge.extent is added to cursorPos.before by generator logic(see block-node-generator.ts).
+  // Note that contextBoxEdge.measure and inline margin is added to start-pos in this logic,
+  // but contextBoxEdge.extent and block margin is added to before-pos in generator logic(see block-node-generator.ts).
   public get localPos(): LogicalCursorPos {
     return new LogicalCursorPos({
       start: this.cursorPos.start + this.inlineMargin + this.contextBoxEdge.borderBoxMeasure,
