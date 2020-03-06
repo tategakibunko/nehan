@@ -130,6 +130,11 @@ export class FlowFormatContext implements IFlowFormatContext {
     let offset = 0;
     offset += this.floatStartOffset;
     offset += this.listMarkerOffset;
+    if (this.env.textAlign.isEnd()) {
+      offset += this.maxMeasure - this.textStartPos;
+    } else if (this.env.textAlign.isCenter()) {
+      offset += Math.floor((this.maxMeasure - this.textStartPos) / 2);
+    }
     return offset;
   }
 
