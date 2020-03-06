@@ -164,7 +164,18 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
-      baseLineNode.appendChild(child.acceptEvaluator(this));
+      const textBodyExtent = child instanceof LogicalReNode ? child.extent : child.env.font.size;
+      const baselineGap = Math.floor((lineNode.baseline.textBodyExtent - textBodyExtent) / 2);
+      const childNode = child.acceptEvaluator(this);
+      console.log("baselineGap for %s is %d", child.text, baselineGap);
+      if (baselineGap === 0) {
+        baseLineNode.appendChild(childNode);
+      } else {
+        const offsetNode = document.createElement("div");
+        offsetNode.style.marginLeft = baselineGap + "px";
+        offsetNode.appendChild(childNode);
+        baseLineNode.appendChild(offsetNode);
+      }
     });
     return node;
   }

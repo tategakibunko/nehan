@@ -128,12 +128,13 @@ export class LineReducer implements ILayoutReducer {
     const maxChildExtent = Math.max(maxLineExtent, ...children.map(node => node.extent));
     const baseLineOffset = (maxLineExtent - maxFont.size) / 2;
     const lineBodyExtent = Math.max(maxLineExtent, maxChildExtent);
+    const textBodyExtent = Math.max(maxFont.size, maxReExtent);
     const extent = (lineBodyExtent === maxReExtent) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
     const size = new LogicalSize({ measure, extent });
     const text = context.inlineText;
     const baseline = {
       extent: baseLineExtent,
-      maxFontSize: maxFont.size,
+      textBodyExtent,
       startOffset: context.lineBoxStartOffset,
       blockOffset: baseLineOffset
     };

@@ -1,6 +1,6 @@
 export interface LogicalBaseLineMetrics {
   extent: number;
-  maxFontSize: number;
+  textBodyExtent: number;
   startOffset: number;
   blockOffset: number;
 }
