@@ -2,7 +2,7 @@ export namespace Config {
   // Language setting.
   export let lang = "ja";
 
-  export let engineVersion = 7;
+  export let engineVersion: number | undefined = 7;
 
   // Tag name of page root.
   export let pageRootTagName = "body";

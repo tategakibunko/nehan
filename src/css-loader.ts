@@ -39,7 +39,7 @@ export class CssLoader {
 
     // [TODO] Deprecated in the future
     // set collapse value
-    if (Config.engineVersion < 7 && Config.edgeSkipTags.indexOf(element.tagName) < 0) {
+    if ((!Config.engineVersion || Config.engineVersion < 7) && Config.edgeSkipTags.indexOf(element.tagName) < 0) {
       MarginCollapse.collapse(element);
     }
   }
