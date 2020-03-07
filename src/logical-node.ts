@@ -108,6 +108,9 @@ export class LogicalInlineNode implements ILogicalNode {
     if (!this.env.textEmphasis.isNone()) {
       return visitor.visitInlineEmpha(this);
     }
+    if (this.env.element.tagName === "a") {
+      return visitor.visitInlineLink(this);
+    }
     return visitor.visitInline(this);
   }
 }

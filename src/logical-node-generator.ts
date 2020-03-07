@@ -24,6 +24,7 @@ import {
   TableCellsGenerator,
   TableCellsFormatContext,
   ListItemInitializer,
+  PseudoElement,
   PseudoElementTagName,
   ListMarkerReducer,
   TableReducer,
@@ -35,6 +36,8 @@ import {
   ReFormatContext,
   FirstLineFormatContext,
   PageRootFormatContext,
+  InlineLinkReducer,
+  BlockLinkReducer,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
 import { ReNodeGenerator } from './re-node-generator';
@@ -77,8 +80,15 @@ export class LogicalNodeGenerator {
     CssLoader.loadDynamic(element, parentContext);
     const env = new BoxEnv(element);
     const display = env.display;
-
-    if (element.tagName === "img" || element.tagName === "video") {
+    if (element.tagName === "a") {
+      const context = new FlowFormatContext(env, parentContext);
+      const generator = display.isInlineLevel() ?
+        new InlineNodeGenerator(context, InlineLinkReducer.instance) :
+        new BlockNodeGenerator(context, BlockLinkReducer.instance);
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
+    if (PseudoElement.isPseudoElement(element)) {
       const generator = new ReNodeGenerator(
         new ReFormatContext(env, parentContext)
       );

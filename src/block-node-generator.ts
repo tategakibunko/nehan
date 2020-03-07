@@ -146,6 +146,10 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           this.context.addBlock(value.body);
         } else if (value.type === 're-inline') {
           this.context.addInlineBlock(value.body);
+        } else if (value.type === 'inline-link') {
+          this.context.addInlineLink(value.body);
+        } else if (value.type === 'block-link') {
+          this.context.addBlockLink(value.body);
         }
       } // while(true)
       childElement = childGen.nextElement;

@@ -234,5 +234,13 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
+
+  visitInlineLink(link: LogicalInlineNode): HTMLElement {
+    throw new Error("todo");
+  }
+
+  visitBlockLink(link: LogicalBlockNode): HTMLElement {
+    throw new Error("todo");
+  }
 }
 

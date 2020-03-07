@@ -375,6 +375,14 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineText += inline.text;
   }
 
+  public addInlineLink(link: LogicalInlineNode) {
+    this.addInline(link);
+  }
+
+  public addBlockLink(link: LogicalBlockNode) {
+    this.addBlock(link);
+  }
+
   // Note that marker text is not included to inlineText.
   public addListMarker(marker: LogicalInlineNode) {
     this.inlineNodes.push(marker);

@@ -41,5 +41,7 @@ export interface ILogicalNodeEvaluator {
   visitTableCells: (tableCellsNode: LogicalTableCellsNode) => HTMLElement;
   visitBlockImage: (imgNode: LogicalReNode) => HTMLElement;
   visitInlineImage: (imgNode: LogicalReNode) => HTMLElement;
+  visitInlineLink: (link: LogicalInlineNode) => HTMLElement;
+  visitBlockLink: (link: LogicalBlockNode) => HTMLElement;
 }
 

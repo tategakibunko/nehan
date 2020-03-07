@@ -243,6 +243,14 @@ export class TableRowReducer extends BlockReducer {
   static instance = new TableRowReducer("table-row");
 }
 
+export class BlockLinkReducer extends BlockReducer {
+  static instance = new BlockReducer("block-link");
+}
+
+export class InlineLinkReducer extends InlineReducer {
+  static instance = new InlineReducer("inline-link");
+}
+
 export class ReReducer implements ILayoutReducer {
   static instance = new ReReducer();
   private constructor() { }

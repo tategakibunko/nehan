@@ -50,7 +50,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitSpaceChar(spaceChar: SpaceChar): HTMLElement | Node {
     const node = document.createElement("div");
-    node.style.height = spaceChar.size.extent + "px";
+    node.style.height = spaceChar.size.measure + "px";
     // return document.createTextNode(spaceChar.text);
     return node;
   }
@@ -59,6 +59,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     node.appendChild(document.createTextNode(halfChar.text));
     node.style.textAlign = "center";
+    node.style.width = "1em";
     return node;
   }
 
@@ -267,5 +268,25 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
+  }
+
+  visitInlineLink(link: LogicalInlineNode): HTMLElement {
+    console.log("visitInlineLink:", link.text);
+    const node = document.createElement("a");
+    const href = link.env.element.getAttribute("href");
+    if (href) {
+      node.setAttribute("href", href);
+    }
+    node.style.marginBottom = link.edge.margin.end + "px";
+    link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(this));
+    });
+    return node;
+  }
+
+  visitBlockLink(link: LogicalBlockNode): HTMLElement {
+    throw new Error("todo");
   }
 }

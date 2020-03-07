@@ -18,7 +18,9 @@ export type LogicalNodeType =
   'ruby' |
   'ruby-text' |
   'ruby-base' |
-  'list-marker'
+  'list-marker' |
+  'inline-link' |
+  'block-link'
 
 export type LayoutResultType =
   'skip' |
