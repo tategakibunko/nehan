@@ -51,7 +51,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitSpaceChar(spaceChar: SpaceChar): HTMLElement | Node {
     const node = document.createElement("div");
     node.style.height = spaceChar.size.measure + "px";
-    // return document.createTextNode(spaceChar.text);
     return node;
   }
 
