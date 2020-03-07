@@ -59,7 +59,12 @@ export class LogicalNodeGenerator {
     return new BlockNodeGenerator(rootContext, RootBlockReducer.instance);
   }
 
-  static createTextLexer(text: string, env: BoxEnv): TextLexer {
+  static createTextLexer(element: HtmlElement, env: BoxEnv): TextLexer {
+    // console.log("createTextLexer:", element, env);
+    let text = element.textContent;
+    if (!env.whiteSpace.isPre()) {
+      text = text.replace(/^\n+/g, "");
+    }
     const lexer = env.textCombineUpright.isNone() ? new TextLexer(text) : new TcyLexer(text);
     if (env.textOrientation.isUpright()) {
       lexer.uprightTokens();
@@ -69,8 +74,7 @@ export class LogicalNodeGenerator {
 
   static createChild(element: HtmlElement, parentContext: ILayoutFormatContext): ChildGenerator {
     if (element.isTextElement()) {
-      const text = element.textContent;
-      const lexer = this.createTextLexer(text, parentContext.env);
+      const lexer = this.createTextLexer(element, parentContext.env);
       const nextElement = element.nextSibling;
       const generator = new TextNodeGenerator(
         new TextFormatContext(lexer, parentContext)
