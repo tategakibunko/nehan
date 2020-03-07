@@ -134,8 +134,8 @@ export class CssParser {
   */
   static parseDeclarationBlock(selector: string, declrBlock: CssDeclarationBlock): CssStyleDeclaration {
     return Object.keys(declrBlock).reduce((acm, prop) => {
-      let objValue = declrBlock[prop];
-      let cssProp = new CssProp(prop);
+      const objValue = declrBlock[prop];
+      const cssProp = new CssProp(prop);
 
       // [example]
       // "color":"red"
@@ -151,24 +151,24 @@ export class CssParser {
         // [example]
         // "!dynamic": function(ctx) => { ... }
         if (cssProp.isDynamicStyleProp()) {
-          let name = cssProp.getDynamicStylePropName();
-          let callback = objValue as DynamicStyleCallback;
+          const name = cssProp.getDynamicStylePropName();
+          const callback = objValue as DynamicStyleCallback;
           return acm.addDynamicStyle(new DynamicStyle(selector, name, callback));
         }
         // [example]
         // "@oncreate": function(ctx) => { ... }
         if (cssProp.isDomCallback()) {
-          let name = cssProp.getDomCallbackName();
-          let callback = objValue as DomCallbackValue;
+          const name = cssProp.getDomCallbackName();
+          const callback = objValue as DomCallbackValue;
           return acm.addDomCallback(new DomCallback(selector, name, callback));
         }
         // [example]
         // "font-size": function(ctx) => { return "1.5em" }
         // If macro, just call and set.
-        let macro = new CssMacro(objValue as CssMacroValue);
-        let macroValue = macro.call(selector);
+        const macro = new CssMacro(objValue as CssMacroValue);
+        const macroValue = macro.call(selector);
         if (macroValue !== "") {
-          let cssText = new CssText({ prop: cssProp.value, value: macroValue });
+          const cssText = new CssText({ prop: cssProp.value, value: macroValue });
           return acm.setProperty(cssProp.value, cssText.value);
         }
       }

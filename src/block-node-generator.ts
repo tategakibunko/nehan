@@ -71,6 +71,12 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         this.context.addLine(line.body); // never overflows!
       }
       this.context.inlineMargin = InlineMargin.getMarginFromParentBlock(childElement);
+      const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
+      this.context.child = childGen.generator;
+      const clear = LogicalClear.load(childElement);
+      if (!clear.isNone()) {
+        this.context.flowRoot.clearFloat(clear);
+      }
       const beforeMargin = BlockMargin.getMarginFromLastBlock(childElement);
       if (beforeMargin > 0) {
         this.context.addBlockMarginEdge("before", beforeMargin);
@@ -78,12 +84,6 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       }
       while (this.context.restExtent < beforeMargin) {
         yield isPageRoot ? this.context.acceptLayoutReducer(this.blockReducer) : LayoutResult.pageBreak;
-      }
-      const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
-      this.context.child = childGen.generator;
-      const clear = LogicalClear.load(childElement);
-      if (!clear.isNone()) {
-        this.context.flowRoot.clearFloat(clear);
       }
       while (true) {
         // Before yielding child generator, resume suspended generators if it exists.

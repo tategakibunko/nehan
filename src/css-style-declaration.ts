@@ -7,6 +7,7 @@ import {
   CssProp,
   CssText,
   ILogicalCssEvaluator,
+  ILogicalNode,
   NativeStyleMap,
 } from "./public-api";
 
@@ -33,7 +34,10 @@ export class CssStyleDeclaration {
       this.domCallbacks.length === 0;
   }
 
-  public callDomCallbacks(box: LogicalBox, dom: HTMLElement) {
+  // [TODO]
+  // To keep backward compatibility, we use 'any' type for box argument.
+  // But this must be updated to ILogicalNode in the future.
+  public callDomCallbacks(box: any, dom: HTMLElement) {
     this.domCallbacks.forEach(callback => callback.call(box, dom));
   }
 
@@ -52,8 +56,8 @@ export class CssStyleDeclaration {
     }, this);
   }
 
-  public addDynamicStyle(dynamic_style: DynamicStyle): CssStyleDeclaration {
-    this.dynamicStyles.push(dynamic_style);
+  public addDynamicStyle(dynamicStyle: DynamicStyle): CssStyleDeclaration {
+    this.dynamicStyles.push(dynamicStyle);
     return this;
   }
 

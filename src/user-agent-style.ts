@@ -286,6 +286,7 @@ export const UserAgentStyles: CssRules = {
   },
   "li::marker": {
     "margin-end": "0.5em",
+    /*
     "!dynamic": (context: DynamicStyleContext) => {
       let parent_ctx = context.parentContext;
       if (!parent_ctx) {
@@ -312,6 +313,7 @@ export const UserAgentStyles: CssRules = {
         "text-combine-upright": text_combine_upright
       };
     }
+    */
   },
   "link": {
     "display": "none"

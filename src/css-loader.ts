@@ -1,14 +1,13 @@
 import {
   HtmlElement,
-  FlowContext,
   Config,
   MarginCollapse,
   CssSpecifiedValueLoader,
   CssSpecifiedInlineValueLoader,
+  CssSpecifiedDynamicValueLoader,
   CssComputedValueLoader,
   CssUsedRegionLoader,
 } from "./public-api";
-import { CssSpecifiedDynamicValueLoader } from "./node-effector";
 
 export class CssLoader {
   static loadAll(element: HtmlElement) {
@@ -40,7 +39,7 @@ export class CssLoader {
 
     // [TODO] Deprecated in the future
     // set collapse value
-    if (Config.edgeSkipTags.indexOf(element.tagName) < 0) {
+    if (Config.engineVersion < 7 && Config.edgeSkipTags.indexOf(element.tagName) < 0) {
       MarginCollapse.collapse(element);
     }
   }
