@@ -7,7 +7,6 @@ import {
   CssRule,
   CssCascade,
   CssParser,
-  FlowContext,
   LogicalEdgeDirections,
   LogicalBorderRadius,
   PseudoElement,

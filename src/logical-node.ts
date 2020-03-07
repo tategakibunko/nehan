@@ -135,6 +135,9 @@ export class LogicalBlockNode implements ILogicalNode {
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     const display = this.env.display;
+    if (this.env.element.tagName === "a") {
+      return visitor.visitBlockLink(this);
+    }
     if (display.isInlineBlockFlow() && !display.isTableCell()) {
       return visitor.visitInlineBlock(this);
     }

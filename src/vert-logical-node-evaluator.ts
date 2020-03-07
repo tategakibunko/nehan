@@ -214,9 +214,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
     console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
-    const background: any = { "body": "wheat", "p": "orange", "div": "pink" };
     node.style.boxSizing = "content-box";
-    node.style.background = background[blockNode.env.element.tagName] || "wheat";
     node.style.position = blockNode.env.element.tagName === "body" ? "relative" : "absolute";
     blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -286,6 +284,23 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockLink(link: LogicalBlockNode): HTMLElement {
-    throw new Error("todo");
+    console.log("visitBlockLink:", link);
+    const node = document.createElement("a");
+    const href = link.env.element.getAttribute("href");
+    if (href) {
+      node.setAttribute("href", href);
+    }
+    node.style.boxSizing = "content-box";
+    node.style.position = "absolute";
+    link.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.env.element.style.callDomCallbacks(link, node);
+    link.children.forEach(child => {
+      const childNode = child.acceptEvaluator(this);
+      node.appendChild(childNode);
+    });
+    return node;
   }
 }

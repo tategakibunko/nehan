@@ -49,7 +49,12 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitSpaceChar(spaceChar: SpaceChar): HTMLElement | Node {
-    return document.createTextNode(spaceChar.text);
+    console.log("visitSpaceChar:", spaceChar);
+    const node = document.createElement("span");
+    node.style.display = "inline-block";
+    node.style.width = spaceChar.size.measure + "px";
+    node.appendChild(document.createTextNode(spaceChar.text));
+    return node;
   }
 
   visitHalfChar(halfChar: HalfChar): HTMLElement | Node {
@@ -236,11 +241,40 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineLink(link: LogicalInlineNode): HTMLElement {
-    throw new Error("todo");
+    console.log("visitInlineLink:", link.text);
+    const node = document.createElement("a");
+    const href = link.env.element.getAttribute("href");
+    if (href) {
+      node.setAttribute("href", href);
+    }
+    node.style.marginRight = link.edge.margin.end + "px";
+    link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(this));
+    });
+    return node;
   }
 
   visitBlockLink(link: LogicalBlockNode): HTMLElement {
-    throw new Error("todo");
+    console.log("visitBlockLink:", link);
+    const node = document.createElement("a");
+    const href = link.env.element.getAttribute("href");
+    if (href) {
+      node.setAttribute("href", href);
+    }
+    node.style.boxSizing = "content-box";
+    node.style.position = "absolute";
+    link.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.env.element.style.callDomCallbacks(link, node);
+    link.children.forEach(child => {
+      const childNode = child.acceptEvaluator(this);
+      node.appendChild(childNode);
+    });
+    return node;
   }
 }
 
