@@ -213,18 +213,14 @@ export class Display {
     }
     // display of <a> is dynamically decided by it's first element.
     if (element.tagName === "a") {
-      return Display.loadDynamicDisplay(element, display);
+      const firstElement = element.firstElementChild;
+      if (!firstElement) {
+        return display;
+      }
+      CssLoader.load(firstElement);
+      return Display.load(firstElement);
     }
     return display;
-  }
-
-  static loadDynamicDisplay(element: HtmlElement, initValue: Display): Display {
-    const firstElement = element.firstElementChild;
-    if (!firstElement) {
-      return initValue;
-    }
-    CssLoader.load(firstElement);
-    return Display.load(firstElement);
   }
 
   public setBlockLevel() {
