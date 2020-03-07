@@ -1,4 +1,6 @@
 import {
+  Config,
+  ILayoutFormatContext,
   FloatRegion,
   LogicalCursorPos,
   LogicalSize,
@@ -13,10 +15,6 @@ import {
 export class FlowRootFormatContext extends FlowFormatContext implements IFlowRootFormatContext {
   public floatRegion?: FloatRegion;
   public floatNodes: ILogicalNode[] = [];
-
-  public get flowRoot(): IFlowRootFormatContext {
-    return this;
-  }
 
   public clearFloat(clear: LogicalClear) {
     if (!this.floatRegion) {

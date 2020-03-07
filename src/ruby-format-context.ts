@@ -9,6 +9,7 @@ import {
   FlowFormatContext,
   IFlowRootFormatContext,
   IFlowFormatContext,
+  PageRootFormatContext,
 } from './public-api'
 
 export class RubyChildFormatContext extends FlowFormatContext {
@@ -59,6 +60,10 @@ export class RubyFormatContext implements ILayoutFormatContext {
 
   public get lineHeadPos(): LogicalCursorPos {
     return this.parent.lineHeadPos;
+  }
+
+  public get pageRoot(): PageRootFormatContext {
+    return this.parent.pageRoot;
   }
 
   public get flowRoot(): IFlowRootFormatContext {

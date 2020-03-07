@@ -8,7 +8,7 @@ import {
   ILayoutReducer,
   IFlowRootFormatContext,
   IFlowFormatContext,
-  FlowFormatContext,
+  PageRootFormatContext,
 } from './public-api'
 
 export class TextFormatContext implements ILayoutFormatContext {
@@ -18,7 +18,6 @@ export class TextFormatContext implements ILayoutFormatContext {
   public text: string;
 
   constructor(
-    // public env: BoxEnv,
     public lexer: TextLexer,
     public parent: ILayoutFormatContext,
   ) {
@@ -45,6 +44,10 @@ export class TextFormatContext implements ILayoutFormatContext {
 
   public get lineHeadPos(): LogicalCursorPos {
     return this.parent.lineHeadPos;
+  }
+
+  public get pageRoot(): PageRootFormatContext {
+    return this.parent.pageRoot;
   }
 
   public get flowRoot(): IFlowRootFormatContext {

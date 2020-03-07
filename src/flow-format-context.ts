@@ -1,4 +1,5 @@
 import {
+  Config,
   BoxEnv,
   ContextBoxEdge,
   LogicalBlockNode,
@@ -15,6 +16,7 @@ import {
   ILogicalNode,
   IFlowFormatContext,
   IFlowRootFormatContext,
+  PageRootFormatContext,
 } from './public-api'
 
 export class FlowFormatContext implements IFlowFormatContext {
@@ -48,28 +50,36 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get inlineRoot(): IFlowFormatContext {
-    if (this.env.isBlockLevel()) {
-      return this;
-    }
-    let parent: ILayoutFormatContext | undefined = this.parent;
-    while (parent) {
-      if (parent.env.isBlockLevel()) {
-        return parent as IFlowFormatContext;
+    let ctx: ILayoutFormatContext | undefined = this;
+    while (ctx) {
+      if (ctx.env.isBlockLevel()) {
+        return ctx as IFlowFormatContext;
       }
-      parent = parent.parent;
+      ctx = ctx.parent;
     }
     throw new Error("inline root not found!");
   }
 
-  public get flowRoot(): IFlowRootFormatContext {
-    let parent: ILayoutFormatContext | undefined = this.parent;
-    while (parent) {
-      if (parent.env.display.isFlowRoot()) {
-        return parent as IFlowRootFormatContext;
+  public get pageRoot(): PageRootFormatContext {
+    let ctx: ILayoutFormatContext | undefined = this;
+    while (ctx) {
+      if (ctx instanceof PageRootFormatContext) {
+        return ctx;
       }
-      parent = parent.parent;
+      ctx = ctx.parent;
     }
-    throw new Error(`[${this.env.element.tagName}] flow root not found!`);
+    throw new Error(`[${this.env.element.tagName}] root context not found!`);
+  }
+
+  public get flowRoot(): IFlowRootFormatContext {
+    let ctx: ILayoutFormatContext | undefined = this;
+    while (ctx) {
+      if (ctx.env.display.isFlowRoot()) {
+        return ctx as IFlowRootFormatContext;
+      }
+      ctx = ctx.parent;
+    }
+    throw new Error(`[${this.env.element.tagName}] flow root context not found!`);
   }
 
   public acceptLayoutReducer(visitor: ILayoutReducer, ...args: any): LayoutResult {

@@ -38,7 +38,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
   protected *createGenerator(): Generator<LayoutResult> {
     console.group(`${this.context.name}`);
 
-    const isPageRoot = this.context.env.element.tagName === Config.pageRoot;
+    const isPageRoot = this.context.env.element.tagName === Config.pageRootTagName;
 
     if ((this.context.env.measure && this.context.env.measure <= 0) ||
       this.context.env.edge.borderBoxExtent > this.context.restExtent) {

@@ -34,6 +34,7 @@ import {
   InlineBlockReducer,
   ReFormatContext,
   FirstLineFormatContext,
+  PageRootFormatContext,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
 import { ReNodeGenerator } from './re-node-generator';
@@ -51,7 +52,7 @@ export interface ILogicalNodeGenerator {
 export class LogicalNodeGenerator {
   static createRoot(element: HtmlElement): ILogicalNodeGenerator {
     const rootEnv = new BoxEnv(element);
-    const rootContext = new FlowRootFormatContext(rootEnv);
+    const rootContext = new PageRootFormatContext(rootEnv);
     return new BlockNodeGenerator(rootContext, RootBlockReducer.instance);
   }
 

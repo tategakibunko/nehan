@@ -9,6 +9,7 @@ import {
   LogicalInlineNode,
   LogicalFloat,
   LogicalClear,
+  PageRootFormatContext,
 } from './public-api'
 
 export interface ILayoutFormatContext {
@@ -20,6 +21,7 @@ export interface ILayoutFormatContext {
   cursorPos: LogicalCursorPos;
   localPos: LogicalCursorPos;
   lineHeadPos: LogicalCursorPos;
+  pageRoot: PageRootFormatContext;
   flowRoot: IFlowRootFormatContext;
   inlineRoot: IFlowFormatContext;
   rootMeasure: number;
