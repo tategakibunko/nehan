@@ -89,7 +89,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitTcy(tcy: Tcy): HTMLElement | Node {
     const node = document.createElement("div");
-    node.style.textCombineUpright = "upright";
+    node.style.writingMode = "vertical-rl";
+    node.style.textCombineUpright = "all";
     node.appendChild(document.createTextNode(tcy.text));
     return node;
   }
