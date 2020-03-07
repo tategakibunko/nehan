@@ -29,11 +29,11 @@ export class LogicalBoxEdge {
   static load(element: HtmlElement): LogicalBoxEdge {
     // If page-root, ignore border and margin.
     // Because layout target of nehan is 'inside' of page-root content.
-    const is_root = element.tagName === Config.pageRootTagName;
+    const isRoot = element.tagName === Config.pageRootTagName;
     return new LogicalBoxEdge({
       padding: LogicalPadding.load(element),
-      border: is_root ? LogicalBorder.none : LogicalBorder.load(element),
-      margin: is_root ? LogicalMargin.none : LogicalMargin.load(element)
+      border: isRoot ? LogicalBorder.none : LogicalBorder.load(element),
+      margin: isRoot ? LogicalMargin.none : LogicalMargin.load(element)
     });
   }
 
