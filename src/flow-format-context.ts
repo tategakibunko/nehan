@@ -207,6 +207,13 @@ export class FlowFormatContext implements IFlowFormatContext {
     });
   }
 
+  public get autoContentBoxSize(): LogicalSize {
+    return new LogicalSize({
+      measure: this.maxMeasure,
+      extent: this.cursorPos.before - this.contextBoxEdge.borderWidth.extent
+    });
+  }
+
   // localPos = position from start-before-corner of border box.
   // Convert inline cursor(0 ~ this.maxMeasure) to (delta ~ delta + this.maxMeasure)
   // where delta = this.inlineMargin + this.contextBoxEdge.measure.

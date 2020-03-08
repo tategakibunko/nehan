@@ -174,6 +174,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
     // console.log("visitInline:", inlineNode.text);
     const node = document.createElement("div");
+    node.style.marginTop = inlineNode.edge.margin.start + "px";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -186,6 +187,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
     // console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");
+    node.style.marginTop = inlineNode.edge.margin.start + "px";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -200,6 +202,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     node.style.boxSizing = "content-box";
     node.style.position = "relative";
+    node.style.marginTop = blockNode.env.edge.margin.start + "px";
+    node.style.marginBottom = blockNode.env.edge.margin.end + "px";
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -260,6 +264,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.display = "block";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
+    node.style.marginTop = img.edge.margin.start + "px";
+    node.style.marginBottom = img.edge.margin.end + "px";
     node.src = img.env.element.getAttribute("src") || "";
     img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -277,6 +283,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     if (name) {
       node.setAttribute("name", name);
     }
+    node.style.marginTop = link.edge.margin.start + "px";
     node.style.marginBottom = link.edge.margin.end + "px";
     link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);

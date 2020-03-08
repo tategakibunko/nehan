@@ -146,6 +146,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
     // console.log("visitInline:", inlineNode.text);
     const node = document.createElement("span");
+    node.style.marginLeft = inlineNode.edge.margin.start + "px";
     node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -159,6 +160,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     // console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");
     node.style.display = "inline-block";
+    node.style.marginLeft = inlineNode.edge.margin.start + "px";
     node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -174,6 +176,8 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.display = "inline-block";
     node.style.boxSizing = "content-box";
     node.style.position = "relative";
+    node.style.marginLeft = blockNode.env.edge.margin.start + "px";
+    node.style.marginRight = blockNode.env.edge.margin.end + "px";
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -232,6 +236,8 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.display = "inline";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
+    node.style.marginLeft = img.edge.margin.start + "px";
+    node.style.marginRight = img.edge.margin.end + "px";
     node.src = img.env.element.getAttribute("src") || "";
     img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -249,6 +255,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     if (name) {
       node.setAttribute("name", name);
     }
+    node.style.marginLeft = link.edge.margin.start + "px";
     node.style.marginRight = link.edge.margin.end + "px";
     link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);

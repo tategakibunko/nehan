@@ -120,6 +120,7 @@ export class LogicalBlockNode implements ILogicalNode {
     public env: BoxEnv,
     public pos: LogicalCursorPos,
     public size: LogicalSize, // padding box size
+    public autoSize: LogicalSize, // size based with cursor pos
     public text: string,
     public border: LogicalBorder,
     public children: ILogicalNode[],

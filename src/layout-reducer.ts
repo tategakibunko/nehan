@@ -21,7 +21,7 @@ import {
 } from './public-api'
 
 export interface ILayoutReducer {
-  visit: (...args: any[]) => LayoutResult; // TODO
+  visit: (...args: any[]) => LayoutResult;
 }
 
 export class TextReducer implements ILayoutReducer {
@@ -162,13 +162,14 @@ export class BlockReducer implements ILayoutReducer {
   visit(context: FlowFormatContext): LayoutResult {
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
     const size = context.contentBoxSize;
+    const autoSize = context.autoContentBoxSize;
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.blockNodes;
     if (context.env.borderCollapse.isCollapse()) {
       size.extent -= context.getBorderCollapseAfterSize();
     }
-    const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
+    const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children);
     // console.log("[%s] reduceBlock(%s) as %s at %s, %o", context.name, size.toString(), this.type, pos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];
@@ -188,10 +189,11 @@ export class RootBlockReducer implements ILayoutReducer {
     if (context.floatRegion) {
       size.extent = Math.max(size.extent, context.floatRegion.maxRegionExtent);
     }
+    const autoSize = context.autoContentBoxSize;
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
-    const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
+    const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children);
     // console.log("[%s] reduceRootBlock at %s, %o", context.name, pos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];

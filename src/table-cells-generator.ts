@@ -4,7 +4,6 @@ import {
   BoxEnv,
   BlockNodeGenerator,
   FlowRootFormatContext,
-  RootBlockReducer,
   TableCellsFormatContext,
   TableCellReducer,
   TableCellsReducer,
