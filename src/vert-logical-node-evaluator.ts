@@ -114,8 +114,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
         node.appendChild(document.createElement("br"));
       }
       if (char.spacing) {
-        // [TODO] added spacing node.
-        console.log(`spacing:${char.spacing}`);
+        // [TODO] added spacing node here.
       }
     });
     node.normalize();
@@ -123,7 +122,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitRuby(rubyNode: LogicalRubyNode): HTMLElement {
-    console.log("visitRuby:", rubyNode);
+    // console.log("visitRuby:", rubyNode);
     const node = document.createElement("div");
     const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
@@ -137,7 +136,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitLine(lineNode: LogicalLineNode): HTMLElement {
-    console.log("visitLine:", lineNode.text);
+    // console.log("visitLine:", lineNode.text);
     const node = document.createElement("div");
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
@@ -173,7 +172,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
-    console.log("visitInline:", inlineNode.text);
+    // console.log("visitInline:", inlineNode.text);
     const node = document.createElement("div");
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -185,7 +184,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
-    console.log("visitInlineEmpha:", inlineNode.text);
+    // console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -197,7 +196,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineBlock(blockNode: LogicalBlockNode): HTMLElement {
-    console.log("visitInlineBlock:", blockNode);
+    // console.log("visitInlineBlock:", blockNode);
     const node = document.createElement("div");
     node.style.boxSizing = "content-box";
     node.style.position = "relative";
@@ -212,7 +211,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
-    console.log("visitBlock:", blockNode);
+    // console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
     node.style.boxSizing = "content-box";
     node.style.position = blockNode.env.element.tagName === "body" ? "relative" : "absolute";
@@ -242,7 +241,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockImage(img: LogicalReNode): HTMLElement {
-    console.log("visitBlockImage");
+    // console.log("visitBlockImage");
     const node = document.createElement("img");
     node.style.position = "absolute";
     node.style.display = "block";
@@ -256,7 +255,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineImage(img: LogicalReNode): HTMLElement {
-    console.log("visitInlineImage");
+    // console.log("visitInlineImage");
     const node = document.createElement("img");
     node.style.display = "block";
     node.style.width = img.physicalSize.width + "px";
@@ -268,11 +267,15 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineLink(link: LogicalInlineNode): HTMLElement {
-    console.log("visitInlineLink:", link.text);
+    // console.log("visitInlineLink:", link.text);
     const node = document.createElement("a");
     const href = link.env.element.getAttribute("href");
+    const name = link.env.element.getAttribute("name");
     if (href) {
       node.setAttribute("href", href);
+    }
+    if (name) {
+      node.setAttribute("name", name);
     }
     node.style.marginBottom = link.edge.margin.end + "px";
     link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -284,11 +287,15 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockLink(link: LogicalBlockNode): HTMLElement {
-    console.log("visitBlockLink:", link);
+    // console.log("visitBlockLink:", link);
     const node = document.createElement("a");
     const href = link.env.element.getAttribute("href");
+    const name = link.env.element.getAttribute("name");
     if (href) {
       node.setAttribute("href", href);
+    }
+    if (name) {
+      node.setAttribute("name", name);
     }
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";

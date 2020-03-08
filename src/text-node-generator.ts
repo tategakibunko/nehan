@@ -35,7 +35,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
   }
 
   private *createGenerator(): Generator<LayoutResult> {
-    console.group("(text)");
+    // console.group("(text)");
     const lexer = this.context.lexer;
 
     while (this.context.lexer.hasNext()) {
@@ -101,7 +101,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
     if (this.context.characters.length > 0) {
       yield this.context.acceptLayoutReducer(this.reducer, false);
     }
-    console.groupEnd();
+    // console.groupEnd();
   }
 }
 

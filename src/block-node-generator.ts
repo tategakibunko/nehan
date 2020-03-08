@@ -47,7 +47,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       return;
     }
     while (this.context.restExtent < this.context.env.edge.borderBoxBefore) {
-      console.log("before border can't be included");
+      console.warn("before border can't be included");
       yield LayoutResult.pageBreak;
     }
     this.context.addBorderBoxEdge("before"); // restExtent shorten
@@ -80,7 +80,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       const beforeMargin = BlockMargin.getMarginFromLastBlock(childElement);
       if (beforeMargin > 0) {
         this.context.addBlockMarginEdge("before", beforeMargin);
-        console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
+        // console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
       }
       while (this.context.restExtent < beforeMargin) {
         yield isPageRoot ? this.context.acceptLayoutReducer(this.blockReducer) : LayoutResult.pageBreak;

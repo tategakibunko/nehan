@@ -249,7 +249,7 @@ export class FlowFormatContext implements IFlowFormatContext {
       const old = this.cursorPos.before;
       this.cursorPos.before += this.contextBoxEdge.padding.getSize(direction);
       this.cursorPos.before += this.contextBoxEdge.borderWidth.getSize(direction);
-      console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
+      // console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
     }
   }
 
@@ -264,7 +264,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addLine(line: LogicalLineNode) {
-    console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
+    // console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
     this.blockNodes.push(line);
     this.nodeHistory.push(line);
     this.cursorPos.before += line.extent;
@@ -272,8 +272,8 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addBlock(block: LogicalBlockNode) {
-    console.log("[%s] addBlock:%o", this.name, block);
-    console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
+    // console.log("[%s] addBlock:%o", this.name, block);
+    // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
     this.blockNodes.push(block);
     this.nodeHistory.push(block);
     this.cursorPos.before += block.extent;
@@ -319,7 +319,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     block.pos.start = -startCollapseSize;
     block.pos.before -= block.border.width.before + beforeCollapseSize;
     this.cursorPos.before -= beforeCollapseSize;
-    console.log("[%s] collapseBeforeStartBorder(before = %d, start = %d)", this.name, beforeCollapseSize, startCollapseSize);
+    // console.log("[%s] collapseBeforeStartBorder(before = %d, start = %d)", this.name, beforeCollapseSize, startCollapseSize);
   }
 
   public addTable(block: LogicalBlockNode) {
@@ -353,7 +353,7 @@ export class FlowFormatContext implements IFlowFormatContext {
         const collapseSize = Math.min(beforeBorderSize, ...cellBeforeBorderSizes);
         cells.pos.before -= collapseSize;
         this.cursorPos.before -= collapseSize;
-        console.log("[%s] collapse before %d", this.name, collapseSize);
+        // console.log("[%s] collapse before %d", this.name, collapseSize);
       }
     }
     this.blockNodes.push(cells);
@@ -388,7 +388,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineNodes.push(marker);
     this.cursorPos.start += marker.measure;
     this.listMarker = marker;
-    console.log("[%s] added list marker:", this.name, marker);
+    // console.log("[%s] added list marker:", this.name, marker);
   }
 
   public addText(text: ILogicalNode) {

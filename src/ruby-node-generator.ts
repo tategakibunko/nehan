@@ -60,7 +60,6 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
       while (this.context.restMeasure < rubyNode.size.measure) {
         yield LayoutResult.lineBreak;
       }
-      console.log("ruby:%o", rubyNode);
       yield ruby;
     }
     console.groupEnd();

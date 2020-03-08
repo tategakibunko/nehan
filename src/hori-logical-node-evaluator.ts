@@ -104,7 +104,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitRuby(rubyNode: LogicalRubyNode): HTMLElement {
-    console.log("visitRuby:", rubyNode);
+    // console.log("visitRuby:", rubyNode);
     const node = document.createElement("div");
     const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
@@ -118,11 +118,11 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitLine(lineNode: LogicalLineNode): HTMLElement {
-    console.log("visitLine:", lineNode.text);
+    // console.log("visitLine:", lineNode.text);
     const node = document.createElement("div");
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
-    node.style.background = "lightblue";
+    // node.style.background = "lightblue";
     node.style.overflow = "visible";
     node.style.top = lineNode.pos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -130,7 +130,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
     const baseLineNode = document.createElement("div");
     baseLineNode.style.position = "absolute";
-    baseLineNode.style.background = "aliceblue";
+    // baseLineNode.style.background = "aliceblue";
     baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
     baseLineNode.style.width = "100%";
     baseLineNode.style.height = lineNode.baseline.size.extent + "px";
@@ -144,7 +144,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
-    console.log("visitInline:", inlineNode.text);
+    // console.log("visitInline:", inlineNode.text);
     const node = document.createElement("span");
     node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -156,7 +156,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
-    console.log("visitInlineEmpha:", inlineNode.text);
+    // console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");
     node.style.display = "inline-block";
     node.style.marginRight = inlineNode.edge.margin.end + "px";
@@ -169,7 +169,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineBlock(blockNode: LogicalBlockNode): HTMLElement {
-    console.log("visitInlineBlock:", blockNode);
+    // console.log("visitInlineBlock:", blockNode);
     const node = document.createElement("div");
     node.style.display = "inline-block";
     node.style.boxSizing = "content-box";
@@ -185,11 +185,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
-    console.log("visitBlock:", blockNode);
+    // console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
-    const background: any = { "body": "wheat", "p": "orange", "div": "pink" };
     node.style.boxSizing = "content-box";
-    node.style.background = background[blockNode.env.element.tagName] || "wheat";
     node.style.position = blockNode.env.element.tagName === "body" ? "relative" : "absolute";
     blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -216,7 +214,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockImage(img: LogicalReNode): HTMLElement {
-    console.log("visitBlockImage");
+    // console.log("visitBlockImage");
     const node = document.createElement("img");
     node.style.position = "absolute";
     node.style.width = img.physicalSize.width + "px";
@@ -229,7 +227,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineImage(img: LogicalReNode): HTMLElement {
-    console.log("visitInlineImage");
+    // console.log("visitInlineImage");
     const node = document.createElement("img");
     node.style.display = "inline";
     node.style.width = img.physicalSize.width + "px";
@@ -241,11 +239,15 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineLink(link: LogicalInlineNode): HTMLElement {
-    console.log("visitInlineLink:", link.text);
+    // console.log("visitInlineLink:", link.text);
     const node = document.createElement("a");
     const href = link.env.element.getAttribute("href");
+    const name = link.env.element.getAttribute("name");
     if (href) {
       node.setAttribute("href", href);
+    }
+    if (name) {
+      node.setAttribute("name", name);
     }
     node.style.marginRight = link.edge.margin.end + "px";
     link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -257,11 +259,15 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockLink(link: LogicalBlockNode): HTMLElement {
-    console.log("visitBlockLink:", link);
+    // console.log("visitBlockLink:", link);
     const node = document.createElement("a");
     const href = link.env.element.getAttribute("href");
+    const name = link.env.element.getAttribute("name");
     if (href) {
       node.setAttribute("href", href);
+    }
+    if (name) {
+      node.setAttribute("name", name);
     }
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";

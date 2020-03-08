@@ -63,7 +63,7 @@ export class InlineReducer implements ILayoutReducer {
     if (indent) {
       context.cursorPos.start = 0;
     }
-    console.log("reduceInline:%o", inlineNode);
+    // console.log("reduceInline:%o", inlineNode);
     return LayoutResult.logicalNode(this.type, inlineNode);
   }
 }
@@ -150,8 +150,7 @@ export class LineReducer implements ILayoutReducer {
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    console.log("[%s] reduceLine(%s) at %s(baseline:%o), %o",
-      context.name, size.toString(), pos.toString(), baseline, lineNode.text);
+    // console.log("[%s] reduceLine(%s) at %s(baseline:%o), %o", context.name, size.toString(), pos.toString(), baseline, lineNode.text);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
@@ -170,7 +169,7 @@ export class BlockReducer implements ILayoutReducer {
       size.extent -= context.getBorderCollapseAfterSize();
     }
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
-    console.log("[%s] reduceBlock(%s) as %s at %s, global %s, %o", context.name, size.toString(), this.type, pos.toString(), context.globalPos.toString(), blockNode.text);
+    // console.log("[%s] reduceBlock(%s) as %s at %s, %o", context.name, size.toString(), this.type, pos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];
     context.cursorPos = LogicalCursorPos.zero;
@@ -193,7 +192,7 @@ export class RootBlockReducer implements ILayoutReducer {
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
     const blockNode = new LogicalBlockNode(context.env, pos, size, text, border, children);
-    console.log("[%s] reduceRootBlock at %s, global %s, %o", context.name, pos.toString(), context.globalPos.toString(), blockNode.text);
+    // console.log("[%s] reduceRootBlock at %s, %o", context.name, pos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];
     context.floatNodes = [];
@@ -226,7 +225,7 @@ export class TableCellsReducer implements ILayoutReducer {
     const pos = LogicalCursorPos.zero;
     const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
     const block = new LogicalTableCellsNode(context.env, size, pos, text, context.cells);
-    console.log("[%s] reduceTableCells:", context.name, block);
+    // console.log("[%s] reduceTableCells:", context.name, block);
     return LayoutResult.logicalNode("table-cells", block);
   }
 }
@@ -256,7 +255,7 @@ export class ReReducer implements ILayoutReducer {
   private constructor() { }
 
   visit(context: FlowFormatContext, logicalSize: LogicalSize, physicalSize: PhysicalSize): LayoutResult {
-    console.log("ReReducer, logicalSize:%o, physicalSize:%o", logicalSize, physicalSize);
+    // console.log("ReReducer, logicalSize:%o, physicalSize:%o", logicalSize, physicalSize);
     const type = context.env.display.isBlockLevel() ? 're-block' : 're-inline';
     const edge = context.env.edge;
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
