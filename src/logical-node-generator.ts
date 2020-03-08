@@ -63,7 +63,8 @@ export class LogicalNodeGenerator {
     // console.log("createTextLexer:", element, env);
     let text = element.textContent;
     if (!env.whiteSpace.isPre()) {
-      text = text.replace(/^\n+/g, "");
+      text = text.replace(/^\n+/, "");
+      text = text.replace(/\n+$/, "");
     }
     const lexer = env.textCombineUpright.isNone() ? new TextLexer(text) : new TcyLexer(text);
     if (env.textOrientation.isUpright()) {
