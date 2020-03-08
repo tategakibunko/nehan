@@ -120,6 +120,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitLine(lineNode: LogicalLineNode): HTMLElement {
     // console.log("visitLine:", lineNode.text);
     const node = document.createElement("div");
+    node.className = "nehan-line";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     // node.style.background = "lightblue";
@@ -129,6 +130,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
 
     const baseLineNode = document.createElement("div");
+    baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
     // baseLineNode.style.background = "aliceblue";
     baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
@@ -191,6 +193,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
     // console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
+    node.className = `nehan-${blockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
     node.style.position = blockNode.env.element.tagName === "body" ? "relative" : "absolute";
     blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -206,6 +209,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitTableCells(tableCells: LogicalTableCellsNode): HTMLElement {
     const node = document.createElement("div");
+    node.className = "nehan-cells";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
