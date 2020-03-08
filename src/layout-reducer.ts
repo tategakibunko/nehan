@@ -170,7 +170,8 @@ export class BlockReducer implements ILayoutReducer {
       size.extent -= context.getBorderCollapseAfterSize();
     }
     const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children);
-    // console.log("[%s] reduceBlock(%s) as %s at %s, %o", context.name, size.toString(), this.type, pos.toString(), blockNode.text);
+    console.log("[%s] reduceBlock(%s) as %s at %s, %o", context.name, size.toString(), this.type, pos.toString(), blockNode.text);
+    console.log(`css.measure = ${context.env.measure}px`);
     context.text = "";
     context.blockNodes = [];
     context.cursorPos = LogicalCursorPos.zero;

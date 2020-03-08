@@ -187,6 +187,10 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get maxMeasure(): number {
+    // if border is collapsed, tr, tbody, thead, tfoot shares the content size with parent.
+    if (this.parent && this.env.borderCollapse.isCollapse() && (this.env.display.isTableRow() || this.env.display.isTableRowGroup())) {
+      return this.parent.maxMeasure;
+    }
     if (this.env.measure) {
       return this.env.measure;
     }

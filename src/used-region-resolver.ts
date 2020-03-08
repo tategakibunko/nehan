@@ -49,21 +49,21 @@ class BlockRegionResolver implements IRegionResolver {
     if (region.logicalSize.measure.length === "auto") {
       region.edges.margin.clearAutoInline();
       region.logicalSize.measure.length = region.containingMeasure - region.edges.measure;
-    } else {
-      const borderBoxMeasure = region.borderBoxMeasure;
-      if (region.boxSizing.isBorderBox()) {
-        region.logicalSize.measure.length -= region.edges.borderBoxMeasure;
-      } else if (region.boxSizing.isPaddingBox()) {
-        region.logicalSize.measure.length -= region.edges.padding.measure;
-      }
-      if (borderBoxMeasure > region.containingMeasure) {
-        region.edges.margin.clearInline();
-      }
-      if (region.edges.margin.isAutoMeasure()) {
-        const autoMargin = Math.floor((region.containingMeasure - region.logicalSize.measure.length) / 2);
-        region.edges.margin.start.length = region.edges.margin.end.length = autoMargin;
-        // console.log("[%s] auto margin is resolved to %d", element.tagName, autoMargin);
-      }
+      return;
+    }
+    const borderBoxMeasure = region.borderBoxMeasure;
+    if (region.boxSizing.isBorderBox()) {
+      region.logicalSize.measure.length -= region.edges.borderBoxMeasure;
+    } else if (region.boxSizing.isPaddingBox()) {
+      region.logicalSize.measure.length -= region.edges.padding.measure;
+    }
+    if (borderBoxMeasure > region.containingMeasure) {
+      region.edges.margin.clearInline();
+    }
+    if (region.edges.margin.isAutoMeasure()) {
+      const autoMargin = Math.floor((region.containingMeasure - region.logicalSize.measure.length) / 2);
+      region.edges.margin.start.length = region.edges.margin.end.length = autoMargin;
+      // console.log("[%s] auto margin is resolved to %d", element.tagName, autoMargin);
     }
   }
 }
@@ -75,19 +75,17 @@ class ReBlockRegionResolver implements IRegionResolver {
   resolve(element: HtmlElement, region: ComputedRegion) {
     if (region.logicalSize.measure.length === "auto") {
       region.edges.margin.clearAutoInline();
-    } else {
-      if (region.edges.margin.start.length === "auto" && region.edges.margin.end.length === "auto") {
-        const autoMarginBoth = Math.floor((region.containingMeasure - region.logicalSize.measure.length) / 2);
-        region.edges.margin.start.length = region.edges.margin.end.length = autoMarginBoth;
-      }
-      else if (region.edges.margin.start.length === "auto" && region.edges.margin.end.length !== "auto") {
-        const autoMarginStart = region.containingMeasure - region.logicalSize.measure.length - region.edges.margin.end.length;
-        region.edges.margin.start.length = autoMarginStart;
-      }
-      else if (region.edges.margin.start.length !== "auto" && region.edges.margin.end.length === "auto") {
-        const autoMarginEnd = region.containingMeasure - region.logicalSize.measure.length - region.edges.margin.start.length;
-        region.edges.margin.end.length = autoMarginEnd;
-      }
+      return;
+    }
+    if (region.edges.margin.start.length === "auto" && region.edges.margin.end.length === "auto") {
+      const autoMarginBoth = Math.floor((region.containingMeasure - region.logicalSize.measure.length) / 2);
+      region.edges.margin.start.length = region.edges.margin.end.length = autoMarginBoth;
+    } else if (region.edges.margin.start.length === "auto" && region.edges.margin.end.length !== "auto") {
+      const autoMarginStart = region.containingMeasure - region.logicalSize.measure.length - region.edges.margin.end.length;
+      region.edges.margin.start.length = autoMarginStart;
+    } else if (region.edges.margin.start.length !== "auto" && region.edges.margin.end.length === "auto") {
+      const autoMarginEnd = region.containingMeasure - region.logicalSize.measure.length - region.edges.margin.start.length;
+      region.edges.margin.end.length = autoMarginEnd;
     }
   }
 }
