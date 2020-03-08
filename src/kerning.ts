@@ -22,7 +22,7 @@ export class Kerning implements IKerning {
     }
     if (cur.isKernEnable()) {
       cur.kerning = true;
-      console.log("kerning done: %o, %o", cur, prev);
+      // console.log("kerning done: %o, %o", cur, prev);
       return true;
     }
     return false;

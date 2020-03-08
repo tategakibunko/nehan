@@ -132,7 +132,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.style.position = "absolute";
     // baseLineNode.style.background = "aliceblue";
     baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
-    baseLineNode.style.width = "100%";
+    baseLineNode.style.width = lineNode.size.measure + 2 * lineNode.env.font.size + "px"; // Prepare space for 'Bura-sagari'.
     baseLineNode.style.height = lineNode.baseline.size.extent + "px";
     baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
 

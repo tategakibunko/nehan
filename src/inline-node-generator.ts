@@ -1,4 +1,5 @@
 import {
+  Config,
   LayoutResult,
   LogicalNodeGenerator,
   HtmlElement,
@@ -28,7 +29,9 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
   }
 
   protected *createGenerator(): Generator<LayoutResult> {
-    console.group(`${this.context.name}`);
+    if (Config.debugLayout) {
+      console.group(`${this.context.name}`);
+    }
 
     if (this.context.rootExtent < this.context.contextBoxEdge.borderBoxExtent ||
       this.context.rootMeasure < this.context.contextBoxEdge.borderBoxMeasure) {
@@ -100,7 +103,9 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
       this.context.addInlineMarginEdge("end", endMarginSize);
     }
     yield this.context.acceptLayoutReducer(this.reducer, false);
-    console.groupEnd();
+    if (Config.debugLayout) {
+      console.groupEnd();
+    }
   }
 }
 

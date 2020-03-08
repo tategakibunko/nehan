@@ -36,7 +36,9 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
   }
 
   protected *createGenerator(): Generator<LayoutResult> {
-    console.group(`${this.context.name}`);
+    if (Config.debugLayout) {
+      console.group(`${this.context.name}`);
+    }
 
     const isPageRoot = this.context.env.element.tagName === Config.pageRootTagName;
 
@@ -171,7 +173,9 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     }
 
     yield this.context.acceptLayoutReducer(this.blockReducer);
-    console.groupEnd();
+    if (Config.debugLayout) {
+      console.groupEnd();
+    }
   }
 }
 
