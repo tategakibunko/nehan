@@ -49,7 +49,9 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
           if (value && value.type === "table-cell") {
             return value.body;
           }
-          return cellGenerators[index].context.acceptLayoutReducer(TableCellReducer.instance).body;
+          const emptyCell = cellGenerators[index].context.acceptLayoutReducer(TableCellReducer.instance).body;
+          console.log("emptyCell:", emptyCell);
+          return emptyCell;
         });
         this.context.setCells(cellBlocks);
       } else {
