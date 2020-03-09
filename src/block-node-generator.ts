@@ -42,6 +42,9 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
 
     const isPageRoot = this.context.env.element.tagName === Config.pageRootTagName;
 
+    if (this.context.env.pageBreakBefore.isAlways()) {
+      yield LayoutResult.pageBreak;
+    }
     if ((this.context.env.measure && this.context.env.measure <= 0) ||
       this.context.env.edge.borderBoxExtent > this.context.restExtent) {
       console.error("This layout can never be included.");
@@ -173,6 +176,9 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     }
 
     yield this.context.acceptLayoutReducer(this.blockReducer);
+    if (this.context.env.pageBreakAfter.isAlways()) {
+      yield LayoutResult.pageBreak;
+    }
     if (Config.debugLayout) {
       console.groupEnd();
     }

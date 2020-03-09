@@ -22,6 +22,7 @@ import {
   ListStyle,
   WhiteSpace,
   PageBreakBefore,
+  PageBreakAfter,
   BorderCollapse,
 } from "./public-api";
 
@@ -50,6 +51,7 @@ export class BoxEnv {
   public listStyle: ListStyle;
   public whiteSpace: WhiteSpace;
   public pageBreakBefore: PageBreakBefore;
+  public pageBreakAfter: PageBreakAfter;
   public backgroundPos: LogicalBackgroundPos;
   public borderCollapse: BorderCollapse;
 
@@ -75,6 +77,7 @@ export class BoxEnv {
     this.listStyle = ListStyle.load(element);
     this.whiteSpace = WhiteSpace.load(element);
     this.pageBreakBefore = PageBreakBefore.load(element);
+    this.pageBreakAfter = PageBreakAfter.load(element);
     this.backgroundPos = LogicalBackgroundPos.load(element);
     this.borderCollapse = BorderCollapse.load(element);
   }

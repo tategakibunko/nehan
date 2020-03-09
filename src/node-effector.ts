@@ -658,6 +658,7 @@ export class CssComputedValueLoader implements NodeEffector {
     this.setCascadedValue(element, "overflow-wrap");
     this.setCascadedValue(element, "white-space");
     this.setCascadedValue(element, "page-break-before");
+    this.setCascadedValue(element, "page-break-after");
     this.setCascadedValue(element, "position"); // static, relative, absolute
     this.setCascadedValue(element, "border-collapse");
 

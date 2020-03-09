@@ -16,6 +16,7 @@ import {
   InlineNodeGenerator,
   BlockNodeGenerator,
   LineBreakGenerator,
+  PageBreakGenerator,
   RubyBaseReducer,
   RubyTextReducer,
   RootBlockReducer,
@@ -87,6 +88,20 @@ export class LogicalNodeGenerator {
       const generator = display.isInlineLevel() ?
         new InlineNodeGenerator(context, InlineLinkReducer.instance) :
         new BlockNodeGenerator(context, BlockLinkReducer.instance);
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
+    if (element.tagName === "br") {
+      const generator = new LineBreakGenerator(
+        new FlowFormatContext(env, parentContext)
+      );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
+    if (element.tagName === "page-break" || element.tagName === "pbr") {
+      const generator = new PageBreakGenerator(
+        new FlowFormatContext(env, parentContext)
+      );
       const nextElement = element.nextSibling;
       return { generator, nextElement };
     }
@@ -183,13 +198,6 @@ export class LogicalNodeGenerator {
       return { generator, nextElement };
     }
     if (display.isInlineLevel()) {
-      if (element.tagName === "br") {
-        const generator = new LineBreakGenerator(
-          new FlowFormatContext(env, parentContext)
-        );
-        const nextElement = element.nextSibling;
-        return { generator, nextElement };
-      }
       const generator = new InlineNodeGenerator(
         new FlowFormatContext(env, parentContext)
       );
