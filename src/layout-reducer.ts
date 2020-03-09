@@ -15,7 +15,8 @@ import {
   LogicalRubyNode,
   RubyGroup,
   TableCellsFormatContext,
-  LogicalReNode,
+  LogicalBlockReNode,
+  LogicalInlineReNode,
   PhysicalSize,
   ReplacedElement,
 } from './public-api'
@@ -170,8 +171,7 @@ export class BlockReducer implements ILayoutReducer {
       size.extent -= context.getBorderCollapseAfterSize();
     }
     const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children);
-    console.log("[%s] reduceBlock(%s) as %s at %s, %o", context.name, size.toString(), this.type, pos.toString(), blockNode.text);
-    console.log(`css.measure = ${context.env.measure}px`);
+    // console.log("[%s] reduceBlock(%s) as %s at %s, %o", context.name, size.toString(), this.type, pos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];
     context.cursorPos = LogicalCursorPos.zero;
@@ -257,13 +257,24 @@ export class ReReducer implements ILayoutReducer {
   static instance = new ReReducer();
   private constructor() { }
 
-  visit(context: FlowFormatContext, logicalSize: LogicalSize, physicalSize: PhysicalSize): LayoutResult {
-    // console.log("ReReducer, logicalSize:%o, physicalSize:%o", logicalSize, physicalSize);
-    const type = context.env.display.isBlockLevel() ? 're-block' : 're-inline';
+  private visitBlock(context: FlowFormatContext, logicalSize: LogicalSize, physicalSize: PhysicalSize): LayoutResult {
     const edge = context.env.edge;
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
     const text = `(${context.env.element.tagName})`;
-    const re = new LogicalReNode(context.env, logicalSize, physicalSize, edge, pos, text);
-    return LayoutResult.logicalNode(type, re);
+    const re = new LogicalBlockReNode(context.env, logicalSize, physicalSize, edge, pos, text);
+    return LayoutResult.logicalNode('re-block', re);
+  }
+
+  private visitInline(context: FlowFormatContext, logicalSize: LogicalSize, physicalSize: PhysicalSize): LayoutResult {
+    const edge = context.env.edge;
+    const text = `(${context.env.element.tagName})`;
+    const re = new LogicalInlineReNode(context.env, logicalSize, physicalSize, edge, text);
+    return LayoutResult.logicalNode('re-inline', re);
+  }
+
+  visit(context: FlowFormatContext, logicalSize: LogicalSize, physicalSize: PhysicalSize): LayoutResult {
+    return context.env.display.isBlockLevel() ?
+      this.visitBlock(context, logicalSize, physicalSize) :
+      this.visitInline(context, logicalSize, physicalSize);
   }
 }

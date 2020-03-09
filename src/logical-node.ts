@@ -168,7 +168,7 @@ export class LogicalTableCellsNode implements ILogicalNode {
   }
 }
 
-export class LogicalReNode implements ILogicalNode {
+export class LogicalBlockReNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
     public size: LogicalSize, // logical content size
@@ -187,9 +187,34 @@ export class LogicalReNode implements ILogicalNode {
   }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
-    const isBlockLevel = this.env.display.isBlockLevel();
     switch (this.env.element.tagName) {
-      case "img": return isBlockLevel ? visitor.visitBlockImage(this) : visitor.visitInlineImage(this);
+      case "img": return visitor.visitBlockImage(this);
+    }
+    console.error("unsupported replaced element:", this);
+    throw new Error("unsupported replaced element");
+  }
+}
+
+export class LogicalInlineReNode implements ILogicalNode {
+  constructor(
+    public env: BoxEnv,
+    public size: LogicalSize, // logical content size
+    public physicalSize: PhysicalSize,
+    public edge: LogicalBoxEdge,
+    public text: string,
+  ) { }
+
+  get measure(): number {
+    return this.size.measure + this.edge.borderBoxMeasure;
+  }
+
+  get extent(): number {
+    return this.size.extent + this.env.edge.borderBoxExtent;
+  }
+
+  acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
+    switch (this.env.element.tagName) {
+      case "img": return visitor.visitInlineImage(this);
     }
     console.error("unsupported replaced element:", this);
     throw new Error("unsupported replaced element");

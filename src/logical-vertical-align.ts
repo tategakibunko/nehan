@@ -7,25 +7,16 @@ import {
   NativeStyleMap,
 } from "./public-api";
 
-export enum LogicalVerticalAlignValue {
-  BASELINE = "baseline",
-  SUB = "sub",
-  SUPER = "super",
-  TEXT_TOP = "text-top",
-  TEXT_BOTTOM = "text-bottom",
-  MIDDLE = "middle",
-  TOP = "top",
-  BOTTOM = "bottom",
-}
+// original css value
+// export type LogicalVerticalAlignValue = "baseline" | "sub" | "super" | "text-top" | "text-bottom" | "middle" | "top" | "bottom"
+
+// our logical css value
+export type LogicalVerticalAlignValue = "baseline" | "sub" | "super" | "text-before" | "text-after" | "middle" | "before" | "after"
 
 export class LogicalVerticalAlign {
-  public value: string;
-  static values: string[] = Utils.Enum.toValueArray(LogicalVerticalAlignValue);
-
+  public value: LogicalVerticalAlignValue;
   constructor(value: LogicalVerticalAlignValue) {
-    this.value = BasicStyle.selectOrDefault(
-      "vertical-align", value, LogicalVerticalAlign.values
-    );
+    this.value = value;
   }
 
   static load(element: HtmlElement): LogicalVerticalAlign {
@@ -43,7 +34,7 @@ export class LogicalVerticalAlign {
   public getCssVert(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
     switch (this.value) {
-      case LogicalVerticalAlignValue.BASELINE:
+      case 'baseline':
         css.set("margin-left", "auto");
         css.set("margin-right", "auto");
         break;
@@ -56,7 +47,7 @@ export class LogicalVerticalAlign {
   public getCssHori(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
     switch (this.value) {
-      case LogicalVerticalAlignValue.BASELINE:
+      case 'baseline':
         css.set("margin-top", "auto");
         css.set("margin-bottom", "auto");
         break;

@@ -84,6 +84,14 @@ export namespace Config {
   // Use this settings to speed up your layout engine.
   // For example, normally some kind of tags (ruby, rt, rb etc) requires only font-size.
   export let fontSizeOnlyTags: string[] = [
+    "b",
+    "br",
+    "em",
+    "rb",
+    "rt",
+    "rp",
+    "ruby",
+    "strong",
   ]
 
   // Tags with no edge(margin/border/padding).

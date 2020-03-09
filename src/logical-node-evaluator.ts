@@ -14,7 +14,8 @@ import {
   LogicalLineNode,
   LogicalBlockNode,
   LogicalTableCellsNode,
-  LogicalReNode,
+  LogicalBlockReNode,
+  LogicalInlineReNode,
   TextEmphaData,
 } from './public-api'
 
@@ -39,8 +40,8 @@ export interface ILogicalNodeEvaluator {
   visitBlock: (blockNode: LogicalBlockNode) => HTMLElement;
   visitInlineBlock: (blockNode: LogicalBlockNode) => HTMLElement;
   visitTableCells: (tableCellsNode: LogicalTableCellsNode) => HTMLElement;
-  visitBlockImage: (imgNode: LogicalReNode) => HTMLElement;
-  visitInlineImage: (imgNode: LogicalReNode) => HTMLElement;
+  visitBlockImage: (imgNode: LogicalBlockReNode) => HTMLElement;
+  visitInlineImage: (imgNode: LogicalInlineReNode) => HTMLElement;
   visitInlineLink: (link: LogicalInlineNode) => HTMLElement;
   visitBlockLink: (link: LogicalBlockNode) => HTMLElement;
 }

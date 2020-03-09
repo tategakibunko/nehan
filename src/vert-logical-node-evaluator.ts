@@ -16,7 +16,8 @@ import {
   ILogicalNodeEvaluator,
   ILogicalCssEvaluator,
   LogicalTableCellsNode,
-  LogicalReNode,
+  LogicalBlockReNode,
+  LogicalInlineReNode,
   TextEmphaData,
 } from './public-api'
 
@@ -157,7 +158,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
-      const textBodyExtent = child instanceof LogicalReNode ? child.extent : child.env.font.size;
+      const textBodyExtent = child instanceof LogicalInlineReNode ? child.extent : child.env.font.size;
       const baselineGap = Math.floor((lineNode.baseline.textBodySize.extent - textBodyExtent) / 2);
       if (baselineGap === 0) {
         baseLineNode.appendChild(childNode);
@@ -244,7 +245,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  visitBlockImage(img: LogicalReNode): HTMLElement {
+  visitBlockImage(img: LogicalBlockReNode): HTMLElement {
     // console.log("visitBlockImage");
     const node = document.createElement("img");
     node.style.position = "absolute";
@@ -258,7 +259,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  visitInlineImage(img: LogicalReNode): HTMLElement {
+  visitInlineImage(img: LogicalInlineReNode): HTMLElement {
     // console.log("visitInlineImage");
     const node = document.createElement("img");
     node.style.display = "block";

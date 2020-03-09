@@ -55,7 +55,9 @@ export class HtmlDocument {
     // before css loading, initialize pseudo elements and set spec-styles to them.
     this.body.acceptEffectorAll(new PseudoElementInitializer(this.specStyleSheet.getPseudoRules()));
 
+    console.time("cssLoading");
     CssLoader.loadAll(this.body);
+    console.timeEnd("cssLoading");
 
     // after loading, do some preprocessing...
     this.body.acceptEffectorAll(TextNodeNormalizer.instance);

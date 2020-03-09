@@ -16,7 +16,8 @@ import {
   ILogicalNodeEvaluator,
   ILogicalCssEvaluator,
   LogicalTableCellsNode,
-  LogicalReNode,
+  LogicalBlockReNode,
+  LogicalInlineReNode,
   TextEmphaData,
 } from './public-api'
 
@@ -221,7 +222,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  visitBlockImage(img: LogicalReNode): HTMLElement {
+  visitBlockImage(img: LogicalBlockReNode): HTMLElement {
     // console.log("visitBlockImage");
     const node = document.createElement("img");
     node.style.position = "absolute";
@@ -234,7 +235,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  visitInlineImage(img: LogicalReNode): HTMLElement {
+  visitInlineImage(img: LogicalInlineReNode): HTMLElement {
     // console.log("visitInlineImage");
     const node = document.createElement("img");
     node.style.display = "inline";
