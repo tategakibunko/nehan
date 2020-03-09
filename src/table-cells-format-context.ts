@@ -26,21 +26,6 @@ export class TableCellsFormatContext extends FlowFormatContext {
     return reducer.visit(this);
   }
 
-  private setVerticalAlign(cell: LogicalBlockNode) {
-    const valign = cell.env.verticalAlign;
-    const diffExtent = cell.size.extent - cell.autoSize.extent;
-    const middleDelta = diffExtent / 2;
-    if (diffExtent === 0) {
-      return;
-    }
-    // draft middle
-    cell.children.forEach(child => {
-      if (child instanceof LogicalLineNode || child instanceof LogicalBlockNode || child instanceof LogicalBlockReNode) {
-        child.pos.before += middleDelta;
-      }
-    });
-  }
-
   setCells(cells: LogicalBlockNode[]) {
     const isCollapse = this.env.borderCollapse.isCollapse();
     this.cells = cells;
@@ -60,7 +45,17 @@ export class TableCellsFormatContext extends FlowFormatContext {
         cell.pos.start -= inlineCollapseSize;
         this.cursorPos.start -= inlineCollapseSize;
       }
-      this.setVerticalAlign(cell);
+      // Set vertical-align for children of cell.
+      const diffSize = cell.size.extent - cell.autoSize.extent; // diff between original size and aligned size.
+      const valign = cell.env.verticalAlign.value;
+      if (diffSize > 0 && (valign === "middle" || valign === "after")) {
+        const delta = valign === "middle" ? Math.floor(diffSize / 2) : diffSize;
+        cell.children.forEach(child => {
+          if (child instanceof LogicalLineNode || child instanceof LogicalBlockNode || child instanceof LogicalBlockReNode) {
+            child.pos.before += delta;
+          }
+        });
+      }
     });
   }
 }
