@@ -12,7 +12,6 @@ import {
   PseudoElementInitializer,
   TextNodeNormalizer,
 } from "./public-api";
-import { RubyNormalizer } from "./node-effector";
 
 export interface HtmlDocumentOptions {
   styleSheets?: CssStyleSheet[]
