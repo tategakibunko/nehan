@@ -16,7 +16,6 @@ import {
   InlineNodeGenerator,
   BlockNodeGenerator,
   LineBreakGenerator,
-  PageBreakGenerator,
   RubyBaseReducer,
   RubyTextReducer,
   RootBlockReducer,
@@ -93,13 +92,6 @@ export class LogicalNodeGenerator {
     }
     if (element.tagName === "br") {
       const generator = new LineBreakGenerator(
-        new FlowFormatContext(env, parentContext)
-      );
-      const nextElement = element.nextSibling;
-      return { generator, nextElement };
-    }
-    if (element.tagName === "page-break" || element.tagName === "pbr") {
-      const generator = new PageBreakGenerator(
         new FlowFormatContext(env, parentContext)
       );
       const nextElement = element.nextSibling;
