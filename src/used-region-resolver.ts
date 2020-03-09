@@ -47,7 +47,7 @@ class BlockRegionResolver implements IRegionResolver {
   private constructor() { }
 
   resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
-    // In collapse mode, table-row(tr) and table-row-group(tbody, thead, tfoot) tag shares the measure of block level parent(<table>).
+    // In collapse mode, table-row(<tr>) and table-row-group(<tbody>, <thead>, <tfoot>) share the measure of block level parent(<table>).
     if (display.isTableRow() || display.isTableRowGroup()) {
       const parent = element.parent;
       const borderCollapse = BorderCollapse.load(element);
