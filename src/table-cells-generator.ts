@@ -45,6 +45,7 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
       }
       if (loopCount % 2 === 0) {
         const cellBlocks = values.map((value, index) => {
+          console.log("loopCount:%d, cells[%d] = %o", loopCount, index, value);
           if (value && value.type === "table-cell") {
             return value.body;
           }

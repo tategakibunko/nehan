@@ -32,8 +32,8 @@ export class TableCellsFormatContext extends FlowFormatContext {
     const maxContentExtent = Math.max(...cells.map(cell => cell.size.extent));
     const maxTotalExtent = Math.max(...cells.map(cell => cell.extent)); // add edge difference to content size.
     this.cells.forEach((cell, index) => {
-      cell.size.extent = maxContentExtent; // align to max 'content' size.
-      cell.size.extent += maxTotalExtent - cell.extent; // align to max 'total(edged)' size.
+      cell.size.extent = maxContentExtent; // align content extent.
+      cell.size.extent += maxTotalExtent - cell.extent; // align total(edged) extent.
       cell.pos.start = this.cursorPos.start;
       this.cursorPos.start += cell.measure;
       // Collapse border of inline level.
