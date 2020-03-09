@@ -27,15 +27,20 @@ export class TableCellsFormatContext extends FlowFormatContext {
   }
 
   setCells(cells: LogicalBlockNode[]) {
-    const isCollapse = this.env.borderCollapse.isCollapse();
     this.cells = cells;
-    const maxContentExtent = Math.max(...cells.map(cell => cell.size.extent));
+    const isCollapse = this.env.borderCollapse.isCollapse();
+    const maxCell = cells.reduce((acm, cell) => acm.size.extent > cell.size.extent ? acm : cell, cells[0]);
+    const maxContentExtent = maxCell.size.extent;
     const maxTotalExtent = Math.max(...cells.map(cell => cell.extent)); // add edge difference to content size.
     this.cells.forEach((cell, index) => {
       cell.size.extent = maxContentExtent; // align content extent.
       cell.size.extent += maxTotalExtent - cell.extent; // align total(edged) extent.
       cell.pos.start = this.cursorPos.start;
       this.cursorPos.start += cell.measure;
+      // if max cell isn't finished yet, smaller cell must follow the border state.
+      if (cell.autoSize.extent !== maxCell.extent && maxCell.border.afterWidth === 0) {
+        cell.border.clearAfter();
+      }
       // Collapse border of inline level.
       // Note that block level collapsing is done by parent context.
       if (isCollapse) {

@@ -45,13 +45,19 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
       }
       if (loopCount % 2 === 0) {
         const cellBlocks = values.map((value, index) => {
-          console.log("loopCount:%d, cells[%d] = %o", loopCount, index, value);
           if (value && value.type === "table-cell") {
             return value.body;
           }
-          const emptyCell = cellGenerators[index].context.acceptLayoutReducer(TableCellReducer.instance).body;
-          console.log("emptyCell:", emptyCell);
-          return emptyCell;
+          const cellCtx = cellGenerators[index].context;
+          cellCtx.addBorderBoxEdge("start");
+          cellCtx.addBorderBoxEdge("end");
+          if (loopCount === 0) {
+            cellCtx.addBorderBoxEdge("before");
+          }
+          if (loopCount >= 2) {
+            cellCtx.addBorderBoxEdge("after");
+          }
+          return cellCtx.acceptLayoutReducer(TableCellReducer.instance).body;
         });
         this.context.setCells(cellBlocks);
       } else {
