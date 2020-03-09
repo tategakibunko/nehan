@@ -89,6 +89,8 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
           this.context.addInline(value.body);
         } else if (value.type === 'inline-link') {
           this.context.addInlineLink(value.body);
+        } else if (value.type === 're-inline') {
+          this.context.addInlineBlock(value.body);
         }
       }
       childElement = childGen.nextElement;

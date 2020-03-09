@@ -2,13 +2,13 @@ import {
   BoxEnv,
   HtmlElement,
   FlowFormatContext,
-  LogicalVerticalAlign,
   LogicalBlockNode,
+  LogicalBlockReNode,
   ILayoutFormatContext,
   LayoutResult,
   TableCellsReducer,
 } from './public-api';
-import { LogicalLineNode } from './logical-node';
+import { LogicalLineNode, LogicalInlineReNode } from './logical-node';
 
 export class TableCellsFormatContext extends FlowFormatContext {
   public cells: LogicalBlockNode[];
@@ -35,7 +35,7 @@ export class TableCellsFormatContext extends FlowFormatContext {
     }
     // draft middle
     cell.children.forEach(child => {
-      if (child instanceof LogicalLineNode) {
+      if (child instanceof LogicalLineNode || child instanceof LogicalBlockNode || child instanceof LogicalBlockReNode) {
         child.pos.before += middleDelta;
       }
     });
