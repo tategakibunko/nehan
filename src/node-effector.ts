@@ -66,15 +66,17 @@ export class TableRowGroupInitializer implements NodeEffector {
     if (!borderCollapse.isCollapse() || !parent) {
       return;
     }
-    const measure = parseInt(element.computedStyle.getPropertyValue("measure") || "0");
     const parentMeasure = parseInt(parent.computedStyle.getPropertyValue("measure") || "0");
     const parentBorderSize = LogicalBorderWidth.load(parent).measure;
     const borderSize = LogicalBorderWidth.load(element).measure;
     const collapsedMeasure = parentMeasure - Math.max(0, borderSize - parentBorderSize);
     element.computedStyle.setProperty("measure", collapsedMeasure + "px");
+    /*
+    const measure = parseInt(element.computedStyle.getPropertyValue("measure") || "0");
     if (measure !== collapsedMeasure) {
       console.log("[%s] update measure by collapse from %d -> %d", element.toString(true), measure, collapsedMeasure);
     }
+    */
   }
 }
 
@@ -88,15 +90,17 @@ export class TableRowInitializer implements NodeEffector {
     if (!borderCollapse.isCollapse() || !parent) {
       return;
     }
-    const measure = parseInt(element.computedStyle.getPropertyValue("measure") || "0");
     const parentMeasure = parseInt(parent.computedStyle.getPropertyValue("measure") || "0");
     const parentBorderSize = LogicalBorderWidth.load(parent).measure;
     const borderSize = LogicalBorderWidth.load(element).measure;
     const collapsedMeasure = parentMeasure - Math.max(0, borderSize - parentBorderSize);
     element.computedStyle.setProperty("measure", collapsedMeasure + "px");
+    /*
+    const measure = parseInt(element.computedStyle.getPropertyValue("measure") || "0");
     if (measure !== collapsedMeasure) {
       console.log("[%s] update measure by collapse from %d -> %d", element.toString(true), measure, collapsedMeasure);
     }
+    */
   }
 }
 
@@ -175,15 +179,16 @@ export class TableCellInitializer implements NodeEffector {
       return (measure === "auto") ? 0 : parseInt(measure, 10);
     });
     const autoCells = cells.filter(cell => cell.computedStyle.getPropertyValue("measure") === "auto");
-    const fixedCount = cells.length - autoCells.length;
     const fixedSize = cellMeasures.reduce((sum, size) => sum + size, 0);
     const autoMeasure = parentMeasure - fixedSize - internalEdgeSize;
     const autoCellSize = Math.max(Math.floor(autoMeasure / autoCells.length), 0);
     const autoFraction = autoMeasure % autoCells.length;
+    /*
     console.log(
-      "cell size:(parent:%d, fixedSize:%d, fixedCount:%d, iedge:%d, auto:%d(fraction:%d))",
-      parentMeasure, fixedSize, fixedCount, internalEdgeSize, autoCellSize, autoFraction
+      "cell size:(parent:%d, fixedSize:%d, iedge:%d, auto:%d(fraction:%d))",
+      parentMeasure, fixedSize, internalEdgeSize, autoCellSize, autoFraction
     );
+    */
     autoCells.forEach((cell, index) => {
       const usedAutoSize = (index === 0) ? autoCellSize + autoFraction : autoCellSize;
       cell.computedStyle.setProperty("measure", usedAutoSize + "px")
@@ -223,10 +228,10 @@ export class TextNodeNormalizer implements NodeEffector {
     }
     if (element.parent && prev.isTextElement()) {
       if (WhiteSpace.isWhiteSpaceElement(prev)) {
-        console.info("remove white space before block:", element);
+        // console.info("remove white space before block:", element);
         element.parent.removeChild(prev);
       } else {
-        console.info("insert <br> before %o", element);
+        // console.info("insert <br> before %o", element);
         element.parent.insertBefore(element.ownerDocument.createElement("br"), element);
       }
     }

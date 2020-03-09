@@ -24,7 +24,6 @@ import {
   TableCellsGenerator,
   TableCellsFormatContext,
   ListItemInitializer,
-  PseudoElement,
   PseudoElementTagName,
   ListMarkerReducer,
   TableReducer,
@@ -37,6 +36,7 @@ import {
   FirstLineFormatContext,
   PageRootFormatContext,
   InlineLinkReducer,
+  ReplacedElement,
   BlockLinkReducer,
 } from './public-api'
 import { TcyLexer } from './text-lexer';
@@ -93,7 +93,7 @@ export class LogicalNodeGenerator {
       const nextElement = element.nextSibling;
       return { generator, nextElement };
     }
-    if (PseudoElement.isPseudoElement(element)) {
+    if (ReplacedElement.isReplacedElement(element)) {
       const generator = new ReNodeGenerator(
         new ReFormatContext(env, parentContext)
       );

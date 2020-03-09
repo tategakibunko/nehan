@@ -1,4 +1,5 @@
 import {
+  Config,
   ILogicalNodeGenerator,
   LayoutResult,
   ILayoutReducer,
@@ -27,7 +28,9 @@ export class ReNodeGenerator implements ILogicalNodeGenerator {
   }
 
   protected *createGenerator(): Generator<LayoutResult> {
-    console.group(`${this.context.name}`);
+    if (Config.debugLayout) {
+      console.group(`${this.context.name}`);
+    }
     const writingMode = this.context.env.writingMode;
     const maxSize = new LogicalSize({
       measure: this.context.maxMeasure - this.context.env.edge.measure,
@@ -43,7 +46,9 @@ export class ReNodeGenerator implements ILogicalNodeGenerator {
       yield LayoutResult.pageBreak;
     }
     yield this.context.acceptLayoutReducer(this.reducer, logicalSize, physicalSize);
-    console.groupEnd();
+    if (Config.debugLayout) {
+      console.groupEnd();
+    }
   }
 }
 

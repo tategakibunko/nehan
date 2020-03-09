@@ -49,7 +49,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       return;
     }
     while (this.context.restExtent < this.context.env.edge.borderBoxBefore) {
-      console.warn("before border can't be included");
+      console.info("before border can't be included");
       yield LayoutResult.pageBreak;
     }
     this.context.addBorderBoxEdge("before"); // restExtent shorten
@@ -61,14 +61,14 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     while (childElement !== null) {
       const display = Display.load(childElement);
       if (display.isNone() || WhiteSpace.isWhiteSpaceElement(childElement)) {
-        console.info("skip element:", childElement);
+        // console.info("skip element:", childElement);
         childElement = childElement.nextSibling;
         continue;
       }
       const float = LogicalFloat.load(childElement);
       // before switching to next block, check there is inlines that are not still wrapped by anon-line-box.
       if ((!float.isNone() || display.isBlockLevel()) && this.context.inlineNodes.length > 0) {
-        console.warn("sweep out remaining inlines as line");
+        // console.info("sweep out remaining inlines as line");
         const line = this.context.acceptLayoutReducer(LineReducer.instance);
         this.context.addLine(line.body); // never overflows!
       }
