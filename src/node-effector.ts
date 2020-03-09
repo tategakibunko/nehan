@@ -686,7 +686,7 @@ export class CssUsedRegionLoader implements NodeEffector {
     }
     const resolver = UsedRegionResolver.select(element);
     // console.log("[%s] resolver:%o", element.tagName, resolver);
-    resolver.resolve(element, computedRegion);
+    resolver.resolve(element, computedRegion, display);
     // console.log("[%s] measure is resolved to %o", element.tagName, computedRegion.logicalSize.measure.length);
     computedRegion.save(element.computedStyle);
   }
