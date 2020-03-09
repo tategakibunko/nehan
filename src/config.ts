@@ -18,7 +18,8 @@ export namespace Config {
       .replace(/<!--[\s\S]*?-->/g, "") // remove comment
       .replace(/\u2015{2}/g, "\u2014\u2014") // HORIZONTAL BAR{2} -> EM DASH{2}
       .replace(/\s+$/, "") // trim end
-      .replace(/(?:<page-break>)|(?:<pbr>)/g, "<hr style='border-width:0px; page-break-after: always'>")
+      // for our legacy page-break tag.
+      .replace(/(?:<page-break>)|(?:<pbr>)/g, "<hr style='border-width:0px; margin:0; page-break-after: always'>")
       ;
   };
 
