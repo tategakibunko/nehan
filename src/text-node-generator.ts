@@ -41,6 +41,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
     while (this.context.lexer.hasNext()) {
       const font = this.context.env.font;
       const empha = this.context.env.isTextEmphasized() ? this.context.env.textEmphasis.textEmphaData : undefined;
+      const isPre = this.context.env.whiteSpace.isPre();
       const isVertical = this.context.env.isTextVertical();
       // Note that metrics can be updated when parent is <::first-line>.
       const metricsArgs = { font, isVertical, empha };
@@ -60,6 +61,13 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       }
       const token: ICharacter = lexer.getNext();
       // console.log("restM:%d, token:%o", this.context.restMeasure, token);
+
+      // if white-space:pre, yield line-break with current text block.
+      if (isPre && token.text === "\n") {
+        yield this.context.acceptLayoutReducer(this.reducer, false);
+        yield LayoutResult.lineBreak;
+        continue;
+      }
 
       // We calculate character metrics when
       // 1. metrics is not set yet(token.size.measure === 0)

@@ -25,6 +25,8 @@ export class TextLexer extends Lexer<ICharacter>{
         return String.fromCodePoint(Utils.atoi(p1, 10));
       });
     if (!args.isPre) {
+      normSrc = normSrc.replace(/^\n+/, "");
+      normSrc = normSrc.replace(/n+$/, "");
       normSrc = Utils.String.multiSpaceToSingle2(normSrc);
     }
     return normSrc;
