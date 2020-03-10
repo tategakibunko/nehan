@@ -1,28 +1,19 @@
 import {
-  Utils,
-  BasicStyle,
   HtmlElement,
   CssCascade,
 } from "./public-api";
 
-export enum PageBreakValue {
-  AUTO = "auto",
-  ALWAYS = "always",
-  LEFT = "left",
-  RIGHT = "right",
-  AVOID = "avoid"
-}
+export type PageBreakValue = "auto" | "always" | "left" | "right" | "avoid"
 
 export class PageBreakAfter {
-  public value: string;
-  static values: string[] = Utils.Enum.toValueArray(PageBreakValue);
+  public value: PageBreakValue;
 
   constructor(value: PageBreakValue) {
-    this.value = BasicStyle.selectOrDefault("page-break-after", value, PageBreakAfter.values);
+    this.value = value;
   }
 
   public isAlways(): boolean {
-    return this.value === PageBreakValue.ALWAYS;
+    return this.value === "always";
   }
 
   static load(element: HtmlElement): PageBreakAfter {
@@ -32,15 +23,14 @@ export class PageBreakAfter {
 }
 
 export class PageBreakBefore {
-  public value: string;
-  static values: string[] = Utils.Enum.toValueArray(PageBreakValue);
+  public value: PageBreakValue;
 
   constructor(value: PageBreakValue) {
-    this.value = BasicStyle.selectOrDefault("page-break-before", value, PageBreakBefore.values);
+    this.value = value;
   }
 
   public isAlways(): boolean {
-    return this.value === PageBreakValue.ALWAYS;
+    return this.value === "always";
   }
 
   static load(element: HtmlElement): PageBreakBefore {
