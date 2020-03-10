@@ -21,6 +21,10 @@ export class WritingMode {
     return this.value === 'vertical-rl';
   }
 
+  public isVerticalLr(): boolean {
+    return this.value === 'vertical-lr';
+  }
+
   public isTextVertical(): boolean {
     return this.value.indexOf("vertical") === 0;
   }

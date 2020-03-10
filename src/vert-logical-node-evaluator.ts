@@ -137,13 +137,15 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitLine(lineNode: LogicalLineNode): HTMLElement {
+    const writingMode = lineNode.env.writingMode;
+    const beforeProp = writingMode.isVerticalLr() ? "left" : "right";
     // console.log("visitLine:", lineNode.text);
     const node = document.createElement("div");
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     // node.style.background = "lightblue";
     node.style.overflow = "visible";
-    node.style.right = lineNode.pos.before + "px";
+    node.style[beforeProp] = lineNode.pos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
 
