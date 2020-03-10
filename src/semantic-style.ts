@@ -7,6 +7,7 @@ export interface SemanticStyleCreateOptions {
   all?: boolean;
   listStyle?: boolean;
   textAlign?: boolean;
+  textOrientation?: boolean;
   textCombine?: boolean;
   textEmphasis?: boolean;
   logicalFloat?: boolean;
@@ -14,7 +15,7 @@ export interface SemanticStyleCreateOptions {
   typography?: boolean;
 }
 
-let pageBreak: CssRules = {
+const pageBreak: CssRules = {
   ".page.break.after": {
     "page-break-after": "always"
   },
@@ -33,7 +34,7 @@ let pageBreak: CssRules = {
   }
 };
 
-let listStyle: CssRules = {
+const listStyle: CssRules = {
   ".list.outside": {
     "list-style-position": "outside"
   },
@@ -42,7 +43,7 @@ let listStyle: CssRules = {
   }
 };
 
-let logicalFloat: CssRules = {
+const logicalFloat: CssRules = {
   ".float.start": {
     "float": "start"
   },
@@ -60,7 +61,7 @@ let logicalFloat: CssRules = {
   }
 };
 
-let textAlign: CssRules = {
+const textAlign: CssRules = {
   ".text.align.start": {
     "text-align": "start"
   },
@@ -72,13 +73,25 @@ let textAlign: CssRules = {
   }
 };
 
-let textCombine: CssRules = {
+const textOrientation: CssRules = {
+  ".text.orientation.mixed": {
+    "text-orientation": "mixed"
+  },
+  ".text.orientation.upright": {
+    "text-orientation": "upright"
+  },
+  ".text.orientation.sideways": {
+    "text-orientation": "sideways"
+  }
+}
+
+const textCombine: CssRules = {
   ".tcy": {
     "text-combine-upright": "all"
   },
 };
 
-let textEmphasis: CssRules = {
+const textEmphasis: CssRules = {
   ".empha.filled.dot": {
     "text-emphasis": "filled dot"
   },
@@ -111,7 +124,7 @@ let textEmphasis: CssRules = {
   },
 };
 
-let typography: CssRules = {
+const typography: CssRules = {
   ".dropcaps::first-letter": {
     "display": "inline-block",
     "measure": "1em",
@@ -124,7 +137,7 @@ let typography: CssRules = {
 
 export class SemanticStyle {
   static create(options: SemanticStyleCreateOptions): CssStyleSheet {
-    let rules: CssRules = {};
+    const rules: CssRules = {};
     if (options.all === true || options.pageBreak === true) {
       Object.assign(rules, pageBreak);
     }
@@ -136,6 +149,9 @@ export class SemanticStyle {
     }
     if (options.all === true || options.textAlign === true) {
       Object.assign(rules, textAlign);
+    }
+    if (options.all === true || options.textOrientation === true) {
+      Object.assign(rules, textOrientation);
     }
     if (options.all === true || options.textCombine === true) {
       Object.assign(rules, textCombine);
