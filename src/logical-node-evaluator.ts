@@ -52,8 +52,9 @@ export interface ILogicalNodeEvaluator {
 }
 
 export class LogicalNodeEvaluator {
+  private currentWritingMode: WritingMode = new WritingMode("horizontal-tb");
+
   constructor(
-    private currentWritingMode: WritingMode = new WritingMode("horizontal-tb"),
     private horiTbEvaluator: ILogicalNodeEvaluator = new HoriLogicalNodeEvaluator(new HoriCssEvaluator(new WritingMode("horizontal-tb"))),
     private vertRlEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(new VertCssEvaluator(new WritingMode("vertical-rl"))),
     private vertLrEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(new VertCssEvaluator(new WritingMode("vertical-lr"))),
