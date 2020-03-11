@@ -9,6 +9,7 @@ import {
   TextFormatContext,
   LogicalTextNode,
   LogicalBlockNode,
+  LogicalInlineBlockNode,
   LogicalTableCellsNode,
   LogicalInlineNode,
   LogicalLineNode,
@@ -209,8 +210,34 @@ export class RootBlockReducer implements ILayoutReducer {
   }
 }
 
-export class InlineBlockReducer extends RootBlockReducer {
-  static instance = new InlineBlockReducer("inline-block");
+export class InlineBlockReducer implements ILayoutReducer {
+  static instance = new InlineBlockReducer();
+
+  visit(context: FlowRootFormatContext): LayoutResult {
+    const pos = context.parent ? context.parent.localPos.clone() : LogicalCursorPos.zero;
+    const size = context.contentBoxSize;
+    if (context.floatRegion) {
+      size.extent = Math.max(size.extent, context.floatRegion.maxRegionExtent);
+    }
+    const autoSize = context.autoContentBoxSize;
+    const border = context.contextBoxEdge.currentBorder;
+    const edge = context.env.edge.clone();
+    edge.border = border;
+    const text = context.text;
+    const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
+    const iblockNode = new LogicalInlineBlockNode(context.env, pos, size, autoSize, text, edge, children);
+    console.log("[%s] reduceInlineBlock at %s, %o", context.name, pos.toString(), iblockNode);
+    context.text = "";
+    context.blockNodes = [];
+    context.floatNodes = [];
+    context.cursorPos = LogicalCursorPos.zero;
+    context.contextBoxEdge.clear();
+    if (context.floatRegion) {
+      delete context.floatRegion;
+      context.floatRegion = undefined;
+    }
+    return LayoutResult.logicalNode("inline-block", iblockNode);
+  }
 }
 
 export class TableCellReducer extends RootBlockReducer {

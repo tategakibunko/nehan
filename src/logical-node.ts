@@ -135,14 +135,34 @@ export class LogicalBlockNode implements ILogicalNode {
   }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
-    const display = this.env.display;
     if (this.env.element.tagName === "a") {
       return visitor.visitBlockLink(this);
     }
-    if (display.isInlineBlockFlow() && !display.isTableCell()) {
-      return visitor.visitInlineBlock(this);
-    }
     return visitor.visitBlock(this);
+  }
+}
+
+export class LogicalInlineBlockNode implements ILogicalNode {
+  constructor(
+    public env: BoxEnv,
+    public pos: LogicalCursorPos,
+    public size: LogicalSize, // padding box size
+    public autoSize: LogicalSize, // size based with cursor pos
+    public text: string,
+    public edge: LogicalBoxEdge,
+    public children: ILogicalNode[],
+  ) { }
+
+  get measure(): number {
+    return this.size.measure + this.edge.measure;
+  }
+
+  get extent(): number {
+    return this.size.extent + this.edge.extent;
+  }
+
+  acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
+    return visitor.visitInlineBlock(this);
   }
 }
 
@@ -205,11 +225,11 @@ export class LogicalInlineReNode implements ILogicalNode {
   ) { }
 
   get measure(): number {
-    return this.size.measure + this.edge.borderBoxMeasure;
+    return this.size.measure + this.edge.measure;
   }
 
   get extent(): number {
-    return this.size.extent + this.env.edge.borderBoxExtent;
+    return this.size.extent + this.edge.extent;
   }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {

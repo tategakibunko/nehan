@@ -13,6 +13,7 @@ import {
   LogicalInlineNode,
   LogicalLineNode,
   LogicalBlockNode,
+  LogicalInlineBlockNode,
   ILogicalNodeEvaluator,
   ILogicalCssEvaluator,
   LogicalTableCellsNode,
@@ -200,16 +201,16 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  visitInlineBlock(blockNode: LogicalBlockNode): HTMLElement {
-    // console.log("visitInlineBlock:", blockNode);
+  visitInlineBlock(iblockNode: LogicalInlineBlockNode): HTMLElement {
+    // console.log("visitInlineBlock:", iblockNode);
     const node = document.createElement("div");
     node.style.boxSizing = "content-box";
     node.style.position = "relative";
-    node.style.marginTop = blockNode.env.edge.margin.start + "px";
-    node.style.marginBottom = blockNode.env.edge.margin.end + "px";
-    blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    node.style.marginTop = iblockNode.env.edge.margin.start + "px";
+    node.style.marginBottom = iblockNode.env.edge.margin.end + "px";
+    iblockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    // iblockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    iblockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
 

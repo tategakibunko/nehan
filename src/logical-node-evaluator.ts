@@ -13,6 +13,7 @@ import {
   LogicalInlineNode,
   LogicalLineNode,
   LogicalBlockNode,
+  LogicalInlineBlockNode,
   LogicalTableCellsNode,
   LogicalBlockReNode,
   LogicalInlineReNode,
@@ -43,7 +44,7 @@ export interface ILogicalNodeEvaluator {
   visitInlineEmpha: (inlineNode: LogicalInlineNode) => HTMLElement;
   visitLine: (lineNode: LogicalLineNode) => HTMLElement;
   visitBlock: (blockNode: LogicalBlockNode) => HTMLElement;
-  visitInlineBlock: (blockNode: LogicalBlockNode) => HTMLElement;
+  visitInlineBlock: (iblockNode: LogicalInlineBlockNode) => HTMLElement;
   visitTableCells: (tableCellsNode: LogicalTableCellsNode) => HTMLElement;
   visitBlockImage: (imgNode: LogicalBlockReNode) => HTMLElement;
   visitInlineImage: (imgNode: LogicalInlineReNode) => HTMLElement;
@@ -151,10 +152,10 @@ export class LogicalNodeEvaluator {
     return node;
   }
 
-  visitInlineBlock(blockNode: LogicalBlockNode): HTMLElement {
-    this.currentWritingMode = blockNode.env.writingMode;
-    const node = blockNode.acceptEvaluator(this.currentEvaluator);
-    blockNode.children.forEach(child => {
+  visitInlineBlock(iblockNode: LogicalInlineBlockNode): HTMLElement {
+    this.currentWritingMode = iblockNode.env.writingMode;
+    const node = iblockNode.acceptEvaluator(this.currentEvaluator);
+    iblockNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
     return node;

@@ -153,9 +153,9 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'ruby') {
           this.context.addRuby(value.body);
         } else if (value.type === 're-block') {
-          this.context.addBlock(value.body);
+          this.context.addBlockRe(value.body);
         } else if (value.type === 're-inline') {
-          this.context.addInlineBlock(value.body);
+          this.context.addInlineRe(value.body);
         } else if (value.type === 'inline-link') {
           this.context.addInlineLink(value.body);
         } else if (value.type === 'block-link') {

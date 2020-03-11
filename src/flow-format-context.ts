@@ -3,6 +3,9 @@ import {
   BoxEnv,
   ContextBoxEdge,
   LogicalBlockNode,
+  LogicalBlockReNode,
+  LogicalInlineReNode,
+  LogicalInlineBlockNode,
   LogicalInlineNode,
   LogicalTableCellsNode,
   LogicalLineNode,
@@ -287,6 +290,15 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.text += block.text;
   }
 
+  public addBlockRe(block: LogicalBlockReNode) {
+    // console.log("[%s] addBlock:%o", this.name, block);
+    // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
+    this.blockNodes.push(block);
+    this.nodeHistory.push(block);
+    this.cursorPos.before += block.extent;
+    this.text += block.text;
+  }
+
   private getBorderCollapseStartSize(block: LogicalBlockNode): number {
     return Math.min(this.contextBoxEdge.borderWidth.getSize("start"), block.border.width.start);
   }
@@ -369,13 +381,19 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.text += cells.text;
   }
 
-  public addInlineBlock(inlineBlock: LogicalBlockNode) {
+  public addInlineBlock(inlineBlock: LogicalInlineBlockNode) {
     this.inlineNodes.push(inlineBlock);
     this.cursorPos.start += inlineBlock.measure;
     this.inlineText += inlineBlock.text;
   }
 
   public addInline(inline: LogicalInlineNode) {
+    this.inlineNodes.push(inline);
+    this.cursorPos.start += inline.measure;
+    this.inlineText += inline.text;
+  }
+
+  public addInlineRe(inline: LogicalInlineReNode) {
     this.inlineNodes.push(inline);
     this.cursorPos.start += inline.measure;
     this.inlineText += inline.text;
