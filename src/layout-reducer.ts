@@ -121,11 +121,13 @@ export class LineReducer implements ILayoutReducer {
     const measure = context.maxMeasure;
     const children = context.inlineNodes;
     const reChildren = children.filter(node => ReplacedElement.isReplacedElement(node.env.element));
+    const iblockChildren = children.filter(node => node instanceof LogicalInlineBlockNode);
     const decoratedChildren = children.filter(node => this.isDecoratedText(node));
     const maxFont = children.reduce((acm, node) => node.env.font.size > acm.size ? node.env.font : acm, context.env.font);
     const maxDecoratedExtent = Math.max(...decoratedChildren.map(node => this.getDecoratedExtent(node)));
     const maxReExtent = Math.max(...reChildren.map(node => node.extent));
-    const baseLineExtent = Math.max(maxFont.size, maxDecoratedExtent, maxReExtent);
+    const maxIblockExtent = Math.max(...iblockChildren.map(node => node.extent));
+    const baseLineExtent = Math.max(maxFont.size, maxDecoratedExtent, maxReExtent, maxIblockExtent);
     const maxLineExtent = maxFont.lineExtent;
     const maxChildExtent = Math.max(maxLineExtent, ...children.map(node => node.extent));
     const baseLineOffset = (maxLineExtent - maxFont.size) / 2;
@@ -142,8 +144,9 @@ export class LineReducer implements ILayoutReducer {
     };
     const lastNode = (context.nodeHistory.length > 0) ? context.nodeHistory[context.nodeHistory.length - 1] : null;
     const isContinuousLine = lastNode && lastNode instanceof LogicalLineNode;
-    // If it's not continuous line, but it has some decorated text like empha, ruby,
-    // set before offset to line to prevent line from overflow of parent block.
+    // If it's not line that is continuous to previous line(for example, block element or nothing),
+    // but it has some decorated text like empha, ruby,
+    // then set before offset to line to prevent line from overflow of prev(or parent) block.
     if (baseLineExtent === maxDecoratedExtent && !isContinuousLine) {
       pos.before += baseLineOffset;
       context.cursorPos.before += baseLineOffset;
