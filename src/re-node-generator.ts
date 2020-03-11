@@ -45,6 +45,9 @@ export class ReNodeGenerator implements ILogicalNodeGenerator {
     while (this.context.restExtent < logicalSize.extent) {
       yield LayoutResult.pageBreak;
     }
+    while (this.context.env.display.isInlineLevel() && this.context.restMeasure < logicalSize.measure) {
+      yield LayoutResult.lineBreak;
+    }
     yield this.context.acceptLayoutReducer(this.reducer, logicalSize, physicalSize);
     if (Config.debugLayout) {
       console.groupEnd();

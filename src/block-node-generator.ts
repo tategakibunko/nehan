@@ -120,6 +120,11 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
           this.context.addLine(line.body);
         } else if (value.type === 'page-break') {
+          // sweep out rest inline
+          if (this.context.inlineNodes.length > 0) {
+            const line = this.context.acceptLayoutReducer(LineReducer.instance);
+            this.context.addLine(line.body); // never overflows!
+          }
           const block = this.context.acceptLayoutReducer(this.blockReducer);
           if (isPageRoot) {
             yield block;

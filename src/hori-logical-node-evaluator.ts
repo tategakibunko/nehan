@@ -184,10 +184,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    blockNode.children.forEach(child => {
-      const childNode = child.acceptEvaluator(this);
-      node.appendChild(childNode);
-    });
     return node;
   }
 
@@ -201,10 +197,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    blockNode.children.forEach(child => {
-      const childNode = child.acceptEvaluator(this);
-      node.appendChild(childNode);
-    });
     return node;
   }
 
@@ -215,10 +207,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.position = "absolute";
     tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCells.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    tableCells.children.forEach(child => {
-      const childNode = child.acceptEvaluator(this);
-      node.appendChild(childNode);
-    });
     return node;
   }
 
@@ -288,10 +276,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     link.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.callDomCallbacks(link, node);
-    link.children.forEach(child => {
-      const childNode = child.acceptEvaluator(this);
-      node.appendChild(childNode);
-    });
     return node;
   }
 }

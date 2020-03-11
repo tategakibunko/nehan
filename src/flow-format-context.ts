@@ -376,7 +376,6 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addInline(inline: LogicalInlineNode) {
-    // console.log("addInline:%o, measure:%d", inline, inline.measure);
     this.inlineNodes.push(inline);
     this.cursorPos.start += inline.measure;
     this.inlineText += inline.text;

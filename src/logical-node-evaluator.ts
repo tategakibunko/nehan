@@ -144,17 +144,29 @@ export class LogicalNodeEvaluator {
 
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
     this.currentWritingMode = blockNode.env.writingMode;
-    return blockNode.acceptEvaluator(this.currentEvaluator);
+    const node = blockNode.acceptEvaluator(this.currentEvaluator);
+    blockNode.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(this));
+    });
+    return node;
   }
 
   visitInlineBlock(blockNode: LogicalBlockNode): HTMLElement {
     this.currentWritingMode = blockNode.env.writingMode;
-    return blockNode.acceptEvaluator(this.currentEvaluator);
+    const node = blockNode.acceptEvaluator(this.currentEvaluator);
+    blockNode.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(this));
+    });
+    return node;
   }
 
   visitTableCells(tableCellsNode: LogicalTableCellsNode): HTMLElement {
     this.currentWritingMode = tableCellsNode.env.writingMode;
-    return tableCellsNode.acceptEvaluator(this.currentEvaluator);
+    const node = tableCellsNode.acceptEvaluator(this.currentEvaluator);
+    tableCellsNode.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(this));
+    });
+    return node;
   }
 
   visitBlockImage(imgNode: LogicalBlockReNode): HTMLElement {
@@ -174,6 +186,11 @@ export class LogicalNodeEvaluator {
 
   visitBlockLink(link: LogicalBlockNode): HTMLElement {
     this.currentWritingMode = link.env.writingMode;
-    return link.acceptEvaluator(this.currentEvaluator);
+    const node = link.acceptEvaluator(this.currentEvaluator);
+    link.children.forEach(child => {
+      const childNode = child.acceptEvaluator(this);
+      node.appendChild(childNode);
+    });
+    return node;
   }
 }
