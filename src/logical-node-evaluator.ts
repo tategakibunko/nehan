@@ -1,5 +1,4 @@
 import {
-  ILogicalNode,
   Char,
   SpaceChar,
   HalfChar,
@@ -24,6 +23,7 @@ import {
   HoriLogicalNodeEvaluator,
   VertCssEvaluator,
   HoriCssEvaluator,
+  WritingModeValue,
 } from './public-api'
 
 export interface ILogicalNodeEvaluator {
@@ -57,11 +57,13 @@ export class LogicalNodeEvaluator {
   static horiTbEvaluator: ILogicalNodeEvaluator = new HoriLogicalNodeEvaluator(new HoriCssEvaluator(new WritingMode("horizontal-tb")));
   static vertRlEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(new VertCssEvaluator(new WritingMode("vertical-rl")));
   static vertLrEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(new VertCssEvaluator(new WritingMode("vertical-lr")));
-  static selectEvaluator(writingMode: WritingMode): ILogicalNodeEvaluator {
-    if (writingMode.isTextHorizontal()) {
+
+  static selectEvaluator(writingMode: WritingMode | WritingModeValue): ILogicalNodeEvaluator {
+    let mode: WritingMode = writingMode instanceof WritingMode ? writingMode : new WritingMode(writingMode);
+    if (mode.isTextHorizontal()) {
       return this.horiTbEvaluator;
     }
-    if (writingMode.isVerticalRl()) {
+    if (mode.isVerticalRl()) {
       return this.vertRlEvaluator;
     }
     return this.vertLrEvaluator;
