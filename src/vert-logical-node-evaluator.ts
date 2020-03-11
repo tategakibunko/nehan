@@ -108,7 +108,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitText(textNode: LogicalTextNode): HTMLElement {
     const node = document.createElement("div");
-    node.style.display = "inline-block";
+    node.className = "nehan-text";
     node.style.lineHeight = "1";
     textNode.children.forEach(char => {
       const charNode = char.acceptEvaluator(this);
@@ -143,6 +143,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const beforeProp = writingMode.isVerticalLr() ? "left" : "right";
     // console.log("visitLine:", lineNode.text);
     const node = document.createElement("div");
+    node.className = "nehan-line";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     // node.style.background = "lightblue";
@@ -152,6 +153,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
 
     const baseLineNode = document.createElement("div");
+    baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
     // baseLineNode.style.background = "aliceblue";
     baseLineNode.style.top = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
@@ -204,9 +206,10 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitInlineBlock(iblockNode: LogicalInlineBlockNode): HTMLElement {
     const node = document.createElement("div");
+    node.className = `nehan-iblock nehan-${iblockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
     node.style.background = "orange";
-    // node.style.position = "relative";
+    node.style.position = "relative";
     node.style.marginTop = iblockNode.env.edge.margin.start + "px";
     node.style.marginBottom = iblockNode.env.edge.margin.end + "px";
     iblockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -221,6 +224,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
     // console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
+    node.className = `nehan-${blockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
     node.style.position = blockNode.env.element.tagName === "body" ? "relative" : "absolute";
     blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);

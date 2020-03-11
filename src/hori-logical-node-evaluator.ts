@@ -93,6 +93,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitText(textNode: LogicalTextNode): HTMLElement {
     const node = document.createElement("div");
+    node.className = "nehan-text";
     node.style.display = "inline-block";
     node.style.lineHeight = "1";
     textNode.children.forEach(char => {
@@ -177,10 +178,11 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitInlineBlock(iblockNode: LogicalInlineBlockNode): HTMLElement {
     const node = document.createElement("div");
+    node.className = `nehan-iblock nehan-${iblockNode.env.element.tagName}`;
     node.style.display = "inline-block";
     node.style.boxSizing = "content-box";
     node.style.background = "orange";
-    // node.style.position = "relative";
+    node.style.position = "relative";
     node.style.marginLeft = iblockNode.env.edge.margin.start + "px";
     node.style.marginRight = iblockNode.env.edge.margin.end + "px";
     iblockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
