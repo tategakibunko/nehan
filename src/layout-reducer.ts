@@ -127,13 +127,16 @@ export class LineReducer implements ILayoutReducer {
     const maxDecoratedExtent = Math.max(...decoratedChildren.map(node => this.getDecoratedExtent(node)));
     const maxReExtent = Math.max(...reChildren.map(node => node.extent));
     const maxIblockExtent = Math.max(...iblockChildren.map(node => node.extent));
-    const baseLineExtent = Math.max(maxFont.size, maxDecoratedExtent, maxReExtent, maxIblockExtent);
+    const maxNonTextExtent = Math.max(maxReExtent, maxIblockExtent);
+    const baseLineExtent = Math.max(maxFont.size, maxDecoratedExtent, maxNonTextExtent);
     const maxFontLineExtent = maxFont.lineExtent;
     const maxChildExtent = Math.max(maxFontLineExtent, ...children.map(node => node.extent));
-    const lineBodyExtent = Math.max(maxFontLineExtent, maxChildExtent);
-    const textBodyExtent = Math.max(maxFont.size, maxReExtent, maxIblockExtent);
-    const baseLineOffset = (textBodyExtent < lineBodyExtent) ? (maxFontLineExtent - maxFont.size) / 2 : 0;
-    const extent = (lineBodyExtent === maxReExtent) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
+    const lineBodyExtent = Math.max(maxFontLineExtent, maxChildExtent); // decorated extent is not included here!
+    const textBodyExtent = Math.max(maxFont.size, maxChildExtent);
+    const baseLineOffset = Math.floor((maxFontLineExtent - maxFont.size) / 2);
+    // If body size of line is created by max non-text element(such as re, iblock),
+    // then add some rest space for line(if rest extent is enough).
+    const extent = (lineBodyExtent === maxNonTextExtent && context.restExtent >= baseLineOffset) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
     const size = new LogicalSize({ measure, extent });
     const text = context.inlineText;
     const baseline = {
