@@ -128,11 +128,11 @@ export class LineReducer implements ILayoutReducer {
     const maxReExtent = Math.max(...reChildren.map(node => node.extent));
     const maxIblockExtent = Math.max(...iblockChildren.map(node => node.extent));
     const baseLineExtent = Math.max(maxFont.size, maxDecoratedExtent, maxReExtent, maxIblockExtent);
-    const maxLineExtent = maxFont.lineExtent;
-    const maxChildExtent = Math.max(maxLineExtent, ...children.map(node => node.extent));
-    const baseLineOffset = (maxLineExtent - maxFont.size) / 2;
-    const lineBodyExtent = Math.max(maxLineExtent, maxChildExtent);
-    const textBodyExtent = Math.max(maxFont.size, maxReExtent);
+    const maxFontLineExtent = maxFont.lineExtent;
+    const maxChildExtent = Math.max(maxFontLineExtent, ...children.map(node => node.extent));
+    const lineBodyExtent = Math.max(maxFontLineExtent, maxChildExtent);
+    const textBodyExtent = Math.max(maxFont.size, maxReExtent, maxIblockExtent);
+    const baseLineOffset = (textBodyExtent < lineBodyExtent) ? (maxFontLineExtent - maxFont.size) / 2 : 0;
     const extent = (lineBodyExtent === maxReExtent) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
     const size = new LogicalSize({ measure, extent });
     const text = context.inlineText;
@@ -155,7 +155,7 @@ export class LineReducer implements ILayoutReducer {
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    // console.log("[%s] reduceLine(%s) at %s(baseline:%o), %o", context.name, size.toString(), pos.toString(), baseline, lineNode.text);
+    console.log("[%s] reduceLine(%s) at %s(baseline:%o), %o", context.name, size.toString(), pos.toString(), baseline, lineNode.text);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
