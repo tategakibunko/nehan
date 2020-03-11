@@ -133,7 +133,7 @@ export class LineReducer implements ILayoutReducer {
     const maxChildExtent = Math.max(maxFontLineExtent, ...children.map(node => node.extent));
     const lineBodyExtent = Math.max(maxFontLineExtent, maxChildExtent); // decorated extent is not included here!
     const textBodyExtent = Math.max(maxFont.size, maxChildExtent);
-    const baseLineOffset = Math.floor((maxFontLineExtent - maxFont.size) / 2);
+    const baseLineOffset = maxFontLineExtent - maxFont.size;
     // If body size of line is created by max non-text element(such as re, iblock),
     // then add some rest space for line(if rest extent is enough).
     const extent = (lineBodyExtent === maxNonTextExtent && context.restExtent >= baseLineOffset) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
@@ -143,7 +143,7 @@ export class LineReducer implements ILayoutReducer {
       size: new LogicalSize({ measure, extent: baseLineExtent }),
       textBodySize: new LogicalSize({ measure: context.cursorPos.start, extent: textBodyExtent }),
       startOffset: context.lineBoxStartOffset,
-      blockOffset: baseLineOffset
+      blockOffset: Math.floor(baseLineOffset / 2),
     };
     const lastNode = (context.nodeHistory.length > 0) ? context.nodeHistory[context.nodeHistory.length - 1] : null;
     const isContinuousLine = lastNode && lastNode instanceof LogicalLineNode;
