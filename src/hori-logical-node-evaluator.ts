@@ -20,10 +20,11 @@ import {
   LogicalBlockReNode,
   LogicalInlineReNode,
   TextEmphaData,
+  LogicalNodeEvaluator,
 } from './public-api'
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
-  constructor(public cssVisitor: ILogicalCssEvaluator) { }
+  constructor(private cssVisitor: ILogicalCssEvaluator) { }
 
   visitChar(char: Char): HTMLElement | Node {
     return document.createTextNode(char.text);
@@ -155,7 +156,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(this));
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
     return node;
   }
@@ -169,22 +170,25 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(this));
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
     return node;
   }
 
   visitInlineBlock(iblockNode: LogicalInlineBlockNode): HTMLElement {
-    // console.log("visitInlineBlock:", iblockNode);
     const node = document.createElement("div");
     node.style.display = "inline-block";
     node.style.boxSizing = "content-box";
-    node.style.position = "relative";
+    node.style.background = "orange";
+    // node.style.position = "relative";
     node.style.marginLeft = iblockNode.env.edge.margin.start + "px";
     node.style.marginRight = iblockNode.env.edge.margin.end + "px";
     iblockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    // iblockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    iblockNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     iblockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    iblockNode.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+    });
     return node;
   }
 
@@ -198,6 +202,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    blockNode.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+    });
     return node;
   }
 
@@ -208,6 +215,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.position = "absolute";
     tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCells.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    tableCells.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+    });
     return node;
   }
 
@@ -254,7 +264,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(this));
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
     return node;
   }
@@ -277,6 +287,10 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     link.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.callDomCallbacks(link, node);
+    link.children.forEach(child => {
+      const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
+      node.appendChild(childNode);
+    });
     return node;
   }
 }

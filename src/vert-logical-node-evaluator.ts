@@ -20,10 +20,11 @@ import {
   LogicalBlockReNode,
   LogicalInlineReNode,
   TextEmphaData,
+  LogicalNodeEvaluator,
 } from './public-api'
 
 export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
-  constructor(public cssVisitor: ILogicalCssEvaluator) { }
+  constructor(private cssVisitor: ILogicalCssEvaluator) { }
 
   visitChar(char: Char): HTMLElement | Node {
     return document.createTextNode(char.text);
@@ -160,7 +161,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
-      const childNode = child.acceptEvaluator(this);
+      const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
       const textBodyExtent = child instanceof LogicalInlineReNode ? child.extent : child.env.font.size;
       const baselineGap = Math.floor((lineNode.baseline.textBodySize.extent - textBodyExtent) / 2);
       if (baselineGap === 0) {
@@ -183,7 +184,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(this));
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
     return node;
   }
@@ -196,21 +197,24 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(this));
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
     return node;
   }
 
   visitInlineBlock(iblockNode: LogicalInlineBlockNode): HTMLElement {
-    // console.log("visitInlineBlock:", iblockNode);
     const node = document.createElement("div");
     node.style.boxSizing = "content-box";
-    node.style.position = "relative";
+    node.style.background = "orange";
+    // node.style.position = "relative";
     node.style.marginTop = iblockNode.env.edge.margin.start + "px";
     node.style.marginBottom = iblockNode.env.edge.margin.end + "px";
     iblockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    // iblockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    iblockNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     iblockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    iblockNode.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+    });
     return node;
   }
 
@@ -224,6 +228,9 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.callDomCallbacks(blockNode, node);
+    blockNode.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+    });
     return node;
   }
 
@@ -233,6 +240,9 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.position = "absolute";
     tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCells.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    tableCells.children.forEach(child => {
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+    });
     return node;
   }
 
@@ -280,7 +290,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(this));
+      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
     return node;
   }
@@ -304,7 +314,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.callDomCallbacks(link, node);
     link.children.forEach(child => {
-      const childNode = child.acceptEvaluator(this);
+      const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
       node.appendChild(childNode);
     });
     return node;

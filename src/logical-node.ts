@@ -18,6 +18,11 @@ export interface ILogicalNode {
   acceptEvaluator: (visitor: ILogicalNodeEvaluator, ...args: any[]) => HTMLElement | Node;
 }
 
+export interface ILogicalPositionalNode extends ILogicalNode {
+  pos: LogicalCursorPos;
+  size: LogicalSize;
+}
+
 export class LogicalTextNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
@@ -39,7 +44,7 @@ export class LogicalTextNode implements ILogicalNode {
   }
 }
 
-export class LogicalLineNode implements ILogicalNode {
+export class LogicalLineNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
     public pos: LogicalCursorPos,
@@ -115,7 +120,7 @@ export class LogicalInlineNode implements ILogicalNode {
   }
 }
 
-export class LogicalBlockNode implements ILogicalNode {
+export class LogicalBlockNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
     public pos: LogicalCursorPos,
@@ -142,7 +147,7 @@ export class LogicalBlockNode implements ILogicalNode {
   }
 }
 
-export class LogicalInlineBlockNode implements ILogicalNode {
+export class LogicalInlineBlockNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
     public pos: LogicalCursorPos,
@@ -188,7 +193,7 @@ export class LogicalTableCellsNode implements ILogicalNode {
   }
 }
 
-export class LogicalBlockReNode implements ILogicalNode {
+export class LogicalBlockReNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
     public size: LogicalSize, // logical content size

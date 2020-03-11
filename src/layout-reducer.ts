@@ -226,7 +226,7 @@ export class InlineBlockReducer implements ILayoutReducer {
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
     const iblockNode = new LogicalInlineBlockNode(context.env, pos, size, autoSize, text, edge, children);
-    console.log("[%s] reduceInlineBlock at %s, %o", context.name, pos.toString(), iblockNode);
+    // console.log("[%s] reduceInlineBlock at %s, %o", context.name, pos.toString(), iblockNode);
     context.text = "";
     context.blockNodes = [];
     context.floatNodes = [];

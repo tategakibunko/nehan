@@ -1,6 +1,4 @@
 import {
-  Config,
-  ILayoutFormatContext,
   FloatRegion,
   LogicalCursorPos,
   LogicalSize,
@@ -9,7 +7,7 @@ import {
   FlowFormatContext,
   IFlowRootFormatContext,
   ILogicalNode,
-  LogicalBlockNode,
+  ILogicalPositionalNode,
 } from './public-api';
 
 export class FlowRootFormatContext extends FlowFormatContext implements IFlowRootFormatContext {
@@ -33,7 +31,7 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     }
   }
 
-  public addFloat(block: LogicalBlockNode, float: LogicalFloat, contextMeasure: number) {
+  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number) {
     if (float.isNone()) {
       console.error("float direction is not set! ignored.");
       return;
