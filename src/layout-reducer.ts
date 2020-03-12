@@ -145,8 +145,8 @@ export class LineReducer implements ILayoutReducer {
       startOffset: context.lineBoxStartOffset,
       blockOffset: Math.floor(baseLineOffset / 2),
     };
-    const lastNode = (context.nodeHistory.length > 0) ? context.nodeHistory[context.nodeHistory.length - 1] : null;
-    const isContinuousLine = lastNode && lastNode instanceof LogicalLineNode;
+    const lastBlockNode = context.lastBlockNode;
+    const isContinuousLine = lastBlockNode && lastBlockNode instanceof LogicalLineNode;
     // If this line is not continuous to previous line,
     // (for example, this line is continuous to block element or at the beginning of block etc)
     // and this line includes some decorated text(like empha, ruby) that has largest extent,

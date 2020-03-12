@@ -31,7 +31,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   public inlineMargin: number;
   public blockNodes: ILogicalNode[];
   public inlineNodes: ILogicalNode[];
-  public nodeHistory: ILogicalNode[];
+  public blockNodeHistory: ILogicalNode[];
   public inlineText: string;
   public listMarker?: LogicalInlineNode;
   public text: string;
@@ -47,7 +47,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineMargin = 0;
     this.blockNodes = [];
     this.inlineNodes = [];
-    this.nodeHistory = [];
+    this.blockNodeHistory = [];
     this.inlineText = "";
     this.text = "";
   }
@@ -96,8 +96,12 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.maxExtent - this.cursorPos.before;
   }
 
+  public get lastBlockNode(): ILogicalNode | undefined {
+    return this.blockNodeHistory[this.blockNodeHistory.length - 1] || undefined;
+  }
+
   public get totalLineCount(): number {
-    return this.nodeHistory.filter(node => node instanceof LogicalLineNode).length;
+    return this.blockNodeHistory.filter(node => node instanceof LogicalLineNode).length;
   }
 
   public get localLineCount(): number {
@@ -273,44 +277,6 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.cursorPos.before += marginSize;
   }
 
-  public addLine(line: LogicalLineNode) {
-    // console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
-    this.blockNodes.push(line);
-    this.nodeHistory.push(line);
-    this.cursorPos.before += line.extent;
-    this.text += line.text;
-  }
-
-  public addBlock(block: LogicalBlockNode) {
-    // console.log("[%s] addBlock:%o", this.name, block);
-    // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
-    this.blockNodes.push(block);
-    this.nodeHistory.push(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
-  }
-
-  public addBlockRe(block: LogicalBlockReNode) {
-    // console.log("[%s] addBlock:%o", this.name, block);
-    // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
-    this.blockNodes.push(block);
-    this.nodeHistory.push(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
-  }
-
-  private getBorderCollapseStartSize(block: LogicalBlockNode): number {
-    return Math.min(this.contextBoxEdge.borderWidth.getSize("start"), block.border.width.start);
-  }
-
-  private getBorderCollapseBeforeSize(block: LogicalBlockNode): number {
-    const lastChild = this.blockNodes[this.blockNodes.length - 1];
-    if (lastChild instanceof LogicalBlockNode) {
-      return Math.min(lastChild.border.width.after, block.border.width.before);
-    }
-    return Math.min(this.contextBoxEdge.borderWidth.getSize("before"), block.border.width.before);
-  }
-
   // called by reducer of this context.
   public getBorderCollapseAfterSize(): number {
     const afterBorderSize = this.contextBoxEdge.borderWidth.getSize("after");
@@ -328,21 +294,33 @@ export class FlowFormatContext implements IFlowFormatContext {
     return 0;
   }
 
-  private collapseBeforeStartBorder(block: LogicalBlockNode) {
-    const startCollapseSize = this.getBorderCollapseStartSize(block);
-    const beforeCollapseSize = this.getBorderCollapseBeforeSize(block);
-    // Note that inline border is not added to cursorPos.
-    // cursor of inline direction moves within 'content-area'(0 ~ maxMeasure) without border/padding.
-    // But cursor of block direction includes block border, ant it's added to cursorPos.
-    // So to cancel border of block direction, we have to cancel both current border size and collapsed size.
-    block.pos.start = -startCollapseSize;
-    block.pos.before -= block.border.width.before + beforeCollapseSize;
-    this.cursorPos.before -= beforeCollapseSize;
-    // console.log("[%s] collapseBeforeStartBorder(before = %d, start = %d)", this.name, beforeCollapseSize, startCollapseSize);
+  public addLine(line: LogicalLineNode) {
+    // console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
+    this.pushBlockNodes(line);
+    this.cursorPos.before += line.extent;
+    this.text += line.text;
+  }
+
+  public addBlock(block: LogicalBlockNode) {
+    // console.log("[%s] addBlock:%o", this.name, block);
+    // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
+    this.pushBlockNodes(block);
+    this.cursorPos.before += block.extent;
+    this.text += block.text;
+  }
+
+  public addBlockRe(block: LogicalBlockReNode) {
+    // console.log("[%s] addBlock:%o", this.name, block);
+    // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
+    this.pushBlockNodes(block);
+    this.cursorPos.before += block.extent;
+    this.text += block.text;
   }
 
   public addTable(block: LogicalBlockNode) {
-    this.addBlock(block);
+    this.pushBlockNodes(block);
+    this.cursorPos.before += block.extent;
+    this.text += block.text;
   }
 
   // parent: table
@@ -350,7 +328,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (this.env.borderCollapse.isCollapse()) {
       this.collapseBeforeStartBorder(block);
     }
-    this.addBlock(block);
+    this.pushBlockNodes(block);
+    this.cursorPos.before += block.extent;
+    this.text += block.text;
   }
 
   // parent: table-row-group
@@ -358,7 +338,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (this.env.borderCollapse.isCollapse()) {
       this.collapseBeforeStartBorder(block);
     }
-    this.addBlock(block);
+    this.pushBlockNodes(block);
+    this.cursorPos.before += block.extent;
+    this.text += block.text;
   }
 
   // parent: table-row
@@ -375,10 +357,15 @@ export class FlowFormatContext implements IFlowFormatContext {
         // console.log("[%s] collapse before %d", this.name, collapseSize);
       }
     }
-    this.blockNodes.push(cells);
-    this.nodeHistory.push(cells);
+    this.pushBlockNodes(cells);
     this.cursorPos.before += cells.extent;
     this.text += cells.text;
+  }
+
+  public addBlockLink(block: LogicalBlockNode) {
+    this.pushBlockNodes(block);
+    this.cursorPos.before += block.extent;
+    this.text += block.text;
   }
 
   public addInlineBlock(inlineBlock: LogicalInlineBlockNode) {
@@ -399,12 +386,10 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineText += inline.text;
   }
 
-  public addInlineLink(link: LogicalInlineNode) {
-    this.addInline(link);
-  }
-
-  public addBlockLink(link: LogicalBlockNode) {
-    this.addBlock(link);
+  public addInlineLink(inline: LogicalInlineNode) {
+    this.inlineNodes.push(inline);
+    this.cursorPos.start += inline.measure;
+    this.inlineText += inline.text;
   }
 
   // Note that marker text is not included to inlineText.
@@ -425,5 +410,35 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineNodes.push(ruby);
     this.cursorPos.start += ruby.measure;
     this.inlineText += ruby.text;
+  }
+
+  private pushBlockNodes(block: ILogicalNode) {
+    this.blockNodes.push(block);
+    this.blockNodeHistory.push(block);
+  }
+
+  private getBorderCollapseStartSize(block: LogicalBlockNode): number {
+    return Math.min(this.contextBoxEdge.borderWidth.getSize("start"), block.border.width.start);
+  }
+
+  private getBorderCollapseBeforeSize(block: LogicalBlockNode): number {
+    const lastChild = this.blockNodes[this.blockNodes.length - 1];
+    if (lastChild instanceof LogicalBlockNode) {
+      return Math.min(lastChild.border.width.after, block.border.width.before);
+    }
+    return Math.min(this.contextBoxEdge.borderWidth.getSize("before"), block.border.width.before);
+  }
+
+  private collapseBeforeStartBorder(block: LogicalBlockNode) {
+    const startCollapseSize = this.getBorderCollapseStartSize(block);
+    const beforeCollapseSize = this.getBorderCollapseBeforeSize(block);
+    // Note that inline border is not added to cursorPos.
+    // cursor of inline direction moves within 'content-area'(0 ~ maxMeasure) without border/padding.
+    // But cursor of block direction includes block border, ant it's added to cursorPos.
+    // So to cancel border of block direction, we have to cancel both current border size and collapsed size.
+    block.pos.start = -startCollapseSize;
+    block.pos.before -= block.border.width.before + beforeCollapseSize;
+    this.cursorPos.before -= beforeCollapseSize;
+    // console.log("[%s] collapseBeforeStartBorder(before = %d, start = %d)", this.name, beforeCollapseSize, startCollapseSize);
   }
 }
