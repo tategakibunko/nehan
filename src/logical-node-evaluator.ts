@@ -59,13 +59,14 @@ export class LogicalNodeEvaluator {
   static vertLrEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(new VertCssEvaluator(new WritingMode("vertical-lr")));
 
   static selectEvaluator(writingMode: WritingMode | WritingModeValue): ILogicalNodeEvaluator {
-    let mode: WritingMode = writingMode instanceof WritingMode ? writingMode : new WritingMode(writingMode);
-    if (mode.isTextHorizontal()) {
-      return this.horiTbEvaluator;
+    const value = writingMode instanceof WritingMode ? writingMode.value : writingMode;
+    switch (value) {
+      case "horizontal-tb":
+        return this.horiTbEvaluator;
+      case "vertical-rl":
+        return this.vertRlEvaluator;
+      case "vertical-lr":
+        return this.vertLrEvaluator;
     }
-    if (mode.isVerticalRl()) {
-      return this.vertRlEvaluator;
-    }
-    return this.vertLrEvaluator;
   }
 }
