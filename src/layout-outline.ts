@@ -4,19 +4,18 @@ import {
   LayoutOutlineCallbacks,
   LayoutOutlineParser,
   Anchor,
-  Utils,
 } from "./public-api";
 
 export class LayoutOutline {
   public rootElement?: HtmlElement;
   public rootSection: LayoutSection;
   public curSection: LayoutSection;
-  public anchor: { [anchor_name: string]: Anchor };
+  public anchors: { [anchor_name: string]: Anchor };
 
   constructor() {
     this.rootSection = new LayoutSection();
     this.curSection = this.rootSection;
-    this.anchor = {};
+    this.anchors = {};
   }
 
   public createElement(callbacks?: LayoutOutlineCallbacks): HTMLElement {
@@ -35,7 +34,7 @@ export class LayoutOutline {
       return this.openHeader(element, pageIndex);
     }
     if (element.tagName === "a") {
-      let anchor_name = element.getAttribute("name") || "";
+      const anchor_name = element.getAttribute("name") || "";
       if (anchor_name) {
         this.addAnchor(anchor_name, pageIndex);
       }
@@ -44,7 +43,7 @@ export class LayoutOutline {
   }
 
   public getAnchor(anchor_name: string): Anchor | null {
-    return this.anchor[anchor_name] || null;
+    return this.anchors[anchor_name] || null;
   }
 
   public openSectionRoot(element: HtmlElement, pageIndex: number): LayoutSection {
@@ -78,7 +77,7 @@ export class LayoutOutline {
     if (element && LayoutSection.isSectioningElement(element) === false) {
       return this.curSection;
     }
-    //let before = this.curTitle;
+    //const before = this.curTitle;
     if (this.curSection.parent) {
       this.curSection = this.curSection.parent;
     }
@@ -86,9 +85,9 @@ export class LayoutOutline {
     return this.curSection;
   }
 
-  protected addAnchor(anchor_name: string, pageIndex: number) {
-    this.anchor[anchor_name] = {
-      name: anchor_name,
+  protected addAnchor(anchorName: string, pageIndex: number) {
+    this.anchors[anchorName] = {
+      name: anchorName,
       pageIndex,
     };
   }
@@ -109,9 +108,8 @@ export class LayoutOutline {
     return section;
   }
 
-  protected createStandAloneSubSection(pageIndex: number, header?: HtmlElement):
-    LayoutSection {
-    let section = this.createContextSection(pageIndex, header);
+  protected createStandAloneSubSection(pageIndex: number, header?: HtmlElement): LayoutSection {
+    const section = this.createContextSection(pageIndex, header);
     section.closed = true; // stand alone
     this.curSection.addChild(section);
     //console.log("[%s] create stand alone sub section:%s", this.curTitle, section.title);
@@ -119,32 +117,29 @@ export class LayoutOutline {
   }
 
   protected createSubSection(pageIndex: number, header?: HtmlElement): LayoutSection {
-    //let section = new LayoutSection(header);
-    let section = this.createContextSection(pageIndex, header);
+    const section = this.createContextSection(pageIndex, header);
     this.curSection.addChild(section);
     //console.log("[%s] create sub section:%s", this.curTitle, section.title);
     return section;
   }
 
   protected createNextSection(pageIndex: number, header?: HtmlElement): LayoutSection {
-    //let section = new LayoutSection(header);
-    let section = this.createContextSection(pageIndex, header);
-    let root_section = this.closeSection();
-    root_section.addChild(section);
+    const section = this.createContextSection(pageIndex, header);
+    const rootSection = this.closeSection();
+    rootSection.addChild(section);
     //console.log("[%s] create next section:%s", this.curTitle, section.title);
     return section;
   }
 
-  protected closeHigherSection(section: LayoutSection, max_level: number): LayoutSection {
-    if (!section.parent || !section.parent.parent || section.level <= max_level) {
+  protected closeHigherSection(section: LayoutSection, maxLevel: number): LayoutSection {
+    if (!section.parent || !section.parent.parent || section.level <= maxLevel) {
       return section;
     }
     section.closed = true;
-    return this.closeHigherSection(section.parent, max_level);
+    return this.closeHigherSection(section.parent, maxLevel);
   }
 
-  protected createHigherSection(pageIndex: number, header: HtmlElement, max_level: number):
-    LayoutSection {
+  protected createHigherSection(pageIndex: number, header: HtmlElement, max_level: number): LayoutSection {
     //console.log("createHigherSection: %s, dst level:%d", header.textContent, max_level); 
     if (this.curSection.parent) {
       this.curSection = this.closeHigherSection(this.curSection.parent, max_level);
@@ -162,18 +157,18 @@ export class LayoutOutline {
       this.curSection.setHeader(header);
       return this.curSection;
     }
-    let cur_level = this.curSection.level;
-    let new_level = Utils.getHeaderLevel(header);
-    //console.log("[%s] h%d -> h%d", this.curTitle, cur_level, new_level);
-    if (new_level > cur_level) { // lower level makes stand alone sub section.
+    const curLevel = this.curSection.level;
+    const newLevel = LayoutSection.getHeaderLevel(header);
+    //console.log("[%s] h%d -> h%d", this.curTitle, curLevel, newLevel);
+    if (newLevel > curLevel) { // lower level makes stand alone sub section.
       return this.createStandAloneSubSection(pageIndex, header);
     }
-    if (new_level === cur_level) { // same level makes continuous section.
+    if (newLevel === curLevel) { // same level makes continuous section.
       return this.createNextSection(pageIndex, header);
     }
     this.curSection.closed = true;
 
     // higher level close current section and create new section.
-    return this.createHigherSection(pageIndex, header, new_level);
+    return this.createHigherSection(pageIndex, header, newLevel);
   }
 }

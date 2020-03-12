@@ -15,18 +15,6 @@ export namespace Utils {
     return isNaN(Number(x)) === false;
   }
 
-  export const getHeaderLevel = (element: HtmlElement): number => {
-    switch (element.tagName) {
-      case "h1": return 1;
-      case "h2": return 2;
-      case "h3": return 3;
-      case "h4": return 4;
-      case "h5": return 5;
-      case "h6": return 6;
-    }
-    throw new Error("invalid element");
-  }
-
   export const mergeDefault = (obj: any, defaults: any): any => {
     return Object.assign(Object.assign({}, defaults), obj);
   };
