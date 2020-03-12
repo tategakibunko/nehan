@@ -147,11 +147,12 @@ export class LineReducer implements ILayoutReducer {
     };
     const lastBlockNode = context.lastBlockNode;
     const isContinuousLine = lastBlockNode && lastBlockNode instanceof LogicalLineNode;
-    // If this line is not continuous to previous line,
-    // (for example, this line is continuous to block element or at the beginning of block etc)
+    const isLocalFirstLine = context.localLineCount === 0;
+    // If this line is not continuous to previous line or first line of local page,
+    // (for example, this line is continuous to block element or at the beginning of local page block etc)
     // and this line includes some decorated text(like empha, ruby) that has largest extent,
     // then set before offset to prevent this line from overflowing previous(or parent) block.
-    if (baseLineExtent === maxDecoratedExtent && !isContinuousLine) {
+    if (baseLineExtent === maxDecoratedExtent && (!isContinuousLine || isLocalFirstLine)) {
       pos.before += baseLineOffset;
       context.cursorPos.before += baseLineOffset;
     }
