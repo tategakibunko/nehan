@@ -1,10 +1,10 @@
 import {
   LayoutSection,
-  LayoutOutlineCallbacks
+  ILayoutOutlineCallbacks
 } from "./public-api";
 
 export class LayoutOutlineParser {
-  static parseSection(section: LayoutSection, callbacks?: LayoutOutlineCallbacks): HTMLElement {
+  static parseSection(section: LayoutSection, callbacks?: ILayoutOutlineCallbacks): HTMLElement {
     callbacks = callbacks || {};
     if (section.isRoot()) {
       return this.parseSectionRoot(section, callbacks);
@@ -15,7 +15,7 @@ export class LayoutOutlineParser {
     return this.parseSectionLeaf(section, callbacks);
   }
 
-  static parseSectionRoot(section: LayoutSection, callbacks: LayoutOutlineCallbacks): HTMLElement {
+  static parseSectionRoot(section: LayoutSection, callbacks: ILayoutOutlineCallbacks): HTMLElement {
     let root = callbacks.onRoot ?
       callbacks.onRoot() :
       document.createElement("ul");
@@ -23,7 +23,7 @@ export class LayoutOutlineParser {
     return root;
   }
 
-  static parseSectionNode(section: LayoutSection, callbacks: LayoutOutlineCallbacks): HTMLElement {
+  static parseSectionNode(section: LayoutSection, callbacks: ILayoutOutlineCallbacks): HTMLElement {
     let li = document.createElement("li");
     let ul = document.createElement("ul");
     let title = callbacks.onSection ?
@@ -35,7 +35,7 @@ export class LayoutOutlineParser {
     return li;
   }
 
-  static parseSectionLeaf(section: LayoutSection, callbacks: LayoutOutlineCallbacks): HTMLElement {
+  static parseSectionLeaf(section: LayoutSection, callbacks: ILayoutOutlineCallbacks): HTMLElement {
     let li = document.createElement("li");
     let title = callbacks.onSection ?
       callbacks.onSection(section) :
@@ -45,7 +45,7 @@ export class LayoutOutlineParser {
   }
 
   static appendSectionChildren(
-    parent: HTMLElement, children: LayoutSection[], callbacks: LayoutOutlineCallbacks) {
+    parent: HTMLElement, children: LayoutSection[], callbacks: ILayoutOutlineCallbacks) {
     children.forEach(child => {
       parent.appendChild(this.parseSection(child, callbacks));
     });

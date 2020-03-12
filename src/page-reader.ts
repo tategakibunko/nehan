@@ -4,16 +4,16 @@ import {
   PageGenerator,
   DocumentCallbacks,
   ResourceLoader,
-  LayoutOutlineCallbacks,
+  ILayoutOutlineCallbacks,
 } from "./public-api";
 
 export class PageReader {
-  protected pages: LogicalPage [];
+  protected pages: LogicalPage[];
   protected document: HtmlDocument;
   protected generator: PageGenerator | null;
   protected timestamp: number;
 
-  constructor(document: HtmlDocument){
+  constructor(document: HtmlDocument) {
     this.pages = [];
     this.document = document;
     this.generator = null;
@@ -39,14 +39,14 @@ export class PageReader {
   }
 
   public getPage(index: number): LogicalPage {
-    if(!this.generator){
+    if (!this.generator) {
       throw new Error("generator is not created yet");
     }
     let page = this.pages[index];
-    if(!page){
+    if (!page) {
       throw new Error("page[" + index + "] not found");
     }
-    if(page.dom !== null){
+    if (page.dom !== null) {
       return page;
     }
     page.dom = this.generator.evalPageBox(page.box);
@@ -54,18 +54,18 @@ export class PageReader {
   }
 
   public getAnchorPage(anchor_name: string): LogicalPage | null {
-    if(!this.generator){
+    if (!this.generator) {
       return null;
     }
     let anchor = this.generator.getAnchor(anchor_name);
-    if(!anchor){
+    if (!anchor) {
       return null;
     }
     return this.getPage(anchor.pageIndex);
   }
 
-  public createOutlineElement(callbacks: LayoutOutlineCallbacks): HTMLElement {
-    if(!this.generator){
+  public createOutlineElement(callbacks: ILayoutOutlineCallbacks): HTMLElement {
+    if (!this.generator) {
       throw new Error("generator is not created yet");
     }
     return this.generator.createOutlineElement(callbacks);
@@ -77,24 +77,24 @@ export class PageReader {
     return time;
   }
 
-  protected renderPage(callbacks: DocumentCallbacks){
-    if(!this.generator){
+  protected renderPage(callbacks: DocumentCallbacks) {
+    if (!this.generator) {
       throw new Error("generator is not created yet");
     }
     let next = this.generator.getNext();
-    if(next.done || !next.value){
-      if(callbacks.onCompletePage){
-	let time = this.getTime();
-	callbacks.onCompletePage(this, time);
+    if (next.done || !next.value) {
+      if (callbacks.onCompletePage) {
+        let time = this.getTime();
+        callbacks.onCompletePage(this, time);
       }
       return;
     }
     let page = next.value;
     this.pages[page.index] = page;
-    if(callbacks.onProgressPage){
+    if (callbacks.onProgressPage) {
       callbacks.onProgressPage(this, page);
     }
-    if(callbacks.onPage){
+    if (callbacks.onPage) {
       page.dom = this.generator.evalPageBox(page.box);
       callbacks.onPage(this, page);
     }

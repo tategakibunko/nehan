@@ -3,7 +3,7 @@ import {
   HtmlDocument,
   BodyGenerator,
   LayoutEvaluator,
-  LayoutOutlineCallbacks,
+  ILayoutOutlineCallbacks,
   LogicalPage,
   LogicalBox,
 } from "./public-api";
@@ -35,7 +35,7 @@ export class PageGenerator {
     return this.generator.getAnchor(anchorName);
   }
 
-  public createOutlineElement(callbacks?: LayoutOutlineCallbacks): HTMLElement {
+  public createOutlineElement(callbacks?: ILayoutOutlineCallbacks): HTMLElement {
     return this.generator.createOutlineElement(callbacks);
   }
 

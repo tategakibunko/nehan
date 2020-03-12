@@ -2,7 +2,7 @@ import {
   Anchor,
   FlowRootContext,
   HtmlElement,
-  LayoutOutlineCallbacks
+  ILayoutOutlineCallbacks
 } from "./public-api";
 
 export class BodyContext extends FlowRootContext {
@@ -18,7 +18,7 @@ export class BodyContext extends FlowRootContext {
     return this.counter.isTooManyPages();
   }
 
-  public createOutlineElement(callbacks?: LayoutOutlineCallbacks): HTMLElement {
+  public createOutlineElement(callbacks?: ILayoutOutlineCallbacks): HTMLElement {
     return this.outline.createElement(callbacks);
   }
 }

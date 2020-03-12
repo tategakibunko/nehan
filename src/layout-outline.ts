@@ -1,8 +1,9 @@
 import {
   HtmlElement,
   LayoutSection,
-  LayoutOutlineCallbacks,
+  ILayoutOutlineCallbacks,
   LayoutOutlineParser,
+  ILayoutOutlineEvaluator,
   Anchor,
 } from "./public-api";
 
@@ -18,7 +19,11 @@ export class LayoutOutline {
     this.anchors = {};
   }
 
-  public createElement(callbacks?: LayoutOutlineCallbacks): HTMLElement {
+  public acceptEvaluator(visitor: ILayoutOutlineEvaluator): HTMLElement {
+    return visitor.visitSectionRoot(this.rootSection);
+  }
+
+  public createElement(callbacks?: ILayoutOutlineCallbacks): HTMLElement {
     //console.log("createElement:", this.rootSection);
     return LayoutOutlineParser.parseSection(this.rootSection, callbacks);
   }
@@ -54,12 +59,12 @@ export class LayoutOutline {
   }
 
   protected openSectionRoot(element: HtmlElement, pageIndex: number): LayoutSection {
-    //console.log("openSectionRoot:", element.tagName);
+    // console.log("openSectionRoot:", element.tagName);
     if (!this.rootElement) {
       return this.curSection;
     }
     this.rootElement = element;
-    //console.log("set section root:", element.tagName);
+    // console.log("set section root:", element.tagName);
     return this.openSection(pageIndex);
   }
 
@@ -81,11 +86,11 @@ export class LayoutOutline {
   }
 
   protected closeSection(): LayoutSection {
-    //const before = this.curTitle;
+    const before = this.curTitle;
     if (this.curSection.parent) {
       this.curSection = this.curSection.parent;
     }
-    //console.log("closeSection: %s -> %s", before, this.curTitle);
+    // console.log("closeSection: %s -> %s", before, this.curTitle);
     return this.curSection;
   }
 
@@ -113,14 +118,14 @@ export class LayoutOutline {
     const section = this.createContextSection(pageIndex, header);
     section.closed = true; // stand alone
     this.curSection.addChild(section);
-    //console.log("[%s] create stand alone sub section:%s", this.curTitle, section.title);
+    // console.log("[%s] create stand alone sub section:%s", this.curTitle, section.title);
     return section;
   }
 
   protected createSubSection(pageIndex: number, header?: HtmlElement): LayoutSection {
     const section = this.createContextSection(pageIndex, header);
     this.curSection.addChild(section);
-    //console.log("[%s] create sub section:%s", this.curTitle, section.title);
+    // console.log("[%s] create sub section:%s", this.curTitle, section.title);
     return section;
   }
 
@@ -128,7 +133,7 @@ export class LayoutOutline {
     const section = this.createContextSection(pageIndex, header);
     const rootSection = this.closeSection();
     rootSection.addChild(section);
-    //console.log("[%s] create next section:%s", this.curTitle, section.title);
+    // console.log("[%s] create next section:%s", this.curTitle, section.title);
     return section;
   }
 
@@ -141,7 +146,7 @@ export class LayoutOutline {
   }
 
   protected createHigherSection(pageIndex: number, header: HtmlElement, max_level: number): LayoutSection {
-    //console.log("createHigherSection: %s, dst level:%d", header.textContent, max_level); 
+    // console.log("createHigherSection: %s, dst level:%d", header.textContent, max_level);
     if (this.curSection.parent) {
       this.curSection = this.closeHigherSection(this.curSection.parent, max_level);
     }
@@ -149,10 +154,10 @@ export class LayoutOutline {
   }
 
   protected addHeader(header: HtmlElement, pageIndex: number): LayoutSection {
-    //console.log("[%s] addHeader(%s):%s", this.curTitle, header.tagName, header.textContent);
+    // console.log("[%s] addHeader(%s):%s", this.curTitle, header.tagName, header.textContent);
     if (!this.curSection.header) { // header is not set yet
       if (!this.curSection.parent) { // root section
-        //console.log("[%s] accepted first header", this.curTitle);
+        // console.log("[%s] accepted first header", this.curTitle);
         return this.createSubSection(pageIndex, header); // create sub section with header
       }
       this.curSection.setHeader(header);
@@ -160,7 +165,7 @@ export class LayoutOutline {
     }
     const curLevel = this.curSection.level;
     const newLevel = LayoutSection.getHeaderLevel(header);
-    //console.log("[%s] h%d -> h%d", this.curTitle, curLevel, newLevel);
+    // console.log("[%s] h%d -> h%d", this.curTitle, curLevel, newLevel);
     if (newLevel > curLevel) { // lower level makes stand alone sub section.
       return this.createStandAloneSubSection(pageIndex, header);
     }

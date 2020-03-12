@@ -181,6 +181,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       this.context.addBlockMarginEdge("after", marginAfter);
     }
 
+    this.context.flowRoot.closeElement(this.context.env.element);
     yield this.context.acceptLayoutReducer(this.blockReducer);
     if (this.context.env.pageBreakAfter.isAlways()) {
       yield LayoutResult.pageBreak;

@@ -183,6 +183,7 @@ export * from "./writing-mode"
 export * from "./semantic-style"
 
 // engine7
+export * from './layout-outline-evaluator'
 export * from './containing-element'
 export * from './computed-value'
 export * from './used-region-resolver'

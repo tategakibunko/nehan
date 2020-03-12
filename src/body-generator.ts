@@ -2,7 +2,7 @@ import {
   Anchor,
   FlowGenerator,
   BodyContext,
-  LayoutOutlineCallbacks,
+  ILayoutOutlineCallbacks,
   LayoutEvaluator,
   VertLayoutEvaluator,
   HoriLayoutEvaluator,
@@ -12,7 +12,7 @@ import {
 export class BodyGenerator extends FlowGenerator {
   protected context!: BodyContext;
 
-  public createOutlineElement(callbacks?: LayoutOutlineCallbacks): HTMLElement {
+  public createOutlineElement(callbacks?: ILayoutOutlineCallbacks): HTMLElement {
     return this.context.createOutlineElement(callbacks);
   }
 
