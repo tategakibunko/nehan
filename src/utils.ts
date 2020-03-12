@@ -3,7 +3,7 @@ import {
 } from "./public-api";
 
 export namespace Utils {
-  export let atoi = (x: string, base = 10): number => {
+  export const atoi = (x: string, base = 10): number => {
     const n = parseInt(x, base);
     if (isNaN(n)) {
       console.error(`${n} is not a number`);
@@ -11,11 +11,11 @@ export namespace Utils {
     return n;
   }
 
-  export let isNumber = (x: any): boolean => {
+  export const isNumber = (x: any): boolean => {
     return isNaN(Number(x)) === false;
   }
 
-  export let getHeaderLevel = (element: HtmlElement): number => {
+  export const getHeaderLevel = (element: HtmlElement): number => {
     switch (element.tagName) {
       case "h1": return 1;
       case "h2": return 2;
@@ -27,7 +27,7 @@ export namespace Utils {
     throw new Error("invalid element");
   }
 
-  export let mergeDefault = (obj: any, defaults: any): any => {
+  export const mergeDefault = (obj: any, defaults: any): any => {
     return Object.assign(Object.assign({}, defaults), obj);
   };
 
