@@ -58,7 +58,7 @@ export class FlowContext implements ILayoutContext {
 
   public closeElement() {
     if (this.hasNext() === false) {
-      this.sectionRoot.outline.closeSection(this.element);
+      this.sectionRoot.outline.closeElement(this.element);
     }
   }
 

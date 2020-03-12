@@ -31,8 +31,8 @@ export class PageGenerator {
     return next;
   }
 
-  public getAnchor(anchor_name: string): Anchor | null {
-    return this.generator.getAnchor(anchor_name);
+  public getAnchor(anchorName: string): Anchor | undefined {
+    return this.generator.getAnchor(anchorName);
   }
 
   public createOutlineElement(callbacks?: LayoutOutlineCallbacks): HTMLElement {

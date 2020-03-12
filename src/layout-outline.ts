@@ -34,19 +34,26 @@ export class LayoutOutline {
       return this.openHeader(element, pageIndex);
     }
     if (element.tagName === "a") {
-      const anchor_name = element.getAttribute("name") || "";
-      if (anchor_name) {
-        this.addAnchor(anchor_name, pageIndex);
+      const anchorName = element.getAttribute("name") || "";
+      if (anchorName) {
+        this.addAnchor(anchorName, pageIndex);
       }
     }
     return undefined;
   }
 
-  public getAnchor(anchor_name: string): Anchor | null {
-    return this.anchors[anchor_name] || null;
+  public closeElement(element?: HtmlElement): LayoutSection {
+    if (element && LayoutSection.isSectioningElement(element) === false) {
+      return this.curSection;
+    }
+    return this.closeSection();
   }
 
-  public openSectionRoot(element: HtmlElement, pageIndex: number): LayoutSection {
+  public getAnchor(anchorName: string): Anchor | undefined {
+    return this.anchors[anchorName];
+  }
+
+  protected openSectionRoot(element: HtmlElement, pageIndex: number): LayoutSection {
     //console.log("openSectionRoot:", element.tagName);
     if (!this.rootElement) {
       return this.curSection;
@@ -56,7 +63,7 @@ export class LayoutOutline {
     return this.openSection(pageIndex);
   }
 
-  public openSection(pageIndex: number): LayoutSection {
+  protected openSection(pageIndex: number): LayoutSection {
     // <sect> <- cur(already closed)
     //   content
     // </sect>
@@ -73,10 +80,7 @@ export class LayoutOutline {
     return this.curSection;
   }
 
-  public closeSection(element?: HtmlElement): LayoutSection {
-    if (element && LayoutSection.isSectioningElement(element) === false) {
-      return this.curSection;
-    }
+  protected closeSection(): LayoutSection {
     //const before = this.curTitle;
     if (this.curSection.parent) {
       this.curSection = this.curSection.parent;
@@ -86,10 +90,7 @@ export class LayoutOutline {
   }
 
   protected addAnchor(anchorName: string, pageIndex: number) {
-    this.anchors[anchorName] = {
-      name: anchorName,
-      pageIndex,
-    };
+    this.anchors[anchorName] = { name: anchorName, pageIndex };
   }
 
   protected openHeader(element: HtmlElement, pageIndex: number): LayoutSection {
@@ -98,8 +99,8 @@ export class LayoutOutline {
   }
 
   protected get curTitle(): string {
-    let close_state = this.curSection.closed ? "(closed)" : "(open)";
-    return this.curSection.title + close_state;
+    let closeState = this.curSection.closed ? "(closed)" : "(open)";
+    return this.curSection.title + closeState;
   }
 
   protected createContextSection(pageIndex: number, header?: HtmlElement): LayoutSection {

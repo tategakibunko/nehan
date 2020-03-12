@@ -6,12 +6,12 @@ import {
 } from "./public-api";
 
 export class BodyContext extends FlowRootContext {
-  constructor(element: HtmlElement){
+  constructor(element: HtmlElement) {
     super(element);
   }
 
-  public getAnchor(anchor_name: string): Anchor | null {
-    return this.outline.getAnchor(anchor_name);
+  public getAnchor(anchorName: string): Anchor | undefined {
+    return this.outline.getAnchor(anchorName);
   }
 
   public isTooManyPages(): boolean {

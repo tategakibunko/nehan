@@ -39,6 +39,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     if (Config.debugLayout) {
       console.group(`${this.context.name}`);
     }
+    this.context.flowRoot.openElement(this.context.env.element);
 
     const isPageRoot = this.context.env.element.tagName === Config.pageRootTagName;
 

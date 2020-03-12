@@ -1,4 +1,5 @@
 import {
+  HtmlElement,
   BoxEnv,
   FloatRegion,
   ILayoutReducer,
@@ -42,6 +43,9 @@ export interface IFlowFormatContext extends ILayoutFormatContext {
 export interface IFlowRootFormatContext extends IFlowFormatContext {
   floatRegion?: FloatRegion;
   floatNodes: ILogicalNode[];
+  pageCount: number;
+  openElement: (element: HtmlElement) => void;
+  closeElement: (element: HtmlElement) => void;
   addFloat: (block: LogicalBlockNode, float: LogicalFloat, contextMeasure: number) => void;
   clearFloat: (clear: LogicalClear) => void;
 }

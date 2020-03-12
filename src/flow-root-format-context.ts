@@ -1,4 +1,8 @@
 import {
+  BoxEnv,
+  HtmlElement,
+  ILayoutFormatContext,
+  LayoutOutline,
   FloatRegion,
   LogicalCursorPos,
   LogicalSize,
@@ -13,9 +17,24 @@ import {
 export class FlowRootFormatContext extends FlowFormatContext implements IFlowRootFormatContext {
   public floatRegion?: FloatRegion;
   public floatNodes: ILogicalNode[] = [];
+  public pageCount: number = 0;
+  public outline: LayoutOutline;
+
+  constructor(public env: BoxEnv, public parent?: ILayoutFormatContext) {
+    super(env, parent);
+    this.outline = new LayoutOutline();
+  }
 
   public get flowRoot(): IFlowRootFormatContext {
     return this;
+  }
+
+  public openElement(element: HtmlElement) {
+    this.outline.openElement(element, this.pageCount);
+  }
+
+  public closeElement(element: HtmlElement) {
+    this.outline.closeElement(element);
   }
 
   public clearFloat(clear: LogicalClear) {

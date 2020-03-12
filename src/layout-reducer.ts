@@ -214,6 +214,7 @@ export class RootBlockReducer implements ILayoutReducer {
       delete context.floatRegion;
       context.floatRegion = undefined;
     }
+    context.pageCount++;
     return LayoutResult.logicalNode(this.type, blockNode);
   }
 }

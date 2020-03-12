@@ -21,8 +21,8 @@ export class BodyGenerator extends FlowGenerator {
       new VertLayoutEvaluator(this.context) : new HoriLayoutEvaluator(this.context);
   }
 
-  public getAnchor(anchor_name: string): Anchor | null {
-    return this.context.getAnchor(anchor_name);
+  public getAnchor(anchorName: string): Anchor | undefined {
+    return this.context.getAnchor(anchorName);
   }
 
   protected onYields(values: LayoutValue[]): LayoutValue[] {
