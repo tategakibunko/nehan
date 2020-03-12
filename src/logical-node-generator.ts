@@ -38,9 +38,9 @@ import {
   InlineLinkReducer,
   ReplacedElement,
   BlockLinkReducer,
+  TcyLexer,
+  ReNodeGenerator,
 } from './public-api'
-import { TcyLexer } from './text-lexer';
-import { ReNodeGenerator } from './re-node-generator';
 
 export interface ChildGenerator {
   generator: ILogicalNodeGenerator;

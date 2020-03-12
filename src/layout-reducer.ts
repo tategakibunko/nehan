@@ -214,6 +214,7 @@ export class RootBlockReducer implements ILayoutReducer {
       delete context.floatRegion;
       context.floatRegion = undefined;
     }
+    // console.log("reduced root block, outline:", context.outline);
     context.pageCount++;
     return LayoutResult.logicalNode(this.type, blockNode);
   }

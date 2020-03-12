@@ -1,5 +1,6 @@
 import {
   HtmlElement,
+  LayoutOutline,
   BoxEnv,
   FloatRegion,
   ILayoutReducer,
@@ -41,6 +42,7 @@ export interface IFlowFormatContext extends ILayoutFormatContext {
 }
 
 export interface IFlowRootFormatContext extends IFlowFormatContext {
+  outline: LayoutOutline;
   floatRegion?: FloatRegion;
   floatNodes: ILogicalNode[];
   pageCount: number;
