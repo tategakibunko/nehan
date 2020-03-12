@@ -36,10 +36,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   public listMarker?: LogicalInlineNode;
   public text: string;
 
-  constructor(
-    public env: BoxEnv,
-    public parent?: ILayoutFormatContext,
-  ) {
+  constructor(public env: BoxEnv, public parent?: ILayoutFormatContext) {
     this.name = env.element.toString(true);
     this.cursorPos = LogicalCursorPos.zero;
     this.contextBoxEdge = new ContextBoxEdge(env.edge);
