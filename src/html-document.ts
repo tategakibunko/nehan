@@ -11,10 +11,14 @@ import {
   Config,
   PseudoElementInitializer,
   TextNodeNormalizer,
+  ILogicalNodeGenerator,
+  ILogicalNodeEvaluator,
 } from "./public-api";
 
 export interface HtmlDocumentOptions {
-  styleSheets?: CssStyleSheet[]
+  styleSheets?: CssStyleSheet[];
+  generator?: ILogicalNodeGenerator;
+  evaluator?: ILogicalNodeEvaluator;
 }
 
 let defaultOptions: HtmlDocumentOptions = {

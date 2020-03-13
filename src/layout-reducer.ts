@@ -179,7 +179,7 @@ export class BlockReducer implements ILayoutReducer {
     if (context.env.borderCollapse.isCollapse()) {
       size.extent -= context.getBorderCollapseAfterSize();
     }
-    const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children);
+    const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children, context.progress);
     // console.log("[%s] reduceBlock(%s) as %s at %s, %o", context.name, size.toString(), this.type, pos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];
@@ -203,7 +203,7 @@ export class RootBlockReducer implements ILayoutReducer {
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
-    const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children);
+    const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children, context.progress);
     // console.log("[%s] reduceRootBlock at %s, %o", context.name, pos.toString(), blockNode.text);
     context.text = "";
     context.blockNodes = [];

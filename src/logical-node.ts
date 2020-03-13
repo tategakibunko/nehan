@@ -14,6 +14,7 @@ export interface ILogicalNode {
   env: BoxEnv;
   measure: number;
   extent: number;
+  progress: number; // 0.0 ~ 1.0
   text: string;
   acceptEvaluator: (visitor: ILogicalNodeEvaluator, ...args: any[]) => HTMLElement | Node;
 }
@@ -29,6 +30,7 @@ export class LogicalTextNode implements ILogicalNode {
     public size: LogicalSize,
     public text: string,
     public children: ICharacter[],
+    public progress = 1,
   ) { }
 
   get measure(): number {
@@ -52,6 +54,7 @@ export class LogicalLineNode implements ILogicalPositionalNode {
     public text: string,
     public children: ILogicalNode[],
     public baseline: LogicalBaseLineMetrics,
+    public progress = 1,
   ) { }
 
   get measure(): number {
@@ -76,6 +79,7 @@ export class LogicalRubyNode implements ILogicalNode {
     public text: string,
     public rb: LogicalInlineNode,
     public rt: LogicalInlineNode,
+    public progress = 1,
   ) {
   }
 
@@ -99,6 +103,7 @@ export class LogicalInlineNode implements ILogicalNode {
     public text: string,
     public edge: LogicalBoxEdge,
     public children: ILogicalNode[],
+    public progress = 1,
   ) { }
 
   get measure(): number {
@@ -129,6 +134,7 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
     public text: string,
     public border: LogicalBorder,
     public children: ILogicalNode[],
+    public progress: number,
   ) { }
 
   get measure(): number {
@@ -156,6 +162,7 @@ export class LogicalInlineBlockNode implements ILogicalPositionalNode {
     public text: string,
     public edge: LogicalBoxEdge,
     public children: ILogicalNode[],
+    public progress = 1,
   ) { }
 
   get measure(): number {
@@ -178,6 +185,7 @@ export class LogicalTableCellsNode implements ILogicalNode {
     public pos: LogicalCursorPos,
     public text: string,
     public children: LogicalBlockNode[],
+    public progress = 1,
   ) { }
 
   get measure(): number {
@@ -201,6 +209,7 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
     public edge: LogicalBoxEdge,
     public pos: LogicalCursorPos,
     public text: string,
+    public progress = 1,
   ) { }
 
   get measure(): number {
@@ -227,6 +236,7 @@ export class LogicalInlineReNode implements ILogicalNode {
     public physicalSize: PhysicalSize,
     public edge: LogicalBoxEdge,
     public text: string,
+    public progress = 1,
   ) { }
 
   get measure(): number {

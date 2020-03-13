@@ -26,6 +26,7 @@ export interface ILayoutFormatContext {
   pageRoot: PageRootFormatContext;
   flowRoot: IFlowRootFormatContext;
   inlineRoot: IFlowFormatContext;
+  progress: number; // 0.0 ~ 1.0
   rootMeasure: number;
   rootExtent: number;
   restMeasure: number;

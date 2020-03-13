@@ -28,6 +28,7 @@ export interface RubyGroup {
 }
 
 export class RubyFormatContext implements ILayoutFormatContext {
+  public progress: number;
   public rb?: LogicalInlineNode;
   public rt?: LogicalInlineNode;
   public child?: ILogicalNodeGenerator;
@@ -40,6 +41,7 @@ export class RubyFormatContext implements ILayoutFormatContext {
   ) {
     this.cursorPos = LogicalCursorPos.zero;
     this.rubyGroups = [];
+    this.progress = 1; // skip calculate!
   }
 
   public acceptLayoutReducer(visitor: ILayoutReducer, rubyGroup: RubyGroup): LayoutResult {
