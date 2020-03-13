@@ -23,12 +23,9 @@ class LogicalCssEvaluator implements ILogicalCssEvaluator {
   visitUnmanagedCssProps(style: CssStyleDeclaration): NativeStyleMap {
     const css = new NativeStyleMap();
     Config.unmanagedCssProps.forEach(prop => {
-      if (prop === "display" || prop === "line-height") {
-        return;
-      }
       const unmanagedValue = style.getPropertyValue(prop);
       if (unmanagedValue !== null) {
-        console.info("set unmanaged prop:%s = %s", prop, unmanagedValue);
+        // console.info("set unmanaged prop:%s = %s", prop, unmanagedValue);
         css.set(prop, unmanagedValue);
       }
     });

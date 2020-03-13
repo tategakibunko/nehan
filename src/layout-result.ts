@@ -1,5 +1,6 @@
 import {
   ILogicalNode,
+  LogicalBlockNode,
 } from './public-api'
 
 export type LogicalNodeType =
@@ -46,5 +47,12 @@ export class LayoutResult {
         return true;
     }
     return false;
+  }
+
+  getBodyAsBlockNode(): LogicalBlockNode {
+    if (this.body && this.body instanceof LogicalBlockNode) {
+      return this.body;
+    }
+    throw new Error("Type error: body is not LogicalBlockNode");
   }
 }
