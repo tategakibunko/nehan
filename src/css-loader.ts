@@ -38,8 +38,8 @@ export class CssLoader {
     element.acceptEffector(CssUsedRegionLoader.instance);
 
     // [TODO] Deprecated in the future
-    // set collapse value
-    if ((!Config.engineVersion || Config.engineVersion < 7) && Config.edgeSkipTags.indexOf(element.tagName) < 0) {
+    // set collapse value for older engine.
+    if ((Config.engineVersion <= 6) && Config.edgeSkipTags.indexOf(element.tagName) < 0) {
       MarginCollapse.collapse(element);
     }
   }

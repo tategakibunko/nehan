@@ -27,12 +27,24 @@ export class LogicalBoxEdge {
   }
 
   static load(element: HtmlElement): LogicalBoxEdge {
-    // Edges of page-root element is ignored,
-    // because layout target of nehan is 'content' area of page-root element.
     if (element.tagName === Config.pageRootTagName) {
-      return this.none;
+      return this.loadRootBoxEdge(element);
     }
     return this.loadBoxEdge(element);
+  }
+
+  static loadRootBoxEdge(element: HtmlElement): LogicalBoxEdge {
+    // In older engine(nehan <= 6), padding is available even for page-root element.
+    if (Config.engineVersion <= 6) {
+      return new LogicalBoxEdge({
+        padding: LogicalPadding.load(element),
+        border: LogicalBorder.none,
+        margin: LogicalMargin.none,
+      });
+    }
+    // Edges of page-root element is ignored,
+    // because layout target of nehan is 'content' area of page-root element.
+    return this.none;
   }
 
   static loadBoxEdge(element: HtmlElement): LogicalBoxEdge {
