@@ -134,6 +134,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.appendChild(rtNode);
     node.style.display = "flex";
     node.style.textAlign = "center";
+    node.style.alignItems = "center";
     rubyNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     rubyNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
