@@ -5,6 +5,8 @@ import {
   CssText,
   PropValue,
   HtmlElement,
+  ILogicalCssEvaluator,
+  NativeStyleMap,
 } from "./public-api";
 
 export class LogicalPadding extends LogicalEdgeSize {
@@ -37,5 +39,9 @@ export class LogicalPadding extends LogicalEdgeSize {
 
   public getPropByLogicalDirection(direction: string): string {
     return `padding-${direction}`;
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitLogicalMargin(this);
   }
 }

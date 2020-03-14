@@ -3,7 +3,9 @@ import {
   Font,
   LogicalSize,
   LogicalCursorPos,
+  LogicalMargin,
   LogicalBorder,
+  LogicalPadding,
   WritingMode,
   NativeStyleMap,
   CssStyleDeclaration,
@@ -13,7 +15,9 @@ export interface ILogicalCssEvaluator {
   visitFont: (font: Font) => NativeStyleMap;
   visitSize: (size: LogicalSize) => NativeStyleMap;
   visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
+  visitLogicalMargin: (margin: LogicalMargin) => NativeStyleMap;
   visitLogicalBorder: (border: LogicalBorder) => NativeStyleMap;
+  visitLogicalPadding: (pading: LogicalPadding) => NativeStyleMap;
   visitUnmanagedCssProps: (style: CssStyleDeclaration) => NativeStyleMap;
 }
 
@@ -49,6 +53,18 @@ class LogicalCssEvaluator implements ILogicalCssEvaluator {
 
   visitPos(pos: LogicalCursorPos): NativeStyleMap {
     throw new Error("must be overrided");
+  }
+
+  visitLogicalMargin(margin: LogicalMargin): NativeStyleMap {
+    return margin.getPhysicalEdge(this.writingMode).items.reduce((css, item) => {
+      return css.set(margin.getPropByLogicalDirection(item.prop), item.value + "px");
+    }, new NativeStyleMap());
+  }
+
+  visitLogicalPadding(padding: LogicalPadding): NativeStyleMap {
+    return padding.getPhysicalEdge(this.writingMode).items.reduce((css, item) => {
+      return css.set(padding.getPropByLogicalDirection(item.prop), item.value + "px");
+    }, new NativeStyleMap());
   }
 
   visitLogicalBorder(border: LogicalBorder): NativeStyleMap {

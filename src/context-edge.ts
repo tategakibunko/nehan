@@ -4,7 +4,6 @@ import {
   LogicalBorder,
   LogicalEdgeValue,
   LogicalBoxEdge,
-  LogicalEdge,
   LogicalEdgeDirection,
   LogicalEdgeDirections,
   LogicalEdgeSize,
@@ -30,6 +29,11 @@ export class ContextEdgeState {
     this.state.start = false;
   }
 
+  public clearBlock() {
+    this.state.before = false;
+    this.state.after = false;
+  }
+
   public addEdge(direction: LogicalEdgeDirection) {
     this.state[direction] = true;
   }
@@ -51,6 +55,10 @@ export class ContextEdgeSize {
 
   clear() {
     this.edgeState.clear();
+  }
+
+  clearBlock() {
+    this.edgeState.clearBlock();
   }
 
   addEdge(direction: LogicalEdgeDirection) {
@@ -85,6 +93,12 @@ export class ContextBoxEdge {
     this.padding.clear();
     this.margin.clear();
     this.borderWidth.clear();
+  }
+
+  public clearBlock() {
+    this.padding.clearBlock();
+    this.margin.clearBlock();
+    this.borderWidth.clearBlock();
   }
 
   get currentBorder(): LogicalBorder {

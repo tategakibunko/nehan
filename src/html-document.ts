@@ -47,8 +47,8 @@ export class HtmlDocument {
     this.selectorCache.clear();
 
     this.$document = new DOMParser().parseFromString(this.source, "text/html");
-    this.documentElement = this.createElementFromDOM(this.$document.documentElement);
-    const body = this.documentElement.querySelector("body");
+    this.documentElement = this.createElementFromDOM(this.$document.documentElement); // <html>, children = [<head>, <body>]
+    const body = this.documentElement.querySelector("body"); // <body>
     if (!body) {
       throw new Error("body not found");
     }
@@ -114,25 +114,22 @@ export class HtmlDocument {
   }
 
   public createElementFromDOM(node: HTMLElement | Node): HtmlElement {
-    let tag_name = (node instanceof HTMLElement) ? node.tagName :
-      (node instanceof Text) ? "(text)" : "??";
-    tag_name = tag_name.toLowerCase();
-    if ((tag_name === "body" || tag_name === "html") &&
-      this.selectorCache.hasCache(tag_name)) {
-      return this.selectorCache.getCache(tag_name)[0];
+    const tagName = ((node instanceof HTMLElement) ? node.tagName : (node instanceof Text) ? "(text)" : "??").toLowerCase();
+    if ((tagName === "body" || tagName === "html") && this.selectorCache.hasCache(tagName)) {
+      return this.selectorCache.getCache(tagName)[0];
     }
-    let element = new HtmlElement(node, this);
+    const element = new HtmlElement(node, this);
     if (element.tagName === "body") {
       this.body = element;
     }
     element.root = this;
-    this.selectorCache.addCache(tag_name, element);
+    this.selectorCache.addCache(tagName, element);
     this.selectorCache.addCache("*", element);
     return element;
   }
 
   public createTextNode(text: string): HtmlElement {
-    let element = this.$document.createTextNode(text);
+    const element = this.$document.createTextNode(text);
     return this.createElementFromDOM(element);
   }
 }

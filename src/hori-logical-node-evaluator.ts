@@ -22,6 +22,7 @@ import {
   TextEmphaData,
   LogicalNodeEvaluator,
 } from './public-api'
+import { Config } from './config';
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(private cssVisitor: ILogicalCssEvaluator) { }

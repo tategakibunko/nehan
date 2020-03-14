@@ -5,6 +5,8 @@ import {
   PropValue,
   CssText,
   HtmlElement,
+  ILogicalCssEvaluator,
+  NativeStyleMap,
 } from "./public-api";
 
 export class LogicalMargin extends LogicalEdgeSize {
@@ -37,5 +39,9 @@ export class LogicalMargin extends LogicalEdgeSize {
 
   public getPropByLogicalDirection(direction: string): string {
     return `margin-${direction}`;
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitLogicalMargin(this);
   }
 }

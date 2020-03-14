@@ -184,7 +184,7 @@ export class BlockReducer implements ILayoutReducer {
     context.text = "";
     context.blockNodes = [];
     context.cursorPos = LogicalCursorPos.zero;
-    context.contextBoxEdge.clear();
+    context.contextBoxEdge.clearBlock();
     return LayoutResult.logicalNode(this.type, blockNode);
   }
 }
@@ -209,7 +209,7 @@ export class RootBlockReducer implements ILayoutReducer {
     context.blockNodes = [];
     context.floatNodes = [];
     context.cursorPos = LogicalCursorPos.zero;
-    context.contextBoxEdge.clear();
+    context.contextBoxEdge.clearBlock();
     if (context.floatRegion) {
       delete context.floatRegion;
       context.floatRegion = undefined;
@@ -241,7 +241,7 @@ export class InlineBlockReducer implements ILayoutReducer {
     context.blockNodes = [];
     context.floatNodes = [];
     context.cursorPos = LogicalCursorPos.zero;
-    context.contextBoxEdge.clear();
+    context.contextBoxEdge.clearBlock();
     if (context.floatRegion) {
       delete context.floatRegion;
       context.floatRegion = undefined;
@@ -265,7 +265,7 @@ export class TableCellsReducer implements ILayoutReducer {
     const pos = LogicalCursorPos.zero;
     const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
     const block = new LogicalTableCellsNode(context.env, size, pos, text, context.cells);
-    context.contextBoxEdge.clear();
+    context.contextBoxEdge.clearBlock();
     context.cursorPos = LogicalCursorPos.zero;
     // console.log("[%s] reduceTableCells:", context.name, block);
     return LayoutResult.logicalNode("table-cells", block);

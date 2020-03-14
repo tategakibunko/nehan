@@ -27,13 +27,15 @@ export class LogicalBoxEdge {
   }
 
   static load(element: HtmlElement): LogicalBoxEdge {
-    // If page-root, ignore border and margin.
-    // Because layout target of nehan is 'inside' of page-root content.
-    const isRoot = element.tagName === Config.pageRootTagName;
+    // content size of page-root element(normally <body>) is always fixed.
+    // Because layout target of nehan is 'content' area of page-root element.
+    if (element.tagName === Config.pageRootTagName) {
+      return this.none;
+    }
     return new LogicalBoxEdge({
       padding: LogicalPadding.load(element),
-      border: isRoot ? LogicalBorder.none : LogicalBorder.load(element),
-      margin: isRoot ? LogicalMargin.none : LogicalMargin.load(element)
+      border: LogicalBorder.load(element),
+      margin: LogicalMargin.load(element)
     });
   }
 
