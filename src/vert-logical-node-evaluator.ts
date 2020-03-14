@@ -21,6 +21,7 @@ import {
   LogicalInlineReNode,
   TextEmphaData,
   LogicalNodeEvaluator,
+  LogicalBoxEdge,
 } from './public-api'
 
 export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
@@ -236,6 +237,17 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
+    return node;
+  }
+
+  visitRootBlock(blockNode: LogicalBlockNode): HTMLElement {
+    const node = document.createElement("div");
+    const edge = LogicalBoxEdge.loadBoxEdge(blockNode.env.element);
+    node.className = "nehan-root";
+    edge.margin.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    edge.padding.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
 

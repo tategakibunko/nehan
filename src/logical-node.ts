@@ -1,4 +1,5 @@
 import {
+  Config,
   BoxEnv,
   LogicalBorder,
   ILogicalNodeEvaluator,
@@ -148,6 +149,11 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     if (this.env.element.tagName === "a") {
       return visitor.visitBlockLink(this);
+    }
+    if (this.env.element.tagName === Config.pageRootTagName) {
+      const wrapper = visitor.visitRootBlock(this);
+      wrapper.appendChild(visitor.visitBlock(this));
+      return wrapper;
     }
     return visitor.visitBlock(this);
   }

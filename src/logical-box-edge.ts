@@ -32,6 +32,10 @@ export class LogicalBoxEdge {
     if (element.tagName === Config.pageRootTagName) {
       return this.none;
     }
+    return this.loadBoxEdge(element);
+  }
+
+  static loadBoxEdge(element: HtmlElement): LogicalBoxEdge {
     return new LogicalBoxEdge({
       padding: LogicalPadding.load(element),
       border: LogicalBorder.load(element),

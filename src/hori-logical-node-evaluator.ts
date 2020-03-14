@@ -21,8 +21,8 @@ import {
   LogicalInlineReNode,
   TextEmphaData,
   LogicalNodeEvaluator,
+  LogicalBoxEdge,
 } from './public-api'
-import { Config } from './config';
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(private cssVisitor: ILogicalCssEvaluator) { }
@@ -204,14 +204,21 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    if (blockNode.env.element.tagName === Config.pageRootTagName) {
-      blockNode.env.edge.margin.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-      blockNode.env.edge.padding.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    }
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
+    return node;
+  }
+
+  visitRootBlock(blockNode: LogicalBlockNode): HTMLElement {
+    const node = document.createElement("div");
+    const edge = LogicalBoxEdge.loadBoxEdge(blockNode.env.element);
+    node.className = "nehan-root";
+    edge.margin.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    edge.padding.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
 
