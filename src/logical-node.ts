@@ -151,9 +151,9 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
       return visitor.visitBlockLink(this);
     }
     if (this.env.element.tagName === Config.pageRootTagName) {
-      const wrapper = visitor.visitRootBlock(this);
-      wrapper.appendChild(visitor.visitBlock(this));
-      return wrapper;
+      const rootBlock = visitor.visitRootBlock(this);
+      rootBlock.appendChild(visitor.visitBlock(this));
+      return rootBlock;
     }
     return visitor.visitBlock(this);
   }
