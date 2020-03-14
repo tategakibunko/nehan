@@ -251,9 +251,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get lineHeadPos(): LogicalCursorPos {
-    // Ignore padding/border size if this is page-root element(normally <body>) context.
-    // Because padding/border of page-root element is set by native css, it's not under control of nehan layouting.
-    const start = (this.env.element.tagName === Config.pageRootTagName) ? 0 : this.contextBoxEdge.borderBoxStartSize;
+    const start = this.contextBoxEdge.borderBoxStartSize;
     const before = this.cursorPos.before - this.contextBoxEdge.borderWidth.getSize("before");
     return new LogicalCursorPos({ start, before });
   }
