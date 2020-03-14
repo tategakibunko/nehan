@@ -2,7 +2,9 @@ import {
   Config,
   Font,
   LogicalSize,
+  LogicalPos,
   LogicalCursorPos,
+  LogicalEdgeMap,
   LogicalMargin,
   LogicalBorder,
   LogicalPadding,
@@ -15,6 +17,7 @@ export interface ILogicalCssEvaluator {
   visitFont: (font: Font) => NativeStyleMap;
   visitSize: (size: LogicalSize) => NativeStyleMap;
   visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
+  visitLogicalPos: (pos: LogicalPos) => NativeStyleMap;
   visitLogicalMargin: (margin: LogicalMargin) => NativeStyleMap;
   visitLogicalBorder: (border: LogicalBorder) => NativeStyleMap;
   visitLogicalPadding: (pading: LogicalPadding) => NativeStyleMap;
@@ -81,6 +84,23 @@ class LogicalCssEvaluator implements ILogicalCssEvaluator {
     border.radius.getPhysicalBorderRadius(this.writingMode).items.forEach(item => {
       return css.set(`border-${item.prop}-radius`, String(item.value));
     });
+    return css;
+  }
+
+  visitLogicalPos(pos: LogicalPos): NativeStyleMap {
+    const css = new NativeStyleMap();
+    if (pos.before !== undefined) {
+      css.set(LogicalEdgeMap.mapValue(this.writingMode, "before"), pos.before + "px");
+    }
+    if (pos.end !== undefined) {
+      css.set(LogicalEdgeMap.mapValue(this.writingMode, "end"), pos.end + "px");
+    }
+    if (pos.after !== undefined) {
+      css.set(LogicalEdgeMap.mapValue(this.writingMode, "after"), pos.after + "px");
+    }
+    if (pos.start !== undefined) {
+      css.set(LogicalEdgeMap.mapValue(this.writingMode, "start"), pos.start + "px");
+    }
     return css;
   }
 }
