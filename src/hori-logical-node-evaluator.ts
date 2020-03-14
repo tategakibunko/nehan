@@ -204,6 +204,10 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    if (blockNode.env.element.tagName === Config.pageRootTagName) {
+      blockNode.env.edge.margin.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+      blockNode.env.edge.padding.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    }
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));

@@ -160,7 +160,7 @@ export class LineReducer implements ILayoutReducer {
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    // console.log("[%s] reduceLine(%s) at %s(baseline:%o), %o", context.name, size.toString(), pos.toString(), baseline, lineNode.text);
+    // console.log("[%s] reduceLine:%o", context.name, lineNode);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }

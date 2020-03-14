@@ -1,4 +1,5 @@
 import {
+  Config,
   BoxEnv,
   ContextBoxEdge,
   LogicalBlockNode,
@@ -250,10 +251,11 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get lineHeadPos(): LogicalCursorPos {
-    return new LogicalCursorPos({
-      start: this.contextBoxEdge.borderBoxStartSize,
-      before: this.cursorPos.before - this.contextBoxEdge.borderWidth.getSize("before")
-    });
+    // Ignore padding/border size if this is page-root element(normally <body>) context.
+    // Because padding/border of page-root element is set by native css, it's not under control of nehan layouting.
+    const start = (this.env.element.tagName === Config.pageRootTagName) ? 0 : this.contextBoxEdge.borderBoxStartSize;
+    const before = this.cursorPos.before - this.contextBoxEdge.borderWidth.getSize("before");
+    return new LogicalCursorPos({ start, before });
   }
 
   public addBorderBoxEdge(direction: LogicalEdgeDirection) {

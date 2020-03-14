@@ -19,9 +19,9 @@ import {
   LogicalFloat,
   WhiteSpace,
   ListStyle,
+  BorderCollapse,
+  LogicalBorderWidth,
 } from './public-api'
-import { BorderCollapse } from './border-collapse';
-import { LogicalBorderWidth } from './logical-border-width';
 
 // side effect visitor
 export interface NodeEffector {

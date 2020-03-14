@@ -1,5 +1,4 @@
 import {
-  Config,
   LogicalBox,
   LogicalPadding,
   LogicalBorder,
@@ -27,11 +26,13 @@ export class LogicalBoxEdge {
   }
 
   static load(element: HtmlElement): LogicalBoxEdge {
+    /*
     // content size of page-root element(normally <body>) is always fixed.
     // Because layout target of nehan is 'content' area of page-root element.
     if (element.tagName === Config.pageRootTagName) {
       return this.none;
     }
+    */
     return new LogicalBoxEdge({
       padding: LogicalPadding.load(element),
       border: LogicalBorder.load(element),
