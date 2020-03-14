@@ -7,6 +7,10 @@ import {
   LogicalEdgeMap,
   LogicalMargin,
   LogicalBorder,
+  LogicalBorderColor,
+  LogicalBorderStyle,
+  LogicalBorderWidth,
+  LogicalBorderRadius,
   LogicalPadding,
   WritingMode,
   NativeStyleMap,
@@ -19,12 +23,15 @@ export interface ILogicalCssEvaluator {
   visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
   visitLogicalPos: (pos: LogicalPos) => NativeStyleMap;
   visitLogicalMargin: (margin: LogicalMargin) => NativeStyleMap;
-  visitLogicalBorder: (border: LogicalBorder) => NativeStyleMap;
+  visitLogicalBorderColor: (borderColor: LogicalBorderColor) => NativeStyleMap;
+  visitLogicalBorderWidth: (borderWidth: LogicalBorderWidth) => NativeStyleMap;
+  visitLogicalBorderStyle: (borderStyle: LogicalBorderStyle) => NativeStyleMap;
+  visitLogicalBorderRadius: (borderRadius: LogicalBorderRadius) => NativeStyleMap;
   visitLogicalPadding: (pading: LogicalPadding) => NativeStyleMap;
   visitUnmanagedCssProps: (style: CssStyleDeclaration) => NativeStyleMap;
 }
 
-class LogicalCssEvaluator implements ILogicalCssEvaluator {
+export class LogicalCssEvaluator implements ILogicalCssEvaluator {
   constructor(public writingMode: WritingMode) { }
 
   visitUnmanagedCssProps(style: CssStyleDeclaration): NativeStyleMap {
@@ -70,21 +77,28 @@ class LogicalCssEvaluator implements ILogicalCssEvaluator {
     }, new NativeStyleMap());
   }
 
-  visitLogicalBorder(border: LogicalBorder): NativeStyleMap {
-    const css = new NativeStyleMap();
-    border.width.getPhysicalEdge(this.writingMode).items.forEach(item => {
-      css.set(border.width.getPropByLogicalDirection(item.prop), item.value + "px");
-    });
-    border.style.getPhysicalEdge(this.writingMode).items.forEach(item => {
-      css.set(border.style.getPropByLogicalDirection(item.prop), String(item.value));
-    });
-    border.color.getPhysicalEdge(this.writingMode).items.forEach(item => {
-      css.set(border.color.getPropByLogicalDirection(item.prop), String(item.value));
-    });
-    border.radius.getPhysicalBorderRadius(this.writingMode).items.forEach(item => {
+  visitLogicalBorderColor(borderColor: LogicalBorderColor): NativeStyleMap {
+    return borderColor.getPhysicalEdge(this.writingMode).items.reduce((css, item) => {
+      return css.set(borderColor.getPropByLogicalDirection(item.prop), String(item.value));
+    }, new NativeStyleMap());
+  }
+
+  visitLogicalBorderWidth(borderWidth: LogicalBorderWidth): NativeStyleMap {
+    return borderWidth.getPhysicalEdge(this.writingMode).items.reduce((css, item) => {
+      return css.set(borderWidth.getPropByLogicalDirection(item.prop), item.value + "px");
+    }, new NativeStyleMap());
+  }
+
+  visitLogicalBorderStyle(borderStyle: LogicalBorderStyle): NativeStyleMap {
+    return borderStyle.getPhysicalEdge(this.writingMode).items.reduce((css, item) => {
+      return css.set(borderStyle.getPropByLogicalDirection(item.prop), String(item.value));
+    }, new NativeStyleMap());
+  }
+
+  visitLogicalBorderRadius(borderRadius: LogicalBorderRadius): NativeStyleMap {
+    return borderRadius.getPhysicalBorderRadius(this.writingMode).items.reduce((css, item) => {
       return css.set(`border-${item.prop}-radius`, String(item.value));
-    });
-    return css;
+    }, new NativeStyleMap());
   }
 
   visitLogicalPos(pos: LogicalPos): NativeStyleMap {

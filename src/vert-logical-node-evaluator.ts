@@ -1,4 +1,5 @@
 import {
+  Config,
   Char,
   SpaceChar,
   HalfChar,
@@ -229,7 +230,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     node.className = `nehan-${blockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
-    node.style.position = blockNode.env.element.tagName === "body" ? "relative" : "absolute";
+    node.style.position = (blockNode.env.element.tagName === Config.pageRootTagName) ? "relative" : "absolute";
     blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);

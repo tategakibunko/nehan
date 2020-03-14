@@ -6,6 +6,8 @@ import {
   CssText,
   PropValue,
   HtmlElement,
+  NativeStyleMap,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 export enum LogicalBorderWidthKeyword {
@@ -68,5 +70,9 @@ export class LogicalBorderWidth extends LogicalEdgeSize {
 
   public getPropByLogicalDirection(direction: string): string {
     return `border-${direction}-width`;
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitLogicalBorderWidth(this);
   }
 }

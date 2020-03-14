@@ -7,6 +7,8 @@ import {
   HtmlElement,
   PropValue,
   Utils,
+  NativeStyleMap,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 export enum LogicalBorderStyleValue {
@@ -63,5 +65,9 @@ export class LogicalBorderStyle extends LogicalEdge<string>{
 
   public getPropByLogicalDirection(direction: string): string {
     return `border-${direction}-style`;
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitLogicalBorderStyle(this);
   }
 }

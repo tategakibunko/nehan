@@ -6,6 +6,8 @@ import {
   CssCascade,
   HtmlElement,
   PropValue,
+  ILogicalCssEvaluator,
+  NativeStyleMap,
 } from "./public-api";
 
 export class LogicalBorderColor extends LogicalEdge<string>{
@@ -47,5 +49,9 @@ export class LogicalBorderColor extends LogicalEdge<string>{
 
   public getPropByLogicalDirection(direction: string): string {
     return `border-${direction}-color`;
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitLogicalBorderColor(this);
   }
 }

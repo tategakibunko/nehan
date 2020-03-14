@@ -8,6 +8,7 @@ import {
   Utils,
   WritingMode,
   NativeStyleMap,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 export enum LogicalBorderRadiusCorner {
@@ -140,5 +141,9 @@ export class LogicalBorderRadius {
     return this.getPhysicalBorderRadius(box.writingMode).items.reduce((css, item) => {
       return css.set(`border-${item.prop}-radius`, String(item.value));
     }, new NativeStyleMap());
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitLogicalBorderRadius(this);
   }
 }

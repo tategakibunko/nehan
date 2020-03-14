@@ -5,6 +5,7 @@ import {
   LogicalBox,
   LogicalEdgeMap,
   NativeStyleMap,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 export interface LogicalPosValue {
@@ -63,5 +64,9 @@ export class LogicalPos {
       css.set(LogicalEdgeMap.mapValue(box.writingMode, "start"), this.start + "px");
     }
     return css;
+  }
+
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitLogicalPos(this);
   }
 }

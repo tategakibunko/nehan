@@ -69,7 +69,12 @@ export class LogicalBorder {
   }
 
   public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
-    return visitor.visitLogicalBorder(this);
+    const css = new NativeStyleMap();
+    visitor.visitLogicalBorderWidth(this.width).mergeTo(css);
+    visitor.visitLogicalBorderStyle(this.style).mergeTo(css);
+    visitor.visitLogicalBorderColor(this.color).mergeTo(css);
+    visitor.visitLogicalBorderRadius(this.radius).mergeTo(css);
+    return css;
   }
 
   public clearBefore() {
