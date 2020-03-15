@@ -124,7 +124,9 @@ export class FlowFormatContext implements IFlowFormatContext {
       return 0;
     }
     const startEdgeSize = this.contextBoxEdge.getBorderBoxEdgeSize("start");
+    console.log("startEdgesize:", startEdgeSize);
     const floatStartPos = this.flowRoot.floatRegion.getSpacePosFromStartBound(this.flowRootPos.before);
+    console.log("floatStartPos = %d(flow root before = %d)", floatStartPos, this.flowRootPos.before);
     return startEdgeSize > floatStartPos ? startEdgeSize : floatStartPos - startEdgeSize;
   }
 
@@ -147,7 +149,8 @@ export class FlowFormatContext implements IFlowFormatContext {
   // this value is referenced from text-fmt-context, ruby-fmt-context etc.
   public get contextRestMeasure(): number {
     if (this.flowRoot.floatRegion) {
-      const floatSpaceSize = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before);
+      let floatSpaceSize = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before);
+      floatSpaceSize -= this.contextBoxEdge.borderBoxMeasure;
       // console.log("contextRestMeasure at %d = %d", this.flowRootPos.before, floatSpaceSize);
       return Math.min(floatSpaceSize, this.maxMeasure) - this.textStartPos;
     }
@@ -270,7 +273,7 @@ export class FlowFormatContext implements IFlowFormatContext {
       const old = this.cursorPos.before;
       this.cursorPos.before += this.contextBoxEdge.padding.getSize(direction);
       this.cursorPos.before += this.contextBoxEdge.borderWidth.getSize(direction);
-      // console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
+      console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
     }
   }
 
@@ -280,8 +283,10 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addBlockMarginEdge(direction: "before" | "after", marginSize: number) {
+    const old = this.cursorPos.before;
     this.contextBoxEdge.margin.addEdge(direction);
     this.cursorPos.before += marginSize;
+    console.log("[%s] addBlockMarginEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
   }
 
   // called by reducer of this context.
@@ -302,32 +307,31 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addLine(line: LogicalLineNode) {
-    // console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
-    this.pushBlockNodes(line);
-    this.cursorPos.before += line.extent;
-    this.text += line.text;
+    console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
+    this.pushBlockNode(line);
+    // this.cursorPos.before += line.extent;
+    // this.text += line.text;
   }
 
   public addBlock(block: LogicalBlockNode) {
-    // console.log("[%s] addBlock:%o", this.name, block);
     // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
-    this.pushBlockNodes(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
+    this.pushBlockNode(block);
+    // this.cursorPos.before += block.extent;
+    // this.text += block.text;
   }
 
   public addBlockRe(block: LogicalBlockReNode) {
     // console.log("[%s] addBlock:%o", this.name, block);
     // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
-    this.pushBlockNodes(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
+    this.pushBlockNode(block);
+    // this.cursorPos.before += block.extent;
+    // this.text += block.text;
   }
 
   public addTable(block: LogicalBlockNode) {
-    this.pushBlockNodes(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
+    this.pushBlockNode(block);
+    // this.cursorPos.before += block.extent;
+    // this.text += block.text;
   }
 
   // parent: table
@@ -335,9 +339,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (this.env.borderCollapse.isCollapse()) {
       this.collapseBeforeStartBorder(block);
     }
-    this.pushBlockNodes(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
+    this.pushBlockNode(block);
+    // this.cursorPos.before += block.extent;
+    // this.text += block.text;
   }
 
   // parent: table-row-group
@@ -345,9 +349,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (this.env.borderCollapse.isCollapse()) {
       this.collapseBeforeStartBorder(block);
     }
-    this.pushBlockNodes(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
+    this.pushBlockNode(block);
+    // this.cursorPos.before += block.extent;
+    // this.text += block.text;
   }
 
   // parent: table-row
@@ -364,65 +368,82 @@ export class FlowFormatContext implements IFlowFormatContext {
         // console.log("[%s] collapse before %d", this.name, collapseSize);
       }
     }
-    this.pushBlockNodes(cells);
-    this.cursorPos.before += cells.extent;
-    this.text += cells.text;
+    this.pushBlockNode(cells);
+    // this.cursorPos.before += cells.extent;
+    // this.text += cells.text;
   }
 
   public addBlockLink(block: LogicalBlockNode) {
-    this.pushBlockNodes(block);
-    this.cursorPos.before += block.extent;
-    this.text += block.text;
+    this.pushBlockNode(block);
+    // this.cursorPos.before += block.extent;
+    // this.text += block.text;
   }
 
   public addInlineBlock(inlineBlock: LogicalInlineBlockNode) {
-    this.inlineNodes.push(inlineBlock);
-    this.cursorPos.start += inlineBlock.measure;
-    this.inlineText += inlineBlock.text;
+    this.pushInlineNode(inlineBlock);
+    // this.inlineNodes.push(inlineBlock);
+    // this.cursorPos.start += inlineBlock.measure;
+    // this.inlineText += inlineBlock.text;
   }
 
   public addInline(inline: LogicalInlineNode) {
-    this.inlineNodes.push(inline);
-    this.cursorPos.start += inline.measure;
-    this.inlineText += inline.text;
+    this.pushInlineNode(inline);
+    // this.inlineNodes.push(inline);
+    // this.cursorPos.start += inline.measure;
+    // this.inlineText += inline.text;
   }
 
   public addInlineRe(inline: LogicalInlineReNode) {
-    this.inlineNodes.push(inline);
-    this.cursorPos.start += inline.measure;
-    this.inlineText += inline.text;
+    this.pushInlineNode(inline);
+    // this.inlineNodes.push(inline);
+    // this.cursorPos.start += inline.measure;
+    // this.inlineText += inline.text;
   }
 
   public addInlineLink(inline: LogicalInlineNode) {
-    this.inlineNodes.push(inline);
-    this.cursorPos.start += inline.measure;
-    this.inlineText += inline.text;
+    this.pushInlineNode(inline);
+    // this.inlineNodes.push(inline);
+    // this.cursorPos.start += inline.measure;
+    // this.inlineText += inline.text;
   }
 
   // Note that marker text is not included to inlineText.
   public addListMarker(marker: LogicalInlineNode) {
     // console.log("[%s] added list marker:", this.name, marker);
-    this.inlineNodes.push(marker);
-    this.cursorPos.start += marker.measure;
-    this.listMarker = marker;
+    this.pushInlineNode(marker);
+    // this.inlineNodes.push(marker);
+    // this.cursorPos.start += marker.measure;
+    // this.listMarker = marker;
   }
 
   public addText(text: ILogicalNode) {
-    this.inlineNodes.push(text);
-    this.cursorPos.start += text.measure;
-    this.inlineText += text.text;
+    this.pushInlineNode(text);
+    // this.inlineNodes.push(text);
+    // this.cursorPos.start += text.measure;
+    // this.inlineText += text.text;
   }
 
   public addRuby(ruby: ILogicalNode) {
-    this.inlineNodes.push(ruby);
-    this.cursorPos.start += ruby.measure;
-    this.inlineText += ruby.text;
+    this.pushInlineNode(ruby);
+    // this.inlineNodes.push(ruby);
+    // this.cursorPos.start += ruby.measure;
+    // this.inlineText += ruby.text;
   }
 
-  private pushBlockNodes(block: ILogicalNode) {
+  private pushInlineNode(inline: ILogicalNode) {
+    this.inlineNodes.push(inline);
+    this.cursorPos.start += inline.measure;
+    this.inlineText += inline.text;
+  }
+
+  private pushBlockNode(block: ILogicalNode) {
+    // const old = this.cursorPos.before;
     this.blockNodes.push(block);
     this.blockNodeHistory.push(block);
+    this.cursorPos.before += block.extent;
+    this.text += block.text;
     this.progress += this.progressDelta * block.progress;
+    // console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
   }
 
   private getBorderCollapseStartSize(block: LogicalBlockNode): number {

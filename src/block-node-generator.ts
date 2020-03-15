@@ -100,7 +100,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           }
           if (fvalue.type === "block") {
             const float = generator.context.env.float;
-            this.context.flowRoot.addFloat(fvalue.body, float, this.context.maxMeasure);
+            this.context.flowRoot.addFloat(fvalue.body, float, this.context.maxMeasure, this.context.flowRootPos.before);
           }
           return true;
         });
@@ -109,7 +109,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           break;
         }
         if (!float.isNone() && value.isFloatable) {
-          this.context.flowRoot.addFloat(value.body, float, this.context.maxMeasure);
+          this.context.flowRoot.addFloat(value.body, float, this.context.maxMeasure, this.context.flowRootPos.before);
           this.context.suspendedGens.push(this.context.child);
           break;
         }

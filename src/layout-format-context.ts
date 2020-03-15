@@ -49,6 +49,6 @@ export interface IFlowRootFormatContext extends IFlowFormatContext {
   pageCount: number;
   openElement: (element: HtmlElement) => void;
   closeElement: (element: HtmlElement) => void;
-  addFloat: (block: LogicalBlockNode, float: LogicalFloat, contextMeasure: number) => void;
+  addFloat: (block: LogicalBlockNode, float: LogicalFloat, contextMeasure: number, beforePos: number) => void;
   clearFloat: (clear: LogicalClear) => void;
 }

@@ -50,14 +50,14 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     }
   }
 
-  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number) {
+  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, beforePos: number) {
     if (float.isNone()) {
       console.error("float direction is not set! ignored.");
       return;
     }
     if (!this.floatRegion) {
       const regionSize = new LogicalSize({ measure: this.maxMeasure, extent: this.maxExtent });
-      this.floatRegion = new FloatRegion(regionSize, this.cursorPos.before);
+      this.floatRegion = new FloatRegion(regionSize, beforePos);
     }
     try {
       const floatSize = new LogicalSize({
@@ -65,8 +65,8 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
         extent: block.size.extent + block.env.edge.extent
       });
       const rect = float.isStart() ?
-        this.floatRegion.pushStart(this.cursorPos.before, floatSize, contextMeasure) :
-        this.floatRegion.pushEnd(this.cursorPos.before, floatSize, contextMeasure);
+        this.floatRegion.pushStart(beforePos, floatSize, contextMeasure) :
+        this.floatRegion.pushEnd(beforePos, floatSize, contextMeasure);
       block.pos = new LogicalCursorPos({
         start: rect.start + block.env.edge.margin.start,
         before: rect.before

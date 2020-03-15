@@ -152,7 +152,7 @@ export class LineReducer implements ILayoutReducer {
     // (for example, this line is continuous to block element or at the beginning of local page block etc)
     // and this line includes some decorated text(like empha, ruby) that has largest extent,
     // then set before offset to prevent this line from overflowing previous(or parent) block.
-    if (baseLineExtent === maxDecoratedExtent && (!isContinuousLine || isLocalFirstLine)) {
+    if (baseLineExtent === maxDecoratedExtent && context.env.font.size < maxFont.size && (!isContinuousLine || isLocalFirstLine)) {
       pos.before += baseLineOffset;
       context.cursorPos.before += baseLineOffset;
     }
@@ -214,7 +214,6 @@ export class RootBlockReducer implements ILayoutReducer {
       delete context.floatRegion;
       context.floatRegion = undefined;
     }
-    // console.log("reduced root block, outline:", context.outline);
     context.pageCount++;
     return LayoutResult.logicalNode(this.type, blockNode);
   }

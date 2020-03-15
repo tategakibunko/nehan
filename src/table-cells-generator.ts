@@ -7,6 +7,7 @@ import {
   TableCellsFormatContext,
   TableCellReducer,
   TableCellsReducer,
+  CssUsedRegionLoader,
 } from './public-api';
 
 export class TableCellsGenerator implements ILogicalNodeGenerator {
@@ -26,6 +27,9 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
 
   *createGenerator(): Generator<LayoutResult> {
     const cellGenerators = this.context.elements.map(cellElement => {
+      // At this point, partition is set to each cell element(logical-node-generator.ts),
+      // so we have to update child region of this cell.
+      cellElement.acceptEffectorAll(CssUsedRegionLoader.instance);
       const env = new BoxEnv(cellElement);
       return new BlockNodeGenerator(
         new FlowRootFormatContext(env, this.context),
