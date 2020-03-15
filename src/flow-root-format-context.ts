@@ -50,14 +50,14 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     }
   }
 
-  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, beforePos: number) {
+  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootBeforePos: number) {
     if (float.isNone()) {
       console.error("float direction is not set! ignored.");
       return;
     }
     if (!this.floatRegion) {
       const regionSize = new LogicalSize({ measure: this.maxMeasure, extent: this.maxExtent });
-      this.floatRegion = new FloatRegion(regionSize, beforePos);
+      this.floatRegion = new FloatRegion(regionSize, flowRootBeforePos);
     }
     try {
       const floatSize = new LogicalSize({
@@ -65,14 +65,14 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
         extent: block.size.extent + block.env.edge.extent
       });
       const rect = float.isStart() ?
-        this.floatRegion.pushStart(beforePos, floatSize, contextMeasure) :
-        this.floatRegion.pushEnd(beforePos, floatSize, contextMeasure);
+        this.floatRegion.pushStart(flowRootBeforePos, floatSize, contextMeasure) :
+        this.floatRegion.pushEnd(flowRootBeforePos, floatSize, contextMeasure);
       block.pos = new LogicalCursorPos({
         start: rect.start + block.env.edge.margin.start,
         before: rect.before
       });
       this.floatNodes.push(block);
-      console.log("addFloat(size=%o, pos=%o)", floatSize, block.pos);
+      console.log("addFloat(size=%o, flowRootBeforePos=%o, rectPos=%o)", floatSize, flowRootBeforePos, block.pos);
       console.log("spaceMeasure at %d = %d", block.pos.before, this.floatRegion.getSpaceMeasureAt(block.pos.before));
     } catch (err) {
       console.error(err);

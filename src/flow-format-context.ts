@@ -28,7 +28,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   public suspendedGens: ILogicalNodeGenerator[];
   public cursorPos: LogicalCursorPos; // range: (0,0) ~ (this.maxMeasure, this.maxExtent)
   public contextBoxEdge: ContextBoxEdge;
-  public inlineMargin: number;
+  public curChildStartMargin: number;
   public blockNodes: ILogicalNode[];
   public inlineNodes: ILogicalNode[];
   public blockNodeHistory: ILogicalNode[];
@@ -43,7 +43,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.cursorPos = LogicalCursorPos.zero;
     this.contextBoxEdge = new ContextBoxEdge(env.edge);
     this.suspendedGens = [];
-    this.inlineMargin = 0;
+    this.curChildStartMargin = 0; // current child <-> this.context marginStart in block flow mode. [TODO] rename var.
     this.blockNodes = [];
     this.inlineNodes = [];
     this.blockNodeHistory = [];
@@ -123,11 +123,13 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (!this.flowRoot.floatRegion) {
       return 0;
     }
-    const startEdgeSize = this.contextBoxEdge.getBorderBoxEdgeSize("start");
+    const startEdgeSize = this.contextBoxEdge.borderWidth.getSize("start");
     console.log("startEdgesize:", startEdgeSize);
     const floatStartPos = this.flowRoot.floatRegion.getSpacePosFromStartBound(this.flowRootPos.before);
     console.log("floatStartPos = %d(flow root before = %d)", floatStartPos, this.flowRootPos.before);
-    return startEdgeSize > floatStartPos ? startEdgeSize : floatStartPos - startEdgeSize;
+    const offset = startEdgeSize > floatStartPos ? startEdgeSize : floatStartPos - startEdgeSize;
+    console.log("floatStartOffset = %d", offset);
+    return offset;
   }
 
   private get textAlignOffset(): number {
@@ -149,8 +151,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   // this value is referenced from text-fmt-context, ruby-fmt-context etc.
   public get contextRestMeasure(): number {
     if (this.flowRoot.floatRegion) {
-      let floatSpaceSize = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before);
-      floatSpaceSize -= this.contextBoxEdge.borderBoxMeasure;
+      const floatSpaceSize = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before) - this.contextBoxEdge.borderBoxMeasure;
       // console.log("contextRestMeasure at %d = %d", this.flowRootPos.before, floatSpaceSize);
       return Math.min(floatSpaceSize, this.maxMeasure) - this.textStartPos;
     }
@@ -227,12 +228,12 @@ export class FlowFormatContext implements IFlowFormatContext {
 
   // localPos = position from start-before-corner of border box.
   // Convert inline cursor(0 ~ this.maxMeasure) to (delta ~ delta + this.maxMeasure)
-  // where delta = this.inlineMargin + this.contextBoxEdge.measure.
+  // where delta = this.curChildStartMargin + this.contextBoxEdge.measure.
   // Note that contextBoxEdge.measure and inline margin is added to start-pos in this logic,
   // but contextBoxEdge.extent and block margin is added to before-pos in generator logic(see block-node-generator.ts).
   public get localPos(): LogicalCursorPos {
     return new LogicalCursorPos({
-      start: this.cursorPos.start + this.inlineMargin + this.contextBoxEdge.borderBoxMeasure,
+      start: this.cursorPos.start + this.curChildStartMargin + this.contextBoxEdge.borderBoxStartSize,
       before: this.cursorPos.before
     });
   }

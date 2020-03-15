@@ -76,7 +76,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         const line = this.context.acceptLayoutReducer(LineReducer.instance);
         this.context.addLine(line.body); // never overflows!
       }
-      this.context.inlineMargin = InlineMargin.getMarginFromParentBlock(childElement);
+      this.context.curChildStartMargin = InlineMargin.getMarginFromParentBlock(childElement);
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
       const clear = LogicalClear.load(childElement);
