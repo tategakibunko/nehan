@@ -230,7 +230,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
     // console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
-    node.className = `nehan-${blockNode.env.element.tagName}`;
+    node.className = `nehan-block nehan-${blockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
     node.style.position = (blockNode.env.element.tagName === Config.pageRootTagName) ? "relative" : "absolute";
     node.style.paddingTop = blockNode.env.edge.padding.start + "px";
@@ -259,6 +259,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitTableCells(tableCells: LogicalTableCellsNode): HTMLElement {
     const node = document.createElement("div");
+    node.className = "nehan-table-cells";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
