@@ -309,29 +309,21 @@ export class FlowFormatContext implements IFlowFormatContext {
   public addLine(line: LogicalLineNode) {
     console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
     this.pushBlockNode(line);
-    // this.cursorPos.before += line.extent;
-    // this.text += line.text;
   }
 
   public addBlock(block: LogicalBlockNode) {
     // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
     this.pushBlockNode(block);
-    // this.cursorPos.before += block.extent;
-    // this.text += block.text;
   }
 
   public addBlockRe(block: LogicalBlockReNode) {
     // console.log("[%s] addBlock:%o", this.name, block);
     // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
     this.pushBlockNode(block);
-    // this.cursorPos.before += block.extent;
-    // this.text += block.text;
   }
 
   public addTable(block: LogicalBlockNode) {
     this.pushBlockNode(block);
-    // this.cursorPos.before += block.extent;
-    // this.text += block.text;
   }
 
   // parent: table
@@ -340,8 +332,6 @@ export class FlowFormatContext implements IFlowFormatContext {
       this.collapseBeforeStartBorder(block);
     }
     this.pushBlockNode(block);
-    // this.cursorPos.before += block.extent;
-    // this.text += block.text;
   }
 
   // parent: table-row-group
@@ -350,8 +340,6 @@ export class FlowFormatContext implements IFlowFormatContext {
       this.collapseBeforeStartBorder(block);
     }
     this.pushBlockNode(block);
-    // this.cursorPos.before += block.extent;
-    // this.text += block.text;
   }
 
   // parent: table-row
@@ -369,65 +357,40 @@ export class FlowFormatContext implements IFlowFormatContext {
       }
     }
     this.pushBlockNode(cells);
-    // this.cursorPos.before += cells.extent;
-    // this.text += cells.text;
   }
 
   public addBlockLink(block: LogicalBlockNode) {
     this.pushBlockNode(block);
-    // this.cursorPos.before += block.extent;
-    // this.text += block.text;
   }
 
   public addInlineBlock(inlineBlock: LogicalInlineBlockNode) {
     this.pushInlineNode(inlineBlock);
-    // this.inlineNodes.push(inlineBlock);
-    // this.cursorPos.start += inlineBlock.measure;
-    // this.inlineText += inlineBlock.text;
   }
 
   public addInline(inline: LogicalInlineNode) {
     this.pushInlineNode(inline);
-    // this.inlineNodes.push(inline);
-    // this.cursorPos.start += inline.measure;
-    // this.inlineText += inline.text;
   }
 
   public addInlineRe(inline: LogicalInlineReNode) {
     this.pushInlineNode(inline);
-    // this.inlineNodes.push(inline);
-    // this.cursorPos.start += inline.measure;
-    // this.inlineText += inline.text;
   }
 
   public addInlineLink(inline: LogicalInlineNode) {
     this.pushInlineNode(inline);
-    // this.inlineNodes.push(inline);
-    // this.cursorPos.start += inline.measure;
-    // this.inlineText += inline.text;
   }
 
   // Note that marker text is not included to inlineText.
   public addListMarker(marker: LogicalInlineNode) {
     // console.log("[%s] added list marker:", this.name, marker);
     this.pushInlineNode(marker);
-    // this.inlineNodes.push(marker);
-    // this.cursorPos.start += marker.measure;
-    // this.listMarker = marker;
   }
 
   public addText(text: ILogicalNode) {
     this.pushInlineNode(text);
-    // this.inlineNodes.push(text);
-    // this.cursorPos.start += text.measure;
-    // this.inlineText += text.text;
   }
 
   public addRuby(ruby: ILogicalNode) {
     this.pushInlineNode(ruby);
-    // this.inlineNodes.push(ruby);
-    // this.cursorPos.start += ruby.measure;
-    // this.inlineText += ruby.text;
   }
 
   private pushInlineNode(inline: ILogicalNode) {
