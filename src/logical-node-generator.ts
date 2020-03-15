@@ -62,7 +62,7 @@ export class LogicalNodeGenerator {
   static createTextLexer(element: HtmlElement, env: BoxEnv): TextLexer {
     // console.log("createTextLexer:", element, env);
     const isPre = env.whiteSpace.isPre();
-    const text = element.textContent;
+    const text = element.textContent || element.computedStyle.getPropertyValue("content") || "";
     const lexer = env.textCombineUpright.isNone() ? new TextLexer(text, { isPre }) : new TcyLexer(text);
     if (env.textOrientation.isUpright()) {
       lexer.uprightTokens();

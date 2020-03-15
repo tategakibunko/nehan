@@ -252,6 +252,7 @@ export class FlowFormatContext implements IFlowFormatContext {
 
   public get lineHeadPos(): LogicalCursorPos {
     const start = this.contextBoxEdge.borderBoxStartSize;
+    console.log("lineHeadPos(start=%d)", start);
     const before = this.cursorPos.before - this.contextBoxEdge.borderWidth.getSize("before");
     return new LogicalCursorPos({ start, before });
   }

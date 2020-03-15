@@ -1,19 +1,29 @@
 import {
+  Config,
   DynamicStyleContext,
   DynamicStyleCallback,
   CssDeclarationBlock,
   HtmlElement
 } from "./public-api";
 
+function getRestExtent(parentContext: any): number {
+  // version <= 6
+  if (parentContext.region) {
+    return parentContext.region.restContextBoxExtent;
+  }
+  // version >= 7
+  return parentContext.restExtent;
+}
+
 export class DynamicStyleUtils {
   // page break before if rest extent is smaller than [size].
-  static requiredExtent(required_extent: number): DynamicStyleCallback {
+  static requiredExtent(requiredExtent: number): DynamicStyleCallback {
     return (ctx: DynamicStyleContext): CssDeclarationBlock => {
       if (!ctx.parentContext) {
         return {};
       }
-      let rest_extent = ctx.parentContext.region.restContextBoxExtent;
-      if (rest_extent < required_extent) {
+      const restExtent = getRestExtent(ctx.parentContext);
+      if (restExtent < requiredExtent) {
         return { "page-break-before": "always" };
       }
       return { "page-break-before": "auto" };
