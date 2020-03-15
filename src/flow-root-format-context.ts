@@ -50,7 +50,7 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     }
   }
 
-  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootBeforePos: number, hostPaddingStart: number) {
+  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootBeforePos: number, hostStartOffset: number) {
     if (float.isNone()) {
       console.error("float direction is not set! ignored.");
       return;
@@ -68,7 +68,7 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
         this.floatRegion.pushStart(flowRootBeforePos, floatSize, contextMeasure) :
         this.floatRegion.pushEnd(flowRootBeforePos, floatSize, contextMeasure);
       block.pos = new LogicalCursorPos({
-        start: rect.start + block.env.edge.margin.start + hostPaddingStart,
+        start: rect.start + block.env.edge.margin.start + hostStartOffset,
         before: rect.before
       });
       this.floatNodes.push(block);
