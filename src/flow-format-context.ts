@@ -273,7 +273,7 @@ export class FlowFormatContext implements IFlowFormatContext {
       const old = this.cursorPos.before;
       this.cursorPos.before += this.contextBoxEdge.padding.getSize(direction);
       this.cursorPos.before += this.contextBoxEdge.borderWidth.getSize(direction);
-      console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
+      // console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
     }
   }
 
@@ -286,7 +286,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     const old = this.cursorPos.before;
     this.contextBoxEdge.margin.addEdge(direction);
     this.cursorPos.before += marginSize;
-    console.log("[%s] addBlockMarginEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
+    // console.log("[%s] addBlockMarginEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
   }
 
   // called by reducer of this context.
@@ -307,18 +307,14 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addLine(line: LogicalLineNode) {
-    console.log(`[${this.name}] addLine:${this.cursorPos.before} -> ${this.cursorPos.before + line.size.extent}`);
     this.pushBlockNode(line);
   }
 
   public addBlock(block: LogicalBlockNode) {
-    // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
     this.pushBlockNode(block);
   }
 
   public addBlockRe(block: LogicalBlockReNode) {
-    // console.log("[%s] addBlock:%o", this.name, block);
-    // console.log(`[${this.name}] addBlock:${this.cursorPos.before} -> ${this.cursorPos.before + block.extent}`);
     this.pushBlockNode(block);
   }
 
@@ -381,7 +377,6 @@ export class FlowFormatContext implements IFlowFormatContext {
 
   // Note that marker text is not included to inlineText.
   public addListMarker(marker: LogicalInlineNode) {
-    // console.log("[%s] added list marker:", this.name, marker);
     this.pushInlineNode(marker);
   }
 
