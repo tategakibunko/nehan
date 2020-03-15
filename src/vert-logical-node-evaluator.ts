@@ -214,6 +214,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.boxSizing = "content-box";
     node.style.background = "orange";
     node.style.position = "relative";
+    node.style.paddingTop = iblockNode.env.edge.padding.start + "px";
+    node.style.paddingBottom = iblockNode.env.edge.padding.end + "px";
     node.style.marginTop = iblockNode.env.edge.margin.start + "px";
     node.style.marginBottom = iblockNode.env.edge.margin.end + "px";
     iblockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -231,6 +233,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.className = `nehan-${blockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
     node.style.position = (blockNode.env.element.tagName === Config.pageRootTagName) ? "relative" : "absolute";
+    node.style.paddingTop = blockNode.env.edge.padding.start + "px";
+    node.style.paddingBottom = blockNode.env.edge.padding.end + "px";
     blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -327,6 +331,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     }
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
+    node.style.paddingTop = link.env.edge.padding.start + "px";
+    node.style.paddingBottom = link.env.edge.padding.end + "px";
     link.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
