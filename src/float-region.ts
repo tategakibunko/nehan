@@ -85,7 +85,6 @@ export class FloatRegion {
   }
 
   public clearBoth(): number {
-    // const clearedExtent = this.maxRegionExtent;
     const clearedExtent = Math.max(this.maxStartRegionExtent, this.maxEndRegionExtent);
     this.startRects = [];
     this.endRects = [];
