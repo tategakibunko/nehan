@@ -253,7 +253,11 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.height = img.physicalSize.height + "px";
     node.src = img.env.element.getAttribute("src") || "";
     img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    img.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    if (img.env.position.isAbsolute()) {
+      img.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    } else {
+      img.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    }
     img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
@@ -308,7 +312,11 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.position = "absolute";
     node.style.paddingLeft = link.env.edge.padding.start + "px";
     node.style.paddingRight = link.env.edge.padding.end + "px";
-    link.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    if (link.env.position.isAbsolute()) {
+      link.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    } else {
+      link.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    }
     link.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
