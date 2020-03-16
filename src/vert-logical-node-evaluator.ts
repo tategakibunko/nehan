@@ -189,6 +189,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
     inlineNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
@@ -202,6 +203,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
     inlineNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
@@ -221,6 +223,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     iblockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     iblockNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     iblockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    iblockNode.env.element.style.callDomCallbacks(iblockNode, node);
     iblockNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
@@ -289,6 +292,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
       img.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     }
     img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    img.env.element.style.callDomCallbacks(img, node);
     return node;
   }
 
@@ -303,6 +307,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.src = img.env.element.getAttribute("src") || "";
     img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    img.env.element.style.callDomCallbacks(img, node);
     return node;
   }
 
@@ -321,6 +326,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.marginBottom = link.edge.margin.end + "px";
     link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    link.env.element.style.callDomCallbacks(link, node);
     link.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
