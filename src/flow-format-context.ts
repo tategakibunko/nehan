@@ -401,13 +401,15 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   private pushBlockNode(block: ILogicalNode) {
-    // const old = this.cursorPos.before;
-    this.blockNodes.push(block);
-    this.blockNodeHistory.push(block);
-    this.cursorPos.before += block.extent;
+    const old = this.cursorPos.before;
     this.text += block.text;
     this.progress += this.progressDelta * block.progress;
-    // console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
+    this.blockNodes.push(block);
+    this.blockNodeHistory.push(block);
+    if (!block.env.position.isAbsolute()) {
+      this.cursorPos.before += block.extent;
+    }
+    console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
   }
 
   private getBorderCollapseStartSize(block: LogicalBlockNode): number {

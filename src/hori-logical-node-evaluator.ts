@@ -201,7 +201,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
     // console.log("visitBlock:", blockNode);
     const node = document.createElement("div");
-    node.className = `nehan-${blockNode.env.element.tagName}`;
+    node.className = `nehan-block nehan-${blockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
     node.style.position = (blockNode.env.element.tagName === Config.pageRootTagName) ? "relative" : "absolute";
     node.style.paddingLeft = blockNode.env.edge.padding.start + "px";
