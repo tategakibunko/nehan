@@ -67,7 +67,11 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitMixChar(mixChar: MixChar): HTMLElement | Node {
-    return document.createTextNode(mixChar.text);
+    const node = document.createElement("span");
+    node.style.display = "inline-block";
+    node.style.width = "1.25em";
+    node.appendChild(document.createTextNode(mixChar.text));
+    return node;
   }
 
   visitDualChar(dualChar: DualChar): HTMLElement | Node {
