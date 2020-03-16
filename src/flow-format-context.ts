@@ -410,7 +410,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (!block.env.position.isAbsolute()) {
       this.cursorPos.before += block.extent;
     }
-    // console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
+    console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
   }
 
   private getBorderCollapseStartSize(block: LogicalBlockNode): number {

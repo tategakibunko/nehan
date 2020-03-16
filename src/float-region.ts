@@ -85,29 +85,30 @@ export class FloatRegion {
   }
 
   public clearBoth(): number {
-    let cleared_extent = this.maxRegionExtent;
+    // const clearedExtent = this.maxRegionExtent;
+    const clearedExtent = Math.max(this.maxStartRegionExtent, this.maxEndRegionExtent);
     this.startRects = [];
     this.endRects = [];
     this.startLedgePositions.clear();
     this.endLedgePositions.clear();
-    this.cursorBefore = cleared_extent;
-    return cleared_extent;
+    this.cursorBefore = clearedExtent;
+    return clearedExtent;
   }
 
   public clearStart(): number {
-    let cleared_extent = this.maxStartRegionExtent;
+    const clearedExtent = this.maxStartRegionExtent;
     this.startRects = [];
     this.startLedgePositions.clear();
-    this.cursorBefore = cleared_extent;
-    return cleared_extent;
+    this.cursorBefore = clearedExtent;
+    return clearedExtent;
   }
 
   public clearEnd(): number {
-    let cleared_extent = this.maxEndRegionExtent;
+    const clearedExtent = this.maxEndRegionExtent;
     this.endRects = [];
     this.endLedgePositions.clear();
-    this.cursorBefore = cleared_extent;
-    return cleared_extent;
+    this.cursorBefore = clearedExtent;
+    return clearedExtent;
   }
 
   public getSpacePosFromStartBound(before: number): number {

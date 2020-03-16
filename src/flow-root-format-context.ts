@@ -37,17 +37,20 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     this.outline.closeElement(element);
   }
 
-  public clearFloat(clear: LogicalClear) {
+  public clearFloat(clear: LogicalClear): number {
     if (!this.floatRegion) {
-      return;
+      throw new Error("float region is not defined");
     }
     if (clear.isStart()) {
-      this.floatRegion.clearStart();
-    } else if (clear.isEnd()) {
-      this.floatRegion.clearEnd();
-    } else if (clear.isBoth()) {
-      this.floatRegion.clearBoth();
+      return this.floatRegion.clearStart();
     }
+    if (clear.isEnd()) {
+      return this.floatRegion.clearEnd();
+    }
+    if (clear.isBoth()) {
+      return this.floatRegion.clearBoth();
+    }
+    throw new Error("clear direction is not defined");
   }
 
   public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) {

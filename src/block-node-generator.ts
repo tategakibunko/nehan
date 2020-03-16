@@ -81,12 +81,13 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       this.context.child = childGen.generator;
       const clear = LogicalClear.load(childElement);
       if (!clear.isNone()) {
-        this.context.flowRoot.clearFloat(clear);
+        const clearedExtent = this.context.flowRoot.clearFloat(clear);
+        this.context.cursorPos.before = clearedExtent; // [TODO] floatRootPos.before -> localPos.before
       }
       const beforeMargin = BlockMargin.getMarginFromLastBlock(childElement);
       if (beforeMargin > 0) {
         this.context.addBlockMarginEdge("before", beforeMargin);
-        // console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
+        console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
       }
       while (this.context.restExtent < beforeMargin) {
         yield isPageRoot ? this.context.acceptLayoutReducer(this.blockReducer) : LayoutResult.pageBreak;
