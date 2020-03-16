@@ -198,7 +198,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get maxMeasure(): number {
-    if (this.env.measure) {
+    if (this.env.measure !== null) {
       return this.env.measure;
     }
     if (this.parent) {
@@ -208,7 +208,10 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get maxExtent(): number {
-    return this.env.extent || this.rootExtent;
+    if (this.env.extent !== null) {
+      return this.env.extent;
+    }
+    return this.rootExtent;
   }
 
   public get contentBoxSize(): LogicalSize {
@@ -407,7 +410,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (!block.env.position.isAbsolute()) {
       this.cursorPos.before += block.extent;
     }
-    console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
+    // console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
   }
 
   private getBorderCollapseStartSize(block: LogicalBlockNode): number {

@@ -235,7 +235,11 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.position = (blockNode.env.element.tagName === Config.pageRootTagName) ? "relative" : "absolute";
     node.style.paddingTop = blockNode.env.edge.padding.start + "px";
     node.style.paddingBottom = blockNode.env.edge.padding.end + "px";
-    blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    if (blockNode.env.position.isAbsolute()) {
+      blockNode.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    } else {
+      blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    }
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
