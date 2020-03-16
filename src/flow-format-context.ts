@@ -37,7 +37,6 @@ export class FlowFormatContext implements IFlowFormatContext {
   public listMarker?: LogicalInlineNode;
   public text: string;
   public progress: number;
-  private progressDelta: number;
 
   constructor(public env: BoxEnv, public parent?: ILayoutFormatContext) {
     this.name = env.element.toString(true);
@@ -51,7 +50,6 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineText = "";
     this.text = "";
     this.progress = 0;
-    this.progressDelta = 1 / env.element.childNodes.length;
   }
 
   public get inlineRoot(): IFlowFormatContext {
@@ -403,7 +401,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   private pushBlockNode(block: ILogicalNode) {
     const old = this.cursorPos.before;
     this.text += block.text;
-    this.progress += this.progressDelta * block.progress;
+    this.progress += block.progress / this.env.element.childNodes.length;
     this.blockNodes.push(block);
     this.blockNodeHistory.push(block);
     if (!block.env.position.isAbsolute()) {
