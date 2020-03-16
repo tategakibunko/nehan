@@ -50,30 +50,32 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     }
   }
 
-  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootBeforePos: number, hostStartOffset: number) {
+  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) {
     if (float.isNone()) {
       console.error("float direction is not set! ignored.");
       return;
     }
     if (!this.floatRegion) {
       const regionSize = new LogicalSize({ measure: this.maxMeasure, extent: this.maxExtent });
-      this.floatRegion = new FloatRegion(regionSize, flowRootBeforePos);
+      this.floatRegion = new FloatRegion(regionSize, flowRootPos.before);
     }
     try {
+      // console.log("addFloat(%o, %o, ctxM:%d, flowRootPos:%o)", block, float, contextMeasure, flowRootPos);
       const floatSize = new LogicalSize({
         measure: block.size.measure + block.env.edge.measure,
         extent: block.size.extent + block.env.edge.extent
       });
       const rect = float.isStart() ?
-        this.floatRegion.pushStart(flowRootBeforePos, floatSize, contextMeasure) :
-        this.floatRegion.pushEnd(flowRootBeforePos, floatSize, contextMeasure);
+        this.floatRegion.pushStart(flowRootPos.before, floatSize, contextMeasure) :
+        this.floatRegion.pushEnd(flowRootPos.before, floatSize, contextMeasure);
+      const start = float.isStart() ? flowRootPos.start : rect.start + block.env.edge.start;
       block.pos = new LogicalCursorPos({
-        start: rect.start + block.env.edge.margin.start + hostStartOffset,
+        start,
         before: rect.before
       });
       this.floatNodes.push(block);
-      console.log("addFloat(size=%o, flowRootBeforePos=%o, rectPos=%o)", floatSize, flowRootBeforePos, block.pos);
-      console.log("spaceMeasure at %d = %d", block.pos.before, this.floatRegion.getSpaceMeasureAt(block.pos.before));
+      // console.log("result: rect:%o, pos:%o", rect, block.pos);
+      // console.log("spaceMeasure at %d = %d", block.pos.before, this.floatRegion.getSpaceMeasureAt(block.pos.before));
     } catch (err) {
       console.error(err);
     }

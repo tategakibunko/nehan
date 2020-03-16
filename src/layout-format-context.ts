@@ -7,11 +7,11 @@ import {
   LogicalCursorPos,
   LayoutResult,
   ILogicalNode,
-  LogicalBlockNode,
   LogicalInlineNode,
   LogicalFloat,
   LogicalClear,
   PageRootFormatContext,
+  ILogicalPositionalNode,
 } from './public-api'
 
 export interface ILayoutFormatContext {
@@ -49,6 +49,6 @@ export interface IFlowRootFormatContext extends IFlowFormatContext {
   pageCount: number;
   openElement: (element: HtmlElement) => void;
   closeElement: (element: HtmlElement) => void;
-  addFloat: (block: LogicalBlockNode, float: LogicalFloat, contextMeasure: number, flowRootBefore: number, hostStartOffset: number) => void;
+  addFloat: (block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) => void;
   clearFloat: (clear: LogicalClear) => void;
 }

@@ -1,7 +1,7 @@
 import {
-  Config,
   BoxEnv,
   ContextBoxEdge,
+  LogicalFloat,
   LogicalBlockNode,
   LogicalBlockReNode,
   LogicalInlineReNode,
@@ -20,6 +20,7 @@ import {
   IFlowFormatContext,
   IFlowRootFormatContext,
   PageRootFormatContext,
+  ILogicalPositionalNode,
 } from './public-api'
 
 export class FlowFormatContext implements IFlowFormatContext {
@@ -124,11 +125,11 @@ export class FlowFormatContext implements IFlowFormatContext {
       return 0;
     }
     const startEdgeSize = this.contextBoxEdge.borderWidth.getSize("start");
-    console.log("startEdgesize:", startEdgeSize);
+    // console.log("startEdgesize:", startEdgeSize);
     const floatStartPos = this.flowRoot.floatRegion.getSpacePosFromStartBound(this.flowRootPos.before);
-    console.log("floatStartPos = %d(flow root before = %d)", floatStartPos, this.flowRootPos.before);
+    // console.log("floatStartPos = %d(flow root before = %d)", floatStartPos, this.flowRootPos.before);
     const offset = startEdgeSize > floatStartPos ? startEdgeSize : floatStartPos - startEdgeSize;
-    console.log("floatStartOffset = %d", offset);
+    // console.log("floatStartOffset = %d", offset);
     return offset;
   }
 
@@ -305,6 +306,10 @@ export class FlowFormatContext implements IFlowFormatContext {
       return Math.min(lastChild.border.width.after, afterBorderSize);
     }
     return 0;
+  }
+
+  public setFloat(block: ILogicalPositionalNode, float: LogicalFloat) {
+    this.flowRoot.addFloat(block, float, this.maxMeasure, this.flowRootPos);
   }
 
   public addLine(line: LogicalLineNode) {
