@@ -23,10 +23,14 @@ import {
   TextEmphaData,
   LogicalNodeEvaluator,
   LogicalBoxEdge,
+  ILogicalTextJustifier,
 } from './public-api'
 
 export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
-  constructor(private cssVisitor: ILogicalCssEvaluator) { }
+  constructor(
+    private cssVisitor: ILogicalCssEvaluator,
+    private textJustifier: ILogicalTextJustifier,
+  ) { }
 
   visitChar(char: Char): HTMLElement | Node {
     return document.createTextNode(char.text);
@@ -165,6 +169,11 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.style.left = lineNode.baseline.blockOffset + "px";
 
     node.appendChild(baseLineNode);
+
+    if (lineNode.env.textAlign.isJustify()) {
+      this.textJustifier.justify(lineNode);
+    }
+
     lineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
       const isReOrIblock = child instanceof LogicalInlineReNode || child instanceof LogicalInlineBlockNode;

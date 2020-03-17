@@ -24,6 +24,7 @@ import {
   VertCssEvaluator,
   HoriCssEvaluator,
   WritingModeValue,
+  LogicalTextJustifier,
 } from './public-api'
 
 export interface ILogicalNodeEvaluator {
@@ -55,9 +56,20 @@ export interface ILogicalNodeEvaluator {
 }
 
 export class LogicalNodeEvaluator {
-  static horiTbEvaluator: ILogicalNodeEvaluator = new HoriLogicalNodeEvaluator(new HoriCssEvaluator(new WritingMode("horizontal-tb")));
-  static vertRlEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(new VertCssEvaluator(new WritingMode("vertical-rl")));
-  static vertLrEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(new VertCssEvaluator(new WritingMode("vertical-lr")));
+  static horiTbEvaluator: ILogicalNodeEvaluator = new HoriLogicalNodeEvaluator(
+    new HoriCssEvaluator(new WritingMode("horizontal-tb")),
+    LogicalTextJustifier.instance,
+  );
+
+  static vertRlEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(
+    new VertCssEvaluator(new WritingMode("vertical-rl")),
+    LogicalTextJustifier.instance,
+  );
+
+  static vertLrEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(
+    new VertCssEvaluator(new WritingMode("vertical-lr")),
+    LogicalTextJustifier.instance,
+  );
 
   static selectEvaluator(writingMode: WritingMode | WritingModeValue): ILogicalNodeEvaluator {
     const value = writingMode instanceof WritingMode ? writingMode.value : writingMode;

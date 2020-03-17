@@ -23,10 +23,14 @@ import {
   TextEmphaData,
   LogicalNodeEvaluator,
   LogicalBoxEdge,
+  ILogicalTextJustifier,
 } from './public-api'
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
-  constructor(private cssVisitor: ILogicalCssEvaluator) { }
+  constructor(
+    private cssVisitor: ILogicalCssEvaluator,
+    private textJustifier: ILogicalTextJustifier,
+  ) { }
 
   visitChar(char: Char): HTMLElement | Node {
     return document.createTextNode(char.text);
@@ -147,6 +151,10 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.style.width = lineNode.size.measure + 2 * lineNode.env.font.size + "px"; // Prepare space for 'Bura-sagari'.
     baseLineNode.style.height = lineNode.baseline.size.extent + "px";
     baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
+
+    if (lineNode.env.textAlign.isJustify()) {
+      this.textJustifier.justify(lineNode);
+    }
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
