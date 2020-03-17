@@ -158,6 +158,11 @@ export class LineReducer implements ILayoutReducer {
     }
     const autoMeasure = baseline.startOffset + context.cursorPos.start;
     const autoSize = new LogicalSize({ measure: autoMeasure, extent });
+    // if empty line, shrink line-height to fontSize.
+    if (children.length === 0) {
+      size.extent = autoSize.extent = baseline.size.extent = baseline.textBodySize.extent = context.env.font.size;
+      baseline.blockOffset = 0;
+    }
     const lineNode = new LogicalLineNode(context.env, pos, size, autoSize, text, children, baseline);
     context.cursorPos.start = 0;
     context.inlineNodes = [];
