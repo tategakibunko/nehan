@@ -152,9 +152,11 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.style.height = lineNode.baseline.size.extent + "px";
     baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
 
+    /* [TODO]
     if (lineNode.env.textAlign.isJustify()) {
       this.textJustifier.justify(lineNode);
     }
+    */
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {

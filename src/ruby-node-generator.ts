@@ -30,10 +30,21 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
     if (Config.debugLayout) {
       console.group("ruby");
     }
+    // For performance, if there is no space for single font size,
+    // generate page-break before processing ruby element.
+    while (this.context.restMeasure < this.context.env.font.size) {
+      yield LayoutResult.lineBreak;
+    }
+    if (this.context.restMeasure < this.context.env.font.size) {
+      debugger;
+    }
     let childElement: HtmlElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
+      // Note that rb, rt never overflows in inline direction,
+      // because RubyChildFormatContext has Infinity value for 'restMeasure' and 'restExtent'.
+      // Because management of overflow for <rb>, <rt> is the task of <ruby> context.
       while (true) {
         const value: LayoutResult | undefined = this.context.child.getNext();
         if (!value) {
@@ -62,6 +73,10 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
       }
       while (this.context.restMeasure < rubyNode.size.measure) {
         yield LayoutResult.lineBreak;
+      }
+      // re-check extent after line-break
+      while (this.context.restExtent < rubyNode.size.extent) {
+        yield LayoutResult.pageBreak;
       }
       yield ruby;
     }

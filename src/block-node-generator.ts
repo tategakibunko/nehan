@@ -1,5 +1,6 @@
 import {
   Config,
+  LogicalLineNode,
   ILogicalNodeGenerator,
   LogicalNodeGenerator,
   LayoutResult,
@@ -73,7 +74,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       // before switching to next block, check there is inlines that are not still wrapped by anon-line-box.
       if ((!float.isNone() || display.isBlockLevel()) && this.context.inlineNodes.length > 0) {
         // console.info("sweep out remaining inlines as line");
-        const line = this.context.acceptLayoutReducer(LineReducer.instance);
+        const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
         this.context.addLine(line.body); // never overflows!
       }
       this.context.curChildStartMargin = InlineMargin.getMarginFromParentBlock(childElement);
@@ -124,8 +125,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'page-break') {
           // sweep out rest inline
           if (this.context.inlineNodes.length > 0) {
-            const line = this.context.acceptLayoutReducer(LineReducer.instance);
-            this.context.addLine(line.body); // never overflows!
+            const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
+            this.context.addLine(line.body);
           }
           const block = this.context.acceptLayoutReducer(this.blockReducer);
           if (isPageRoot) {
