@@ -35,9 +35,6 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
     while (this.context.restMeasure < this.context.env.font.size) {
       yield LayoutResult.lineBreak;
     }
-    if (this.context.restMeasure < this.context.env.font.size) {
-      debugger;
-    }
     let childElement: HtmlElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
