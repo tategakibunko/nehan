@@ -214,7 +214,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     node.className = `nehan-iblock nehan-${iblockNode.env.element.tagName}`;
     node.style.boxSizing = "content-box";
-    node.style.background = "orange";
     node.style.position = "relative";
     node.style.paddingTop = iblockNode.env.edge.padding.start + "px";
     node.style.paddingBottom = iblockNode.env.edge.padding.end + "px";

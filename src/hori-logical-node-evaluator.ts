@@ -189,7 +189,6 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.className = `nehan-iblock nehan-${iblockNode.env.element.tagName}`;
     node.style.display = "inline-block";
     node.style.boxSizing = "content-box";
-    node.style.background = "orange";
     node.style.position = "relative";
     node.style.paddingLeft = iblockNode.env.edge.padding.start + "px";
     node.style.paddingRight = iblockNode.env.edge.padding.end + "px";
