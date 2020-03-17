@@ -52,6 +52,7 @@ export class LogicalLineNode implements ILogicalPositionalNode {
     public env: BoxEnv,
     public pos: LogicalCursorPos,
     public size: LogicalSize,
+    public autoSize: LogicalSize,
     public text: string,
     public children: ILogicalNode[],
     public baseline: LogicalBaseLineMetrics,
