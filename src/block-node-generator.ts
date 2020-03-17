@@ -47,8 +47,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     if (this.context.env.pageBreakBefore.isAlways()) {
       yield LayoutResult.pageBreak;
     }
-    if ((this.context.env.measure && this.context.env.measure <= 0) ||
-      this.context.env.edge.borderBoxExtent > this.context.restExtent) {
+    if (this.context.env.measure && this.context.env.measure <= 0) {
       console.error("This layout can never be included.");
       yield LayoutResult.skip;
       return;
