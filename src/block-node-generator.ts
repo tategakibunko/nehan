@@ -41,6 +41,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     }
     this.context.flowRoot.openElement(this.context.env.element);
 
+    const progressDelta = 1 / this.context.env.element.childNodes.length;
     const isPageRoot = this.context.env.element.tagName === Config.pageRootTagName;
 
     if (this.context.env.pageBreakBefore.isAlways()) {
@@ -164,6 +165,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           this.context.addBlockLink(value.body);
         }
       } // while(true)
+      this.context.progress = childElement.index * progressDelta; // force update progress
       childElement = childGen.nextElement;
     } // while (childElement !== null)
 
