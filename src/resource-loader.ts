@@ -7,8 +7,7 @@ import {
 } from "./public-api";
 
 export class ResourceLoader {
-  static loadImageAll(document: HtmlDocument, callbacks?: ResourceLoaderCallbacks):
-    Promise<HtmlDocument> {
+  static loadImageAll(document: HtmlDocument, callbacks?: ResourceLoaderCallbacks): Promise<HtmlDocument> {
     let images = document.querySelectorAll("img");
     let context = new ResourceLoaderContext(images.length, callbacks);
     return Promise.all(images.map(image => this.loadImage(image, context)))
