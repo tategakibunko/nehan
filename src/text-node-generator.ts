@@ -50,6 +50,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
         yield LayoutResult.pageBreak(this.context, "lineExtent is not enough for text-fmt-context");
       }
       if (this.context.isLineHead()) {
+        // console.log("lineHead:", this.context);
         if (this.context.maxMeasure < font.size) {
           console.warn("too narrow space, skip:", this.context);
           yield LayoutResult.skip;

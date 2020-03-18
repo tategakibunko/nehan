@@ -265,6 +265,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     const edge = LogicalBoxEdge.loadBoxEdge(blockNode.env.element);
     node.className = "nehan-root";
+    node.style.width = blockNode.extent + edge.extent + "px";
+    node.style.height = blockNode.measure + edge.measure + "px";
     edge.margin.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     edge.padding.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);

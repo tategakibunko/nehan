@@ -167,7 +167,7 @@ export class FlowFormatContext implements IFlowFormatContext {
 
   public get restMeasure(): number {
     if (this.parent) {
-      return this.parent.restMeasure - this.cursorPos.start;
+      return Math.min(this.parent.restMeasure, this.maxMeasure) - this.cursorPos.start;
     }
     return this.maxMeasure - this.textStartPos;
   }

@@ -7,7 +7,6 @@ export namespace Utils {
     const n = parseInt(x, base);
     if (isNaN(n)) {
       console.error(`${n} is not a number`);
-      debugger;
     }
     return n;
   }

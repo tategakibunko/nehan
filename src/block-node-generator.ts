@@ -53,7 +53,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       yield LayoutResult.skip;
       return;
     }
-    while (this.context.restExtent < this.context.env.edge.borderBoxBefore) {
+    while (!isPageRoot && this.context.restExtent < this.context.env.edge.borderBoxBefore) {
       console.info("before border can't be included");
       yield LayoutResult.pageBreak(this.context, "block-fmt-context: before border can't be included");
     }
@@ -126,7 +126,6 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
           this.context.addLine(line.body);
         } else if (value.type === 'page-break') {
-          debugger;
           // sweep out rest inline
           if (this.context.inlineNodes.length > 0) {
             const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
@@ -176,7 +175,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       this.context.addLine(line.body);
     }
 
-    while (this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("after")) {
+    while (!isPageRoot && this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("after")) {
       yield LayoutResult.pageBreak(this.context, "block-fmt-context: after border can't be included");
     }
 
@@ -188,7 +187,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
 
     this.context.flowRoot.closeElement(this.context.env.element);
     yield this.context.acceptLayoutReducer(this.blockReducer);
-    if (this.context.env.pageBreakAfter.isAlways()) {
+    if (!isPageRoot && this.context.env.pageBreakAfter.isAlways()) {
       yield LayoutResult.pageBreak(this.context, "block-fmt-context: page-break-after");
     }
     if (Config.debugLayout) {

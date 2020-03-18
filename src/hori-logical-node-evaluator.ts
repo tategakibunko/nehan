@@ -241,6 +241,8 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     const edge = LogicalBoxEdge.loadBoxEdge(blockNode.env.element);
     node.className = "nehan-root";
+    node.style.width = blockNode.measure + edge.measure + "px";
+    node.style.height = blockNode.extent + edge.extent + "px";
     edge.margin.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     edge.padding.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
