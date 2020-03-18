@@ -70,7 +70,7 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
         this.context.setCells(cellBlocks);
       } else {
         yield this.context.acceptLayoutReducer(this.reducer);
-        yield LayoutResult.pageBreak(this.context, "???"); // [TODO] I don't remember why I added this code.
+        yield LayoutResult.pageBreak(this.context, "table devided."); // at this point, table is devided into next page.
       }
       loopCount++;
     } // for(loopCount)
