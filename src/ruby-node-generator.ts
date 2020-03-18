@@ -66,14 +66,14 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
         continue;
       }
       while (this.context.restExtent < rubyNode.size.extent) {
-        yield LayoutResult.pageBreak;
+        yield LayoutResult.pageBreak(this.context, "restExtent is not enough for rubyNode.extent");
       }
       while (this.context.restMeasure < rubyNode.size.measure) {
         yield LayoutResult.lineBreak;
       }
       // re-check extent after line-break
       while (this.context.restExtent < rubyNode.size.extent) {
-        yield LayoutResult.pageBreak;
+        yield LayoutResult.pageBreak(this.context, "restExtent is not enough for rubyNode.extent even after pageBreak");
       }
       yield ruby;
     }

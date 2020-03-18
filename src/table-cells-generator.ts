@@ -1,4 +1,5 @@
 import {
+  Config,
   ILogicalNodeGenerator,
   LayoutResult,
   BoxEnv,
@@ -26,6 +27,9 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
   }
 
   *createGenerator(): Generator<LayoutResult> {
+    if (Config.debugLayout) {
+      console.group(`table-cells: ${this.context.name}`);
+    }
     const cellGenerators = this.context.elements.map(cellElement => {
       // At this point, partition is set to each cell element(logical-node-generator.ts),
       // so we have to update child region of this cell.
@@ -44,7 +48,7 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
       }
       // if some cell yields page-break at the beginning of layout, then yield nothing but page-break.
       if (loopCount === 0 && values.some(value => value && value.type === "page-break")) {
-        yield LayoutResult.pageBreak;
+        yield LayoutResult.pageBreak(this.context, "some table-cell has page-break, propagate to parent");
         continue; // In this case, loopCount remains 0.
       }
       if (loopCount % 2 === 0) {
@@ -66,10 +70,13 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
         this.context.setCells(cellBlocks);
       } else {
         yield this.context.acceptLayoutReducer(this.reducer);
-        yield LayoutResult.pageBreak;
+        yield LayoutResult.pageBreak(this.context, "???"); // [TODO] I don't remember why I added this code.
       }
       loopCount++;
     } // for(loopCount)
     yield this.context.acceptLayoutReducer(this.reducer);
+    if (Config.debugLayout) {
+      console.groupEnd();
+    }
   }
 }

@@ -47,7 +47,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       const metricsArgs = { font, isVertical, empha };
 
       while (this.context.restExtent < font.lineExtent) {
-        yield LayoutResult.pageBreak;
+        yield LayoutResult.pageBreak(this.context, "lineExtent is not enough for text-fmt-context");
       }
       if (this.context.isLineHead()) {
         if (this.context.maxMeasure < font.size) {

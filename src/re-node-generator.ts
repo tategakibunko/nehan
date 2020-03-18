@@ -43,7 +43,7 @@ export class ReNodeGenerator implements ILogicalNodeGenerator {
       physicalSize = logicalSize.getPhysicalSize(writingMode);
     }
     while (this.context.restExtent < logicalSize.extent) {
-      yield LayoutResult.pageBreak;
+      yield LayoutResult.pageBreak(this.context, "re extent is not enough for restExtent");
     }
     while (this.context.env.display.isInlineLevel() && this.context.restMeasure < logicalSize.measure) {
       yield LayoutResult.lineBreak;

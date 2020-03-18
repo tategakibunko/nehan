@@ -30,7 +30,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
 
   protected *createGenerator(): Generator<LayoutResult> {
     if (Config.debugLayout) {
-      console.group(`${this.context.name}`);
+      console.group(`inline: ${this.context.name}`);
     }
 
     if (this.context.rootExtent < this.context.contextBoxEdge.borderBoxExtent ||
@@ -41,7 +41,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
     }
 
     while (this.context.restExtent < this.context.contextBoxEdge.borderBoxExtent) {
-      yield LayoutResult.pageBreak;
+      yield LayoutResult.pageBreak(this.context, "inline rest extent not enough for border size");
     }
 
     this.context.addBorderBoxEdge("before");

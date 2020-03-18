@@ -38,7 +38,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
 
   protected *createGenerator(): Generator<LayoutResult> {
     if (Config.debugLayout) {
-      console.group(`${this.context.name}`);
+      console.group(`block: ${this.context.name}`);
     }
     this.context.flowRoot.openElement(this.context.env.element);
 
@@ -46,7 +46,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     const isPageRoot = this.context.env.element.tagName === Config.pageRootTagName;
 
     if (this.context.env.pageBreakBefore.isAlways()) {
-      yield LayoutResult.pageBreak;
+      yield LayoutResult.pageBreak(this.context, "block-fmt-context: page-break-before");
     }
     if (this.context.env.measure && this.context.env.measure <= 0) {
       console.error("This layout can never be included.");
@@ -55,7 +55,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     }
     while (this.context.restExtent < this.context.env.edge.borderBoxBefore) {
       console.info("before border can't be included");
-      yield LayoutResult.pageBreak;
+      yield LayoutResult.pageBreak(this.context, "block-fmt-context: before border can't be included");
     }
     this.context.addBorderBoxEdge("before"); // restExtent shorten
     // Add inline edge, but note that maxMeasure doesn't change
@@ -90,8 +90,11 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         this.context.addBlockMarginEdge("before", beforeMargin);
         // console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
       }
-      while (this.context.restExtent < beforeMargin) {
-        yield isPageRoot ? this.context.acceptLayoutReducer(this.blockReducer) : LayoutResult.pageBreak;
+      // while (this.context.restExtent < beforeMargin) {
+      if (this.context.restExtent < beforeMargin) {
+        yield isPageRoot ?
+          this.context.acceptLayoutReducer(this.blockReducer) :
+          LayoutResult.pageBreak(this.context, "block-fmt-context: before-margin is not enough.");
       }
       while (true) {
         // Before yielding child generator, resume suspended generators if it exists.
@@ -110,7 +113,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         if (!value) {
           break;
         }
-        if (!float.isNone() && value.isFloatable) {
+        if (!float.isNone() && value.isFloatable()) {
           this.context.setFloat(value.body, float);
           this.context.suspendedGens.push(this.context.child);
           break;
@@ -129,10 +132,14 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
             this.context.addLine(line.body);
           }
           const block = this.context.acceptLayoutReducer(this.blockReducer);
-          if (isPageRoot) {
-            yield block;
-          } else {
-            yield block;
+          if (block.body.extent === 0) {
+            console.error("[%s] zero yield!", this.context.name, block.body);
+          }
+          if (block.body.children.length === 0) {
+            console.error("[%s] zero children!", this.context.name, block.body);
+          }
+          yield block;
+          if (!isPageRoot) {
             yield value; // page-break
           }
         } else if (value.type === 'block') {
@@ -175,7 +182,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     }
 
     while (this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("after")) {
-      yield LayoutResult.pageBreak;
+      yield LayoutResult.pageBreak(this.context, "block-fmt-context: after border can't be included");
     }
 
     this.context.addBorderBoxEdge("after");
@@ -187,7 +194,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     this.context.flowRoot.closeElement(this.context.env.element);
     yield this.context.acceptLayoutReducer(this.blockReducer);
     if (this.context.env.pageBreakAfter.isAlways()) {
-      yield LayoutResult.pageBreak;
+      yield LayoutResult.pageBreak(this.context, "block-fmt-context: page-break-after");
     }
     if (Config.debugLayout) {
       console.groupEnd();

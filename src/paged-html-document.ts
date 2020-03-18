@@ -1,4 +1,5 @@
 import {
+  Config,
   HtmlElement,
   HtmlDocument,
   HtmlDocumentOptions,
@@ -101,9 +102,15 @@ export class PagedHtmlDocument extends HtmlDocument {
         return;
       }
       const node = result.getBodyAsBlockNode();
-      const page = this.addPageNode(node);
-      if (options.onPage) {
-        options.onPage({ caller: this, page });
+      if (node.children.some(child => child.extent > 0)) {
+        const page = this.addPageNode(node);
+        if (options.onPage) {
+          options.onPage({ caller: this, page });
+        }
+      }
+      if (this.pages.length > Config.maxPageCount) {
+        console.error("too many pages, abort.");
+        return;
       }
       this.renderAsync(options);
     });

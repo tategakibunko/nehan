@@ -1,6 +1,7 @@
 import {
   ILogicalNode,
   LogicalBlockNode,
+  ILayoutFormatContext,
 } from './public-api'
 
 export type LogicalNodeType =
@@ -31,15 +32,20 @@ export type LayoutResultType =
 
 export class LayoutResult {
   static skip = new LayoutResult('skip');
-  static pageBreak = new LayoutResult('page-break');
   static lineBreak = new LayoutResult('line-break');
+
+  static pageBreak(ctx: ILayoutFormatContext, msg = "std"): LayoutResult {
+    console.log("created page break(%s):", msg, ctx);
+    return new LayoutResult('page-break', ctx);
+  }
+
   static logicalNode(type: LogicalNodeType, node: ILogicalNode): LayoutResult {
     return new LayoutResult(type, node);
   }
 
   private constructor(public type: LayoutResultType, public body?: any) { }
 
-  get isFloatable(): boolean {
+  isFloatable(): boolean {
     switch (this.type) {
       case 'block':
       case 'inline-block':
@@ -53,6 +59,7 @@ export class LayoutResult {
     if (this.body && this.body instanceof LogicalBlockNode) {
       return this.body;
     }
+    console.log("Type error: body is not LogicalBlockNode. %o", this);
     throw new Error("Type error: body is not LogicalBlockNode");
   }
 }
