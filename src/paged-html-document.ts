@@ -12,6 +12,8 @@ import {
   WritingModeValue,
   ILayoutOutlineEvaluator,
   LayoutOutlineEvaluator,
+  ResourceLoaderContext,
+  ResourceLoader,
 } from './public-api';
 
 interface PagedNode {
@@ -23,7 +25,9 @@ interface PagedNode {
   acmCharCount: number;
 }
 
-interface PagedHtmlRenderOptions {
+export interface PagedHtmlRenderOptions {
+  onProgressImage?: (ctx: ResourceLoaderContext) => void
+  onCompleteImage?: (ctx: ResourceLoaderContext) => void
   onPage?: (context: { caller: PagedHtmlDocument, page: PagedNode }) => void;
   onComplete?: (context: { caller: PagedHtmlDocument, time: number, pageCount: number }) => void;
 }
@@ -84,8 +88,10 @@ export class PagedHtmlDocument extends HtmlDocument {
   }
 
   public render(options: PagedHtmlRenderOptions = {}): PagedHtmlDocument {
-    this.timestamp = performance.now();
-    this.renderAsync(options);
+    ResourceLoader.loadImageAll(this, options).then(doc => {
+      this.timestamp = performance.now();
+      this.renderAsync(options);
+    });
     return this;
   }
 

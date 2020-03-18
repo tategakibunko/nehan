@@ -1,14 +1,20 @@
 import {
-  DocumentCallbacks
+  DocumentCallbacks,
+  PagedHtmlRenderOptions,
 } from "./public-api";
+
+export class ResourceLoaderCallbacks {
+  onProgressImage?: (ctx: ResourceLoaderContext) => void
+  onCompleteImage?: (ctx: ResourceLoaderContext) => void
+}
 
 export class ResourceLoaderContext {
   public totalItemCount: number;
   public successCount: number;
   public errorCount: number;
-  protected callbacks?: DocumentCallbacks;
+  protected callbacks?: DocumentCallbacks | PagedHtmlRenderOptions;
 
-  constructor(total_count: number, callbacks?: DocumentCallbacks){
+  constructor(total_count: number, callbacks?: ResourceLoaderCallbacks) {
     this.totalItemCount = total_count;
     this.successCount = 0;
     this.errorCount = 0;
@@ -23,21 +29,21 @@ export class ResourceLoaderContext {
     return Math.floor(100 * this.currentItemCount / this.totalItemCount);
   }
 
-  protected process(){
-    if(this.callbacks && this.callbacks.onProgressImage){
+  protected process() {
+    if (this.callbacks && this.callbacks.onProgressImage) {
       this.callbacks.onProgressImage(this);
     }
-    if(this.isFinish() && this.callbacks && this.callbacks.onCompleteImage){
+    if (this.isFinish() && this.callbacks && this.callbacks.onCompleteImage) {
       this.callbacks.onCompleteImage(this);
     }
   }
 
-  public fail(){
+  public fail() {
     this.errorCount++;
     this.process();
   }
 
-  public success(){
+  public success() {
     this.successCount++;
     this.process();
   }

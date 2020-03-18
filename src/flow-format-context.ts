@@ -166,6 +166,9 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get restMeasure(): number {
+    if (this.parent) {
+      return this.parent.restMeasure - this.cursorPos.start;
+    }
     return this.maxMeasure - this.textStartPos;
   }
 
@@ -396,9 +399,11 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   private pushInlineNode(inline: ILogicalNode) {
+    const old = this.cursorPos.start;
     this.inlineNodes.push(inline);
     this.cursorPos.start += inline.measure;
     this.inlineText += inline.text;
+    // console.log("[%s] pushInlineNode:%o(%d -> %d)", this.name, inline, old, this.cursorPos.start);
   }
 
   private pushBlockNode(block: ILogicalNode) {
