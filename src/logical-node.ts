@@ -93,6 +93,14 @@ export class LogicalRubyNode implements ILogicalNode {
     return this.size.extent;
   }
 
+  get lineExtent(): number {
+    const lh = this.env.font.lineHeight;
+    if (lh.indexOf("px") < 0) {
+      return Math.floor(this.rb.env.font.size * parseFloat(lh));
+    }
+    return parseInt(lh);
+  }
+
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitRuby(this);
   }

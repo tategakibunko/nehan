@@ -1,4 +1,5 @@
 import {
+  Config,
   ILogicalNode,
   LogicalBlockNode,
   ILayoutFormatContext,
@@ -35,7 +36,9 @@ export class LayoutResult {
   static lineBreak = new LayoutResult('line-break');
 
   static pageBreak(ctx: ILayoutFormatContext, msg = ""): LayoutResult {
-    console.log("created page break(%s):", msg, ctx);
+    if (Config.debugLayout) {
+      console.log("created page break(%s):", msg, ctx);
+    }
     return new LayoutResult('page-break', ctx);
   }
 

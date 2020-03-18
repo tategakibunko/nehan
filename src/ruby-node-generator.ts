@@ -1,4 +1,5 @@
 import {
+  CssLength,
   Config,
   ILogicalNodeGenerator,
   LayoutResult,
@@ -30,11 +31,6 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
     if (Config.debugLayout) {
       console.group("ruby");
     }
-    // For performance, if there is no space for single font size,
-    // generate page-break before processing ruby element.
-    while (this.context.restMeasure < this.context.env.font.size) {
-      yield LayoutResult.lineBreak;
-    }
     let childElement: HtmlElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
@@ -61,19 +57,21 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
     for (let rubyGroup of this.context.rubyGroups) {
       const ruby = this.context.acceptLayoutReducer(this.reducer, rubyGroup);
       const rubyNode = ruby.body;
+      const rubyLineExtent = rubyNode.lineExtent;
+      // console.log("ruby:%o, rubyLineExtent:%d, restE:%d", rubyNode, rubyLineExtent, this.context.restExtent);
       if (rubyNode.size.measure > this.context.maxMeasure) {
         console.warn("too large ruby, can't be included, ignored:%o(maxM=%d)", ruby, this.context.maxMeasure);
         continue;
       }
-      while (this.context.restExtent < rubyNode.size.extent) {
-        yield LayoutResult.pageBreak(this.context, "restExtent is not enough for rubyNode.extent");
+      while (this.context.restExtent < rubyLineExtent) {
+        yield LayoutResult.pageBreak(this.context, `restExtent is not enough for rubyNode.lineExtent(${rubyLineExtent})`);
       }
-      while (this.context.restMeasure < rubyNode.size.measure) {
+      while (this.context.restMeasure < rubyNode.measure) {
         yield LayoutResult.lineBreak;
       }
       // re-check extent after line-break
-      while (this.context.restExtent < rubyNode.size.extent) {
-        yield LayoutResult.pageBreak(this.context, "restExtent is not enough for rubyNode.extent even after pageBreak");
+      while (this.context.restExtent < rubyLineExtent) {
+        yield LayoutResult.pageBreak(this.context, `restExtent is not enough for rubyNode.lineExtent(${rubyLineExtent}) even after pageBreak`);
       }
       yield ruby;
     }

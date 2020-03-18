@@ -1,4 +1,5 @@
 import {
+  Config,
   BoxEnv,
   ContextBoxEdge,
   LogicalFloat,
@@ -403,7 +404,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.inlineNodes.push(inline);
     this.cursorPos.start += inline.measure;
     this.inlineText += inline.text;
-    // console.log("[%s] pushInlineNode:%o(%d -> %d)", this.name, inline, old, this.cursorPos.start);
+    if (Config.debugLayout) {
+      console.log("[%s] pushInlineNode:%o(%d -> %d)", this.name, inline, old, this.cursorPos.start);
+    }
   }
 
   private pushBlockNode(block: ILogicalNode) {
@@ -419,7 +422,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (!block.env.position.isAbsolute()) {
       this.cursorPos.before += block.extent;
     }
-    // console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
+    if (Config.debugLayout) {
+      console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
+    }
   }
 
   private getBorderCollapseStartSize(block: LogicalBlockNode): number {
