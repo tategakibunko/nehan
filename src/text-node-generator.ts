@@ -56,7 +56,8 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           yield LayoutResult.skip;
           break;
         }
-        while (this.context.restMeasure < font.size) {
+        // while (this.context.restMeasure < font.size) {
+        if (this.context.restMeasure < font.size) {
           yield LayoutResult.lineBreak;
         }
       }
