@@ -11,6 +11,6 @@ export class LineBreakGenerator extends InlineNodeGenerator {
     while (this.context.restExtent < this.context.env.font.lineExtent) {
       yield LayoutResult.pageBreak(this.context, "line break, lineExtent not enough");
     }
-    yield LayoutResult.lineBreak;
+    yield LayoutResult.lineBreak(this.context, "<br>");
   }
 }

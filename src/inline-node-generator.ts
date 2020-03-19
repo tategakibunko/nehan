@@ -35,8 +35,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
 
     if (this.context.rootExtent < this.context.contextBoxEdge.borderBoxExtent ||
       this.context.rootMeasure < this.context.contextBoxEdge.borderBoxMeasure) {
-      console.error("Too large edge size: this layout can't be included!");
-      yield LayoutResult.skip;
+      yield LayoutResult.skip(this.context, "Too large edge size: this layout can't be included!");
       return;
     }
 
@@ -49,7 +48,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
 
     const startEdgeSize = this.context.contextBoxEdge.getBorderBoxEdgeSize("start");
     while (this.context.restMeasure < startEdgeSize) {
-      yield LayoutResult.lineBreak;
+      yield LayoutResult.lineBreak(this.context, "Start edge is not enough for restMeasure");
     }
 
     this.context.addBorderBoxEdge("start"); // context.cursorPos.start += startEdgeSize

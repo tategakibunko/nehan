@@ -52,13 +52,12 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       if (this.context.isLineHead()) {
         // console.log("lineHead:", this.context);
         if (this.context.maxMeasure < font.size) {
-          console.warn("too narrow space, skip:", this.context);
-          yield LayoutResult.skip;
+          yield LayoutResult.skip(this.context, "too narrow space");
           break;
         }
         // while (this.context.restMeasure < font.size) {
         if (this.context.restMeasure < font.size) {
-          yield LayoutResult.lineBreak;
+          yield LayoutResult.lineBreak(this.context, "restMeasure is not enough for single font size");
         }
         if (this.context.restMeasure < font.size) {
           console.warn("restMeasure is not enough even after lineBreak!");
@@ -70,7 +69,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       // if white-space:pre, yield line-break with current text block.
       if (isPre && token.text === "\n") {
         yield this.context.acceptLayoutReducer(this.reducer, false);
-        yield LayoutResult.lineBreak;
+        yield LayoutResult.lineBreak(this.context, "CRLF in white-space:pre");
         continue;
       }
 
@@ -99,12 +98,12 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
             lexer.pushBack();
           }
           yield this.context.acceptLayoutReducer(this.reducer, true);
-          yield LayoutResult.lineBreak;
+          yield LayoutResult.lineBreak(this.context, "long word is broken by word-break: break-all");
         } else {
           lexer.pushBack();
           this.hyphenator.hyphenate(this.context);
           yield this.context.acceptLayoutReducer(this.reducer, true);
-          yield LayoutResult.lineBreak;
+          yield LayoutResult.lineBreak(this.context, "char token overflows measure");
         }
       } else {
         this.context.addCharacter(token);

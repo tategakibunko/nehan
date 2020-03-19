@@ -32,8 +32,19 @@ export type LayoutResultType =
   LogicalNodeType
 
 export class LayoutResult {
-  static skip = new LayoutResult('skip');
-  static lineBreak = new LayoutResult('line-break');
+  static skip(ctx: ILayoutFormatContext, msg = ""): LayoutResult {
+    if (Config.debugLayout) {
+      console.log("created skip(%s):", msg, ctx);
+    }
+    return new LayoutResult('skip', ctx);
+  }
+
+  static lineBreak(ctx: ILayoutFormatContext, msg = ""): LayoutResult {
+    if (Config.debugLayout) {
+      console.log("created line-break(%s):", msg, ctx);
+    }
+    return new LayoutResult('line-break', ctx);
+  }
 
   static pageBreak(ctx: ILayoutFormatContext, msg = ""): LayoutResult {
     if (Config.debugLayout) {
