@@ -55,13 +55,6 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           yield LayoutResult.skip(this.context, "too narrow space");
           break;
         }
-        // while (this.context.restMeasure < font.size) {
-        if (this.context.restMeasure < font.size) {
-          yield LayoutResult.lineBreak(this.context, "restMeasure is not enough for single font size");
-        }
-        if (this.context.restMeasure < font.size) {
-          console.warn("restMeasure is not enough even after lineBreak!");
-        }
       }
       const token: ICharacter = lexer.getNext();
       // console.log("restM:%d, token:%o", this.context.restMeasure, token);
