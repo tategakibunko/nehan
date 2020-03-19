@@ -14,7 +14,6 @@ import {
 export class TextFormatContext implements ILayoutFormatContext {
   public name = "(text)";
   public progress: number;
-  public progressDelta: number;
   public cursorPos: LogicalCursorPos;
   public characters: ICharacter[];
   public text: string;
@@ -27,7 +26,6 @@ export class TextFormatContext implements ILayoutFormatContext {
     this.cursorPos = LogicalCursorPos.zero;
     this.characters = [];
     this.text = "";
-    this.progressDelta = 1 / this.lexer.tokens.length;
   }
 
   public get env(): BoxEnv {

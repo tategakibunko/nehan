@@ -167,6 +167,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         }
       } // while(true)
       this.context.progress = (childElement.index + 1) * progressDelta; // force update progress
+      // console.log("[%s] force update progress: %f", this.context.name, this.context.progress);
       childElement = childGen.nextElement;
     } // while (childElement !== null)
 

@@ -418,7 +418,8 @@ export class FlowFormatContext implements IFlowFormatContext {
     }
     const old = this.cursorPos.before;
     this.text += block.text;
-    this.progress += block.progress / this.env.element.childNodes.length;
+    this.progress = Math.min(1, this.progress + block.progress / this.env.element.childNodes.length);
+    // console.log("[%s] child-progress: %f, block-progress: %f", this.name, block.progress, this.progress);
     this.blockNodes.push(block);
     this.blockNodeHistory.push(block);
     if (!block.env.position.isAbsolute()) {
