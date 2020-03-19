@@ -123,7 +123,10 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
         node.appendChild(document.createElement("br"));
       }
       if (char.spacing) {
-        // [TODO] added spacing node here.
+        const spacingNode = document.createElement("div");
+        spacingNode.style.height = char.spacing + "px";
+        spacingNode.appendChild(document.createTextNode(" "));
+        node.appendChild(spacingNode);
       }
     });
     node.normalize();
