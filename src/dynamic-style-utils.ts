@@ -39,20 +39,26 @@ export class DynamicStyleUtils {
       return {};
     }
     if (Config.engineVersion >= 7) {
-      let pctx: ILayoutFormatContext = ctx.parentContext;
+      const pctx: ILayoutFormatContext = ctx.parentContext;
+      const style: CssDeclarationBlock = {
+        marginBefore: (2 * ctx.remSize - 0.14285714 * ctx.emSize) + "px",
+        marginStart: "0px",
+        marginEnd: "0px",
+        marginAfter: "1rem"
+      };
       if (pctx.cursorPos.before === 0) {
-        return { marginBefore: "0" };
+        style.marginBefore = "0px";
       }
-      return {};
+      return style;
     }
-    let is_block_head = parent_ctx.isBlockHead();
-    let style: CssDeclarationBlock = {
+    const isBlockHead = parent_ctx.isBlockHead();
+    const style: CssDeclarationBlock = {
       marginBefore: (2 * ctx.remSize - 0.14285714 * ctx.emSize) + "px",
       marginStart: "0px",
       marginEnd: "0px",
       marginAfter: "1rem"
     };
-    if (is_block_head || ctx.element.isFirstChild()) {
+    if (isBlockHead || ctx.element.isFirstChild()) {
       style.marginBefore = "0px";
     }
     if (ctx.element.isLastChild()) {
