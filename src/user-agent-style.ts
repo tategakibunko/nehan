@@ -65,7 +65,7 @@ export const UserAgentStyles: CssRules = {
   },
   "body": {
     "display": "flow-root",
-    "text-align": "justify",
+    // "text-align": "justify",
     "font-size": "16px",
     "overflow-wrap": "break-word",
     "measure": Config.defaultBodyMeasure + "px",
