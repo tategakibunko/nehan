@@ -3,7 +3,8 @@ import {
   DynamicStyleContext,
   DynamicStyleCallback,
   CssDeclarationBlock,
-  HtmlElement
+  HtmlElement,
+  ILayoutFormatContext,
 } from "./public-api";
 
 function getRestExtent(parentContext: any): number {
@@ -35,6 +36,13 @@ export class DynamicStyleUtils {
   static smartHeader(ctx: DynamicStyleContext): CssDeclarationBlock {
     let parent_ctx = ctx.parentContext;
     if (!parent_ctx) {
+      return {};
+    }
+    if (Config.engineVersion >= 7) {
+      let pctx: ILayoutFormatContext = ctx.parentContext;
+      if (pctx.cursorPos.before === 0) {
+        return { marginBefore: "0" };
+      }
       return {};
     }
     let is_block_head = parent_ctx.isBlockHead();

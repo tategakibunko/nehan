@@ -70,6 +70,10 @@ export class PagedHtmlDocument extends HtmlDocument {
     return pagedNode;
   }
 
+  public get pageCount(): number {
+    return this.pages.length;
+  }
+
   public getPage(index: number): HTMLElement | Node {
     const page = this.pages[index];
     if (!page) {
