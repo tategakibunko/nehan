@@ -107,10 +107,14 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.display = "inline-block";
     node.style.lineHeight = "1";
     textNode.children.forEach(char => {
-      node.appendChild(char.acceptEvaluator(this));
+      const charNode = char.acceptEvaluator(this);
       if (char.spacing) {
-        // [TODO] added spacing node.
-        console.log(`spacing:${char.spacing}`);
+        const spacingWrap = document.createElement("span");
+        spacingWrap.style.paddingRight = char.spacing + "px";
+        spacingWrap.appendChild(charNode);
+        node.appendChild(spacingWrap);
+      } else {
+        node.appendChild(charNode);
       }
     });
     node.normalize();
@@ -152,11 +156,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.style.height = lineNode.baseline.size.extent + "px";
     baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
 
-    /* [TODO]
     if (lineNode.env.textAlign.isJustify()) {
       this.textJustifier.justify(lineNode);
     }
-    */
 
     node.appendChild(baseLineNode);
     lineNode.children.forEach(child => {
