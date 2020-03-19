@@ -126,6 +126,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
+    rbNode.style.display = "block";
+    rtNode.style.display = "block";
+    rtNode.style.lineHeight = "1";
     node.appendChild(rtNode);
     node.appendChild(rbNode);
     node.style.display = "inline-block";
