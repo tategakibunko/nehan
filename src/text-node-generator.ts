@@ -61,7 +61,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           yield LayoutResult.lineBreak;
         }
         if (this.context.restMeasure < font.size) {
-          console.error("restMeasure is not enough even after lineBreak!");
+          console.warn("restMeasure is not enough even after lineBreak!");
         }
       }
       const token: ICharacter = lexer.getNext();
