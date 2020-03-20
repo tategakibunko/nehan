@@ -65,6 +65,14 @@ export class PagedHtmlDocument extends HtmlDocument {
     return this.pages.length;
   }
 
+  public getAnchorPage(anchorName: string): Page {
+    const anchor = this.generator.context.pageRoot.outline.getAnchor(anchorName);
+    if (!anchor) {
+      throw new Error(`anchor(${anchorName}) is not found!`);
+    }
+    return this.getPage(anchor.pageIndex);
+  }
+
   public getPage(index: number): Page {
     const page = this.pages[index];
     if (!page) {
