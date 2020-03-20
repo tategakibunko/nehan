@@ -116,11 +116,21 @@ export class LineReducer implements ILayoutReducer {
     return 0;
   }
 
+  isReChild(node: ILogicalNode): boolean {
+    if (node instanceof LogicalInlineReNode) {
+      return true;
+    }
+    if (node instanceof LogicalInlineNode) {
+      return node.children.some(child => this.isReChild(child));
+    }
+    return false;
+  }
+
   visit(context: FlowFormatContext): LayoutResult {
     const pos = context.lineHeadPos;
     const measure = context.maxMeasure;
     const children = context.inlineNodes;
-    const reChildren = children.filter(node => ReplacedElement.isReplacedElement(node.env.element));
+    const reChildren = children.filter(node => this.isReChild(node));
     const iblockChildren = children.filter(node => node instanceof LogicalInlineBlockNode);
     const decoratedChildren = children.filter(node => this.isDecoratedText(node));
     const maxFont = children.reduce((acm, node) => node.env.font.size > acm.size ? node.env.font : acm, context.env.font);
@@ -139,11 +149,13 @@ export class LineReducer implements ILayoutReducer {
     const extent = (lineBodyExtent === maxNonTextExtent && context.restExtent >= baseLineOffset) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
     const size = new LogicalSize({ measure, extent });
     const text = context.inlineText;
+    // blockOffset is space size before/after space between baseline and wrapLineNode.
+    const blockOffset = Math.floor(baseLineOffset / 2);
     const baseline = {
       size: new LogicalSize({ measure, extent: baseLineExtent }),
       textBodySize: new LogicalSize({ measure: context.cursorPos.start, extent: textBodyExtent }),
       startOffset: context.lineBoxStartOffset,
-      blockOffset: Math.floor(baseLineOffset / 2),
+      blockOffset,
     };
     const lastBlockNode = context.lastBlockNode;
     const isContinuousLine = lastBlockNode && lastBlockNode instanceof LogicalLineNode;
@@ -167,7 +179,7 @@ export class LineReducer implements ILayoutReducer {
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    // console.log("[%s] reduceLine:%o", context.name, lineNode);
+    console.log("[%s] reduceLine:%o", context.name, lineNode);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
@@ -307,6 +319,7 @@ export class ReReducer implements ILayoutReducer {
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
     const text = `(${context.env.element.tagName})`;
     const re = new LogicalBlockReNode(context.env, logicalSize, physicalSize, edge, pos, text);
+    // console.log("[%s] reduce Re(block):", context.name, re);
     return LayoutResult.logicalNode('re-block', re);
   }
 
@@ -314,6 +327,7 @@ export class ReReducer implements ILayoutReducer {
     const edge = context.env.edge;
     const text = `(${context.env.element.tagName})`;
     const re = new LogicalInlineReNode(context.env, logicalSize, physicalSize, edge, text);
+    // console.log("[%s] reduce Re(inline):", context.name, re);
     return LayoutResult.logicalNode('re-inline', re);
   }
 
