@@ -1,10 +1,10 @@
 import {
   Config,
+  Page,
   HtmlElement,
   HtmlDocument,
   HtmlDocumentOptions,
   LogicalNodeGenerator,
-  ILogicalNode,
   ILogicalNodeGenerator,
   LogicalBlockNode,
   ILogicalNodeEvaluator,
@@ -16,26 +16,17 @@ import {
   ResourceLoader,
 } from './public-api';
 
-interface PagedNode {
-  node: ILogicalNode;
-  dom?: HTMLElement | Node;
-  index: number;
-  progress: number;
-  charCount: number;
-  acmCharCount: number;
-}
-
 export interface PagedHtmlRenderOptions {
   onProgressImage?: (ctx: ResourceLoadingContext) => void
   onCompleteImage?: (ctx: ResourceLoadingContext) => void
-  onPage?: (context: { caller: PagedHtmlDocument, page: PagedNode }) => void;
+  onPage?: (context: { caller: PagedHtmlDocument, page: Page }) => void;
   onComplete?: (context: { caller: PagedHtmlDocument, time: number, pageCount: number }) => void;
 }
 
 export class PagedHtmlDocument extends HtmlDocument {
   private generator: ILogicalNodeGenerator;
   private evaluator: ILogicalNodeEvaluator;
-  private pages: PagedNode[];
+  private pages: Page[];
   private timestamp: number;
 
   constructor(src: string, options: HtmlDocumentOptions) {
@@ -51,7 +42,7 @@ export class PagedHtmlDocument extends HtmlDocument {
     return LogicalNodeEvaluator.selectEvaluator(writingMode);
   }
 
-  private addPageNode(node: LogicalBlockNode): PagedNode {
+  private addPageNode(node: LogicalBlockNode): Page {
     const index = this.pages.length;
     const dom = (index === 0) ? node.acceptEvaluator(this.evaluator) : undefined; // evaluate first page only(lazy evaluation)
     const prevPage = this.pages[index - 1];
@@ -74,16 +65,16 @@ export class PagedHtmlDocument extends HtmlDocument {
     return this.pages.length;
   }
 
-  public getPage(index: number): HTMLElement | Node {
+  public getPage(index: number): Page {
     const page = this.pages[index];
     if (!page) {
       throw new Error(`page ${index} is not found!`);
     }
     if (page.dom) {
-      return page.dom;
+      return page;
     }
     page.dom = page.node.acceptEvaluator(this.evaluator);
-    return page.dom;
+    return page;
   }
 
   public createOutline(outlineEvaluator?: ILayoutOutlineEvaluator): HTMLElement {
