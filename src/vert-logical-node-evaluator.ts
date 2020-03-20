@@ -24,6 +24,7 @@ import {
   LogicalNodeEvaluator,
   LogicalBoxEdge,
   ILogicalTextJustifier,
+  ILogicalNode,
 } from './public-api'
 
 export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
@@ -31,6 +32,16 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     private cssVisitor: ILogicalCssEvaluator,
     private textJustifier: ILogicalTextJustifier,
   ) { }
+
+  private isReOrIblock(node: ILogicalNode): boolean {
+    if (node instanceof LogicalInlineReNode || node instanceof LogicalInlineBlockNode) {
+      return true;
+    }
+    if (node instanceof LogicalInlineNode) {
+      return node.children.some(child => this.isReOrIblock(child));
+    }
+    return false;
+  }
 
   visitChar(char: Char): HTMLElement | Node {
     return document.createTextNode(char.text);
@@ -179,8 +190,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
     lineNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
-      const isReOrIblock = child instanceof LogicalInlineReNode || child instanceof LogicalInlineBlockNode;
-      const textBodyExtent = isReOrIblock ? child.extent : child.env.font.size;
+      const textBodyExtent = this.isReOrIblock(child) ? child.extent : child.env.font.size;
       const baselineGap = Math.floor((lineNode.baseline.textBodySize.extent - textBodyExtent) / 2);
       if (baselineGap === 0) {
         baseLineNode.appendChild(childNode);
