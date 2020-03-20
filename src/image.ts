@@ -25,7 +25,7 @@ export class Image {
           if (Config.debugResourceLoader) {
             console.info("%s is successfully loaded(%dx%d)", image.src, image.width, image.height);
           }
-          context.success();
+          context.success(element);
         }
         resolve(element);
       };
@@ -34,7 +34,7 @@ export class Image {
           console.error(reason);
         }
         if (context) {
-          context.fail();
+          context.fail(element);
         }
         if (!element.getAttribute("alt")) {
           $node.setAttribute("style", "display:none");

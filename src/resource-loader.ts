@@ -8,8 +8,8 @@ import {
 
 export class ResourceLoader {
   static loadImageAll(document: HtmlDocument, callbacks?: ResourceLoaderCallbacks): Promise<HtmlDocument> {
-    let images = document.querySelectorAll("img");
-    let context = new ResourceLoaderContext(images.length, callbacks);
+    const images = document.querySelectorAll("img");
+    const context = new ResourceLoaderContext(images.length, callbacks);
     return Promise.all(images.map(image => this.loadImage(image, context)))
       .then(images => {
         return new Promise((resolve, reject) => {
@@ -24,9 +24,9 @@ export class ResourceLoader {
   }
 
   static loadImage(element: HtmlElement, context: ResourceLoaderContext): Promise<HtmlElement> {
-    let $node = element.$node as HTMLImageElement;
+    const $node = element.$node as HTMLImageElement;
     if ($node.width && $node.height) {
-      context.success();
+      context.success(element);
       return Promise.resolve(element);
     }
     return Image.load(element, context);

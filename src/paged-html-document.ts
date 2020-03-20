@@ -12,7 +12,7 @@ import {
   WritingModeValue,
   ILayoutOutlineEvaluator,
   LayoutOutlineEvaluator,
-  ResourceLoaderContext,
+  ResourceLoadingContext,
   ResourceLoader,
 } from './public-api';
 
@@ -26,8 +26,8 @@ interface PagedNode {
 }
 
 export interface PagedHtmlRenderOptions {
-  onProgressImage?: (ctx: ResourceLoaderContext) => void
-  onCompleteImage?: (ctx: ResourceLoaderContext) => void
+  onProgressImage?: (ctx: ResourceLoadingContext) => void
+  onCompleteImage?: (ctx: ResourceLoadingContext) => void
   onPage?: (context: { caller: PagedHtmlDocument, page: PagedNode }) => void;
   onComplete?: (context: { caller: PagedHtmlDocument, time: number, pageCount: number }) => void;
 }
