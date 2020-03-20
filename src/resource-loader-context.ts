@@ -14,8 +14,8 @@ export class ResourceLoaderContext {
   public errorCount: number;
   protected callbacks?: DocumentCallbacks | PagedHtmlRenderOptions;
 
-  constructor(total_count: number, callbacks?: ResourceLoaderCallbacks) {
-    this.totalItemCount = total_count;
+  constructor(totalCount: number, callbacks?: ResourceLoaderCallbacks) {
+    this.totalItemCount = totalCount;
     this.successCount = 0;
     this.errorCount = 0;
     this.callbacks = callbacks || {};

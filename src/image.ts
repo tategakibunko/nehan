@@ -22,6 +22,9 @@ export class Image {
         $node.setAttribute("width", String(image.width));
         $node.setAttribute("height", String(image.height));
         if (context) {
+          if (Config.debugResourceLoader) {
+            console.info("%s is successfully loaded(%dx%d)", image.src, image.width, image.height);
+          }
           context.success();
         }
         resolve(element);

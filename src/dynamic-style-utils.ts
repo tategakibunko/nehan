@@ -34,11 +34,12 @@ export class DynamicStyleUtils {
   // 1. calc margin by em, rem relative.
   // 2. clear header margin before if header is displayed block head pos of each page.
   static smartHeader(ctx: DynamicStyleContext): CssDeclarationBlock {
-    let parent_ctx = ctx.parentContext;
-    if (!parent_ctx) {
+    let parentCtx = ctx.parentContext;
+    if (!parentCtx) {
       return {};
     }
-    if (Config.engineVersion >= 7) {
+    // ver >= 7
+    if (parentCtx.cursorPos) {
       const pctx: ILayoutFormatContext = ctx.parentContext;
       const style: CssDeclarationBlock = {
         marginBefore: (2 * ctx.remSize - 0.14285714 * ctx.emSize) + "px",
@@ -51,7 +52,8 @@ export class DynamicStyleUtils {
       }
       return style;
     }
-    const isBlockHead = parent_ctx.isBlockHead();
+    // ver <= 6
+    const isBlockHead = parentCtx.isBlockHead();
     const style: CssDeclarationBlock = {
       marginBefore: (2 * ctx.remSize - 0.14285714 * ctx.emSize) + "px",
       marginStart: "0px",

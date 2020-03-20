@@ -22,8 +22,8 @@ export class PhysicalSize {
   static load(element: HtmlElement): PhysicalSize {
     const attr_width = element.getAttribute("width");
     const attr_height = element.getAttribute("height");
-    const prop_width = element.computedStyle.getPropertyValue("width");
-    const prop_height = element.computedStyle.getPropertyValue("height");
+    const prop_width = attr_width || element.computedStyle.getPropertyValue("width");
+    const prop_height = attr_height || element.computedStyle.getPropertyValue("height");
     const width = prop_width === "auto" ? 0 : Utils.atoi(attr_width || prop_width || "0");
     const height = prop_height === "auto" ? 0 : Utils.atoi(attr_height || prop_height || "0");
     return new PhysicalSize({ width: width, height: height });
