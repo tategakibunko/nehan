@@ -80,7 +80,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
       const clear = LogicalClear.load(childElement);
-      if (!clear.isNone()) {
+      if (!clear.isNone() && this.context.flowRoot.floatRegion) {
         const clearedExtent = this.context.flowRoot.clearFloat(clear);
         this.context.cursorPos.before = clearedExtent; // [TODO] floatRootPos.before -> localPos.before
       }
