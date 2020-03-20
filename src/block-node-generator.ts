@@ -1,6 +1,5 @@
 import {
   Config,
-  LogicalLineNode,
   ILogicalNodeGenerator,
   LogicalNodeGenerator,
   LayoutResult,
@@ -52,7 +51,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       yield LayoutResult.skip(this.context, "Minus size measure");
       return;
     }
-    while (!isPageRoot && this.context.restExtent < this.context.env.edge.borderBoxBefore) {
+    // while (!isPageRoot && this.context.restExtent < this.context.env.edge.borderBoxBefore) {
+    if (!isPageRoot && this.context.restExtent < this.context.env.edge.borderBoxBefore) {
       console.info("[%s] before border can't be included", this.context.name);
       yield LayoutResult.pageBreak(this.context, "block-fmt-context: before border can't be included");
     }
@@ -175,7 +175,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       this.context.addLine(line.body);
     }
 
-    while (!isPageRoot && this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("after")) {
+    // while (!isPageRoot && this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("after")) {
+    if (!isPageRoot && this.context.restExtent < this.context.contextBoxEdge.getBorderBoxEdgeSize("after")) {
       yield LayoutResult.pageBreak(this.context, "block-fmt-context: after border can't be included");
     }
 
