@@ -368,7 +368,7 @@ export class ComputedRegion {
     const containingMeasure = ComputedLength.load(containingElement, "measure");
     const containingExtent = ComputedLength.load(containingElement, "extent");
     if (containingMeasure.isAuto()) {
-      // console.warn(`[${element.tagName}] containing size for ${containingElement.tagName} is not resolved.`);
+      // console.warn("[%s] containing size for %s is not resolved yet. containingElement:%o", element.tagName, containingElement.tagName, containingElement);
       return undefined;
     }
     return new ComputedRegion(

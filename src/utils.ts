@@ -1,12 +1,9 @@
-import {
-  HtmlElement,
-} from "./public-api";
-
 export namespace Utils {
   export const atoi = (x: string, base = 10): number => {
     const n = parseInt(x, base);
     if (isNaN(n)) {
-      console.error(`${n} is not a number`);
+      console.error(`${x} is not a number`);
+      throw new Error(`${x} is not a number`);
     }
     return n;
   }

@@ -313,11 +313,17 @@ export class InvalidBlockSweeper implements NodeEffector {
   private constructor() { }
 
   visit(inlineElement: HtmlElement) {
+    /*
+    if (inlineElement.isTextElement() || !Display.load(inlineElement).isInlineLevel()) {
+      return;
+    }
+    */
     const nodes = inlineElement.childNodes;
     const nextNode = inlineElement.nextSibling;
     for (let i = 0; i < nodes.length; i++) {
       const child = nodes[i];
       if (Display.load(child).isBlockLevel() && inlineElement.parent) {
+        // console.log("block %o inside %o", child, inlineElement);
         const headNodes = nodes.slice(0, i);
         const tailNodes = nodes.slice(i + 1);
         inlineElement.childNodes = headNodes;
@@ -325,8 +331,11 @@ export class InvalidBlockSweeper implements NodeEffector {
         const inlineElement2 = inlineElement.clone();
         inlineElement2.parent = inlineElement.parent;
         tailNodes.forEach(child => inlineElement2.appendChild(child));
-        this.visit(inlineElement2);
+        inlineElement2.acceptEffector(this);
         inlineElement.parent.insertBefore(inlineElement2, nextNode);
+        // Now element tree(of parent) updated,
+        // so we have to reload css to get proper content measure for each block element.
+        CssLoader.loadAll(inlineElement.parent);
         break;
       }
     }
@@ -682,7 +691,7 @@ export class CssUsedRegionLoader implements NodeEffector {
     }
     const computedRegion = ComputedRegion.load(element);
     if (!computedRegion) {
-      // console.warn("containing meausre for %s is not resolved", element.tagName);
+      // console.warn("containing meausre for %s is not resolved, can't resolve.", element.tagName);
       return;
     }
     const resolver = UsedRegionResolver.select(element);

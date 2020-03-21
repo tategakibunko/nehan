@@ -7,6 +7,7 @@ import {
   TextLexer,
   ILayoutFormatContext,
   FlowFormatContext,
+
   TextFormatContext,
   RubyNormalizer,
   RubyFormatContext,
@@ -40,6 +41,7 @@ import {
   BlockLinkReducer,
   TcyLexer,
   ReNodeGenerator,
+  InvalidBlockSweeper,
 } from './public-api'
 
 export interface ChildGenerator {
@@ -190,6 +192,7 @@ export class LogicalNodeGenerator {
       return { generator, nextElement };
     }
     if (display.isInlineLevel()) {
+      element.acceptEffector(InvalidBlockSweeper.instance);
       const generator = new InlineNodeGenerator(
         new FlowFormatContext(env, parentContext)
       );
