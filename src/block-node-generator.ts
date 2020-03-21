@@ -53,7 +53,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     }
     // while (!isPageRoot && this.context.restExtent < this.context.env.edge.borderBoxBefore) {
     if (!isPageRoot && this.context.restExtent < this.context.env.edge.borderBoxBefore) {
-      console.info("[%s] before border can't be included", this.context.name);
+      // console.info("[%s] before border can't be included", this.context.name);
       yield LayoutResult.pageBreak(this.context, "block-fmt-context: before border can't be included");
     }
     this.context.addBorderBoxEdge("before"); // restExtent shorten
