@@ -313,17 +313,17 @@ export class InvalidBlockSweeper implements NodeEffector {
   private constructor() { }
 
   visit(inlineElement: HtmlElement) {
-    /*
     if (inlineElement.isTextElement() || !Display.load(inlineElement).isInlineLevel()) {
       return;
     }
-    */
     const nodes = inlineElement.childNodes;
     const nextNode = inlineElement.nextSibling;
     for (let i = 0; i < nodes.length; i++) {
       const child = nodes[i];
       if (Display.load(child).isBlockLevel() && inlineElement.parent) {
-        // console.log("block %o inside %o", child, inlineElement);
+        if (Config.debugLayout) {
+          console.log("found %o(block) inside %o(inline)", child, inlineElement);
+        }
         const headNodes = nodes.slice(0, i);
         const tailNodes = nodes.slice(i + 1);
         inlineElement.childNodes = headNodes;
@@ -333,6 +333,9 @@ export class InvalidBlockSweeper implements NodeEffector {
         tailNodes.forEach(child => inlineElement2.appendChild(child));
         inlineElement2.acceptEffector(this);
         inlineElement.parent.insertBefore(inlineElement2, nextNode);
+        if (Display.load(inlineElement.parent).isInlineLevel()) {
+          inlineElement.parent.acceptEffector(this);
+        }
         // Now element tree(of parent) updated,
         // so we have to reload css to get proper content measure for each block element.
         CssLoader.loadAll(inlineElement.parent);
