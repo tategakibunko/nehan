@@ -89,6 +89,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
             this.context.addCharacter(token); // will overflow, but ignore!
           } else {
             lexer.pushBack();
+            this.hyphenator.hyphenate(this.context);
           }
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield LayoutResult.lineBreak(this.context, "long word is broken by word-break: break-all");
