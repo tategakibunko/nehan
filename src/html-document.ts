@@ -47,6 +47,9 @@ export class HtmlDocument {
     this.selectorCache.clear();
 
     this.$document = new DOMParser().parseFromString(this.source, "text/html");
+    if (Config.debugLayout) {
+      console.log(this.$document.body);
+    }
     this.documentElement = this.createElementFromDOM(this.$document.documentElement); // <html>, children = [<head>, <body>]
     const body = this.documentElement.querySelector("body"); // <body>
     if (!body) {
