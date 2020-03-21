@@ -168,7 +168,7 @@ export class Font {
     font.weight = CssCascade.getValue(element, "font-weight");
     font.stretch = CssCascade.getValue(element, "font-stretch");
     font.family = CssCascade.getValue(element, "font-family");
-    font.size = Utils.atoi(CssCascade.getValue(element, "font-size"));
+    font.size = Utils.atoi(CssCascade.getValue(element, "font-size"), Config.defaultFontSize);
     font.lineHeight = CssCascade.getValue(element, "line-height");
     return font;
   }

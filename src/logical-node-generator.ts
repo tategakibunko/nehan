@@ -1,4 +1,5 @@
 import {
+  Config,
   LayoutResult,
   HtmlElement,
   Display,
@@ -7,7 +8,6 @@ import {
   TextLexer,
   ILayoutFormatContext,
   FlowFormatContext,
-
   TextFormatContext,
   RubyNormalizer,
   RubyFormatContext,
@@ -80,6 +80,9 @@ export class LogicalNodeGenerator {
         new TextFormatContext(lexer, parentContext)
       );
       return { generator, nextElement };
+    }
+    if (Config.debugLayout) {
+      console.log("createChild, element: %o, parentContext: %o", element, parentContext);
     }
     CssLoader.loadDynamic(element, parentContext);
     const env = new BoxEnv(element);

@@ -6,7 +6,9 @@ import {
   NativeStyleMap,
 } from "./public-api";
 
-export type LogicalFloatValue = "start" | "end" | "none"
+// If "left" is used, it's treated as "start" in horizontal mode.
+// If "right" is used, it's treated as "end" in horizontal mode.
+export type LogicalFloatValue = "start" | "end" | "none" | "left" | "right"
 
 export class LogicalFloat {
   public value: LogicalFloatValue;
@@ -20,11 +22,11 @@ export class LogicalFloat {
   }
 
   public isStart(): boolean {
-    return this.value === "start";
+    return this.value === "start" || this.value === "left";
   }
 
   public isEnd(): boolean {
-    return this.value === "end";
+    return this.value === "end" || this.value === "right";
   }
 
   public isNone(): boolean {

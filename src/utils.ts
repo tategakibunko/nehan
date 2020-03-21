@@ -1,9 +1,10 @@
 export namespace Utils {
-  export const atoi = (x: string, base = 10): number => {
-    const n = parseInt(x, base);
+  export const atoi = (x: string, failOver = 0): number => {
+    const n = parseInt(x, 10);
     if (isNaN(n)) {
-      console.error(`${x} is not a number`);
-      throw new Error(`${x} is not a number`);
+      console.error(`${x} is not a number, so use ${failOver}`);
+      // throw new Error(`${x} is not a number`);
+      return failOver;
     }
     return n;
   }
