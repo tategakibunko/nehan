@@ -105,7 +105,7 @@ class FloatBlockRegionResolver implements IRegionResolver {
   resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
-      console.info(`auto measure for float element is not allowed in nehan, so use ${Config.defaultFloatMeasure}px by default.`);
+      console.info("auto measure for float element is not allowed in nehan, so use %dpx by default:", Config.defaultFloatMeasure, element);
       region.logicalSize.measure.length = Config.defaultFloatMeasure;
     }
   }
@@ -117,7 +117,7 @@ class ReFloatBlockRegionResolver implements IRegionResolver {
   resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
-      console.info(`auto measure for float element is not allowed in nehan, so use ${Config.defaultFloatMeasure}px by default.`);
+      console.info("auto measure for float element is not allowed in nehan, so use %dpx by default:", Config.defaultFloatMeasure, element);
       region.logicalSize.measure.length = Config.defaultFloatMeasure;
     }
   }
@@ -146,7 +146,7 @@ class InlineBlockRegionResolver implements IRegionResolver {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
       if (element.computedStyle.getPropertyValue("display") !== "table-cell") {
-        console.info(`auto measure for inline-block element is not allowed in nehan, so use ${Config.defaultInlineBlockMeasure}px by default.`);
+        console.info("auto measure for inline-block element is not allowed in nehan, so use %dpx by default:", Config.defaultInlineBlockMeasure, element);
         region.logicalSize.measure.length = Config.defaultInlineBlockMeasure;
       }
     }
@@ -159,7 +159,7 @@ class ReInlineBlockRegionResolver implements IRegionResolver {
   resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
-      console.info(`auto measure for inline-block element is not allowed in nehan, so use ${Config.defaultInlineBlockMeasure}px by default.`);
+      console.info("auto measure for inline-block element is not allowed in nehan, so use %dpx by default:", Config.defaultInlineBlockMeasure, element);
       region.logicalSize.measure.length = Config.defaultInlineBlockMeasure;
     }
   }
