@@ -6,15 +6,13 @@ import {
   NativeStyleMap,
 } from "./public-api";
 
-// If "left" is used, it's treated as "start" in horizontal mode.
-// If "right" is used, it's treated as "end" in horizontal mode.
-export type LogicalFloatValue = "start" | "end" | "none" | "left" | "right"
+export type LogicalFloatValue = "start" | "end" | "none"
 
 export class LogicalFloat {
   public value: LogicalFloatValue;
 
   constructor(value: LogicalFloatValue) {
-    this.value = value;
+    this.value = (value !== "start" && value !== "end" && value !== "none") ? "none" : value;
   }
 
   public isFloat(): boolean {
@@ -22,11 +20,11 @@ export class LogicalFloat {
   }
 
   public isStart(): boolean {
-    return this.value === "start" || this.value === "left";
+    return this.value === "start";
   }
 
   public isEnd(): boolean {
-    return this.value === "end" || this.value === "right";
+    return this.value === "end";
   }
 
   public isNone(): boolean {
