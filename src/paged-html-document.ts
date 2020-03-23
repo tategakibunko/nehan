@@ -81,7 +81,7 @@ export class PagedHtmlDocument extends HtmlDocument {
     if (page.dom) {
       return page;
     }
-    page.dom = page.node.acceptEvaluator(this.evaluator);
+    page.dom = page.node.acceptEvaluator(this.evaluator) as HTMLElement;
     return page;
   }
 

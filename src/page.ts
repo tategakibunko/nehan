@@ -4,7 +4,7 @@ import {
 
 export interface Page {
   node: ILogicalNode;
-  dom?: HTMLElement | Node;
+  dom?: HTMLElement;
   index: number;
   progress: number;
   charCount: number;
