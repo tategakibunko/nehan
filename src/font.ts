@@ -103,10 +103,10 @@ export class Font {
     if (value.indexOf("condensed") >= 0 || value.indexOf("expanded") >= 0) {
       return "font-stretch";
     }
-    let props_of_normal = ["font-style", "font-variant", "font-weight", "font-stretch"];
+    const normalProps = ["font-style", "font-variant", "font-weight", "font-stretch"];
     switch (value) {
       case "normal": // font-style or font-variant or font-weight
-        return props_of_normal[index];
+        return normalProps[index];
       case "italic":
       case "oblique":
         return "font-style";
@@ -125,8 +125,8 @@ export class Font {
   // <style> <variant> <weight> <stretch> <size>/<line-height> <family>
   // opt     opt       opt      opt       must  / opt          must(and last)
   static parseShorthand(text: CssText): PropValue<string, string>[] {
-    let vals = text.split();
-    let defaults: FontShorthand = {
+    const vals = text.split();
+    const defaults: FontShorthand = {
       "font-style": "none",
       "font-variant": "normal",
       "font-weight": "normal",
@@ -135,7 +135,7 @@ export class Font {
       "line-height": "none",
       "font-family": ""
     };
-    let props = Object.keys(defaults);
+    const props = Object.keys(defaults);
     if (vals.length === 1) {
       console.error("syntax error(font shorthand):%s", text.value);
     } else if (vals.length >= 6) {
@@ -144,19 +144,19 @@ export class Font {
       });
     } else {
       for (let i = 0; i < vals.length - 2; i++) {
-        let prop = Font.inferProp(vals[i], i);
+        const prop = Font.inferProp(vals[i], i);
         defaults[prop as keyof FontShorthand] = vals[i];
       }
-      let font_size = vals[vals.length - 2];
+      const font_size = vals[vals.length - 2];
       if (font_size && font_size.indexOf("/") > 0) {
-        let parts = font_size.split("/");
+        const parts = font_size.split("/");
         defaults["font-size"] = parts[0];
         defaults["line-height"] = parts[1];
       }
       defaults["font-family"] = vals[vals.length - 1];
     }
     return props.map((prop) => {
-      let value = defaults[prop as keyof FontShorthand] || "";
+      const value = defaults[prop as keyof FontShorthand] || "";
       return { prop: prop, value: value };
     });
   }
