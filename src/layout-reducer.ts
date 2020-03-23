@@ -142,7 +142,7 @@ export class LineReducer implements ILayoutReducer {
     const maxFontLineExtent = maxFont.lineExtent;
     const maxChildExtent = Math.max(maxFontLineExtent, ...children.map(node => node.extent));
     const lineBodyExtent = Math.max(maxFontLineExtent, maxChildExtent); // decorated extent is not included here!
-    const textBodyExtent = Math.max(maxFont.size, maxChildExtent);
+    const textBodyExtent = Math.max(maxFont.size, maxNonTextExtent);
     const baseLineOffset = maxFontLineExtent - maxFont.size;
     // If body size of line is created by max non-text element(such as re, iblock),
     // then add some rest space for line(if rest extent is enough).
@@ -179,7 +179,7 @@ export class LineReducer implements ILayoutReducer {
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    // console.log("[%s] reduceLine:%o", context.name, lineNode);
+    console.log("[%s] reduceLine:%o", context.name, lineNode);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
