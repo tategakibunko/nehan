@@ -1,21 +1,25 @@
 img.nehan-img {
-  background-color: #ffffff; }
+  background-color: rgba(64, 64, 64, 0.5); }
 
+/*
+// ----------------------------------------------------
+// reset
+// ----------------------------------------------------
 .nehan-i-body,
 .nehan-i-body div,
 .nehan-i-body span,
 .nehan-i-body br,
 .nehan-i-body a,
-.nehan-i-body img {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-  text-align: inherit;
-  letter-spacing: 0; }
-
+.nehan-i-body img{
+  margin:0;
+  padding:0;
+  border:0;
+  font-size:100%;
+  font:inherit;
+  vertical-align:baseline;
+  text-align:inherit;
+  letter-spacing:0;
+}
 .nehan-i-body div,
 .nehan-i-body div::before,
 .nehan-i-body div::after,
@@ -28,184 +32,224 @@ img.nehan-img {
 .nehan-i-block,
 .nehan-i-inline,
 .nehan-i-vert-glyph {
-  -o-box-sizing: content-box !important;
-  -ms-box-sizing: content-box !important;
-  -moz-box-sizing: content-box !important;
-  -webkit-box-sizing: content-box !important;
-  box-sizing: content-box !important;
-  white-space: nowrap; }
-
+  -o-box-sizing:content-box !important;
+  -ms-box-sizing:content-box !important;
+  -moz-box-sizing:content-box !important;
+  -webkit-box-sizing:content-box !important;
+  box-sizing:content-box !important;
+  white-space:nowrap;
+}
+// ----------------------------------------------------
+// common
+// ----------------------------------------------------
 .nehan-i-body,
 .nehan-i-body .nehan-i-block {
-  position: relative; }
-
+  position:relative;
+}
 .nehan-i-body a {
-  overflow: visible;
-  text-decoration: none;
-  word-wrap: normal !important; }
-
+  overflow:visible;
+  text-decoration:none;
+  word-wrap:normal !important;
+}
 .nehan-i-body a img {
-  border: none; }
-
-.nehan-i-block > .nehan-i-block,
-.nehan-i-block > .nehan-i-line,
-.nehan-i-inline-block > .nehan-i-line {
-  position: absolute; }
-
+  border:none;
+}
+.nehan-i-block>.nehan-i-block,
+.nehan-i-block>.nehan-i-line,
+.nehan-i-inline-block>.nehan-i-line {
+  position:absolute;
+}
 .nehan-i-empha-mark {
-  line-height: 1em; }
-
+  line-height:1em;
+}
 .nehan-i-empha-mark.nehan-i-dot {
-  font-size: 1em; }
-
+  font-size:1em;
+}
 .nehan-i-empha-mark.nehan-i-circle,
 .nehan-i-empha-mark.nehan-i-double-circle,
 .nehan-i-empha-mark.nehan-i-triangle,
 .nehan-i-empha-mark.nehan-i-sesame {
-  line-height: 1;
-  font-size: 0.5em; }
-
-.nehan-i-vert-glyph {
-  -ms-writing-mode: tb-rl;
-  -webkit-writing-mode: vertical-rl;
-  writing-mode: vertical-rl; }
-
-.nehan-i-rotate-90 {
-  word-break: normal;
-  word-wrap: normal;
-  overflow: visible;
-  white-space: pre;
-  /* avoid line break */
-  -webkit-transform: rotate(90deg);
-  -webkit-transform-origin: 50% 50%;
-  -moz-transform: rotate(90deg);
-  -moz-transform-origin: 50% 50%;
-  -o-transform: rotate(90deg);
-  -o-transform-origin: 50% 50%;
-  -ms-transform: rotate(90deg);
-  -ms-transform-origin: 50% 50%;
-  transform: rotate(90deg);
-  transform-origin: 50% 50%;
-  -webkit-hyphens: none;
+  line-height:1;
+  font-size:0.5em;
+}
+.nehan-i-vert-glyph{
+  -ms-writing-mode:tb-rl;
+  -webkit-writing-mode:vertical-rl;
+  writing-mode:vertical-rl;
+}
+.nehan-i-rotate-90{
+  word-break:normal;
+  word-wrap:normal;
+  overflow:visible;
+  white-space:pre; // avoid line break
+  -webkit-transform : rotate(90deg);
+  -webkit-transform-origin : 50% 50%;
+  -moz-transform : rotate(90deg);
+  -moz-transform-origin : 50% 50%;
+  -o-transform : rotate(90deg);
+  -o-transform-origin : 50% 50%;
+  -ms-transform : rotate(90deg);
+  -ms-transform-origin : 50% 50%;
+  transform : rotate(90deg);
+  transform-origin : 50% 50%;
+  -webkit-hyphens: none; // avoid line-break
   -moz-hyphens: none;
   -ms-hyphens: none;
-  hyphens: none; }
+  hyphens: none;
+}
+.nehan-i-vert-ie{
+  writing-mode:tb-rl;
+  float:left;
+}
+.nehan-i-text-combine-upright{
+  line-height:1;
+  writing-mode:vertical-rl;
+  -webkit-writing-mode:vertical-rl;
 
-.nehan-i-vert-ie {
-  writing-mode: tb-rl;
-  float: left; }
+  text-combine-upright:all;
+  -webkit-text-combine-upright:all;
+  -ms-text-combine-horizontal:all;
 
-.nehan-i-text-combine-upright {
-  line-height: 1;
-  writing-mode: vertical-rl;
-  -webkit-writing-mode: vertical-rl;
-  text-combine-upright: all;
-  -webkit-text-combine-upright: all;
-  -ms-text-combine-horizontal: all;
-  /* for backward compatibility */
-  -webkit-text-combine: horizontal;
-  text-combine: horizontal;
-  text-combine-horizontal: all; }
-
-.nehan-i-hr {
-  border-color: rgba(0, 0, 0, 0.2) !important; }
-
+  // for backward compatibility
+  -webkit-text-combine:horizontal;
+  text-combine:horizontal;
+  text-combine-horizontal:all;
+}
+.nehan-i-hr{
+  border-color:rgba(0,0,0,0.2) !important;
+}
+// ----------------------------------------------------
+// vertical settings
+// ----------------------------------------------------
 .nehan-i-vertical {
-  -webkit-locale: 'ja'; }
-  .nehan-i-vertical .nehan-i-inline.nehan-i-a {
-    display: block; }
-  .nehan-i-vertical .nehan-i-line {
-    line-height: 1; }
-  .nehan-i-vertical .nehan-i-ruby {
-    display: flex;
-    justify-content: flex-start; }
-  .nehan-i-vertical .nehan-i-word {
-    writing-mode: vertical-rl;
-    text-orientation: sideways; }
-  .nehan-i-vertical .nehan-i-empha {
-    display: flex;
-    justify-content: flex-start;
-    overflow: visible; }
-  .nehan-i-vertical .nehan-i-empha-mark {
-    padding-left: 0.25em;
-    padding-top: 0.5em; }
-  .nehan-i-vertical .nehan-i-empha-mark.nehan-i-dot {
-    padding: 0; }
-  .nehan-i-vertical .nehan-i-inline-block {
-    position: relative; }
-  .nehan-i-vertical .nehan-i-dual-char-kern {
-    margin-top: -0.5em; }
-  .nehan-i-vertical .nehan-i-baseline > img.nehan-i-inline {
-    display: block; }
+  -webkit-locale:'ja';
 
-.nehan-i-horizontal .nehan-i-ruby,
-.nehan-i-horizontal .nehan-i-span {
-  display: inline-block; }
-
-.nehan-i-horizontal .nehan-i-inline {
-  overflow: visible;
-  display: inline-block; }
-
-.nehan-i-horizontal .nehan-i-inline-block {
-  position: relative;
-  display: inline-block; }
-
-.nehan-i-horizontal .nehan-i-rt,
-.nehan-i-horizontal .nehan-i-rb {
-  display: block; }
-
-.nehan-i-horizontal .nehan-i-rb {
-  text-align: center; }
-
-.nehan-i-horizontal .nehan-i-empha {
-  display: inline-block;
-  position: relative; }
-
-.nehan-i-horizontal .nehan-i-empha-mark {
-  display: block;
-  position: absolute;
-  left: 0.4em;
-  top: -1.25em;
-  text-align: center;
-  height: 0.5em;
-  line-height: 1; }
-
-.nehan-i-horizontal .nehan-i-empha-mark.nehan-i-dot {
-  left: 0.25em;
-  top: -0.75em; }
-
-.nehan-i-horizontal .nehan-i-empha-mark.nehan-i-open.nehan-i-dot {
-  left: 0; }
-
-.nehan-i-horizontal .nehan-i-empha-src {
-  display: block;
-  line-height: 1; }
-
-.nehan-i-horizontal .nehan-i-dual-char-kern {
-  margin-left: -0.5em; }
-
-.nehan-i-horizontal .nehan-i-mix-char {
-  display: inline-block;
-  width: 1.25em; }
-
-@supports (-ms-accelerator: true) {
-  .nehan-i-vertical .nehan-i-text-combine-upright {
-    text-align: center;
-    writing-mode: horizontal-tb !important;
-    line-height: 1; }
-  .nehan-i-vert-glyph {
-    line-height: 1;
-    max-height: 1em; }
+  .nehan-i-inline.nehan-i-a {
+    display:block;
+  }
+  .nehan-i-line {
+    line-height:1;
+  }
+  .nehan-i-ruby {
+    display:flex;
+    justify-content:flex-start;
+  }
   .nehan-i-word {
-    max-height: 1em; } }
-
-@supports (-ms-ime-align: auto) {
-  .nehan-i-vertical .nehan-i-text-combine-upright {
-    text-align: center;
-    writing-mode: horizontal-tb !important;
-    line-height: 1; }
+    writing-mode:vertical-rl;
+    text-orientation: sideways;
+  }
+  .nehan-i-empha {
+    display:flex;
+    justify-content:flex-start;
+    overflow:visible;
+  }
+  .nehan-i-empha-mark {
+    padding-left:0.25em;
+    padding-top:0.5em;
+  }
+  .nehan-i-empha-mark.nehan-i-dot {
+    padding:0;
+  }
+  .nehan-i-inline-block{
+    position:relative;
+  }
+  .nehan-i-dual-char-kern{
+    margin-top:-0.5em;
+  }
+  .nehan-i-baseline>img.nehan-i-inline{
+    display:block;
+  }
+}
+// ----------------------------------------------------
+// horizontal settings
+// ----------------------------------------------------
+.nehan-i-horizontal {
+  .nehan-i-ruby,
+  .nehan-i-span{
+    display:inline-block;
+  }
+  .nehan-i-inline {
+    overflow:visible;
+    display:inline-block;
+  }
+  .nehan-i-inline-block{
+    position:relative;
+    display:inline-block;
+  }
+  .nehan-i-rt,
+  .nehan-i-rb {
+    display:block;
+  }
+  .nehan-i-rb {
+    text-align:center;
+  }
+  .nehan-i-empha {
+    display:inline-block;
+    position:relative;
+  }
+  .nehan-i-empha-mark {
+    display:block;
+    position:absolute;
+    left:0.4em;
+    top:-1.25em;
+    text-align:center;
+    height:0.5em;
+    line-height:1;
+  }
+  .nehan-i-empha-mark.nehan-i-dot {
+    left:0.25em;
+    top:-0.75em;
+  }
+  .nehan-i-empha-mark.nehan-i-open.nehan-i-dot {
+    left:0;
+  }
+  .nehan-i-empha-src {
+    display:block;
+    line-height:1;
+  }
+  .nehan-i-dual-char-kern{
+    margin-left:-0.5em;
+  }
+  .nehan-i-mix-char {
+    display:inline-block;
+    width:1.25em;
+  }
+}
+// ----------------------------------------------------
+// environment
+// ----------------------------------------------------
+// for older MS Edge
+@supports (-ms-accelerator:true) {
+  .nehan-i-vertical {
+    .nehan-i-text-combine-upright{
+      text-align:center;
+      writing-mode:horizontal-tb !important;
+      line-height:1;
+    }
+  }
   .nehan-i-vert-glyph {
-    line-height: 1;
-    max-height: 1em; }
+    line-height:1;
+    max-height:1em;
+  }
   .nehan-i-word {
-    max-height: 1em; } }
+    max-height:1em;
+  }
+}
+// for newer MS Edge
+@supports (-ms-ime-align:auto) {
+  .nehan-i-vertical {
+    .nehan-i-text-combine-upright{
+      text-align:center;
+      writing-mode:horizontal-tb !important;
+      line-height:1;
+    }
+  }
+  .nehan-i-vert-glyph {
+    line-height:1;
+    max-height:1em;
+  }
+  .nehan-i-word {
+    max-height:1em;
+  }
+}
+*/

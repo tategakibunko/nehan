@@ -149,7 +149,17 @@ export class LineReducer implements ILayoutReducer {
     const extent = (lineBodyExtent === maxNonTextExtent && context.restExtent >= baseLineOffset) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
     const size = new LogicalSize({ measure, extent });
     const text = context.inlineText;
-    // blockOffset is space size before/after space between baseline and wrapLineNode.
+
+    // [memo]
+    // blockOffset is space size of before/after space between baseline and lineNode.
+    // startOffset is space size of (inline) start space
+    // Here is [lineNode] structure.
+    //
+    // --------------------------------------------
+    //               blockOffset
+    // startOffset  [baselineNode]
+    //               blockOffset
+    //----------------------------------------------
     const blockOffset = Math.floor(baseLineOffset / 2);
     const baseline = {
       size: new LogicalSize({ measure, extent: baseLineExtent }),
