@@ -53,7 +53,8 @@ export class InlineReducer implements ILayoutReducer {
 
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
     const measure = context.cursorPos.start;
-    const extent = Math.max(context.env.font.lineExtent, ...context.inlineNodes.map(node => node.extent));
+    const lineExtent = context.env.font.lineExtent;
+    const extent = Math.max(lineExtent, ...context.inlineNodes.map(node => node.extent));
     const children = context.inlineNodes;
     const text = context.inlineText;
     const size = new LogicalSize({ measure, extent });

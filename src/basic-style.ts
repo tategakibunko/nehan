@@ -182,7 +182,7 @@ let defaults: { [cssProp: string]: BasicStyleValue } = {
     inherit: true
   },
   "font-size": {
-    initial: Config.defaultFontSize + "px",
+    initial: Config.defaultFontSize + "px", // [TODO] use 'medium' keyword
     inherit: true
   },
   "font-size-adjust": {
@@ -218,7 +218,7 @@ let defaults: { [cssProp: string]: BasicStyleValue } = {
     inherit: true
   },
   "line-height": {
-    initial: String(Config.defaultLineHeight),
+    initial: String(Config.defaultLineHeight), // [TODO] use 'normal' keyword.
     inherit: true
   },
   "list-style": {

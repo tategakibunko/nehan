@@ -3,6 +3,7 @@ import {
   BasicStyle,
   Config,
   CssText,
+  CssLength,
   PropValue,
   HtmlElement,
   CssCascade,
@@ -11,6 +12,7 @@ import {
   PseudoElement,
   LogicalBox,
   ILogicalCssEvaluator,
+  Lexer,
 } from "./public-api";
 
 export interface FontShorthand {
@@ -22,6 +24,8 @@ export interface FontShorthand {
   "font-size": string, // mandatory
   "font-family": string // mandatory
 };
+
+type FontShorthandKey = keyof FontShorthand
 
 export enum FontSizeKeyword {
   XX_SMALL = "xx-small",
@@ -54,6 +58,130 @@ export const FontSizeKeywordSize: { [keyword: string]: number } = {
 export const FontSizeKeywordRelativeSize: { [keyword: string]: string } = {
   "smaller": "0.8em",
   "larger": "1.2em",
+}
+
+class FontShorthandLexer extends Lexer<string> {
+  static rexQuotedString = /^'[^']+'/;
+  normalize(src: string) {
+    return src.trim();
+  }
+
+  private peekQuotedString(): string {
+    const match = FontShorthandLexer.rexQuotedString.exec(this.buff);
+    if (match) {
+      const token = match[0];
+      this.stepBuff(token.length);
+      return token;
+    }
+    return "";
+  }
+
+  private peekUntilSpace(): string {
+    const spacePos = this.buff.indexOf(" ");
+    if (spacePos < 0) {
+      return this.buff;
+    }
+    const token = this.buff.substring(0, spacePos);
+    this.stepBuff(spacePos + 1);
+    return token;
+  }
+
+  createToken(): string {
+    return this.peekQuotedString() || this.peekUntilSpace();
+  }
+}
+
+class FontShorthandParser {
+  constructor(private lexer: Lexer<string>) { }
+
+  parseLineHeight(fontSize: string): string {
+    if (fontSize.indexOf("/") < 0) {
+      return "normal";
+    }
+    return fontSize.split("/")[1].trim();
+  }
+
+  inferOptPropByValue(value: string, optIndex: number, optLength: number): FontShorthandKey {
+    if (/^[1-9]00$/.test(value)) {
+      return "font-weight";
+    }
+    if (value.indexOf("condensed") >= 0 || value.indexOf("expanded") >= 0) {
+      return "font-stretch";
+    }
+    // const optProps = ["font-style", "font-variant", "font-weight", "font-stretch"];
+    switch (value) {
+      // [TODO]: use optIndex, optLength, and find property-name more wisely.
+      case "normal": // font-style or font-variant or font-weight
+        return "font-style"; // if ambigous, select font-style.
+      case "italic":
+      case "oblique":
+        return "font-style";
+      case "none":
+      case "small-caps":
+        return "font-variant";
+      case "bold":
+      case "lighter":
+      case "bolder":
+        return "font-weight";
+      default: break;
+    }
+    console.error(`invalid optinal value for shorthanded font css:${value}`);
+    return "font-style";
+  }
+
+  // <style> <variant> <weight> <stretch> <size>/<line-height> <family>
+  // opt     opt       opt      opt       must  / opt          must(and last)
+  parse(): PropValue<FontShorthandKey, string>[] {
+    const src = this.lexer.src;
+    const tokens = this.lexer.tokens;
+    if (tokens.length < 2) {
+      console.warn(`invalid font shorthand, both font-size and font-family must be specified: ${src}`);
+      return [];
+    }
+    if (tokens.length === 2) {
+      const fontSize = tokens[0];
+      const fontFamily = tokens[1];
+      const lineHeight = this.parseLineHeight(fontSize);
+      return [
+        { prop: "font-family", value: fontFamily },
+        { prop: "font-size", value: fontSize },
+        { prop: "line-height", value: lineHeight }
+      ];
+    }
+    if (2 < tokens.length && tokens.length < 6) {
+      const optValues = tokens.slice(0, -2);
+      const fontSize = tokens[tokens.length - 2];
+      const fontFamily = tokens[tokens.length - 1];
+      const lineHeight = this.parseLineHeight(fontSize);
+      let propValues: PropValue<FontShorthandKey, string>[] = [
+        { prop: "font-family", value: fontFamily },
+        { prop: "font-size", value: fontSize },
+        { prop: "line-height", value: lineHeight }
+      ];
+      optValues.forEach((value, index) => {
+        const prop = this.inferOptPropByValue(value, index, optValues.length);
+        propValues.push({ prop, value });
+      });
+      return propValues;
+    }
+    // tokens.length >= 6
+    const fontStyle = tokens[0];
+    const fontVariant = tokens[1];
+    const fontWeight = tokens[2];
+    const fontStretch = tokens[3];
+    const fontSize = tokens[4];
+    const lineHeight = this.parseLineHeight(fontSize);
+    const fontFamily = tokens[5];
+    return [
+      { prop: "font-style", value: fontStyle },
+      { prop: "font-variant", value: fontVariant },
+      { prop: "font-weight", value: fontWeight },
+      { prop: "font-stretch", value: fontStretch },
+      { prop: "font-family", value: fontFamily },
+      { prop: "font-size", value: fontSize },
+      { prop: "line-height", value: lineHeight }
+    ];
+  }
 }
 
 export class Font {
@@ -95,70 +223,12 @@ export class Font {
     return Math.floor(parseFloat(this.lineHeight) * this.size);
   }
 
-  // infer shorthanded css property by value and defined index.
-  static inferProp(value: string, index: number): string {
-    if (/^[1-9]00$/.test(value)) {
-      return "font-weight";
-    }
-    if (value.indexOf("condensed") >= 0 || value.indexOf("expanded") >= 0) {
-      return "font-stretch";
-    }
-    const normalProps = ["font-style", "font-variant", "font-weight", "font-stretch"];
-    switch (value) {
-      case "normal": // font-style or font-variant or font-weight
-        return normalProps[index];
-      case "italic":
-      case "oblique":
-        return "font-style";
-      case "none":
-      case "small-caps":
-        return "font-variant";
-      case "bold":
-      case "lighter":
-      case "bolder":
-        return "font-weight";
-      default: break;
-    }
-    throw new Error("font value (" + value + ") is not available.");
-  }
-
-  // <style> <variant> <weight> <stretch> <size>/<line-height> <family>
-  // opt     opt       opt      opt       must  / opt          must(and last)
-  static parseShorthand(text: CssText): PropValue<string, string>[] {
-    const vals = text.split();
-    const defaults: FontShorthand = {
-      "font-style": "none",
-      "font-variant": "normal",
-      "font-weight": "normal",
-      "font-stretch": "normal",
-      "font-size": "",
-      "line-height": "none",
-      "font-family": ""
-    };
-    const props = Object.keys(defaults);
-    if (vals.length === 1) {
-      console.error("syntax error(font shorthand):%s", text.value);
-    } else if (vals.length >= 6) {
-      props.forEach((prop, i) => {
-        defaults[prop as keyof FontShorthand] = vals[i];
-      });
-    } else {
-      for (let i = 0; i < vals.length - 2; i++) {
-        const prop = Font.inferProp(vals[i], i);
-        defaults[prop as keyof FontShorthand] = vals[i];
-      }
-      const font_size = vals[vals.length - 2];
-      if (font_size && font_size.indexOf("/") > 0) {
-        const parts = font_size.split("/");
-        defaults["font-size"] = parts[0];
-        defaults["line-height"] = parts[1];
-      }
-      defaults["font-family"] = vals[vals.length - 1];
-    }
-    return props.map((prop) => {
-      const value = defaults[prop as keyof FontShorthand] || "";
-      return { prop: prop, value: value };
-    });
+  static parseShorthand(text: CssText): PropValue<FontShorthandKey, string>[] {
+    const lexer = new FontShorthandLexer(text.value);
+    const parser = new FontShorthandParser(lexer);
+    const propValue = parser.parse();
+    // console.log("shorthanded font:", propValue);
+    return propValue;
   }
 
   static load(element: HtmlElement): Font {
