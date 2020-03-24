@@ -99,13 +99,6 @@ export class BlockMargin {
   }
 
   static getMarginFromLastBlock(element: HtmlElement): number {
-    if (element.isTextElement()) {
-      return 0;
-    }
-    const display = Display.load(element);
-    if (display.isInlineLevel()) {
-      return 0;
-    }
     const float = LogicalFloat.load(element);
     const prevElement = element.previousElementSibling;
     if (prevElement && !LogicalFloat.load(prevElement).isNone()) {

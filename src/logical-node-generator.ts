@@ -42,6 +42,7 @@ import {
   TcyLexer,
   ReNodeGenerator,
   InvalidBlockSweeper,
+  ConstantValueGenerator,
 } from './public-api'
 
 export interface ChildGenerator {
@@ -87,6 +88,14 @@ export class LogicalNodeGenerator {
     CssLoader.loadDynamic(element, parentContext);
     const env = new BoxEnv(element);
     const display = env.display;
+    if (display.isNone()) {
+      const generator = new ConstantValueGenerator(
+        new FlowFormatContext(env, parentContext),
+        LayoutResult.skip(parentContext, "display:none")
+      );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
     if (element.tagName === "a") {
       const context = new FlowFormatContext(env, parentContext);
       const generator = display.isInlineLevel() ?
