@@ -219,6 +219,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get contentBoxSize(): LogicalSize {
+    const extent = (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent;
     return new LogicalSize({
       measure: this.maxMeasure,
       extent: (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent
@@ -280,7 +281,9 @@ export class FlowFormatContext implements IFlowFormatContext {
       const old = this.cursorPos.before;
       this.cursorPos.before += this.contextBoxEdge.padding.getSize(direction);
       this.cursorPos.before += this.contextBoxEdge.borderWidth.getSize(direction);
-      // console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
+      if (Config.debugLayout) {
+        console.log("[%s] addBorderBoxEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
+      }
     }
   }
 
@@ -293,7 +296,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     const old = this.cursorPos.before;
     this.contextBoxEdge.margin.addEdge(direction);
     this.cursorPos.before += marginSize;
-    // console.log("[%s] addBlockMarginEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
+    if (Config.debugLayout) {
+      console.log("[%s] addBlockMarginEdge(%s): %d -> %d", this.name, direction, old, this.cursorPos.before);
+    }
   }
 
   // called by reducer of this context.
@@ -360,7 +365,9 @@ export class FlowFormatContext implements IFlowFormatContext {
         const collapseSize = Math.min(beforeBorderSize, ...cellBeforeBorderSizes);
         cells.pos.before -= collapseSize;
         this.cursorPos.before -= collapseSize;
-        // console.log("[%s] collapse before %d", this.name, collapseSize);
+        if (Config.debugLayout) {
+          console.log("[%s] collapse before %d", this.name, collapseSize);
+        }
       }
     }
     this.pushBlockNode(cells);

@@ -19,7 +19,6 @@ import {
   LogicalBlockReNode,
   LogicalInlineReNode,
   PhysicalSize,
-  ReplacedElement,
 } from './public-api'
 
 export interface ILayoutReducer {
@@ -158,8 +157,9 @@ export class LineReducer implements ILayoutReducer {
       startOffset: context.lineBoxStartOffset,
       blockOffset,
     };
+    /*
     const lastBlockNode = context.lastBlockNode;
-    const isContinuousLine = lastBlockNode && lastBlockNode instanceof LogicalLineNode;
+    const isContinuousLine = lastBlockNode instanceof LogicalLineNode;
     const isLocalFirstLine = context.localLineCount === 0;
     // If this line is not continuous to previous line or first line of local page,
     // (for example, this line is continuous to block element or at the beginning of local page block etc)
@@ -169,6 +169,7 @@ export class LineReducer implements ILayoutReducer {
       pos.before += baseLineOffset;
       context.cursorPos.before += baseLineOffset;
     }
+    */
     const autoMeasure = baseline.startOffset + context.cursorPos.start;
     const autoSize = new LogicalSize({ measure: autoMeasure, extent });
     // if empty line, shrink line-height to fontSize.
