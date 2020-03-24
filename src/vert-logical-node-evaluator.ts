@@ -303,6 +303,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlockImage(img: LogicalBlockReNode): HTMLElement {
     // console.log("visitBlockImage");
     const node = document.createElement("img");
+    node.className = "nehan-img";
     node.style.position = "absolute";
     node.style.display = "block";
     node.style.width = img.physicalSize.width + "px";
@@ -322,6 +323,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineImage(img: LogicalInlineReNode): HTMLElement {
     // console.log("visitInlineImage");
     const node = document.createElement("img");
+    node.className = "nehan-img";
     node.style.display = "block";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";

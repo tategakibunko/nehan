@@ -72,6 +72,7 @@ export namespace Config {
   // Feel free to add props to this field if it doesn't do any bad to your page.
   export let unmanagedCssProps = [
     "background",
+    "background-image",
     "background-color",
     "background-position",
     "color",

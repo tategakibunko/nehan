@@ -271,6 +271,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlockImage(img: LogicalBlockReNode): HTMLElement {
     // console.log("visitBlockImage");
     const node = document.createElement("img");
+    node.className = "nehan-img";
     node.style.position = "absolute";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
@@ -289,6 +290,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineImage(img: LogicalInlineReNode): HTMLElement {
     // console.log("visitInlineImage");
     const node = document.createElement("img");
+    node.className = "nehan-img";
     node.style.display = "inline";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
