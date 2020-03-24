@@ -22,6 +22,7 @@ import {
   IFlowRootFormatContext,
   PageRootFormatContext,
   ILogicalPositionalNode,
+  BlockMargin,
 } from './public-api'
 
 export class FlowFormatContext implements IFlowFormatContext {
