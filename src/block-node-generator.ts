@@ -88,15 +88,20 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         const clearedExtent = this.context.flowRoot.clearFloat(clear);
         this.context.cursorPos.before = clearedExtent; // [TODO] floatRootPos.before -> localPos.before
       }
-      // --------------------------------------------
-      // curChildDisplay  prevChildGen  addMargin
-      // --------------------------------------------
+      // --------------------------------------------------------
+      // curChildDisplay  prevChildGen    addMargin
+      // --------------------------------------------------------
       // block            (any)           yes
       // (any)            TextGenerator   no
+      // (any)            Abs positioned  no
       // (any)            BlockLevelGen   yes
       //----------------------------------------------
-      if (display.isBlockLevel() || (prevChildGen && !(prevChildGen instanceof TextNodeGenerator) && prevChildGen.context.env.display.isBlockLevel())) {
-        // console.log("calc blockmargin between %o and %s(display=%o)", prevChildGen, childElement.tagName, display);
+      if (display.isBlockLevel() ||
+        (prevChildGen &&
+          !(prevChildGen instanceof TextNodeGenerator) &&
+          !prevChildGen.context.env.position.isAbsolute() &&
+          prevChildGen.context.env.display.isBlockLevel())) {
+        // console.log("calc blockmargin between %o and %o([%s] display=%o)", prevChildGen, childGen, childElement.tagName, display);
         const beforeMargin = BlockMargin.getMarginFromLastBlock(childElement);
         if (beforeMargin > 0) {
           this.context.addBlockMarginEdge("before", beforeMargin);

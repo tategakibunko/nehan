@@ -1,6 +1,5 @@
 import {
   HtmlElement,
-  Display,
   LogicalFloat,
   Position,
 } from './public-api'
@@ -99,11 +98,14 @@ export class BlockMargin {
   }
 
   static getMarginFromLastBlock(element: HtmlElement): number {
-    const float = LogicalFloat.load(element);
     const prevElement = element.previousElementSibling;
     if (prevElement && !LogicalFloat.load(prevElement).isNone()) {
       return 0;
     }
+    if (Position.load(element).isAbsolute()) {
+      return 0;
+    }
+    const float = LogicalFloat.load(element);
     if (!float.isNone() || !prevElement) {
       return parseInt(element.computedStyle.getPropertyValue("margin-before") || "0", 10);
     }
