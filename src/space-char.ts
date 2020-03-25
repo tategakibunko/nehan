@@ -66,6 +66,10 @@ export class SpaceChar implements ICharacter {
     empha?: TextEmphaData;
   }) {
     this.size = TextMeasure.getWordSize(opts.font, this.text);
+
+    // [deprecated]
+    // this.size.measure = Math.floor(this.info.advanceRate * opts.font.size);
+    // this.size.extent = opts.font.size;
   }
 
   public toString(): string {

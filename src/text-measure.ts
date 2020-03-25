@@ -35,6 +35,10 @@ function createDummyElement(): HTMLElement {
 const offDomNode = createDummyElement();
 
 export class TextMeasure {
+  static isOffscreenCanvasEnabled(): boolean {
+    return offCanvasCtx !== null;
+  }
+
   static getWordSize(font: Font, word: string): LogicalSize {
     let measure = 0, extent = font.size;
     if (offCanvasCtx) {

@@ -1,4 +1,5 @@
 import {
+  BoxEnv,
   HtmlElement,
   LogicalFloat,
   Position,
@@ -95,6 +96,20 @@ export class BlockMargin {
       parent = parent.parent;
     }
     return elements;
+  }
+
+  // TODO
+  static getMarginFromLastBlock2(curEnv: BoxEnv, prevEnv?: BoxEnv): number {
+    if (curEnv.position.isAbsolute()) {
+      return 0;
+    }
+    if (prevEnv && !prevEnv.float.isNone()) {
+      return 0;
+    }
+    if (!curEnv.float.isNone() || !prevEnv) {
+      return parseInt(curEnv.element.computedStyle.getPropertyValue("margin-before") || "0", 10);
+    }
+    return 0; // TODO
   }
 
   static getMarginFromLastBlock(element: HtmlElement): number {
