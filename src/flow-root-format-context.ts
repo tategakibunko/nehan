@@ -1,4 +1,5 @@
 import {
+  Config,
   BoxEnv,
   HtmlElement,
   ILayoutFormatContext,
@@ -63,7 +64,9 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
       this.floatRegion = new FloatRegion(regionSize, flowRootPos.before);
     }
     try {
-      // console.log("addFloat(%o, %o, ctxM:%d, flowRootPos:%o)", block, float, contextMeasure, flowRootPos);
+      if (Config.debugLayout) {
+        console.log("addFloat(%o, %o, ctxM:%d, flowRootPos:%o)", block, float, contextMeasure, flowRootPos);
+      }
       const floatSize = new LogicalSize({
         measure: block.size.measure + block.env.edge.measure,
         extent: block.size.extent + block.env.edge.extent
@@ -77,8 +80,10 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
         before: rect.before
       });
       this.floatNodes.push(block);
-      // console.log("result: rect:%o, pos:%o", rect, block.pos);
-      // console.log("spaceMeasure at %d = %d", block.pos.before, this.floatRegion.getSpaceMeasureAt(block.pos.before));
+      if (Config.debugLayout) {
+        console.log("added float. rect:%o, pos:%o", rect, block.pos);
+        console.log("spaceMeasure at %d = %d", block.pos.before, this.floatRegion.getSpaceMeasureAt(block.pos.before));
+      }
     } catch (err) {
       console.error(err);
     }
