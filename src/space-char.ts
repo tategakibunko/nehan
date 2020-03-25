@@ -7,6 +7,7 @@ import {
   Font,
   TextEmphaData,
   ILogicalNodeEvaluator,
+  TextMeasure,
 } from "./public-api";
 
 // more detailed version
@@ -64,8 +65,7 @@ export class SpaceChar implements ICharacter {
     isVertical: boolean;
     empha?: TextEmphaData;
   }) {
-    this.size.measure = Math.floor(this.info.advanceRate * opts.font.size);
-    this.size.extent = opts.font.size;
+    this.size = TextMeasure.getWordSize(opts.font, this.text);
   }
 
   public toString(): string {
