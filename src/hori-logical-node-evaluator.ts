@@ -126,6 +126,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
+    node.className = "nehan-ruby";
     rbNode.style.display = "block";
     rtNode.style.display = "block";
     rtNode.style.lineHeight = "1";
@@ -173,6 +174,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
     // console.log("visitInline:", inlineNode.text);
     const node = document.createElement("span");
+    node.className = `nehan-inline nehan-${inlineNode.env.element.tagName}`;
     node.style.marginLeft = inlineNode.edge.margin.start + "px";
     node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -187,6 +189,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
     // console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");
+    node.className = `nehan-inline nehan-empha nehan-${inlineNode.env.element.tagName}`;
     node.style.display = "inline-block";
     node.style.marginLeft = inlineNode.edge.margin.start + "px";
     node.style.marginRight = inlineNode.edge.margin.end + "px";
@@ -271,7 +274,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlockImage(img: LogicalBlockReNode): HTMLElement {
     // console.log("visitBlockImage");
     const node = document.createElement("img");
-    node.className = "nehan-img";
+    node.className = "nehan-block nehan-img";
     node.style.position = "absolute";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
@@ -290,7 +293,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineImage(img: LogicalInlineReNode): HTMLElement {
     // console.log("visitInlineImage");
     const node = document.createElement("img");
-    node.className = "nehan-img";
+    node.className = "nehan-inline nehan-img";
     node.style.display = "inline";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
@@ -308,6 +311,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("a");
     const href = link.env.element.getAttribute("href");
     const name = link.env.element.getAttribute("name");
+    node.className = "nehan-inline nehan-a";
     if (href) {
       node.setAttribute("href", href);
     }
@@ -330,6 +334,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("a");
     const href = link.env.element.getAttribute("href");
     const name = link.env.element.getAttribute("name");
+    node.className = "nehan-block nehan-a";
     if (href) {
       node.setAttribute("href", href);
     }

@@ -149,6 +149,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
+    node.className = "nehan-ruby";
     node.appendChild(rbNode);
     node.appendChild(rtNode);
     node.style.display = "flex";
@@ -207,6 +208,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
     // console.log("visitInline:", inlineNode.text);
     const node = document.createElement("div");
+    node.className = `nehan-inline nehan-${inlineNode.env.element.tagName}`;
     node.style.marginTop = inlineNode.edge.margin.start + "px";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -221,6 +223,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
     // console.log("visitInlineEmpha:", inlineNode.text);
     const node = document.createElement("div");
+    node.className = `nehan-inline nehan-empha nehan-${inlineNode.env.element.tagName}`;
     node.style.marginTop = inlineNode.edge.margin.start + "px";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -303,7 +306,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitBlockImage(img: LogicalBlockReNode): HTMLElement {
     // console.log("visitBlockImage");
     const node = document.createElement("img");
-    node.className = "nehan-img";
+    node.className = "nehan-block nehan-img";
     node.style.position = "absolute";
     node.style.display = "block";
     node.style.width = img.physicalSize.width + "px";
@@ -323,7 +326,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitInlineImage(img: LogicalInlineReNode): HTMLElement {
     // console.log("visitInlineImage");
     const node = document.createElement("img");
-    node.className = "nehan-img";
+    node.className = "nehan-inline nehan-img";
     node.style.display = "block";
     node.style.width = img.physicalSize.width + "px";
     node.style.height = img.physicalSize.height + "px";
@@ -341,6 +344,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("a");
     const href = link.env.element.getAttribute("href");
     const name = link.env.element.getAttribute("name");
+    node.className = "nehan-inline nehan-a";
     if (href) {
       node.setAttribute("href", href);
     }
@@ -363,6 +367,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("a");
     const href = link.env.element.getAttribute("href");
     const name = link.env.element.getAttribute("name");
+    node.className = "nehan-block nehan-a";
     if (href) {
       node.setAttribute("href", href);
     }
