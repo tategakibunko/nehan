@@ -149,11 +149,29 @@ export class FlowFormatContext implements IFlowFormatContext {
     return startPos;
   }
 
+  // Hierarchical edge sizes are not inlucded in returned value of 'floatRegion.getSpaceMeasureAt(xxx)'.
+  // You can get total edge size from flowRootContext until this context by this property.
+  private get parentInlineEdgeSize(): number {
+    let parent = this.parent;
+    let size = 0;
+    while (parent) {
+      size += parent.env.edge.measure;
+      // console.log("parent(%s) edge size = %d", parent.env.element.getNodeName(), parent.env.edge.measure);
+      if (parent === this.flowRoot) {
+        break;
+      }
+      parent = parent.parent;
+    }
+    // console.log("[%s] inlineEdgeSizeUntilFlowRoot = %d", this.name, size);
+    return size;
+  }
+
   // this value is referenced from text-fmt-context, ruby-fmt-context etc.
   public get contextRestMeasure(): number {
     if (this.flowRoot.floatRegion) {
-      const floatSpaceSize = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before) - this.contextBoxEdge.borderBoxMeasure;
-      // console.log("contextRestMeasure at %d = %d", this.flowRootPos.before, floatSpaceSize);
+      const contextEdgeSize = this.contextBoxEdge.borderBoxMeasure + this.parentInlineEdgeSize;
+      const floatSpaceSize = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before) - contextEdgeSize;
+      // console.log("[%s] contextRestMeasure at %d = %d, maxMeasure = %d", this.name, this.flowRootPos.before, floatSpaceSize, this.maxMeasure);
       return Math.min(floatSpaceSize, this.maxMeasure) - this.textStartPos;
     }
     return this.restMeasure;
@@ -192,14 +210,6 @@ export class FlowFormatContext implements IFlowFormatContext {
       throw new Error("root extent is not defined!");
     }
     return this.env.extent;
-  }
-
-  protected getContextMeasure(): number {
-    if (!this.flowRoot.floatRegion) {
-      return this.maxMeasure;
-    }
-    const spaceMeasure = this.flowRoot.floatRegion.getSpaceMeasureAt(this.flowRootPos.before);
-    return Math.min(spaceMeasure, this.maxMeasure);
   }
 
   public get maxMeasure(): number {
