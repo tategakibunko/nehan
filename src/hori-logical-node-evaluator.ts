@@ -58,12 +58,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitSpaceChar(spaceChar: SpaceChar): HTMLElement | Node {
-    // console.log("visitSpaceChar:", spaceChar);
-    const node = document.createElement("span");
-    node.style.display = "inline-block";
-    node.style.width = spaceChar.size.measure + "px";
-    node.appendChild(document.createTextNode(spaceChar.text));
-    return node;
+    return document.createTextNode(spaceChar.text);
   }
 
   visitHalfChar(halfChar: HalfChar): HTMLElement | Node {
