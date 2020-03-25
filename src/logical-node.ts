@@ -148,7 +148,7 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
   ) { }
 
   get measure(): number {
-    return this.size.measure + this.border.width.measure;
+    return this.size.measure + this.env.edge.measure;
   }
 
   get extent(): number {
