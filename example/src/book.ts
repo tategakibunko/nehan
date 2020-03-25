@@ -1,5 +1,5 @@
-import * as Nehan from "nehan";
-import * as SampleReader from "./sample-reader";
+import * as Nehan from "../../dist";
+import * as SampleReader from "./sample-document";
 
 //Nehan.Config.debugLayout = true;
 
@@ -7,7 +7,7 @@ class Pager {
   public pageIndex: number;
   public pageCount: number;
 
-  constructor(){
+  constructor() {
     this.pageIndex = 0;
     this.pageCount = 0;
   }
@@ -49,27 +49,27 @@ let run_reader = (html: string) => {
   };
 
   reader.render({
-    onPage:(reader, page) => { // called when each page is generated.
-      if(page.index === 0){
-	$result.appendChild(page.dom);
+    onPage: (ctx) => { // called when each page is generated.
+      if (ctx.page.index === 0) {
+        const page = ctx.caller.getPage(ctx.page.index);
+        $result.appendChild(page.dom);
       }
       pager.incPageCount();
       update_nombre();
     },
-    onCompletePage:(reader, time) => {
-      console.log("finished! %f msec", time);
-      let outline = reader.createOutlineElement({
-	onSection:(section) => {
-	  let a = document.createElement("a");
-	  a.innerHTML = section.title;
-	  a.href = "#" + section.pageIndex;
-	  a.onclick = () => {
-	    goto_page(section.pageIndex);
-	  };
-	  return a;
-	}
+    onComplete: (ctx) => {
+      console.log("finished! %f msec", ctx.time);
+      const etor = new Nehan.LayoutOutlineEvaluator(section => {
+        let a = document.createElement("a");
+        a.innerHTML = section.title;
+        a.href = "#" + section.pageIndex;
+        a.onclick = () => {
+          goto_page(section.pageIndex);
+        };
+        return a;
       });
-      document.getElementById("outline").appendChild(outline);
+      const outlineElement = ctx.caller.createOutline(etor);
+      document.getElementById("outline").appendChild(outlineElement);
     }
   });
 

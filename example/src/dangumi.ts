@@ -1,30 +1,33 @@
-import * as Nehan from "nehan";
-import * as SampleReader from "./sample-reader";
+import * as Nehan from "../../dist";
+import * as SampleDocument from "./sample-document";
 
 //Nehan.Config.debugLayout = true;
 
 let run_reader = (html: string) => {
   let $result = document.getElementById("result");
-  let reader = SampleReader.create(html);
+  let reader = SampleDocument.create(html);
   reader.render({
-    onPage:(reader, page) => { // called when each page is generated.
+    onPage: (ctx) => { // called when each page is parsed.
+      // At this point, ctx.page.dom is not stored,
+      // so you have to call ctx.caller.getPage(ctx.page.index),
+      // then ctx.page.dom(same as page.dom in following code) is evaluated.
+      const page = ctx.caller.getPage(ctx.page.index); // eval page
       $result.appendChild(page.dom);
       $result.appendChild(document.createElement("hr"));
     },
-    onCompletePage:(reader, time) => {
-      console.log("finished! %f msec", time);
-      let outline = reader.createOutlineElement({
-	onSection:(section) => {
-	  let a = document.createElement("a");
-	  a.innerHTML = section.title;
-	  a.href = "#" + section.pageIndex;
-	  a.onclick = () => {
-	    alert("at page " + section.pageIndex + "!");
-	  };
-	  return a;
-	}
+    onComplete: (ctx) => {
+      console.log("finished! %f msec", ctx.time);
+      const etor = new Nehan.LayoutOutlineEvaluator(section => {
+        let a = document.createElement("a");
+        a.innerHTML = section.title;
+        a.href = "#" + section.pageIndex;
+        a.onclick = () => {
+          alert("at page " + section.pageIndex + "!");
+        };
+        return a;
       });
-      document.getElementById("outline").appendChild(outline);
+      const outlineElement = ctx.caller.createOutline(etor);
+      document.getElementById("outline").appendChild(outlineElement);
     }
   });
 };
