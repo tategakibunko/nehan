@@ -100,7 +100,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       if (!clear.isNone() && this.context.flowRoot.floatRegion) {
         const clearedExtent = this.context.flowRoot.clearFloat(clear);
         if (Config.debugLayout) {
-          console.log("float clearance:", clearedExtent);
+          console.log("float clearance:%d (cur before = %d)", clearedExtent, this.context.cursorPos.before);
         }
         this.context.cursorPos.before = clearedExtent; // [TODO] floatRootPos.before -> localPos.before
       }
