@@ -14,7 +14,6 @@ import {
   LineReducer,
   BlockReducer,
   WhiteSpace,
-  TextNodeGenerator,
 } from './public-api';
 
 // ----------------------------------------------------------------------
@@ -68,12 +67,13 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       const display = Display.load(childElement);
       if (display.isNone() || WhiteSpace.isWhiteSpaceElement(childElement)) {
         if (Config.debugLayout) {
-          console.info("skip element:", childElement);
+          console.log("skip element:", childElement);
         }
         childElement = childElement.nextSibling;
         continue;
       }
       const float = LogicalFloat.load(childElement);
+
       // before switching to next block, check there is inlines that are not still wrapped by anon-line-box.
       if ((!float.isNone() || display.isBlockLevel()) && this.context.inlineNodes.length > 0) {
         if (this.context.child) {
@@ -95,11 +95,14 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       this.context.curChildStartMargin = InlineMargin.getMarginFromParentBlock(childElement);
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
+
+      // If cur child has some clear value, add some clearance before yielding it's content.
       const clear = LogicalClear.load(childElement);
       if (!clear.isNone() && this.context.flowRoot.floatRegion) {
         const clearedExtent = this.context.flowRoot.clearFloat(clear);
         this.context.cursorPos.before = clearedExtent; // [TODO] floatRootPos.before -> localPos.before
       }
+      // If cur child has some margin between latest flow block, add it before yielding it's content.
       const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.child, prevChildGen);
       if (this.context.restExtent < beforeMargin) {
         yield isPageRoot ?
