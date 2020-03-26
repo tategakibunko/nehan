@@ -39,7 +39,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
       return;
     }
 
-    while (this.context.restExtent < this.context.contextBoxEdge.borderBoxExtent) {
+    if (this.context.restExtent < this.context.contextBoxEdge.borderBoxExtent) {
       yield LayoutResult.pageBreak(this.context, "inline rest extent not enough for border size");
     }
 
@@ -47,7 +47,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
     this.context.addBorderBoxEdge("after");
 
     const startEdgeSize = this.context.contextBoxEdge.getBorderBoxEdgeSize("start");
-    while (this.context.restMeasure < startEdgeSize) {
+    if (this.context.restMeasure < startEdgeSize) {
       yield LayoutResult.lineBreak(this.context, "Start edge is not enough for restMeasure");
     }
 

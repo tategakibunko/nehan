@@ -46,7 +46,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       // Note that metrics can be updated when parent is <::first-line>.
       const metricsArgs = { font, isVertical, empha };
 
-      while (this.context.restExtent < font.lineExtent) {
+      if (this.context.restExtent < font.lineExtent) {
         yield LayoutResult.pageBreak(this.context, "lineExtent is not enough for text-fmt-context");
       }
       if (this.context.isLineHead()) {
