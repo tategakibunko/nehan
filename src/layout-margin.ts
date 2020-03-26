@@ -1,9 +1,11 @@
 import {
-  BoxEnv,
   HtmlElement,
   LogicalFloat,
   Position,
+  ILogicalNodeGenerator,
+  TextNodeGenerator,
 } from './public-api'
+import { TextGenerator } from './text-generator';
 
 function isFlowElement(element: HtmlElement): boolean {
   if (element.isTextElement()) {
@@ -22,17 +24,17 @@ function isFlowElement(element: HtmlElement): boolean {
 
 export class InlineMargin {
   static getMarginFromParentBlock(element: HtmlElement): number {
-    const marginStart = parseInt(element.computedStyle.getPropertyValue("margin-start") || "0", 10);
+    const marginStart = parseInt(element.computedStyle.getPropertyValue("margin-start") || "0");
     return marginStart;
   }
 
   static getMarginFromLastInline(element: HtmlElement): number {
     const prev = element.previousSibling;
-    const marginStart = parseInt(element.computedStyle.getPropertyValue("margin-start") || "0", 10);
+    const marginStart = parseInt(element.computedStyle.getPropertyValue("margin-start") || "0");
     if (!prev || prev.isTextElement()) {
       return marginStart;
     }
-    const marginEnd = parseInt(prev.computedStyle.getPropertyValue("margin-end") || "0", 10);
+    const marginEnd = parseInt(prev.computedStyle.getPropertyValue("margin-end") || "0");
     return marginEnd + marginStart; // inline margin is never canceled!
   }
 }
@@ -98,35 +100,89 @@ export class BlockMargin {
     return elements;
   }
 
-  // TODO
-  static getMarginFromLastBlock2(curEnv: BoxEnv, prevEnv?: BoxEnv): number {
-    if (curEnv.position.isAbsolute()) {
-      return 0;
-    }
-    if (prevEnv && !prevEnv.float.isNone()) {
-      return 0;
-    }
-    if (!curEnv.float.isNone() || !prevEnv) {
-      return parseInt(curEnv.element.computedStyle.getPropertyValue("margin-before") || "0", 10);
-    }
-    return 0; // TODO
-  }
-
-  static getMarginFromLastBlock(element: HtmlElement): number {
-    const prevElement = element.previousElementSibling;
-    if (prevElement && !LogicalFloat.load(prevElement).isNone()) {
-      return 0;
-    }
-    if (Position.load(element).isAbsolute()) {
-      return 0;
-    }
-    const float = LogicalFloat.load(element);
-    if (!float.isNone() || !prevElement) {
-      return parseInt(element.computedStyle.getPropertyValue("margin-before") || "0", 10);
-    }
+  static getCollapsedMarginBetween(element: HtmlElement, prevElement: HtmlElement): number {
     const maxBefore = Math.max(...this.getBeforeElements(element).map(e => parseInt(e.computedStyle.getPropertyValue("margin-before") || "0")));
     const maxPrevAfter = Math.max(...this.getAfterElements(prevElement).map(e => parseInt(e.computedStyle.getPropertyValue("margin-after") || "0")));
     return Math.max(maxBefore, maxPrevAfter);
+  }
+
+  /*
+    o : collapse
+    △ : margin-before(cur)
+    ▽ : margin-after(prev)
+    - : do nothing
+
+    ---------------------------------------------
+    | cur / prev | block text float abs  none
+    ---------------------------------------------
+    | block      |   o     △    △    △     △
+    | text       |   ▽     -    -    -     -
+    | float      | ▽ + △   -    -    -     △
+    | abs        |   -     -    -    -     -
+    ----------------------------------------------
+  */
+  static getFlowMarginFromLastElement(curGen: ILogicalNodeGenerator, prevGen?: ILogicalNodeGenerator): number {
+    const curEnv = curGen.context.env;
+
+    // [cur = abs]
+    // Position of block with absolutely positioned is determined by itself,
+    // so margin of it has no effect for flow context.
+    if (curEnv.position.isAbsolute()) {
+      return 0;
+    }
+    const curMarginBefore = parseInt(curEnv.element.computedStyle.getPropertyValue("margin-before") || "0");
+    const prevEnv = prevGen ? prevGen.context.env : undefined;
+    const prevMarginAfter = prevEnv ? parseInt(prevEnv.element.computedStyle.getPropertyValue("margin-after") || "0") : 0;
+
+    // [cur = float]
+    if (!curEnv.float.isNone()) {
+      if (!prevEnv) {
+        return curMarginBefore;
+      }
+      if (!prevEnv.float.isNone()) {
+        return 0;
+      }
+      if (prevGen instanceof TextNodeGenerator) {
+        return 0;
+      }
+      if (prevEnv.display.isBlockLevel()) {
+        return prevMarginAfter + curMarginBefore;
+      }
+    }
+    // [cur = text]
+    if (curGen instanceof TextNodeGenerator) {
+      if (!prevEnv) {
+        return 0;
+      }
+      if (!prevEnv.float.isNone()) {
+        return 0;
+      }
+      if (prevGen instanceof TextNodeGenerator) {
+        return 0;
+      }
+      if (prevEnv.display.isBlockLevel()) {
+        return prevMarginAfter;
+      }
+    }
+    // [cur = block(with normal flow layout)]
+    if (curEnv.display.isBlockLevel()) {
+      if (!prevEnv) {
+        return curMarginBefore;
+      }
+      if (prevGen instanceof TextGenerator) {
+        return curMarginBefore;
+      }
+      if (!prevEnv.float.isNone()) {
+        return curMarginBefore;
+      }
+      if (prevEnv.position.isAbsolute()) {
+        return curMarginBefore;
+      }
+      if (prevEnv.display.isBlockLevel()) {
+        return this.getCollapsedMarginBetween(curEnv.element, prevEnv.element);
+      }
+    }
+    return 0; // never
   }
 }
 

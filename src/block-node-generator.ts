@@ -76,6 +76,18 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       const float = LogicalFloat.load(childElement);
       // before switching to next block, check there is inlines that are not still wrapped by anon-line-box.
       if ((!float.isNone() || display.isBlockLevel()) && this.context.inlineNodes.length > 0) {
+        if (this.context.child) {
+          const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.child, prevChildGen);
+          if (this.context.restExtent < beforeMargin) {
+            yield isPageRoot ?
+              this.context.acceptLayoutReducer(this.blockReducer) :
+              LayoutResult.pageBreak(this.context, "block-fmt-context: before-margin is not enough.");
+          }
+          if (beforeMargin > 0) {
+            this.context.addBlockMarginEdge("before", beforeMargin);
+            // console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
+          }
+        }
         // console.info("sweep out remaining inlines as line");
         const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
         this.context.addLine(line.body); // never overflows!
@@ -88,30 +100,15 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         const clearedExtent = this.context.flowRoot.clearFloat(clear);
         this.context.cursorPos.before = clearedExtent; // [TODO] floatRootPos.before -> localPos.before
       }
-      // --------------------------------------------------------
-      // curChildDisplay  prevChildGen    addMargin
-      // --------------------------------------------------------
-      // block            (any)           yes
-      // (any)            TextGenerator   no
-      // (any)            Abs positioned  no
-      // (any)            BlockLevelGen   yes
-      //----------------------------------------------
-      if (display.isBlockLevel() ||
-        (prevChildGen &&
-          !(prevChildGen instanceof TextNodeGenerator) &&
-          !prevChildGen.context.env.position.isAbsolute() &&
-          prevChildGen.context.env.display.isBlockLevel())) {
-        // console.log("calc blockmargin between %o and %o([%s] display=%o)", prevChildGen, childGen, childElement.tagName, display);
-        const beforeMargin = BlockMargin.getMarginFromLastBlock(childElement);
-        if (beforeMargin > 0) {
-          this.context.addBlockMarginEdge("before", beforeMargin);
-          // console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
-        }
-        if (this.context.restExtent < beforeMargin) {
-          yield isPageRoot ?
-            this.context.acceptLayoutReducer(this.blockReducer) :
-            LayoutResult.pageBreak(this.context, "block-fmt-context: before-margin is not enough.");
-        }
+      const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.child, prevChildGen);
+      if (this.context.restExtent < beforeMargin) {
+        yield isPageRoot ?
+          this.context.acceptLayoutReducer(this.blockReducer) :
+          LayoutResult.pageBreak(this.context, "block-fmt-context: before-margin is not enough.");
+      }
+      if (beforeMargin > 0) {
+        this.context.addBlockMarginEdge("before", beforeMargin);
+        // console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
       }
       while (true) {
         // Before yielding child generator, resume suspended generators if it exists.
