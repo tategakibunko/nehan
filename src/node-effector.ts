@@ -307,6 +307,15 @@ export class RubyNormalizer implements NodeEffector {
     <p>bar</p>
     <span>text3</span>
   </div>
+
+  [example2]
+
+  <span><b><p>foo</p></b></span>
+
+  =>
+
+  <span><b></b></span>
+  <p>foo</p>
 */
 export class InvalidBlockSweeper implements NodeEffector {
   static instance = new InvalidBlockSweeper();
@@ -322,7 +331,7 @@ export class InvalidBlockSweeper implements NodeEffector {
       const child = nodes[i];
       if (Display.load(child).isBlockLevel() && inlineElement.parent) {
         if (Config.debugLayout) {
-          console.log("found %o(block) inside %o(inline)", child, inlineElement);
+          console.log("found %s(block) inside %s(inline)", child.tagName, inlineElement.tagName);
         }
         const headNodes = nodes.slice(0, i);
         const tailNodes = nodes.slice(i + 1);
