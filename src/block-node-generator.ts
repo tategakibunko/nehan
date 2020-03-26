@@ -102,7 +102,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         if (Config.debugLayout) {
           console.log("float clearance:%d (cur before = %d)", clearedExtent, this.context.cursorPos.before);
         }
-        this.context.cursorPos.before = clearedExtent; // [TODO] floatRootPos.before -> localPos.before
+        // [TODO] floatRootPos.before -> localPos.before
+        this.context.cursorPos.before = Math.max(this.context.cursorPos.before, clearedExtent);
       }
       // If cur child has some margin between latest flow block, add it before yielding it's content.
       const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.child, prevChildGen);
