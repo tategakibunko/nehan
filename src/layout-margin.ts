@@ -142,6 +142,9 @@ export class BlockMargin {
       if (!prevEnv.float.isNone()) {
         return 0;
       }
+      if (prevEnv.position.isAbsolute()) {
+        return 0;
+      }
       if (prevGen instanceof TextNodeGenerator) {
         return 0;
       }
@@ -155,6 +158,9 @@ export class BlockMargin {
         return 0;
       }
       if (!prevEnv.float.isNone()) {
+        return 0;
+      }
+      if (prevEnv.position.isAbsolute()) {
         return 0;
       }
       if (prevGen instanceof TextNodeGenerator) {
