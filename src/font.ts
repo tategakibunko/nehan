@@ -79,6 +79,7 @@ class FontShorthandLexer extends Lexer<string> {
   private peekUntilSpace(): string {
     const spacePos = this.buff.indexOf(" ");
     if (spacePos < 0) {
+      this.stepBuff(this.buff.length);
       return this.buff;
     }
     const token = this.buff.substring(0, spacePos);
