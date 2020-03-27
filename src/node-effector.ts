@@ -197,48 +197,6 @@ export class TableCellInitializer implements NodeEffector {
 }
 
 /*
-  Insert <br> between text node and block level element.
-
-  [example]
-
-  this is some text
-  <p>foo</p>
-
-  =>
-
-  this is some text<br>
-  <p>foo</p>
-*/
-export class TextNodeNormalizer implements NodeEffector {
-  static instance = new TextNodeNormalizer();
-  private constructor() { }
-
-  visit(element: HtmlElement) {
-    if (element.isTextElement()) {
-      return;
-    }
-    const display = Display.load(element);
-    const float = LogicalFloat.load(element);
-    if (display.isInlineLevel() && float.isNone()) {
-      return;
-    }
-    const prev = element.previousSibling;
-    if (!prev) {
-      return;
-    }
-    if (element.parent && prev.isTextElement()) {
-      if (WhiteSpace.isWhiteSpaceElement(prev)) {
-        // console.info("remove white space before block:", element);
-        element.parent.removeChild(prev);
-      } else {
-        // console.info("insert <br> before %o", element);
-        element.parent.insertBefore(element.ownerDocument.createElement("br"), element);
-      }
-    }
-  }
-}
-
-/*
   1. Insert rb tag if not defined in ruby.
   2. Remove rp tag if it exists.
 

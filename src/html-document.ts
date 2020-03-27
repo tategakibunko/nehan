@@ -10,7 +10,6 @@ import {
   PageReader,
   Config,
   PseudoElementInitializer,
-  TextNodeNormalizer,
   ILogicalNodeGenerator,
   ILogicalNodeEvaluator,
 } from "./public-api";
@@ -64,9 +63,6 @@ export class HtmlDocument {
     console.time("cssLoading");
     CssLoader.loadAll(this.body);
     console.timeEnd("cssLoading");
-
-    // after loading, do some preprocessing...
-    this.body.acceptEffectorAll(TextNodeNormalizer.instance);
     console.timeEnd("initializeDocument");
   }
 
