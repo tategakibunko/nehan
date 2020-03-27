@@ -4,8 +4,6 @@ import {
   BoxEnv,
   LogicalSize,
   DualCharInfo,
-  ParenType,
-  KinsokuPos,
   TextEmphaData,
   ILogicalNodeEvaluator,
 } from "./public-api";
