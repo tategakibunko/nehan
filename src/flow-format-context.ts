@@ -22,7 +22,6 @@ import {
   IFlowRootFormatContext,
   PageRootFormatContext,
   ILogicalPositionalNode,
-  BlockMargin,
 } from './public-api'
 
 export class FlowFormatContext implements IFlowFormatContext {
@@ -87,13 +86,26 @@ export class FlowFormatContext implements IFlowFormatContext {
     throw new Error(`[${this.env.element.tagName}] flow root context not found!`);
   }
 
+  // [NOTICE] For performance reason, we should not write this code recursive way.
+  public get parentBlock(): IFlowFormatContext | undefined {
+    let ctx: ILayoutFormatContext | undefined = this.parent;
+    while (ctx) {
+      if (ctx.env.display.isBlockLevel()) {
+        return ctx as IFlowFormatContext;
+      }
+      ctx = ctx.parent;
+    }
+    return undefined;
+  }
+
   public acceptLayoutReducer(visitor: ILayoutReducer, ...args: any): LayoutResult {
     return visitor.visit(this, ...args);
   }
 
   public get restExtent(): number {
-    if (this.parent) {
-      return this.parent.restExtent - this.cursorPos.before;
+    const parentBlock = this.parentBlock;
+    if (parentBlock) {
+      return parentBlock.restExtent - this.cursorPos.before;
     }
     return this.maxExtent - this.cursorPos.before;
   }

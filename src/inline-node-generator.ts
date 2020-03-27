@@ -90,6 +90,12 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
           this.context.addInlineLink(value.body);
         } else if (value.type === 're-inline') {
           this.context.addInlineRe(value.body);
+        } else if (value.type === 'block') {
+          if (this.context.inlineNodes.length > 0) {
+            yield this.context.acceptLayoutReducer(this.reducer, true);
+            yield LayoutResult.lineBreak(this.context, "sweep out inline by block(inline level)");
+          }
+          yield value; // delegate to parent.
         }
       }
       childElement = childGen.nextElement;

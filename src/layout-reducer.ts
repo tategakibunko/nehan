@@ -201,7 +201,7 @@ export class BlockReducer implements ILayoutReducer {
   protected constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowFormatContext): LayoutResult {
-    const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
+    const pos = context.parentBlock ? context.parentBlock.localPos : LogicalCursorPos.zero;
     const size = context.contentBoxSize;
     const autoSize = context.autoContentBoxSize;
     const border = context.contextBoxEdge.currentBorder;

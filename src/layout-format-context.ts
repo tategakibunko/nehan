@@ -38,6 +38,7 @@ export interface ILayoutFormatContext {
 }
 
 export interface IFlowFormatContext extends ILayoutFormatContext {
+  parentBlock?: ILayoutFormatContext;
   inlineNodes: ILogicalNode[];
   blockNodes: ILogicalNode[];
 }

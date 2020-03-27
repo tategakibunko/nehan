@@ -204,7 +204,7 @@ export class LogicalNodeGenerator {
       return { generator, nextElement };
     }
     if (display.isInlineLevel()) {
-      element.acceptEffector(InvalidBlockSweeper.instance);
+      // element.acceptEffector(InvalidBlockSweeper.instance);
       const generator = new InlineNodeGenerator(
         new FlowFormatContext(env, parentContext)
       );
