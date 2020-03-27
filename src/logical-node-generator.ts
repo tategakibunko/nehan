@@ -41,7 +41,6 @@ import {
   BlockLinkReducer,
   TcyLexer,
   ReNodeGenerator,
-  // InvalidBlockSweeper,
   ConstantValueGenerator,
 } from './public-api'
 
@@ -204,7 +203,6 @@ export class LogicalNodeGenerator {
       return { generator, nextElement };
     }
     if (display.isInlineLevel()) {
-      // element.acceptEffector(InvalidBlockSweeper.instance);
       const generator = new InlineNodeGenerator(
         new FlowFormatContext(env, parentContext)
       );
