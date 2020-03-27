@@ -90,7 +90,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   public get parentBlock(): IFlowFormatContext | undefined {
     let ctx: ILayoutFormatContext | undefined = this.parent;
     while (ctx) {
-      if (ctx.env.display.isBlockLevel()) {
+      if (ctx.env.display.isBlockLevel() || ctx.env.display.isFlowRoot()) {
         return ctx as IFlowFormatContext;
       }
       ctx = ctx.parent;
@@ -282,6 +282,11 @@ export class FlowFormatContext implements IFlowFormatContext {
       return this.localPos;
     }
     return this.parent.globalPos.translate(this.localPos);
+  }
+
+  public get blockPos(): LogicalCursorPos {
+    const parentBlock = this.parentBlock;
+    return parentBlock ? parentBlock.localPos : LogicalCursorPos.zero;
   }
 
   public get lineHeadPos(): LogicalCursorPos {

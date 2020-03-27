@@ -37,7 +37,6 @@ import {
   EmptyBoxContext,
   ReplacedElementGenerator,
   ImageContext,
-  InvalidBlockSweeper,
   ListStyle,
 } from "./public-api";
 
@@ -59,9 +58,6 @@ export class LayoutGeneratorFactory {
     }
     CssLoader.loadDynamic(element, parent_ctx);
     let display = Display.load(element);
-    if (display.isInlineLevel()) {
-      element.acceptEffector(InvalidBlockSweeper.instance);
-    }
     if (display.isNone()) {
       if (Config.debugLayout) {
         console.log("[%s] empty box(display:none)", element.toString());
