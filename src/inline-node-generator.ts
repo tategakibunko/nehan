@@ -64,7 +64,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
       this.context.child = childGen.generator;
       if (this.context.child.context.env.display.isBlockLevel()) {
         yield this.context.acceptLayoutReducer(this.reducer, true);
-        yield LayoutResult.lineBreak(this.context, "sweep outline inlines before block");
+        yield LayoutResult.lineBreak(this.context, "sweep out inlines for next block");
       }
       while (true) {
         const value = this.context.child.getNext();
@@ -97,7 +97,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'block') {
           if (this.context.inlineNodes.length > 0) {
             yield this.context.acceptLayoutReducer(this.reducer, true);
-            yield LayoutResult.lineBreak(this.context, "sweep out inline by block(inline level)");
+            yield LayoutResult.lineBreak(this.context, "sweep out inline by block");
           }
           yield value; // delegate to parent.
         }
