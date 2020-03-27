@@ -62,6 +62,10 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
       }
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
+      if (this.context.child.context.env.display.isBlockLevel()) {
+        yield this.context.acceptLayoutReducer(this.reducer, true);
+        yield LayoutResult.lineBreak(this.context, "sweep outline inlines before block");
+      }
       while (true) {
         const value = this.context.child.getNext();
         if (!value) {
