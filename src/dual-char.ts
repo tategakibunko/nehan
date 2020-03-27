@@ -29,19 +29,19 @@ export class DualChar implements ICharacter {
   }
 
   public isOpenParen(): boolean {
-    return this.info.parenType === ParenType.OPEN;
+    return this.info.parenType === "open";
   }
 
   public isCloseParen(): boolean {
-    return this.info.parenType === ParenType.CLOSE;
+    return this.info.parenType === "close";
   }
 
   public isTailNg(): boolean {
-    return this.info.kinsokuPos === KinsokuPos.TAIL;
+    return this.info.kinsokuPos === "tail";
   }
 
   public isHeadNg(): boolean {
-    return this.info.kinsokuPos === KinsokuPos.HEAD;
+    return this.info.kinsokuPos === "head";
   }
 
   public isKernEnable(): boolean {

@@ -1,14 +1,12 @@
-export const enum ParenType {
-  OPEN  = "open",  // open mark like left bracket.
-  CLOSE = "close", // close mark like right bracket.
-  NONE  = "none"
-}
+export type ParenType =
+  "open" | // open mark like left bracket.
+  "close" | // close mark like right bracket.
+  "none"
 
-export const enum KinsokuPos {
-  HEAD = "head",  // unable to place line head.
-  TAIL = "tail",  // unable to place line tail.
-  NONE = "none"
-}
+export type KinsokuPos =
+  "head" |  // unable to place line head.
+  "tail" |   // unable to place line tail.
+  "none"
 
 export interface DualCharInfo {
   readonly parenType: ParenType,
