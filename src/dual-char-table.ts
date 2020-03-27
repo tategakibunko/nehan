@@ -1,11 +1,9 @@
 import {
-  ParenType,
-  KinsokuPos,
   DualCharInfo,
   Utils
 } from "./public-api";
 
-let kakkoStart: DualCharInfo = {
+const kakkoStart: DualCharInfo = {
   parenType: "open",
   kinsokuPos: "tail",
   kernEnable: true,
@@ -14,7 +12,7 @@ let kakkoStart: DualCharInfo = {
   isSmall: false
 };
 
-let kakkoStartHalf: DualCharInfo = {
+const kakkoStartHalf: DualCharInfo = {
   parenType: "open",
   kinsokuPos: "tail",
   kernEnable: false,
@@ -23,7 +21,7 @@ let kakkoStartHalf: DualCharInfo = {
   isSmall: true
 };
 
-let kakkoEnd: DualCharInfo = {
+const kakkoEnd: DualCharInfo = {
   parenType: "close",
   kinsokuPos: "head",
   kernEnable: true,
@@ -32,7 +30,7 @@ let kakkoEnd: DualCharInfo = {
   isSmall: false
 };
 
-let kakkoEndHalf: DualCharInfo = {
+const kakkoEndHalf: DualCharInfo = {
   parenType: "close",
   kinsokuPos: "head",
   kernEnable: false,
@@ -41,7 +39,7 @@ let kakkoEndHalf: DualCharInfo = {
   isSmall: true
 };
 
-let kutouten: DualCharInfo = {
+const kutouten: DualCharInfo = {
   parenType: "none",
   kinsokuPos: "head",
   kernEnable: true,
@@ -50,7 +48,7 @@ let kutouten: DualCharInfo = {
   isSmall: false
 };
 
-let kutoutenHalf: DualCharInfo = {
+const kutoutenHalf: DualCharInfo = {
   parenType: "none",
   kinsokuPos: "head",
   kernEnable: false,
@@ -59,7 +57,7 @@ let kutoutenHalf: DualCharInfo = {
   isSmall: true
 };
 
-let dash: DualCharInfo = {
+const dash: DualCharInfo = {
   parenType: "none",
   kinsokuPos: "none",
   kernEnable: false,
@@ -69,7 +67,7 @@ let dash: DualCharInfo = {
 };
 
 /*
-let rotatableDash: DualCharInfo = {
+const rotatableDash: DualCharInfo = {
   parenType: "none",
   kinsokuPos: KinsokuPos.NONE,
   kernEnable: false,
@@ -79,7 +77,7 @@ let rotatableDash: DualCharInfo = {
 }
 */
 
-let colon: DualCharInfo = {
+const colon: DualCharInfo = {
   parenType: "none",
   kinsokuPos: "none",
   kernEnable: false,
@@ -88,7 +86,7 @@ let colon: DualCharInfo = {
   isSmall: false
 };
 
-let smallKana: DualCharInfo = {
+const smallKana: DualCharInfo = {
   parenType: "none",
   kinsokuPos: "head",
   kernEnable: false,
@@ -97,7 +95,7 @@ let smallKana: DualCharInfo = {
   isSmall: true
 };
 
-let normal: DualCharInfo = {
+const normal: DualCharInfo = {
   parenType: "none",
   kinsokuPos: "none",
   kernEnable: false,
@@ -106,7 +104,7 @@ let normal: DualCharInfo = {
   isSmall: false
 };
 
-let dual_char_table: { [_: string]: DualCharInfo } = {
+const dualCharTable: { [universalCharacterName: string]: DualCharInfo } = {
   "U+0028": kakkoStartHalf, // LEFT PARENTHESIS
   "U+0029": kakkoEndHalf, // RIGHT PARENTHESIS
   "U+002C": kutoutenHalf, // COMMA
@@ -120,8 +118,8 @@ let dual_char_table: { [_: string]: DualCharInfo } = {
   "U+007D": kakkoEndHalf, // RIGHT CURLY BRACKET
   "U+2014": dash, // EM DASH
   "U+2015": dash, // HORIZONTAL BAR
-  "U+201C": kakkoStart, // LEFT DOUBLE QUOTATION MARK
-  "U+201D": kakkoEnd, // RIGHT DOUBLE QUOTATION MARK
+  "U+201C": kakkoStartHalf, // LEFT DOUBLE QUOTATION MARK
+  "U+201D": kakkoEndHalf, // RIGHT DOUBLE QUOTATION MARK
   "U+2025": dash, // TWO DOT LEADER
   "U+2026": dash, // HORIZONTAL ELLIPSIS
   "U+2190": normal, // LEFTWARDS ARROW
@@ -211,7 +209,7 @@ let dual_char_table: { [_: string]: DualCharInfo } = {
 export class DualCharTable {
   static load(str: string): DualCharInfo | null {
     let prop = Utils.String.getUnicodeProp(str);
-    let info = dual_char_table[prop];
+    let info = dualCharTable[prop];
     return info || null;
   }
 }
