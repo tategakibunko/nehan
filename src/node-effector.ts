@@ -317,6 +317,7 @@ export class RubyNormalizer implements NodeEffector {
   <span><b></b></span>
   <p>foo</p>
 */
+/*
 export class InvalidBlockSweeper implements NodeEffector {
   static instance = new InvalidBlockSweeper();
   private constructor() { }
@@ -353,6 +354,7 @@ export class InvalidBlockSweeper implements NodeEffector {
     }
   }
 }
+*/
 
 // Before css loading, create pseudo-elements defined in css,
 // and initialize spec-styles for them.

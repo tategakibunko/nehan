@@ -41,7 +41,7 @@ import {
   BlockLinkReducer,
   TcyLexer,
   ReNodeGenerator,
-  InvalidBlockSweeper,
+  // InvalidBlockSweeper,
   ConstantValueGenerator,
 } from './public-api'
 
