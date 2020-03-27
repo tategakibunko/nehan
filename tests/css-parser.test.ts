@@ -62,6 +62,17 @@ test("font(shorthand)", () => {
   expect(rule.getPropertyValue("font-family")).toBe("Arial,Helvetica,sans-serif");
 });
 
+test("font(shorthand2)", () => {
+  const shorthand = "oblique normal 400 16px/1.2 'IPA Mincho'";
+  const rule = Nehan.CssParser.parseRule("body", { "font": shorthand })[0];
+  expect(rule.getPropertyValue("font-style")).toBe("oblique");
+  expect(rule.getPropertyValue("font-variant")).toBe("normal");
+  expect(rule.getPropertyValue("font-weight")).toBe("400");
+  expect(rule.getPropertyValue("font-size")).toBe("16px");
+  expect(rule.getPropertyValue("line-height")).toBe("1.2");
+  expect(rule.getPropertyValue("font-family")).toBe("'IPA Mincho'");
+});
+
 test("border all(shorthand)", () => {
   const shorthand = "1px solid black";
   const rule = Nehan.CssParser.parseRule("body", { "border": shorthand })[0];
