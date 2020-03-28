@@ -20,39 +20,4 @@ export class LogicalVerticalAlign {
     let value = CssCascade.getValue(element, "vertical-align");
     return new LogicalVerticalAlign(value as LogicalVerticalAlignValue);
   }
-
-  /*
-  public getCss(box: LogicalBox): NativeStyleMap {
-    if (box.isTextVertical()) {
-      return this.getCssVert(box);
-    }
-    return this.getCssHori(box);
-  }
-
-  public getCssVert(box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    switch (this.value) {
-      case 'baseline':
-        css.set("margin-left", "auto");
-        css.set("margin-right", "auto");
-        break;
-      default:
-        console.warn("vertical-align(%s) is not supported yet.", this.value);
-    }
-    return css;
-  }
-
-  public getCssHori(box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    switch (this.value) {
-      case 'baseline':
-        css.set("margin-top", "auto");
-        css.set("margin-bottom", "auto");
-        break;
-      default:
-        console.warn("vertical-align(%s) is not supported yet.", this.value);
-    }
-    return css;
-  }
-  */
 }
