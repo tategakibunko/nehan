@@ -197,7 +197,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
         baseLineNode.appendChild(childNode);
       } else {
         const offsetNode = document.createElement("div");
-        offsetNode.style.marginLeft = baselineGap + "px";
+        offsetNode.style.marginLeft = Math.max(0, baselineGap) + "px";
         offsetNode.appendChild(childNode);
         baseLineNode.appendChild(offsetNode);
       }
