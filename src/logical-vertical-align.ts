@@ -1,7 +1,6 @@
 import {
   HtmlElement,
   CssCascade,
-  NativeStyleMap,
 } from "./public-api";
 
 // original css value
