@@ -2,6 +2,7 @@ import {
   CssCascade,
   HtmlElement,
   PositionValue,
+  Display,
 } from './public-api';
 
 export class ContainingElement {
@@ -9,9 +10,21 @@ export class ContainingElement {
   static getAbsAncestor(element: HtmlElement): HtmlElement {
     let parent = element.parent;
     while (parent) {
-      const display = parent.computedStyle.getPropertyValue("position");
-      if (display !== "static") {
+      const position = parent.computedStyle.getPropertyValue("position");
+      if (position !== "static") {
         break;
+      }
+      parent = parent.parent;
+    }
+    return parent || element.ownerDocument.body;
+  }
+
+  static getBlockAncestor(element: HtmlElement): HtmlElement {
+    let parent = element.parent;
+    while (parent) {
+      const display = Display.load(parent);
+      if (display.isBlockLevel() || display.isFlowRoot()) {
+        return parent;
       }
       parent = parent.parent;
     }
@@ -29,6 +42,6 @@ export class ContainingElement {
     if (position === "absolute" || position === "fixed") {
       return this.getAbsAncestor(element);
     }
-    return element.parent;
+    return this.getBlockAncestor(element);
   }
 }

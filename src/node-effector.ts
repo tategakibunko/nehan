@@ -16,8 +16,6 @@ import {
   ComputedRegion,
   UsedRegionResolver,
   LogicalBoxEdge,
-  LogicalFloat,
-  WhiteSpace,
   ListStyle,
   BorderCollapse,
   LogicalBorderWidth,
