@@ -1,7 +1,6 @@
 import {
   Utils,
   HtmlElement,
-  BoxType,
   LogicalPos,
   LogicalSize,
   Display,
@@ -128,10 +127,6 @@ export class BoxEnv {
 
   public get fontSize(): number {
     return this.font.size;
-  }
-
-  public get boxType(): BoxType {
-    return this.display.boxType;
   }
 
   public getLineExtent(max_inline_extent: number): number {

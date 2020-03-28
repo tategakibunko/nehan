@@ -1,5 +1,4 @@
 import {
-  BoxType,
   Utils,
   BasicStyle,
   HtmlElement,
@@ -330,15 +329,5 @@ export class Display {
 
   public isInlineLevel(): boolean {
     return this.outside ? this.outside === DisplayOutside.INLINE : false;
-  }
-
-  public get boxType(): BoxType {
-    if (this.isInlineFlow()) {
-      return BoxType.INLINE;
-    }
-    if (this.isInlineBlockFlow()) {
-      return BoxType.INLINE_BLOCK;
-    }
-    return BoxType.BLOCK;
   }
 }

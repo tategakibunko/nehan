@@ -7,15 +7,15 @@ import {
 
 export class Image {
   static exists(element: HtmlElement): boolean {
-    let width = Utils.atoi(element.getAttribute("width") || "0");
-    let height = Utils.atoi(element.getAttribute("height") || "0");
+    const width = Utils.atoi(element.getAttribute("width") || "0");
+    const height = Utils.atoi(element.getAttribute("height") || "0");
     return width > 0 && height > 0;
   }
 
   static load(element: HtmlElement, context?: ResourceLoaderContext): Promise<HtmlElement> {
     return new Promise<HtmlElement>((resolve, reject) => {
-      let $node = element.$node as HTMLImageElement;
-      let image = document.createElement("img") as HTMLImageElement;
+      const $node = element.$node as HTMLImageElement;
+      const image = document.createElement("img") as HTMLImageElement;
       image.src = $node.src;
       image.onload = (evt: Event) => {
         //console.log("image.onload:width=%d, height=%d", image.width, image.height);
