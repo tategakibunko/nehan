@@ -200,7 +200,7 @@ export class Display {
     }
   }
 
-  static load(element: HtmlElement): Display {
+  static load(element: HtmlElement, withDynamicLoad = true): Display {
     const value = CssCascade.getValue(element, "display");
     const display = new Display(value as DisplayValue);
     const float = LogicalFloat.load(element);
@@ -212,7 +212,7 @@ export class Display {
       display.setBlockLevel();
     }
     // display of <a> is dynamically decided by it's first element.
-    if (element.tagName === "a") {
+    if (withDynamicLoad && element.tagName === "a") {
       const firstElement = element.firstElementChild;
       if (!firstElement) {
         return display;

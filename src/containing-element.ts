@@ -3,6 +3,7 @@ import {
   HtmlElement,
   PositionValue,
   Display,
+  DisplayValue,
 } from './public-api';
 
 export class ContainingElement {
@@ -22,13 +23,13 @@ export class ContainingElement {
   static getBlockAncestor(element: HtmlElement): HtmlElement {
     let parent = element.parent;
     while (parent) {
-      const display = Display.load(parent);
+      const display = Display.load(parent, false);
       if (display.isBlockLevel() || display.isFlowRoot()) {
         return parent;
       }
       parent = parent.parent;
     }
-    return parent || element.ownerDocument.body;
+    return element.ownerDocument.body;
   }
 
   static get(element: HtmlElement): HtmlElement {
@@ -42,6 +43,9 @@ export class ContainingElement {
     if (position === "absolute" || position === "fixed") {
       return this.getAbsAncestor(element);
     }
-    return this.getBlockAncestor(element);
+    if (Display.load(element, false).isBlockLevel()) {
+      return this.getBlockAncestor(element);
+    }
+    return element.parent;
   }
 }
