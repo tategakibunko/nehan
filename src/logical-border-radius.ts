@@ -1,5 +1,4 @@
 import {
-  LogicalBox,
   LogicalCornerMap,
   CssText,
   CssCascade,
@@ -135,12 +134,6 @@ export class LogicalBorderRadius {
       { prop: "after-end", value: this.afterEnd },
       { prop: "after-start", value: this.afterStart }
     ];
-  }
-
-  public getCss(box: LogicalBox): NativeStyleMap {
-    return this.getPhysicalBorderRadius(box.writingMode).items.reduce((css, item) => {
-      return css.set(`border-${item.prop}-radius`, String(item.value));
-    }, new NativeStyleMap());
   }
 
   public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {

@@ -6,12 +6,12 @@ import {
   LogicalCursorPos,
   LogicalEdgeMap,
   LogicalMargin,
-  LogicalBorder,
   LogicalBorderColor,
   LogicalBorderStyle,
   LogicalBorderWidth,
   LogicalBorderRadius,
   LogicalPadding,
+  LogicalBackgroundPos,
   WritingMode,
   NativeStyleMap,
   CssStyleDeclaration,
@@ -28,6 +28,7 @@ export interface ILogicalCssEvaluator {
   visitLogicalBorderStyle: (borderStyle: LogicalBorderStyle) => NativeStyleMap;
   visitLogicalBorderRadius: (borderRadius: LogicalBorderRadius) => NativeStyleMap;
   visitLogicalPadding: (pading: LogicalPadding) => NativeStyleMap;
+  visitBackgroundPos: (backgroundPos: LogicalBackgroundPos) => NativeStyleMap;
   visitUnmanagedCssProps: (style: CssStyleDeclaration) => NativeStyleMap;
 }
 
@@ -63,6 +64,16 @@ export class LogicalCssEvaluator implements ILogicalCssEvaluator {
 
   visitPos(pos: LogicalCursorPos): NativeStyleMap {
     throw new Error("must be overrided");
+  }
+
+  visitBackgroundPos(backgroundPos: LogicalBackgroundPos): NativeStyleMap {
+    const css = new NativeStyleMap();
+    let value = backgroundPos.value;
+    LogicalEdgeMap.forEach(this.writingMode, (logical, physical) => {
+      value = value.replace(logical, physical);
+    });
+    css.set("background-position", value);
+    return css;
   }
 
   visitLogicalMargin(margin: LogicalMargin): NativeStyleMap {

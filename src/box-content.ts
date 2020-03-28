@@ -1,3 +1,4 @@
+/*
 import {
   LogicalSize,
   ICharacter,
@@ -28,4 +29,5 @@ export class BoxContentSize {
     throw new Error("Invalid argument type for BoxContentSize.getLogicalSize");
   }
 }
+*/
 

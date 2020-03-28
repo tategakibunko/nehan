@@ -1,5 +1,4 @@
 import {
-  LogicalBox,
   LogicalPos,
   NativeStyleMap,
   ILogicalCssEvaluator,
@@ -53,17 +52,5 @@ export class LogicalCursorPos implements LogicalCursorPosValue {
 
   public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
     return visitor.visitPos(this);
-  }
-
-  public getCss(box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    if (box.isTextVertical()) {
-      css.set("top", this.start + "px");
-      css.set(box.isVerticalRl() ? "right" : "left", this.before + "px");
-    } else {
-      css.set("top", this.before + "px");
-      css.set("left", this.start + "px");
-    }
-    return css;
   }
 }

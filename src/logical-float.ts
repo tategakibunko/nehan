@@ -1,8 +1,6 @@
 import {
   HtmlElement,
   CssCascade,
-  LayoutParent,
-  LogicalBox,
   NativeStyleMap,
 } from "./public-api";
 
@@ -34,16 +32,5 @@ export class LogicalFloat {
   static load(element: HtmlElement): LogicalFloat {
     let value = CssCascade.getValue(element, "float");
     return new LogicalFloat(value as LogicalFloatValue);
-  }
-
-  public getCss(parent: LayoutParent, box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    if (this.isNone()) {
-      return css;
-    }
-    if (!box.isTextVertical()) {
-      css.set("float", this.isStart() ? "left" : "right");
-    }
-    return css;
   }
 }

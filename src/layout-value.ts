@@ -1,3 +1,4 @@
+/*
 import {
   LayoutControl,
   ICharacter,
@@ -56,3 +57,4 @@ export class LayoutValue {
     return this.value as LayoutControl;
   }
 }
+*/

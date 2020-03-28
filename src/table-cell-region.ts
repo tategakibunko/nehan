@@ -1,3 +1,4 @@
+/*
 import {
   FlowRootRegion,
   TableRowContext,
@@ -22,3 +23,4 @@ export class TableCellRegion extends FlowRootRegion {
     return this.cellMeasure;
   }
 }
+*/

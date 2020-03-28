@@ -1,3 +1,4 @@
+/*
 import {
   PageReader,
   ResourceLoadingContext,
@@ -11,3 +12,4 @@ export interface DocumentCallbacks {
   onProgressImage?: (ctx: ResourceLoadingContext) => void
   onCompleteImage?: (ctx: ResourceLoadingContext) => void
 }
+*/

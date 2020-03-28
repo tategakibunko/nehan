@@ -2,7 +2,6 @@ import {
   Utils,
   HtmlElement,
   CssCascade,
-  LogicalBox,
   LogicalEdgeMap,
   NativeStyleMap,
   ILogicalCssEvaluator,
@@ -47,23 +46,6 @@ export class LogicalPos {
       this.end !== undefined ||
       this.after !== undefined ||
       this.start !== undefined);
-  }
-
-  public getCss(box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    if (this.before !== undefined) {
-      css.set(LogicalEdgeMap.mapValue(box.writingMode, "before"), this.before + "px");
-    }
-    if (this.end !== undefined) {
-      css.set(LogicalEdgeMap.mapValue(box.writingMode, "end"), this.end + "px");
-    }
-    if (this.after !== undefined) {
-      css.set(LogicalEdgeMap.mapValue(box.writingMode, "after"), this.after + "px");
-    }
-    if (this.start !== undefined) {
-      css.set(LogicalEdgeMap.mapValue(box.writingMode, "start"), this.start + "px");
-    }
-    return css;
   }
 
   public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {

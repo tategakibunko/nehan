@@ -1,3 +1,4 @@
+/*
 import {
   HtmlElement,
   LayoutValue,
@@ -62,3 +63,4 @@ export interface ILayoutContext {
   // is generator running normally?
   isStatusNormal: () => boolean;
 }
+*/

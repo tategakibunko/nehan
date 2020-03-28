@@ -1,6 +1,5 @@
 import {
   CssLength,
-  LogicalBox,
   LogicalBorderStyle,
   LogicalBorderWidth,
   LogicalBorderColor,
@@ -57,15 +56,6 @@ export class LogicalBorder {
       color: LogicalBorderColor.none,
       radius: LogicalBorderRadius.none
     });
-  }
-
-  public getCss(box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    this.width.getCss(box).mergeTo(css);
-    this.style.getCss(box).mergeTo(css);
-    this.color.getCss(box).mergeTo(css);
-    this.radius.getCss(box).mergeTo(css);
-    return css;
   }
 
   public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {

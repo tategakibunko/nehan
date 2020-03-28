@@ -2,13 +2,14 @@ import {
   Utils,
   HtmlElement,
   CssLength,
+  ILayoutFormatContext,
 } from "./public-api";
 
 export interface DynamicStyleContextValue {
   selector: string;
   name: string;
   element: HtmlElement;
-  parentContext?: any;
+  parentContext?: ILayoutFormatContext;
 }
 
 // dynamic context is called after CssLoader::loadSpecifiedStyle,

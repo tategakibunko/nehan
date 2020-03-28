@@ -1,3 +1,4 @@
+/*
 import {
   ReplacedElementContext,
   LogicalSize,
@@ -96,3 +97,4 @@ export class ReplacedElementRegion {
     return root_rest - edge_size;
   }
 }
+*/

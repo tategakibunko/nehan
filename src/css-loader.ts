@@ -1,7 +1,5 @@
 import {
   HtmlElement,
-  Config,
-  MarginCollapse,
   CssSpecifiedValueLoader,
   CssSpecifiedInlineValueLoader,
   CssSpecifiedDynamicValueLoader,
@@ -36,12 +34,6 @@ export class CssLoader {
 
     // computed value -> used value
     element.acceptEffector(CssUsedRegionLoader.instance);
-
-    // [TODO] Deprecated in the future
-    // set collapse value for older engine.
-    if ((Config.engineVersion <= 6) && Config.edgeSkipTags.indexOf(element.tagName) < 0) {
-      MarginCollapse.collapse(element);
-    }
   }
 
   static loadDynamic(element: HtmlElement, parentCtx?: any): boolean {

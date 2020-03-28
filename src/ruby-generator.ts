@@ -1,3 +1,4 @@
+/*
 import {
   FlowGenerator,
   RubyContext,
@@ -25,3 +26,4 @@ export class RubyGenerator extends FlowGenerator {
     return [new LayoutValue(LayoutControl.createSkip())];
   }
 }
+*/

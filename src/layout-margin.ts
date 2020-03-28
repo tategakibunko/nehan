@@ -5,7 +5,6 @@ import {
   ILogicalNodeGenerator,
   TextNodeGenerator,
 } from './public-api'
-import { TextGenerator } from './text-generator';
 
 function isFlowElement(element: HtmlElement): boolean {
   if (element.isTextElement()) {
@@ -175,7 +174,7 @@ export class BlockMargin {
       if (!prevEnv) {
         return curMarginBefore;
       }
-      if (prevGen instanceof TextGenerator) {
+      if (prevGen instanceof TextNodeGenerator) {
         return curMarginBefore;
       }
       if (!prevEnv.float.isNone()) {
@@ -191,4 +190,3 @@ export class BlockMargin {
     return 0; // never
   }
 }
-

@@ -4,10 +4,10 @@ import {
   UserAgentStyles,
   SelectorCache,
   CssLoader,
-  BodyContext,
-  BodyGenerator,
-  PageGenerator,
-  PageReader,
+  // BodyContext,
+  // BodyGenerator,
+  // PageGenerator,
+  // PageReader,
   Config,
   PseudoElementInitializer,
   ILogicalNodeGenerator,
@@ -66,6 +66,7 @@ export class HtmlDocument {
     console.timeEnd("initializeDocument");
   }
 
+  /*
   public createBodyGenerator(): BodyGenerator {
     return new BodyGenerator(new BodyContext(this.body));
   }
@@ -77,6 +78,7 @@ export class HtmlDocument {
   public createPageReader(): PageReader {
     return new PageReader(this);
   }
+  */
 
   public querySelectorAll(query: string): HtmlElement[] {
     return this.documentElement.querySelectorAll(query);

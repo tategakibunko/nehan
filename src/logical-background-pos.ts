@@ -2,9 +2,8 @@ import {
   HtmlElement,
   NativeCssValue,
   NativeStyleMap,
-  LogicalBox,
-  LogicalEdgeMap,
   CssCascade,
+  ILogicalCssEvaluator,
 } from "./public-api";
 
 // background-position is not layouting target of nehan.
@@ -13,7 +12,7 @@ import {
 export class LogicalBackgroundPos {
   public value: NativeCssValue;
 
-  constructor(value: NativeCssValue){
+  constructor(value: NativeCssValue) {
     this.value = value;
   }
 
@@ -22,14 +21,8 @@ export class LogicalBackgroundPos {
     return new LogicalBackgroundPos(value);
   }
 
-  public getCss(box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    let value = this.value;
-    LogicalEdgeMap.forEach(box.writingMode, (logical, physical) => {
-      value = value.replace(logical, physical);
-    });
-    css.set("background-position", value);
-    return css;
+  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
+    return visitor.visitBackgroundPos(this);
   }
 }
 

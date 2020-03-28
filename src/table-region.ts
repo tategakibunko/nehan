@@ -1,3 +1,4 @@
+/*
 import {
   FlowRegion,
   HtmlElement,
@@ -82,3 +83,4 @@ export class TableRegion extends FlowRegion {
     return this.cellMeasures;
   }
 }
+*/

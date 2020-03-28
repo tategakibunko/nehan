@@ -1,3 +1,4 @@
+/*
 import {
   FlowRegion,
   LogicalBox,
@@ -21,7 +22,7 @@ export class ListItemRegion extends FlowRegion {
     line.contextEdge = line.contextEdge || LogicalBoxEdge.none;
     line.contextEdge.padding.start += this.outsideMarkerMeasure;
   }
-  
+
   public get outsideMarkerMeasure(): number {
     return this.outsideListMarker? this.outsideListMarker.totalMeasure : 0;
   }
@@ -42,3 +43,4 @@ export class ListItemRegion extends FlowRegion {
     return max - this.outsideMarkerMeasure;
   }
 }
+*/

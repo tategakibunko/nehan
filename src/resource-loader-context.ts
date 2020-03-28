@@ -1,6 +1,5 @@
 import {
   HtmlElement,
-  DocumentCallbacks,
   PagedHtmlRenderOptions,
 } from "./public-api";
 
@@ -22,7 +21,7 @@ export class ResourceLoaderContext {
   public totalItemCount: number;
   public successCount: number;
   public errorCount: number;
-  protected callbacks?: DocumentCallbacks | PagedHtmlRenderOptions;
+  protected callbacks?: PagedHtmlRenderOptions;
 
   constructor(totalCount: number, callbacks?: ResourceLoaderCallbacks) {
     this.totalItemCount = totalCount;

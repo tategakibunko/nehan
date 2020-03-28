@@ -1,3 +1,4 @@
+/*
 import {
   ReplacedElementContext,
   LogicalSize,
@@ -20,3 +21,4 @@ export class ImageContext extends ReplacedElementContext {
     return box;
   }
 }
+*/

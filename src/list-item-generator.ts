@@ -1,3 +1,4 @@
+/*
 import {
   FlowGenerator,
   ListItemContext,
@@ -6,3 +7,4 @@ import {
 export class ListItemGenerator extends FlowGenerator {
   protected context!: ListItemContext;
 }
+*/

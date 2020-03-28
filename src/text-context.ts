@@ -1,3 +1,4 @@
+/*
 import {
   ILayoutContext,
   ICharacter,
@@ -337,7 +338,7 @@ export class TextContext implements ILayoutContext {
 
       //
       // OI-DASHI for head-NG(-1)
-      // 
+      //
       // c ... c [prev2][prev1]<br>
       // [tail][head][next1]
       if (tail && tail instanceof DualChar === false) {
@@ -370,3 +371,4 @@ export class TextContext implements ILayoutContext {
     return 0;
   }
 }
+*/

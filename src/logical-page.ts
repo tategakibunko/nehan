@@ -1,3 +1,4 @@
+/*
 import {
   LogicalBox,
 } from "./public-api";
@@ -10,3 +11,4 @@ export interface LogicalPage {
   box: LogicalBox;
   dom: HTMLElement | null;
 }
+*/

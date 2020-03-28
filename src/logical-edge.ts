@@ -3,7 +3,6 @@ import {
   PropValue,
   WritingMode,
   LogicalEdgeMap,
-  LogicalBox,
   NativeStyleMap,
   HtmlElement,
   CssCascade,
@@ -102,11 +101,13 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
     ];
   }
 
+  /*  
   public getCss(box: LogicalBox): NativeStyleMap {
     return this.getPhysicalEdge(box.writingMode).items.reduce((css, item) => {
       return css.set(this.getPropByLogicalDirection(item.prop), String(item.value));
     }, new NativeStyleMap());
   }
+  */
 }
 
 export class LogicalEdgeSize extends LogicalEdge<number> {
@@ -144,9 +145,11 @@ export class LogicalEdgeSize extends LogicalEdge<number> {
     return this.start + this.end;
   }
 
+  /*
   public getCss(box: LogicalBox): NativeStyleMap {
     return this.getPhysicalEdge(box.writingMode).items.reduce((css, item) => {
       return css.set(this.getPropByLogicalDirection(item.prop), item.value + "px");
     }, new NativeStyleMap());
   }
+  */
 }

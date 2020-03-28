@@ -1,3 +1,4 @@
+/*
 import {
   FlowContext,
   TableRegion,
@@ -48,4 +49,4 @@ export class TableContext extends FlowContext {
     return super.createBlockBox(overflow, BoxType.TABLE);
   }
 }
-
+*/

@@ -1,3 +1,4 @@
+/*
 import {
   ConstantGenerator,
   ReplacedElementContext,
@@ -6,3 +7,4 @@ import {
 export class ReplacedElementGenerator extends ConstantGenerator {
   protected context!: ReplacedElementContext;
 }
+*/

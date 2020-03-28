@@ -1,6 +1,5 @@
 import {
   Config,
-  LogicalBox,
   LogicalPadding,
   LogicalBorder,
   LogicalMargin,
@@ -150,6 +149,7 @@ export class LogicalBoxEdge {
     };
   }
 
+  /*
   public getCss(box: LogicalBox): NativeStyleMap {
     let css = new NativeStyleMap();
     this.padding.getCss(box).mergeTo(css);
@@ -161,4 +161,5 @@ export class LogicalBoxEdge {
     }
     return css;
   }
+  */
 }

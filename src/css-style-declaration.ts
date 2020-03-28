@@ -2,12 +2,10 @@ import {
   HtmlElement,
   DynamicStyle,
   DomCallback,
-  LogicalBox,
   CssParser,
   CssProp,
   CssText,
   ILogicalCssEvaluator,
-  ILogicalNode,
   NativeStyleMap,
 } from "./public-api";
 

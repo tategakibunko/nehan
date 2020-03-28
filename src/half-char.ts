@@ -1,7 +1,6 @@
 import {
   ICharacter,
   LogicalSize,
-  LogicalBox,
   Font,
   NativeStyleMap,
   TextEmphaData,
@@ -36,15 +35,6 @@ export class HalfChar implements ICharacter {
     if (opts.empha) {
       this.size.extent = opts.font.size * 2;
     }
-  }
-
-  public getCssVert(box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    css.set("text-align", "center");
-    if (this.text.length === 2) {
-      css.set("padding-left", Math.floor(box.fontSize / 4) + "px");
-    }
-    return css;
   }
 
   public toString(): string {

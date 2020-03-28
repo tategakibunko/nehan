@@ -1,3 +1,4 @@
+/*
 import {
   LayoutGenerator,
   LayoutSection,
@@ -184,3 +185,4 @@ export class LayoutGeneratorFactory {
     return new ReplacedElementGenerator(new ImageContext(element, parent_ctx));
   }
 }
+*/

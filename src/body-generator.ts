@@ -1,3 +1,4 @@
+/*
 import {
   Anchor,
   FlowGenerator,
@@ -39,3 +40,4 @@ export class BodyGenerator extends FlowGenerator {
     return yields;
   }
 }
+*/

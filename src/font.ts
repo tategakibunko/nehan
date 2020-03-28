@@ -6,10 +6,8 @@ import {
   PropValue,
   HtmlElement,
   CssCascade,
-  LayoutParent,
   NativeStyleMap,
   PseudoElement,
-  LogicalBox,
   ILogicalCssEvaluator,
   Lexer,
 } from "./public-api";
@@ -253,36 +251,5 @@ export class Font {
 
   public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
     return visitor.visitFont(this);
-  }
-
-  // [NOTE]
-  // line-height is fully managed by nehan.js.
-  // so don't set line-height settings here.
-  public getCss(parent: LayoutParent, box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    let parent_font = parent ? parent.env.font : null;
-    let is_first_line = PseudoElement.isFirstLine(box.element);
-    // apply style if it is not same as parent one,
-    // but note that style of <::first-line> is dynamically changed by line number.
-    // so style of it is always applied to.
-    if (!parent || parent_font && parent_font.style !== this.style || is_first_line) {
-      css.set("font-style", this.style);
-    }
-    if (!parent || parent_font && parent_font.variant !== this.variant || is_first_line) {
-      css.set("font-variant", this.variant);
-    }
-    if (!parent || parent_font && parent_font.weight !== this.weight || is_first_line) {
-      css.set("font-weight", this.weight);
-    }
-    if (!parent || parent_font && parent_font.stretch !== this.stretch || is_first_line) {
-      css.set("font-stretch", this.stretch);
-    }
-    if (!parent || parent_font && parent_font.size !== this.size || is_first_line) {
-      css.set("font-size", this.size + "px");
-    }
-    if (!parent || parent_font && parent_font.family !== this.family || is_first_line) {
-      css.set("font-family", this.family);
-    }
-    return css;
   }
 }

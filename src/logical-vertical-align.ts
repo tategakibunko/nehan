@@ -1,9 +1,6 @@
 import {
-  Utils,
-  BasicStyle,
   HtmlElement,
   CssCascade,
-  LogicalBox,
   NativeStyleMap,
 } from "./public-api";
 
@@ -24,6 +21,7 @@ export class LogicalVerticalAlign {
     return new LogicalVerticalAlign(value as LogicalVerticalAlignValue);
   }
 
+  /*
   public getCss(box: LogicalBox): NativeStyleMap {
     if (box.isTextVertical()) {
       return this.getCssVert(box);
@@ -56,4 +54,5 @@ export class LogicalVerticalAlign {
     }
     return css;
   }
+  */
 }

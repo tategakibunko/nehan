@@ -1,3 +1,4 @@
+/*
 import {
   ICharacter,
   FlowRegion,
@@ -63,3 +64,4 @@ export class TextRegion extends FlowRegion {
     return this.context.region.restContextBoxMeasure;
   }
 }
+*/
