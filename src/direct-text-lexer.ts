@@ -1,3 +1,4 @@
+/*
 import {
   TextLexer,
   ICharacter,
@@ -10,3 +11,4 @@ export class DirectTextLexer extends TextLexer {
     this.tokens = tokens;
   }
 }
+*/
