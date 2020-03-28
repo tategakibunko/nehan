@@ -1,5 +1,4 @@
 import {
-  Utils,
   HtmlElement,
   LogicalPos,
   LogicalSize,
@@ -83,56 +82,5 @@ export class BoxEnv {
 
   protected loadEdge(element: HtmlElement, display: Display): LogicalBoxEdge {
     return display.isNone() ? LogicalBoxEdge.none : LogicalBoxEdge.load(element);
-  }
-
-  public isTextVertical(): boolean {
-    return this.writingMode.isTextVertical();
-  }
-
-  public isTextEmphasized(): boolean {
-    return this.textEmphasis.isNone() === false;
-  }
-
-  public isTextJustify(): boolean {
-    return this.textAlign.isJustify();
-  }
-
-  public isWordBreakAll(): boolean {
-    return this.wordBreak.isBreakAll();
-  }
-
-  public isOverflowBreakWord(): boolean {
-    return this.overflowWrap.isBreakWord();
-  }
-
-  public isPositionAbsolute(): boolean {
-    return this.position.isAbsolute();
-  }
-
-  public isFloat(): boolean {
-    return this.float.isFloat();
-  }
-
-  public isBlockLevel(): boolean {
-    return this.display.isBlockLevel();
-  }
-
-  public isLineRoot(): boolean {
-    return this.display.isBlockLevel() || this.display.isFlowRoot();
-  }
-
-  public get contentValue(): string {
-    return this.content.value;
-  }
-
-  public get fontSize(): number {
-    return this.font.size;
-  }
-
-  public getLineExtent(max_inline_extent: number): number {
-    if (this.font.lineHeight.indexOf("px") < 0) {
-      return Math.floor(max_inline_extent * parseFloat(this.font.lineHeight));
-    }
-    return Utils.atoi(this.font.lineHeight);
   }
 }

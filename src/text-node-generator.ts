@@ -40,9 +40,9 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
 
     while (this.context.lexer.hasNext()) {
       const font = this.context.env.font;
-      const empha = this.context.env.isTextEmphasized() ? this.context.env.textEmphasis.textEmphaData : undefined;
+      const empha = this.context.env.textEmphasis.isNone() ? undefined : this.context.env.textEmphasis.textEmphaData;
       const isPre = this.context.env.whiteSpace.isPre();
-      const isVertical = this.context.env.isTextVertical();
+      const isVertical = this.context.env.writingMode.isTextVertical();
       // Note that metrics can be updated when parent is <::first-line>.
       const metricsArgs = { font, isVertical, empha };
 
