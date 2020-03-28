@@ -33,15 +33,8 @@ export class DynamicStyleContext {
   }
 
   public get remSize(): number {
-    if (this.parentContext) {
-      // older version
-      if (this.parentContext.body) {
-        return this.parentContext.body.env.font.size;
-      }
-      // for version >=7
-      if (this.parentContext.root) {
-        this.parentContext.root.env.font.size;
-      }
+    if (this.parentContext && this.parentContext.root) {
+      this.parentContext.root.env.font.size;
     }
     return this.emSize;
   }
@@ -63,11 +56,6 @@ export class DynamicStyleContext {
 
   public get restContextBoxExtent(): number {
     if (this.parentContext) {
-      // for older version
-      if (this.parentContext.region) {
-        return this.parentContext.region.restContextBoxExtent;
-      }
-      // for version >= 7
       return this.parentContext.restExtent;
     }
     throw new Error("parent context is not defined");
