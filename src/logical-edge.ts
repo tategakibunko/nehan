@@ -3,7 +3,6 @@ import {
   PropValue,
   WritingMode,
   LogicalEdgeMap,
-  NativeStyleMap,
   HtmlElement,
   CssCascade,
 } from "./public-api";
