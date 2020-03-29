@@ -25,6 +25,7 @@ import {
   HoriCssEvaluator,
   WritingModeValue,
   LogicalTextJustifier,
+  ILogicalNode,
 } from './public-api'
 
 export interface ILogicalNodeEvaluator {
@@ -70,6 +71,15 @@ export class LogicalNodeEvaluator {
     new VertCssEvaluator(new WritingMode("vertical-lr")),
     LogicalTextJustifier.instance,
   );
+
+  static createElementFromNode(tagName: string, layoutNames: string[], logicalNode: ILogicalNode): HTMLElement {
+    const node = document.createElement(tagName);
+    const originalTagName = logicalNode instanceof LogicalTextNode ? "text" : logicalNode.env.element.tagName;
+    node.className = layoutNames.concat(originalTagName).map(layoutName => `nehan-${layoutName}`).concat(
+      logicalNode.env.element.classList.values().map(klass => `nehan-e-${klass}`)
+    ).join(" ");
+    return node;
+  }
 
   static selectEvaluator(writingMode: WritingMode | WritingModeValue): ILogicalNodeEvaluator {
     const value = writingMode instanceof WritingMode ? writingMode.value : writingMode;

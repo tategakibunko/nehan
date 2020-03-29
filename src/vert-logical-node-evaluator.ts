@@ -124,8 +124,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitText(textNode: LogicalTextNode): HTMLElement {
-    const node = document.createElement("div");
-    node.className = "nehan-text";
+    const node = LogicalNodeEvaluator.createElementFromNode("div", [], textNode);
     node.style.lineHeight = "1";
     textNode.children.forEach(char => {
       const charNode = char.acceptEvaluator(this);
@@ -145,11 +144,9 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitRuby(rubyNode: LogicalRubyNode): HTMLElement {
-    // console.log("visitRuby:", rubyNode);
-    const node = document.createElement("div");
+    const node = LogicalNodeEvaluator.createElementFromNode("div", ["ruby"], rubyNode);
     const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
-    node.className = "nehan-ruby";
     node.appendChild(rbNode);
     node.appendChild(rtNode);
     node.style.display = "flex";
@@ -163,12 +160,10 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   visitLine(lineNode: LogicalLineNode): HTMLElement {
     const writingMode = lineNode.env.writingMode;
     const beforeProp = writingMode.isVerticalLr() ? "left" : "right";
-    // console.log("visitLine:", lineNode.text);
     const node = document.createElement("div");
     node.className = "nehan-line";
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
-    // node.style.background = "lightblue";
     node.style.overflow = "visible";
     node.style[beforeProp] = lineNode.pos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -177,7 +172,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const baseLineNode = document.createElement("div");
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
-    // baseLineNode.style.background = "aliceblue";
     baseLineNode.style.top = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
     baseLineNode.style.height = "100%";
     baseLineNode.style.width = lineNode.baseline.size.extent + "px";
@@ -206,9 +200,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
-    // console.log("visitInline:", inlineNode.text);
-    const node = document.createElement("div");
-    node.className = `nehan-inline nehan-${inlineNode.env.element.tagName}`;
+    const node = LogicalNodeEvaluator.createElementFromNode("div", ["inline"], inlineNode);
     node.style.marginTop = inlineNode.edge.margin.start + "px";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -221,9 +213,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
-    // console.log("visitInlineEmpha:", inlineNode.text);
-    const node = document.createElement("div");
-    node.className = `nehan-inline nehan-empha nehan-${inlineNode.env.element.tagName}`;
+    const node = LogicalNodeEvaluator.createElementFromNode("div", ["inline", "empha"], inlineNode);
     node.style.marginTop = inlineNode.edge.margin.start + "px";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -236,8 +226,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineBlock(iblockNode: LogicalInlineBlockNode): HTMLElement {
-    const node = document.createElement("div");
-    node.className = `nehan-iblock nehan-${iblockNode.env.element.tagName}`;
+    const node = LogicalNodeEvaluator.createElementFromNode("div", ["iblock"], iblockNode);
     node.style.boxSizing = "content-box";
     node.style.position = "relative";
     node.style.paddingTop = iblockNode.env.edge.padding.start + "px";
@@ -255,9 +244,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
-    // console.log("visitBlock:", blockNode);
-    const node = document.createElement("div");
-    node.className = `nehan-block nehan-${blockNode.env.element.tagName}`;
+    const node = LogicalNodeEvaluator.createElementFromNode("div", ["block"], blockNode);
     node.style.boxSizing = "content-box";
     node.style.position = (blockNode.env.element.tagName === Config.pageRootTagName) ? "relative" : "absolute";
     node.style.paddingTop = blockNode.env.edge.padding.start + "px";
@@ -277,97 +264,87 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  visitRootBlock(blockNode: LogicalBlockNode): HTMLElement {
-    const node = document.createElement("div");
-    const edge = LogicalBoxEdge.loadBoxEdge(blockNode.env.element);
-    node.className = "nehan-root";
-    node.style.width = blockNode.extent + edge.extent + "px";
-    node.style.height = blockNode.measure + edge.measure + "px";
+  visitRootBlock(rootBlockNode: LogicalBlockNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("div", ["root"], rootBlockNode);
+    const edge = LogicalBoxEdge.loadBoxEdge(rootBlockNode.env.element);
+    node.style.width = rootBlockNode.extent + edge.extent + "px";
+    node.style.height = rootBlockNode.measure + edge.measure + "px";
     edge.margin.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     edge.padding.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    rootBlockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
 
-  visitTableCells(tableCells: LogicalTableCellsNode): HTMLElement {
-    const node = document.createElement("div");
-    node.className = "nehan-table-cells";
+  visitTableCells(tableCellsNode: LogicalTableCellsNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("div", ["table-cells"], tableCellsNode);
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
-    tableCells.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    tableCells.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    tableCells.children.forEach(child => {
+    tableCellsNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    tableCellsNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    tableCellsNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
     return node;
   }
 
-  visitBlockImage(img: LogicalBlockReNode): HTMLElement {
-    // console.log("visitBlockImage");
-    const node = document.createElement("img");
-    node.className = "nehan-block nehan-img";
+  visitBlockImage(imgNode: LogicalBlockReNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("img", ["block"], imgNode);
     node.style.position = "absolute";
     node.style.display = "block";
-    node.style.width = img.physicalSize.width + "px";
-    node.style.height = img.physicalSize.height + "px";
-    node.src = img.env.element.getAttribute("src") || "";
-    img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    if (img.env.position.isAbsolute()) {
-      img.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    node.style.width = imgNode.physicalSize.width + "px";
+    node.style.height = imgNode.physicalSize.height + "px";
+    node.setAttribute("src", imgNode.env.element.getAttribute("src") || "");
+    imgNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    if (imgNode.env.position.isAbsolute()) {
+      imgNode.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     } else {
-      img.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+      imgNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     }
-    img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    img.env.element.style.callDomCallbacks(img, node);
+    imgNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    imgNode.env.element.style.callDomCallbacks(imgNode, node);
     return node;
   }
 
-  visitInlineImage(img: LogicalInlineReNode): HTMLElement {
-    // console.log("visitInlineImage");
-    const node = document.createElement("img");
-    node.className = "nehan-inline nehan-img";
+  visitInlineImage(imgNode: LogicalInlineReNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("img", ["inline"], imgNode);
     node.style.display = "block";
-    node.style.width = img.physicalSize.width + "px";
-    node.style.height = img.physicalSize.height + "px";
-    node.style.marginTop = img.edge.margin.start + "px";
-    node.style.marginBottom = img.edge.margin.end + "px";
-    node.src = img.env.element.getAttribute("src") || "";
-    img.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    img.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    img.env.element.style.callDomCallbacks(img, node);
+    node.style.width = imgNode.physicalSize.width + "px";
+    node.style.height = imgNode.physicalSize.height + "px";
+    node.style.marginTop = imgNode.edge.margin.start + "px";
+    node.style.marginBottom = imgNode.edge.margin.end + "px";
+    node.setAttribute("src", imgNode.env.element.getAttribute("src") || "");
+    imgNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    imgNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    imgNode.env.element.style.callDomCallbacks(imgNode, node);
     return node;
   }
 
-  visitInlineLink(link: LogicalInlineNode): HTMLElement {
-    // console.log("visitInlineLink:", link.text);
-    const node = document.createElement("a");
-    const href = link.env.element.getAttribute("href");
-    const name = link.env.element.getAttribute("name");
-    node.className = "nehan-inline nehan-a";
+  visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("a", ["inline"], linkNode);
+    const href = linkNode.env.element.getAttribute("href");
+    const name = linkNode.env.element.getAttribute("name");
     if (href) {
       node.setAttribute("href", href);
     }
     if (name) {
       node.setAttribute("name", name);
     }
-    node.style.marginTop = link.edge.margin.start + "px";
-    node.style.marginBottom = link.edge.margin.end + "px";
-    link.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    link.env.element.style.callDomCallbacks(link, node);
-    link.children.forEach(child => {
+    node.style.marginTop = linkNode.edge.margin.start + "px";
+    node.style.marginBottom = linkNode.edge.margin.end + "px";
+    linkNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    linkNode.env.element.style.callDomCallbacks(linkNode, node);
+    linkNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
     });
     return node;
   }
 
-  visitBlockLink(link: LogicalBlockNode): HTMLElement {
-    // console.log("visitBlockLink:", link);
-    const node = document.createElement("a");
-    const href = link.env.element.getAttribute("href");
-    const name = link.env.element.getAttribute("name");
-    node.className = "nehan-block nehan-a";
+  visitBlockLink(linkNode: LogicalBlockNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("a", ["block"], linkNode);
+    const href = linkNode.env.element.getAttribute("href");
+    const name = linkNode.env.element.getAttribute("name");
     if (href) {
       node.setAttribute("href", href);
     }
@@ -376,18 +353,18 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     }
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
-    node.style.paddingTop = link.env.edge.padding.start + "px";
-    node.style.paddingBottom = link.env.edge.padding.end + "px";
-    if (link.env.position.isAbsolute()) {
-      link.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    node.style.paddingTop = linkNode.env.edge.padding.start + "px";
+    node.style.paddingBottom = linkNode.env.edge.padding.end + "px";
+    if (linkNode.env.position.isAbsolute()) {
+      linkNode.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     } else {
-      link.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+      linkNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     }
-    link.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    link.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    link.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    link.env.element.style.callDomCallbacks(link, node);
-    link.children.forEach(child => {
+    linkNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    linkNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    linkNode.env.element.style.callDomCallbacks(linkNode, node);
+    linkNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
       node.appendChild(childNode);
     });
