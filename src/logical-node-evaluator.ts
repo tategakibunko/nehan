@@ -74,7 +74,7 @@ export class LogicalNodeEvaluator {
 
   static createElementFromNode(tagName: string, layoutNames: string[], logicalNode: ILogicalNode): HTMLElement {
     const node = document.createElement(tagName);
-    const originalTagName = logicalNode instanceof LogicalTextNode ? "text" : logicalNode.env.element.tagName;
+    const originalTagName = logicalNode.env.element.tagName;
     node.className = layoutNames.concat(originalTagName).map(layoutName => `nehan-${layoutName}`).concat(
       logicalNode.env.element.classList.values().map(klass => `nehan-e-${klass}`)
     ).join(" ");

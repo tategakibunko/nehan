@@ -124,7 +124,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitText(textNode: LogicalTextNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", [], textNode);
+    const node = document.createElement("div");
+    node.className = "nehan-text";
     node.style.lineHeight = "1";
     textNode.children.forEach(char => {
       const charNode = char.acceptEvaluator(this);
@@ -144,7 +145,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitRuby(rubyNode: LogicalRubyNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["ruby"], rubyNode);
+    const node = document.createElement("div");
+    node.className = "nehan-ruby";
     const rbNode = document.createElement("div").appendChild(rubyNode.rb.acceptEvaluator(this));
     const rtNode = document.createElement("div").appendChild(rubyNode.rt.acceptEvaluator(this));
     node.appendChild(rbNode);
