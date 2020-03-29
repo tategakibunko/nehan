@@ -1,5 +1,6 @@
 import {
   Config,
+  CssLoader,
   ILogicalNodeGenerator,
   LayoutResult,
   BoxEnv,
@@ -31,6 +32,7 @@ export class TableCellsGenerator implements ILogicalNodeGenerator {
       console.group(`table-cells: ${this.context.name}`);
     }
     const cellGenerators = this.context.elements.map(cellElement => {
+      CssLoader.loadDynamic(cellElement, this);
       // At this point, partition is set to each cell element(logical-node-generator.ts),
       // so we have to update child region of this cell.
       cellElement.acceptEffectorAll(CssUsedRegionLoader.instance);
