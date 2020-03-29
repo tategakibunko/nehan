@@ -48,15 +48,6 @@ export class NativeStyleMap {
     return dst;
   }
 
-  // legacy
-  public apply(dom: HTMLElement): NativeStyleMap {
-    let style: any = dom.style;
-    this.forEach((value, key) => {
-      style[key] = value;
-    });
-    return this;
-  }
-
   public applyTo(style: CSSStyleDeclaration): NativeStyleMap {
     this._map.forEach((value, key) => {
       style.setProperty(key, value);
