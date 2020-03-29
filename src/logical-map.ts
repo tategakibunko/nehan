@@ -2,44 +2,36 @@ import {
   WritingMode,
 } from "./public-api";
 
-// logical property to physical mapper.
-class LogicalMap {
-  protected horiTb: Map<string, string>;
-  protected vertRl: Map<string, string>;
-  protected vertLr: Map<string, string>;
-
-  constructor() {
-    this.horiTb = new Map<string, string>();
-    this.vertRl = new Map<string, string>();
-    this.vertLr = new Map<string, string>();
-  }
-
-  private getValue(map: Map<string, string>, prop: string): string {
-    let value = map.get(prop);
+class PropMap extends Map<string, string> {
+  get(prop: string): string {
+    const value = super.get(prop);
     if (!value) {
-      throw new Error(prop + " is not defined in map");
+      throw new Error(`property(${prop}) is not defined in map`);
     }
     return value;
   }
+}
 
-  protected selectMap(writing_mode: WritingMode): Map<string, string> {
-    if (writing_mode.isTextHorizontal()) {
+// logical property to physical mapper.
+class LogicalMap {
+  protected horiTb: PropMap;
+  protected vertRl: PropMap;
+  protected vertLr: PropMap;
+
+  constructor() {
+    this.horiTb = new PropMap();
+    this.vertRl = new PropMap();
+    this.vertLr = new PropMap();
+  }
+
+  select(writingMode: WritingMode): PropMap {
+    if (writingMode.isTextHorizontal()) {
       return this.horiTb;
     }
-    if (writing_mode.isVerticalRl()) {
+    if (writingMode.isVerticalRl()) {
       return this.vertRl;
     }
     return this.vertLr;
-  }
-
-  public mapValue(writing_mode: WritingMode, prop: string): string {
-    return this.getValue(this.selectMap(writing_mode), prop);
-  }
-
-  public forEach(writing_mode: WritingMode, fn: (prop: string, value: string) => void) {
-    this.selectMap(writing_mode).forEach((value: string, prop: string) => {
-      fn(prop, value);
-    });
   }
 }
 

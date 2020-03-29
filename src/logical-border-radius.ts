@@ -112,12 +112,10 @@ export class LogicalBorderRadius {
     ];
   }
 
-  public getPhysicalBorderRadiusValue(writing_mode: WritingMode): PhysicalBorderRadiusValue {
-    //let l2p_map: any = LogicalMap.selectCornerMap(writing_mode);
+  public getPhysicalBorderRadiusValue(writingMode: WritingMode): PhysicalBorderRadiusValue {
     return this.items.reduce((values, item) => {
-      //let phy_prop = l2p_map[item.prop];
-      let phy_prop = LogicalCornerMap.mapValue(writing_mode, item.prop);
-      values[Utils.String.chainToCamel(phy_prop)] = item.value;
+      const physicalProp = LogicalCornerMap.select(writingMode).get(item.prop);
+      values[Utils.String.chainToCamel(physicalProp)] = item.value;
       return values;
     }, {} as any) as PhysicalBorderRadiusValue;
   }

@@ -2,7 +2,6 @@ import {
   Utils,
   HtmlElement,
   CssCascade,
-  LogicalEdgeMap,
   NativeStyleMap,
   ILogicalCssEvaluator,
 } from "./public-api";

@@ -66,10 +66,12 @@ export class LogicalCssEvaluator implements ILogicalCssEvaluator {
     throw new Error("must be overrided");
   }
 
+  // background-position is not layouting target of nehan,
+  // so we just replace all logical position to phyisical position in the value.
   visitBackgroundPos(backgroundPos: LogicalBackgroundPos): NativeStyleMap {
     const css = new NativeStyleMap();
     let value = backgroundPos.value;
-    LogicalEdgeMap.forEach(this.writingMode, (logical, physical) => {
+    LogicalEdgeMap.select(this.writingMode).forEach((logical, physical) => {
       value = value.replace(logical, physical);
     });
     css.set("background-position", value);
@@ -114,17 +116,18 @@ export class LogicalCssEvaluator implements ILogicalCssEvaluator {
 
   visitLogicalPos(pos: LogicalPos): NativeStyleMap {
     const css = new NativeStyleMap();
+    const map = LogicalEdgeMap.select(this.writingMode);
     if (pos.before !== undefined) {
-      css.set(LogicalEdgeMap.mapValue(this.writingMode, "before"), pos.before + "px");
+      css.set(map.get("before"), pos.before + "px");
     }
     if (pos.end !== undefined) {
-      css.set(LogicalEdgeMap.mapValue(this.writingMode, "end"), pos.end + "px");
+      css.set(map.get("end"), pos.end + "px");
     }
     if (pos.after !== undefined) {
-      css.set(LogicalEdgeMap.mapValue(this.writingMode, "after"), pos.after + "px");
+      css.set(map.get("after"), pos.after + "px");
     }
     if (pos.start !== undefined) {
-      css.set(LogicalEdgeMap.mapValue(this.writingMode, "start"), pos.start + "px");
+      css.set(map.get("start"), pos.start + "px");
     }
     return css;
   }

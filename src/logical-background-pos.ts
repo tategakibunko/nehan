@@ -1,23 +1,19 @@
 import {
   HtmlElement,
-  NativeCssValue,
   NativeStyleMap,
   CssCascade,
   ILogicalCssEvaluator,
 } from "./public-api";
 
-// background-position is not layouting target of nehan.
-// we just use this class to change logical position to phyisical ones.
-// so value of this class is just a string(NativeCssValue).
 export class LogicalBackgroundPos {
-  public value: NativeCssValue;
+  public value: string;
 
-  constructor(value: NativeCssValue) {
+  constructor(value: string) {
     this.value = value;
   }
 
   static load(element: HtmlElement): LogicalBackgroundPos {
-    let value = CssCascade.getValue(element, "background-position") as NativeCssValue;
+    const value = CssCascade.getValue(element, "background-position");
     return new LogicalBackgroundPos(value);
   }
 

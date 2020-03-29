@@ -72,10 +72,10 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
     return (direction === "start" || direction === "end");
   }
 
-  public getPhysicalEdgeValue(writing_mode: WritingMode): PhysicalEdgeValue<T> {
+  public getPhysicalEdgeValue(writingMode: WritingMode): PhysicalEdgeValue<T> {
     return this.items.reduce((value, item) => {
-      let phy_prop = LogicalEdgeMap.mapValue(writing_mode, item.prop);
-      value[phy_prop] = item.value;
+      let physicalProp = LogicalEdgeMap.select(writingMode).get(item.prop);
+      value[physicalProp] = item.value;
       return value;
     }, {} as any) as PhysicalEdgeValue<T>;
   }
