@@ -19,8 +19,12 @@ export class Image {
       image.src = $node.src;
       image.onload = (evt: Event) => {
         //console.log("image.onload:width=%d, height=%d", image.width, image.height);
-        $node.setAttribute("width", String(image.width));
-        $node.setAttribute("height", String(image.height));
+        if (image.width > 0) {
+          $node.setAttribute("width", String(image.width));
+        }
+        if (image.height > 0) {
+          $node.setAttribute("height", String(image.height));
+        }
         if (context) {
           if (Config.debugResourceLoader) {
             console.info("%s is successfully loaded(%dx%d)", image.src, image.width, image.height);
