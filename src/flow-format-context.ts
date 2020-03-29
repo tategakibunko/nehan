@@ -242,11 +242,9 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get contentBoxSize(): LogicalSize {
+    const measure = this.maxMeasure;
     const extent = (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent;
-    return new LogicalSize({
-      measure: this.maxMeasure,
-      extent: (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent
-    });
+    return new LogicalSize({ measure, extent });
   }
 
   public get autoContentBoxSize(): LogicalSize {

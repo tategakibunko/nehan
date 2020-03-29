@@ -7,8 +7,8 @@ import {
   ILayoutFormatContext,
   LayoutResult,
   TableCellsReducer,
+  LogicalLineNode,
 } from './public-api';
-import { LogicalLineNode, LogicalInlineReNode } from './logical-node';
 
 export class TableCellsFormatContext extends FlowFormatContext {
   public cells: LogicalBlockNode[];
