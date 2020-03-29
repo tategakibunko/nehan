@@ -1,8 +1,14 @@
+import {
+  Config
+} from './public-api';
+
 export namespace Utils {
   export const atoi = (x: string, failOver = 0): number => {
     const n = parseInt(x, 10);
     if (isNaN(n)) {
-      console.info(`${x} is not a number, so use ${failOver}`);
+      if (Config.debugLayout) {
+        console.warn(`${x} is not a number, so use ${failOver}`);
+      }
       // throw new Error(`${x} is not a number`);
       return failOver;
     }
