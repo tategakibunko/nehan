@@ -227,10 +227,12 @@ export class RootBlockReducer implements ILayoutReducer {
   visit(context: FlowRootFormatContext): LayoutResult {
     const pos = context.blockPos;
     const size = context.contentBoxSize;
-    if (context.floatRegion) {
-      size.extent = Math.max(size.extent, context.floatRegion.maxRegionExtent);
-    }
     const autoSize = context.autoContentBoxSize;
+    if (context.floatRegion) {
+      const maxFloatedExtent = context.floatRegion.maxRegionExtent;
+      size.extent = Math.max(size.extent, maxFloatedExtent);
+      autoSize.extent = Math.max(autoSize.extent, maxFloatedExtent);
+    }
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
