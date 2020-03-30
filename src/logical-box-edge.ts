@@ -5,7 +5,6 @@ import {
   LogicalMargin,
   LogicalCursorPosValue,
   HtmlElement,
-  NativeStyleMap,
 } from "./public-api";
 
 export interface LogicalBoxEdgeValue {

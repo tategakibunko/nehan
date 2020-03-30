@@ -3,7 +3,6 @@ import {
   HtmlElement,
   PositionValue,
   Display,
-  DisplayValue,
 } from './public-api';
 
 export class ContainingElement {

@@ -7,7 +7,6 @@ import {
   HtmlElement,
   CssCascade,
   NativeStyleMap,
-  PseudoElement,
   ILogicalCssEvaluator,
   Lexer,
 } from "./public-api";

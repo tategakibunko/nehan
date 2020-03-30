@@ -6,7 +6,7 @@ import {
 export class Content {
   public value: string;
 
-  constructor(value: string){
+  constructor(value: string) {
     this.value = this.normalize(value);
   }
 

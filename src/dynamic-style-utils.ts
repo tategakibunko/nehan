@@ -1,5 +1,4 @@
 import {
-  Config,
   DynamicStyleContext,
   DynamicStyleCallback,
   CssDeclarationBlock,

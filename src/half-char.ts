@@ -2,7 +2,6 @@ import {
   ICharacter,
   LogicalSize,
   Font,
-  NativeStyleMap,
   TextEmphaData,
   ILogicalNodeEvaluator,
 } from "./public-api";

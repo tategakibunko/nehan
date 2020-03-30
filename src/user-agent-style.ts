@@ -1,7 +1,6 @@
 import {
   Config,
   CssRules,
-  DynamicStyleContext
 } from "./public-api";
 
 // https://www.w3.org/TR/CSS2/sample.html
@@ -286,34 +285,6 @@ export const UserAgentStyles: CssRules = {
   },
   "li::marker": {
     "margin-end": "0.5em",
-    /*
-    "!dynamic": (context: DynamicStyleContext) => {
-      let parent_ctx = context.parentContext;
-      if (!parent_ctx) {
-        return {};
-      }
-      let parent_env = parent_ctx.env;
-      let element = context.element;
-      if (!element.parent) {
-        return {};
-      }
-      let content = parent_env.content;
-      let writing_mode = parent_env.writingMode;
-      let list_style = parent_env.listStyle;
-      let is_vert = writing_mode.isTextVertical();
-
-      // if content is defined, replace old marker content with it.
-      if (content.value && element.firstChild) {
-        let content_text_node = element.root.createTextNode(content.value);
-        element.replaceChild(content_text_node, element.firstChild);
-      }
-      let text_combine_upright = (is_vert && list_style.isTcyMarker()) ? "all" : "none";
-      return {
-        "display": "inline",
-        "text-combine-upright": text_combine_upright
-      };
-    }
-    */
   },
   "link": {
     "display": "none"

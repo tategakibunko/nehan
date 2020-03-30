@@ -6,7 +6,7 @@ import {
 export class ClassSelector extends Selector {
   public className: string;
 
-  constructor(class_name: string){
+  constructor(class_name: string) {
     super();
     this.className = class_name;
     this.specificity.b = 1;
