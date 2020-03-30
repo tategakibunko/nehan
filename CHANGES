@@ -6,7 +6,16 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 6.1.0
+version 7.0.0, 2020/03/30
+==========================
+! Totally refact parsing algorithem.
+o 20% faster than version6.
+o 13% smaller than version6.
+o vertical-align in table-cell is supported.
+o More strict border collapsing.
+! PageReader is deprecated, use PagedHtmlDocument instead.
+
+version 6.1.0, 2019/11/11
 ==========================
 o Added HtmlElement::clone.
 o Sweep out block elements from children of inline element.
