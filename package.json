@@ -48,8 +48,8 @@
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.32",
-    "jest": "^24.9.0",
-    "jest-cli": "^24.9.0",
+    "jest": "^25.2.4",
+    "jest-cli": "^25.2.4",
     "node-sass": "^4.13.1",
     "ts-jest": "^24.3.0",
     "ts-loader": "^6.2.2",
