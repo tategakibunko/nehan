@@ -57,6 +57,9 @@ export class InlineReducer implements ILayoutReducer {
     const children = context.inlineNodes;
     const text = context.inlineText;
     const size = new LogicalSize({ measure, extent });
+    if (children.length === 1 && (children[0] instanceof LogicalInlineReNode || children[0] instanceof LogicalInlineBlockNode)) {
+      size.extent = children[0].extent;
+    }
     const edge = context.contextBoxEdge.currentMarginBoxEdge;
     const inlineNode = new LogicalInlineNode(context.env, size, text, edge, children);
     context.contextBoxEdge.clear();
