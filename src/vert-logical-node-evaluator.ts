@@ -25,10 +25,12 @@ import {
   LogicalBoxEdge,
   ILogicalTextJustifier,
   ILogicalNode,
+  WritingMode,
 } from './public-api'
 
 export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(
+    private writingMode: WritingMode,
     private cssVisitor: ILogicalCssEvaluator,
     private textJustifier: ILogicalTextJustifier,
   ) { }
@@ -186,7 +188,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     }
 
     lineNode.children.forEach(child => {
-      const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
+      const childNode = child.acceptEvaluator(this);
       const textBodyExtent = this.isReOrIblock(child) ? child.extent : child.env.font.size;
       const baselineGap = Math.floor((lineNode.baseline.textBodySize.extent - textBodyExtent) / 2);
       if (baselineGap === 0) {
@@ -209,7 +211,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
     inlineNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -222,7 +224,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
     inlineNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -240,7 +242,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     iblockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     iblockNode.env.element.style.callDomCallbacks(iblockNode, node);
     iblockNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -261,7 +263,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.callDomCallbacks(blockNode, node);
     blockNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -285,7 +287,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     tableCellsNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCellsNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCellsNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -338,7 +340,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.element.style.callDomCallbacks(linkNode, node);
     linkNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -367,7 +369,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.element.style.callDomCallbacks(linkNode, node);
     linkNode.children.forEach(child => {
-      const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
+      const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
     });
     return node;

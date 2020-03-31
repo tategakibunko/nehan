@@ -18,13 +18,6 @@ import {
   LogicalBlockReNode,
   LogicalInlineReNode,
   TextEmphaData,
-  WritingMode,
-  VertLogicalNodeEvaluator,
-  HoriLogicalNodeEvaluator,
-  VertCssEvaluator,
-  HoriCssEvaluator,
-  WritingModeValue,
-  LogicalTextJustifier,
   ILogicalNode,
 } from './public-api'
 
@@ -57,21 +50,6 @@ export interface ILogicalNodeEvaluator {
 }
 
 export class LogicalNodeEvaluator {
-  static horiTbEvaluator: ILogicalNodeEvaluator = new HoriLogicalNodeEvaluator(
-    new HoriCssEvaluator(new WritingMode("horizontal-tb")),
-    LogicalTextJustifier.instance,
-  );
-
-  static vertRlEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(
-    new VertCssEvaluator(new WritingMode("vertical-rl")),
-    LogicalTextJustifier.instance,
-  );
-
-  static vertLrEvaluator: ILogicalNodeEvaluator = new VertLogicalNodeEvaluator(
-    new VertCssEvaluator(new WritingMode("vertical-lr")),
-    LogicalTextJustifier.instance,
-  );
-
   static createElementFromNode(tagName: string, layoutNames: string[], logicalNode: ILogicalNode): HTMLElement {
     const node = document.createElement(tagName);
     const originalTagName = logicalNode.env.element.tagName;
@@ -79,17 +57,5 @@ export class LogicalNodeEvaluator {
       logicalNode.env.element.classList.values().map(klass => `nehan-e-${klass}`)
     ).join(" ");
     return node;
-  }
-
-  static selectEvaluator(writingMode: WritingMode | WritingModeValue): ILogicalNodeEvaluator {
-    const value = writingMode instanceof WritingMode ? writingMode.value : writingMode;
-    switch (value) {
-      case "horizontal-tb":
-        return this.horiTbEvaluator;
-      case "vertical-rl":
-        return this.vertRlEvaluator;
-      case "vertical-lr":
-        return this.vertLrEvaluator;
-    }
   }
 }

@@ -24,10 +24,12 @@ import {
   LogicalNodeEvaluator,
   LogicalBoxEdge,
   ILogicalTextJustifier,
+  WritingMode,
 } from './public-api'
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(
+    private writingMode: WritingMode,
     private cssVisitor: ILogicalCssEvaluator,
     private textJustifier: ILogicalTextJustifier,
   ) { }
@@ -175,7 +177,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
     inlineNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -189,7 +191,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
     inlineNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -208,7 +210,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     iblockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     iblockNode.env.element.style.callDomCallbacks(iblockNode, node);
     iblockNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -229,7 +231,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.callDomCallbacks(blockNode, node);
     blockNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -254,7 +256,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     tableCellsNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCellsNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCellsNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -307,7 +309,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.element.style.callDomCallbacks(linkNode, node);
     linkNode.children.forEach(child => {
-      node.appendChild(child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode)));
+      node.appendChild(child.acceptEvaluator(this));
     });
     return node;
   }
@@ -336,7 +338,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.element.style.callDomCallbacks(linkNode, node);
     linkNode.children.forEach(child => {
-      const childNode = child.acceptEvaluator(LogicalNodeEvaluator.selectEvaluator(child.env.writingMode));
+      const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);
     });
     return node;

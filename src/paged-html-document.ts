@@ -8,12 +8,17 @@ import {
   ILogicalNodeGenerator,
   LogicalBlockNode,
   ILogicalNodeEvaluator,
-  LogicalNodeEvaluator,
   WritingModeValue,
   ILayoutOutlineEvaluator,
   LayoutOutlineEvaluator,
   ResourceLoadingContext,
   ResourceLoader,
+  WritingMode,
+  HoriCssEvaluator,
+  HoriLogicalNodeEvaluator,
+  VertCssEvaluator,
+  VertLogicalNodeEvaluator,
+  LogicalTextJustifier,
 } from './public-api';
 
 export interface PagedHtmlRenderOptions {
@@ -32,14 +37,34 @@ export class PagedHtmlDocument extends HtmlDocument {
   constructor(src: string, options: HtmlDocumentOptions) {
     super(src, options);
     this.generator = options.generator || LogicalNodeGenerator.createRoot(this.body);
-    this.evaluator = options.evaluator || this.createEvaluator(this.body);
+    this.evaluator = options.evaluator || this.createEvaluator(WritingMode.load(this.body));
     this.pages = [];
     this.timestamp = 0;
   }
 
-  private createEvaluator(body: HtmlElement): ILogicalNodeEvaluator {
-    const writingMode = body.computedStyle.getPropertyValue("writing-mode") as WritingModeValue;
-    return LogicalNodeEvaluator.selectEvaluator(writingMode);
+  private createEvaluator(writingMode: WritingMode): ILogicalNodeEvaluator {
+    switch (writingMode.value) {
+      case "horizontal-tb":
+        return new HoriLogicalNodeEvaluator(
+          writingMode,
+          new HoriCssEvaluator(writingMode),
+          LogicalTextJustifier.instance,
+        );
+      case "vertical-rl":
+        return new VertLogicalNodeEvaluator(
+          writingMode,
+          new VertCssEvaluator(writingMode),
+          LogicalTextJustifier.instance,
+        );
+      case "vertical-lr":
+        return new VertLogicalNodeEvaluator(
+          writingMode,
+          new VertCssEvaluator(writingMode),
+          LogicalTextJustifier.instance,
+        );
+      default:
+        throw new Error(`undefined writing mode: ${writingMode.value}`);
+    }
   }
 
   private addPageNode(node: LogicalBlockNode): Page {
