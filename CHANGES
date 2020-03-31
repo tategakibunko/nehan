@@ -9,6 +9,7 @@ Mark "!": change that can break compatibility with older version
 version 7.0.1
 ==========================
 * Fix baseline for replaced element in horizontal mode.
+o Removed unused files(nehan.css).
 
 version 7.0.0, 2020/03/30
 ==========================
