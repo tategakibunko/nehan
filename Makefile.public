@@ -1,9 +1,4 @@
-.PHONY:css
-
-all:css engine
+all:engine
 
 engine:
 	cd src && make -f Makefile.public
-
-css:
-	cd css && make -f Makefile.public

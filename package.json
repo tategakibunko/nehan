@@ -8,9 +8,6 @@
     "build": "make -f Makefile.public",
     "test": "jest"
   },
-  "style": [
-    "./css/nehan.css"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tategakibunko/nehan.git"

@@ -1,7 +1,0 @@
-all:nehan.css
-
-.PHONY:nehan.css
-
-nehan.css:nehan.scss
-	node-sass $< $@
-	cp -f $@ ../example/styles/
