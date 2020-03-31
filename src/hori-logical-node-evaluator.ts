@@ -283,6 +283,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.height = imgNode.physicalSize.height + "px";
     node.style.marginLeft = imgNode.edge.margin.start + "px";
     node.style.marginRight = imgNode.edge.margin.end + "px";
+    node.style.verticalAlign = "bottom";
     node.setAttribute("src", imgNode.env.element.getAttribute("src") || "");
     imgNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     imgNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
