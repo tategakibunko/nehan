@@ -31,7 +31,7 @@ export class TextReducer implements ILayoutReducer {
 
   visit(context: TextFormatContext, indent = false): LayoutResult {
     const measure = context.cursorPos.start;
-    const extent = context.env.font.lineExtent;
+    const extent = context.env.font.size;
     const size = new LogicalSize({ measure, extent });
     const text = context.text;
     const children = context.characters;
@@ -52,14 +52,10 @@ export class InlineReducer implements ILayoutReducer {
 
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
     const measure = context.cursorPos.start;
-    const lineExtent = context.env.font.lineExtent;
-    const extent = Math.max(lineExtent, ...context.inlineNodes.map(node => node.extent));
+    const extent = Math.max(context.env.font.size, ...context.inlineNodes.map(node => node.extent));
     const children = context.inlineNodes;
     const text = context.inlineText;
     const size = new LogicalSize({ measure, extent });
-    if (children.length === 1 && (children[0] instanceof LogicalInlineReNode || children[0] instanceof LogicalInlineBlockNode)) {
-      size.extent = children[0].extent;
-    }
     const edge = context.contextBoxEdge.currentMarginBoxEdge;
     const inlineNode = new LogicalInlineNode(context.env, size, text, edge, children);
     context.contextBoxEdge.clear();
