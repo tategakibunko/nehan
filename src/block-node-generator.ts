@@ -75,18 +75,6 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
 
       // before switching to next block, check there is inlines that are not still wrapped by anon-line-box.
       if ((!float.isNone() || display.isBlockLevel()) && this.context.inlineNodes.length > 0) {
-        if (this.context.child) {
-          const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.child, prevChildGen);
-          if (this.context.restExtent < beforeMargin) {
-            yield isPageRoot ?
-              this.context.acceptLayoutReducer(this.blockReducer) :
-              LayoutResult.pageBreak(this.context, "block-fmt-context: before-margin is not enough.");
-          }
-          if (beforeMargin > 0) {
-            this.context.addBlockMarginEdge("before", beforeMargin);
-            // console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
-          }
-        }
         // console.info("sweep out remaining inlines as line");
         const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
         this.context.addLine(line.body); // never overflows!
@@ -110,7 +98,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       if (this.context.restExtent < beforeMargin) {
         yield isPageRoot ?
           this.context.acceptLayoutReducer(this.blockReducer) :
-          LayoutResult.pageBreak(this.context, "block-fmt-context: before-margin is not enough.");
+          LayoutResult.pageBreak(this.context, `block-fmt-context: before-margin(${beforeMargin}) is not enough.`);
       }
       if (beforeMargin > 0) {
         this.context.addBlockMarginEdge("before", beforeMargin);

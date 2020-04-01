@@ -32,11 +32,12 @@ export class TableCellsFormatContext extends FlowFormatContext {
     const maxCell = cells.reduce((acm, cell) => acm.size.extent > cell.size.extent ? acm : cell, cells[0]);
     const maxContentExtent = maxCell.size.extent;
     const maxTotalExtent = Math.max(...cells.map(cell => cell.extent)); // add edge difference to content size.
+    let startPos = 0;
     this.cells.forEach((cell, index) => {
       cell.size.extent = maxContentExtent; // align content extent.
       cell.size.extent += maxTotalExtent - cell.extent; // align total(edged) extent.
-      cell.pos.start = this.cursorPos.start;
-      this.cursorPos.start += cell.measure;
+      cell.pos.start = startPos;
+      startPos += cell.measure;
       // if max cell isn't finished yet, smaller cell must follow the border state.
       if (cell.autoSize.extent !== maxCell.extent && maxCell.border.afterWidth === 0) {
         cell.border.clearAfter();
@@ -48,7 +49,7 @@ export class TableCellsFormatContext extends FlowFormatContext {
         const inlineCollapseSize = Math.min(prevBorderSize, cell.border.width.start);
         // console.log("inline collapse size:%d", inlineCollapseSize);
         cell.pos.start -= inlineCollapseSize;
-        this.cursorPos.start -= inlineCollapseSize;
+        startPos -= inlineCollapseSize;
       }
       // Set vertical-align for children of cell.
       const diffSize = cell.size.extent - cell.autoSize.extent; // diff between original size and aligned size.
