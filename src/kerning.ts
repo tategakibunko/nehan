@@ -11,6 +11,7 @@ export class Kerning implements IKerning {
   private constructor() { }
 
   set(cur: DualChar, prev: DualChar): boolean {
+    debugger;
     if (!prev.isKernEnable()) {
       return false;
     }
@@ -18,6 +19,9 @@ export class Kerning implements IKerning {
       return false;
     }
     if (prev.isCloseParen() && cur.isOpenParen()) {
+      return false;
+    }
+    if (prev.isOpenParen() && !cur.isParen()) {
       return false;
     }
     if (cur.isKernEnable()) {

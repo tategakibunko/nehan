@@ -26,6 +26,10 @@ export class DualChar implements ICharacter {
     this.charCount = 1;
   }
 
+  public isParen(): boolean {
+    return this.isOpenParen() || this.isCloseParen();
+  }
+
   public isOpenParen(): boolean {
     return this.info.parenType === "open";
   }
