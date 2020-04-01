@@ -11,7 +11,6 @@ export class Kerning implements IKerning {
   private constructor() { }
 
   set(cur: DualChar, prev: DualChar): boolean {
-    debugger;
     if (!prev.isKernEnable()) {
       return false;
     }
