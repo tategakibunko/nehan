@@ -111,14 +111,14 @@ export class BlockMargin {
     ▽ : margin-after(prev)
     - : do nothing
 
-    ---------------------------------------------
-    | cur / prev | block text float abs  none
-    ---------------------------------------------
-    | block      |   o     △    △    △     △
-    | text       |   ▽     -    -    -     -
-    | float      | ▽ + △   -    -    -     △
-    | abs        |   -     -    -    -     -
-    ----------------------------------------------
+    -------------------------------------------------
+    | cur / prev | block text/inline float abs  none
+    -------------------------------------------------
+    | block      |   o        △        △    △     △
+    | text       |   ▽        -        -    -     -
+    | float      | ▽ + △      -        -    -     △
+    | abs        |   -        -        -    -     -
+    -------------------------------------------------
   */
   static getFlowMarginFromLastElement(curGen: ILogicalNodeGenerator, prevGen?: ILogicalNodeGenerator): number {
     const curEnv = curGen.context.env;
@@ -144,7 +144,7 @@ export class BlockMargin {
       if (prevEnv.position.isAbsolute()) {
         return 0;
       }
-      if (prevGen instanceof TextNodeGenerator) {
+      if (prevGen instanceof TextNodeGenerator || prevEnv.display.isInlineLevel()) {
         return 0;
       }
       if (prevEnv.display.isBlockLevel()) {
@@ -162,7 +162,7 @@ export class BlockMargin {
       if (prevEnv.position.isAbsolute()) {
         return 0;
       }
-      if (prevGen instanceof TextNodeGenerator) {
+      if (prevGen instanceof TextNodeGenerator || prevEnv.display.isInlineLevel()) {
         return 0;
       }
       if (prevEnv.display.isBlockLevel()) {
@@ -174,7 +174,7 @@ export class BlockMargin {
       if (!prevEnv) {
         return curMarginBefore;
       }
-      if (prevGen instanceof TextNodeGenerator) {
+      if (prevGen instanceof TextNodeGenerator || prevEnv.display.isInlineLevel()) {
         return curMarginBefore;
       }
       if (!prevEnv.float.isNone()) {
