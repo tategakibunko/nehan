@@ -6,8 +6,9 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.0.1
+version 7.0.1, 2020/04/01
 ==========================
+* Fix table-cell layouting bug.
 * Fix baseline for replaced element in horizontal mode.
 o Removed unused files(nehan.css).
 
