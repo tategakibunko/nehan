@@ -145,7 +145,8 @@ export class LineReducer implements ILayoutReducer {
     const baseLineOffset = maxFontLineExtent - maxFont.size;
     // If body size of line is created by max non-text element(such as re, iblock),
     // then add some rest space for line(if rest extent is enough).
-    const extent = (lineBodyExtent === maxNonTextExtent && context.restExtent >= baseLineOffset) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
+    let extent = (lineBodyExtent === maxNonTextExtent && context.restExtent >= baseLineOffset) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
+    extent = Math.min(extent, context.rootExtent);
     const size = new LogicalSize({ measure, extent });
     const text = context.inlineText;
 

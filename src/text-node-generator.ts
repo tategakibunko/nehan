@@ -39,13 +39,14 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
 
     while (this.context.lexer.hasNext()) {
       const font = this.context.env.font;
+      const lineExtent = font.lineExtent;
       const empha = this.context.env.textEmphasis.isNone() ? undefined : this.context.env.textEmphasis.textEmphaData;
       const isPre = this.context.env.whiteSpace.isPre();
       const isVertical = this.context.env.writingMode.isTextVertical();
-      // Note that metrics can be updated when parent is <::first-line>.
+      // Note that this metricsArgs can be updated if parent is <::first-line>.
       const metricsArgs = { font, isVertical, empha };
 
-      if (this.context.restExtent < font.lineExtent) {
+      if (this.context.restExtent < lineExtent) {
         yield LayoutResult.pageBreak(this.context, "lineExtent is not enough for text-fmt-context");
       }
       if (this.context.isLineHead()) {
@@ -97,6 +98,9 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           this.hyphenator.hyphenate(this.context);
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield LayoutResult.lineBreak(this.context, "char token overflows measure");
+          if (this.context.restExtent <= lineExtent) {
+            yield LayoutResult.pageBreak(this.context, "rest extent is full-filled by lineExtent");
+          }
         }
       } else {
         this.context.addCharacter(token);
@@ -105,6 +109,9 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
 
     if (this.context.characters.length > 0) {
       yield this.context.acceptLayoutReducer(this.reducer, false);
+      if (this.context.restExtent <= this.context.env.font.lineExtent) {
+        yield LayoutResult.pageBreak(this.context, "rest extent is full-filled by lineExtent(sweep out)");
+      }
     }
     // console.groupEnd();
   }
