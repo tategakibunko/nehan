@@ -8,6 +8,7 @@ import {
   WritingMode,
   NativeStyleMap,
   ILogicalCssEvaluator,
+  LogicalBorderWidth,
 } from "./public-api";
 
 export enum LogicalBorderRadiusCorner {
@@ -132,9 +133,5 @@ export class LogicalBorderRadius {
       { prop: "after-end", value: this.afterEnd },
       { prop: "after-start", value: this.afterStart }
     ];
-  }
-
-  public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
-    return visitor.visitLogicalBorderRadius(this);
   }
 }

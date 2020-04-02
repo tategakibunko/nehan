@@ -63,7 +63,7 @@ export class LogicalBorder {
     visitor.visitLogicalBorderWidth(this.width).mergeTo(css);
     visitor.visitLogicalBorderStyle(this.style).mergeTo(css);
     visitor.visitLogicalBorderColor(this.color).mergeTo(css);
-    visitor.visitLogicalBorderRadius(this.radius).mergeTo(css);
+    visitor.visitLogicalBorderRadius(this.radius, this.width).mergeTo(css);
     return css;
   }
 

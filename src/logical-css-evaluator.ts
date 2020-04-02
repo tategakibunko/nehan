@@ -5,6 +5,7 @@ import {
   LogicalPos,
   LogicalCursorPos,
   LogicalEdgeMap,
+  LogicalCornerMap,
   LogicalMargin,
   LogicalBorderColor,
   LogicalBorderStyle,
@@ -26,7 +27,7 @@ export interface ILogicalCssEvaluator {
   visitLogicalBorderColor: (borderColor: LogicalBorderColor) => NativeStyleMap;
   visitLogicalBorderWidth: (borderWidth: LogicalBorderWidth) => NativeStyleMap;
   visitLogicalBorderStyle: (borderStyle: LogicalBorderStyle) => NativeStyleMap;
-  visitLogicalBorderRadius: (borderRadius: LogicalBorderRadius) => NativeStyleMap;
+  visitLogicalBorderRadius: (borderRadius: LogicalBorderRadius, width: LogicalBorderWidth) => NativeStyleMap;
   visitLogicalPadding: (pading: LogicalPadding) => NativeStyleMap;
   visitBackgroundPos: (backgroundPos: LogicalBackgroundPos) => NativeStyleMap;
   visitUnmanagedCssProps: (style: CssStyleDeclaration) => NativeStyleMap;
@@ -108,9 +109,14 @@ export class LogicalCssEvaluator implements ILogicalCssEvaluator {
     }, new NativeStyleMap());
   }
 
-  visitLogicalBorderRadius(borderRadius: LogicalBorderRadius): NativeStyleMap {
-    return borderRadius.getPhysicalBorderRadius(this.writingMode).items.reduce((css, item) => {
-      return css.set(`border-${item.prop}-radius`, String(item.value));
+  visitLogicalBorderRadius(borderRadius: LogicalBorderRadius, borderWidth: LogicalBorderWidth): NativeStyleMap {
+    const cornerMap = LogicalCornerMap.select(this.writingMode);
+    return borderRadius.items.reduce((css, item) => {
+      if (item.prop.indexOf("before") >= 0 && borderWidth.before <= 0 ||
+        item.prop.indexOf("after") >= 0 && borderWidth.after <= 0) {
+        return css;
+      }
+      return css.set(`border-${cornerMap.get(item.prop)}-radius`, String(item.value));
     }, new NativeStyleMap());
   }
 

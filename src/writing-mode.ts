@@ -1,6 +1,8 @@
 import {
   HtmlElement,
   CssCascade,
+  LogicalEdgeDirection,
+  PhysicalEdgeDirection,
 } from "./public-api";
 
 export type WritingModeValue = 'horizontal-tb' | 'vertical-rl' | 'vertical-lr';
