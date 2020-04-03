@@ -1,9 +1,12 @@
 import {
   WritingMode,
+  LogicalEdgeDirection,
+  PhysicalEdgeDirection,
+  LogicalBorderRadiusCorner,
 } from "./public-api";
 
-class PropMap extends Map<string, string> {
-  get(prop: string): string {
+class PropMap<P, V> extends Map<P, V> {
+  get(prop: P): V {
     const value = super.get(prop);
     if (!value) {
       throw new Error(`property(${prop}) is not defined in map`);
@@ -12,26 +15,26 @@ class PropMap extends Map<string, string> {
   }
 }
 
-export interface ILogicalMap {
-  readonly horiTb: PropMap;
-  readonly vertRl: PropMap;
-  readonly vertLr: PropMap;
-  select: (writingMode: WritingMode) => PropMap;
+export interface ILogicalMap<P, V> {
+  readonly horiTb: PropMap<P, V>;
+  readonly vertRl: PropMap<P, V>;
+  readonly vertLr: PropMap<P, V>;
+  select: (writingMode: WritingMode) => PropMap<P, V>;
 }
 
 // logical property to physical mapper.
-class LogicalMap implements ILogicalMap {
-  horiTb: PropMap;
-  vertRl: PropMap;
-  vertLr: PropMap;
+class LogicalMap<P, V> implements ILogicalMap<P, V> {
+  horiTb: PropMap<P, V>;
+  vertRl: PropMap<P, V>;
+  vertLr: PropMap<P, V>;
 
   constructor() {
-    this.horiTb = new PropMap();
-    this.vertRl = new PropMap();
-    this.vertLr = new PropMap();
+    this.horiTb = new PropMap<P, V>();
+    this.vertRl = new PropMap<P, V>();
+    this.vertLr = new PropMap<P, V>();
   }
 
-  select(writingMode: WritingMode): PropMap {
+  select(writingMode: WritingMode): PropMap<P, V> {
     if (writingMode.isTextHorizontal()) {
       return this.horiTb;
     }
@@ -42,7 +45,7 @@ class LogicalMap implements ILogicalMap {
   }
 }
 
-class LogicalEdgeMapImpl extends LogicalMap {
+class LogicalEdgeMapImpl extends LogicalMap<LogicalEdgeDirection, PhysicalEdgeDirection> {
   constructor() {
     super();
     this.horiTb.set("before", "top");
@@ -62,7 +65,7 @@ class LogicalEdgeMapImpl extends LogicalMap {
   }
 }
 
-class LogicalCornerMapImpl extends LogicalMap {
+class LogicalCornerMapImpl extends LogicalMap<LogicalBorderRadiusCorner, string> {
   constructor() {
     super();
     this.horiTb.set("before-start", "top-left");
@@ -82,5 +85,5 @@ class LogicalCornerMapImpl extends LogicalMap {
   }
 }
 
-export const LogicalEdgeMap: ILogicalMap = new LogicalEdgeMapImpl();
-export const LogicalCornerMap: ILogicalMap = new LogicalCornerMapImpl();
+export const LogicalEdgeMap: ILogicalMap<LogicalEdgeDirection, PhysicalEdgeDirection> = new LogicalEdgeMapImpl();
+export const LogicalCornerMap: ILogicalMap<LogicalBorderRadiusCorner, string> = new LogicalCornerMapImpl();

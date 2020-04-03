@@ -73,7 +73,7 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
 
   public getPhysicalEdgeValue(writingMode: WritingMode): PhysicalEdgeValue<T> {
     return this.items.reduce((value, item) => {
-      let physicalProp = LogicalEdgeMap.select(writingMode).get(item.prop);
+      const physicalProp = LogicalEdgeMap.select(writingMode).get(item.prop);
       value[physicalProp] = item.value;
       return value;
     }, {} as any) as PhysicalEdgeValue<T>;
@@ -99,14 +99,6 @@ export class LogicalEdge<T> implements LogicalEdgeValue<T> {
       { prop: "start", value: this.start }
     ];
   }
-
-  /*  
-  public getCss(box: LogicalBox): NativeStyleMap {
-    return this.getPhysicalEdge(box.writingMode).items.reduce((css, item) => {
-      return css.set(this.getPropByLogicalDirection(item.prop), String(item.value));
-    }, new NativeStyleMap());
-  }
-  */
 }
 
 export class LogicalEdgeSize extends LogicalEdge<number> {

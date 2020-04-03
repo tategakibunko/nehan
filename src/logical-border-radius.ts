@@ -1,22 +1,12 @@
 import {
-  LogicalCornerMap,
   CssText,
   CssCascade,
   HtmlElement,
   PropValue,
   Utils,
-  WritingMode,
-  NativeStyleMap,
-  ILogicalCssEvaluator,
-  LogicalBorderWidth,
 } from "./public-api";
 
-export enum LogicalBorderRadiusCorner {
-  BEFORE_START = "before-start",
-  BEFORE_END = "before-end",
-  AFTER_END = "after-end",
-  AFTER_START = "after-start",
-}
+export type LogicalBorderRadiusCorner = "before-start" | "before-end" | "after-end" | "after-start"
 
 export interface LogicalBorderRadiusValue {
   beforeStart: number,
@@ -25,42 +15,12 @@ export interface LogicalBorderRadiusValue {
   afterStart: number
 }
 
-export interface PhysicalBorderRadiusValue {
-  topLeft: number,
-  topRight: number,
-  bottomRight: number,
-  bottomLeft: number
-}
-
-export class PhysicalBorderRadius {
-  public topLeft: number;
-  public topRight: number;
-  public bottomRight: number;
-  public bottomLeft: number;
-
-  constructor(values: PhysicalBorderRadiusValue) {
-    this.topLeft = values.topLeft;
-    this.topRight = values.topRight;
-    this.bottomRight = values.bottomRight;
-    this.bottomLeft = values.bottomLeft;
-  }
-
-  public get items(): PropValue<string, number>[] {
-    return [
-      { prop: "top-left", value: this.topLeft },
-      { prop: "top-right", value: this.topRight },
-      { prop: "bottom-right", value: this.bottomRight },
-      { prop: "bottom-left", value: this.bottomLeft }
-    ];
-  }
-}
-
 export class LogicalBorderRadius {
   public beforeStart: number;
   public beforeEnd: number;
   public afterEnd: number;
   public afterStart: number;
-  static corners: string[] = Utils.Enum.toValueArray(LogicalBorderRadiusCorner);
+  static corners: LogicalBorderRadiusCorner[] = ["before-start", "before-end", "after-end", "after-start"];
 
   // Is it simpler if values are 'number []'?
   constructor(values: LogicalBorderRadiusValue) {
@@ -113,20 +73,7 @@ export class LogicalBorderRadius {
     ];
   }
 
-  public getPhysicalBorderRadiusValue(writingMode: WritingMode): PhysicalBorderRadiusValue {
-    return this.items.reduce((values, item) => {
-      const physicalProp = LogicalCornerMap.select(writingMode).get(item.prop);
-      values[Utils.String.chainToCamel(physicalProp)] = item.value;
-      return values;
-    }, {} as any) as PhysicalBorderRadiusValue;
-  }
-
-  public getPhysicalBorderRadius(writing_mode: WritingMode): PhysicalBorderRadius {
-    let values = this.getPhysicalBorderRadiusValue(writing_mode);
-    return new PhysicalBorderRadius(values);
-  }
-
-  public get items(): PropValue<string, number>[] {
+  public get items(): PropValue<LogicalBorderRadiusCorner, number>[] {
     return [
       { prop: "before-start", value: this.beforeStart },
       { prop: "before-end", value: this.beforeEnd },
