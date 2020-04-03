@@ -349,6 +349,9 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addLine(line: LogicalLineNode) {
+    if (Config.ignoreEmptyLine && line.children.length === 0) {
+      return;
+    }
     this.pushBlockNode(line);
   }
 
