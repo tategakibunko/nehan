@@ -1,4 +1,5 @@
 import {
+  Config,
   ILogicalNodeGenerator,
   LayoutResult,
   ICharacter,
@@ -57,7 +58,9 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
         }
       }
       const token: ICharacter = lexer.getNext();
-      // console.log("restM:%d, token:%o", this.context.restMeasure, token);
+      if (Config.debugCharacter) {
+        console.log("restM:%d, token:%o", this.context.restMeasure, token);
+      }
 
       // if white-space:pre, yield line-break with current text block.
       if (isPre && token.text === "\n") {

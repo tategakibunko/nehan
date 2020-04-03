@@ -23,19 +23,13 @@ export namespace Config {
       ;
   };
 
-  // Unfortunately, sometimes nehan.js is going to infinite loop,
-  // and [maxFlowRollbackCount] restricts retry count of flow-generator.
-  export let maxFlowRollbackCount = 3; // too many retry -> abort.
   export let maxPageCount = 2000; // too many pages -> abort.
-  export let maxEmptyBoxCount = 100; // block with too many empty box -> abort.
-  export let maxFlowLoopCount = -1; // if count > 0, force restrict loop count of flow-generator.
 
   // text-align: justify
   // max allowed spacing size for text-align:justify.
   export let maxJustifyGap = 1.0;
 
   // debug log settings.
-  export let debugElementByClick = false; // debug output on click for each evaluated dom.
   export let debugResourceLoader = false; // debug pre-loading process for resources.
   export let debugCharacter = false; // enable debug log even if it's single character.
   export let debugLayout = false; // enable debug log in layout-context and layout-generator.
