@@ -6,13 +6,13 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.0.2
+version 7.0.2, 2020/04/03
 ==========================
 o Added Config.ignoreEmptyLine, Config.ignoreEmptyInline.
 * Ignore size of border-radius if corresponding border-width is zero.
 * Fix kerning trouble for some pattern.
 * Fix block level margin between block level element and inline(or text) element.
-* Fix case of layout overflow caused by too large replaced-element.
+* Fix layout overflow caused by too large replaced-element.
 
 version 7.0.1, 2020/04/01
 ==========================
