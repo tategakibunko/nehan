@@ -2,7 +2,7 @@ import {
   WritingMode,
 } from "./public-api";
 
-class PropMap extends Map<string, string> {
+export class PropMap extends Map<string, string> {
   get(prop: string): string {
     const value = super.get(prop);
     if (!value) {
@@ -12,11 +12,18 @@ class PropMap extends Map<string, string> {
   }
 }
 
+export interface ILogicalMap {
+  readonly horiTb: PropMap;
+  readonly vertRl: PropMap;
+  readonly vertLr: PropMap;
+  select: (writingMode: WritingMode) => PropMap;
+}
+
 // logical property to physical mapper.
-class LogicalMap {
-  protected horiTb: PropMap;
-  protected vertRl: PropMap;
-  protected vertLr: PropMap;
+class LogicalMap implements ILogicalMap {
+  horiTb: PropMap;
+  vertRl: PropMap;
+  vertLr: PropMap;
 
   constructor() {
     this.horiTb = new PropMap();
@@ -75,5 +82,5 @@ class LogicalCornerMapImpl extends LogicalMap {
   }
 }
 
-export let LogicalEdgeMap = new LogicalEdgeMapImpl();
-export let LogicalCornerMap = new LogicalCornerMapImpl();
+export const LogicalEdgeMap: ILogicalMap = new LogicalEdgeMapImpl();
+export const LogicalCornerMap: ILogicalMap = new LogicalCornerMapImpl();
