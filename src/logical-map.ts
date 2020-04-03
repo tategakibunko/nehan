@@ -2,7 +2,7 @@ import {
   WritingMode,
 } from "./public-api";
 
-export class PropMap extends Map<string, string> {
+class PropMap extends Map<string, string> {
   get(prop: string): string {
     const value = super.get(prop);
     if (!value) {
