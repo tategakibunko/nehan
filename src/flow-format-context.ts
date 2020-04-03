@@ -407,10 +407,16 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addInlineBlock(inlineBlock: LogicalInlineBlockNode) {
+    if (Config.ignoreEmptyInline && inlineBlock.children.length === 0) {
+      return;
+    }
     this.pushInlineNode(inlineBlock);
   }
 
   public addInline(inline: LogicalInlineNode) {
+    if (Config.ignoreEmptyInline && inline.children.length === 0) {
+      return;
+    }
     this.pushInlineNode(inline);
   }
 
@@ -419,12 +425,15 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addInlineLink(inline: LogicalInlineNode) {
+    if (Config.ignoreEmptyInline && inline.children.length === 0) {
+      return;
+    }
     this.pushInlineNode(inline);
   }
 
   // Note that marker text is not included to inlineText.
   public addListMarker(marker: LogicalInlineNode) {
-    this.pushInlineNode(marker);
+    this.pushInlineNode(marker, false);
   }
 
   public addText(text: ILogicalNode) {
@@ -435,11 +444,13 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.pushInlineNode(ruby);
   }
 
-  private pushInlineNode(inline: ILogicalNode) {
+  private pushInlineNode(inline: ILogicalNode, hasText = true) {
     const old = this.cursorPos.start;
     this.inlineNodes.push(inline);
     this.cursorPos.start += inline.measure;
-    this.inlineText += inline.text;
+    if (hasText) {
+      this.inlineText += inline.text;
+    }
     if (Config.debugLayout) {
       console.log("[%s] pushInlineNode:%o(%d -> %d)", this.name, inline, old, this.cursorPos.start);
     }

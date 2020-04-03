@@ -24,9 +24,12 @@ export namespace Config {
   // max allowed spacing size for text-align:justify.
   export let maxJustifyGap = 1.0;
 
-  // If enabled, anonymous 'empty' line block is discarded.
+  // If enabled, anonymous 'empty' line block will be discarded.
   // This is usefull if you want to display all white-spaces only by css(margin, padding, position), not by empty line.
   export let ignoreEmptyLine = false;
+
+  // If enabled, empty inline element will be discarded.
+  export let ignoreEmptyInline = false;
 
   // debug log settings.
   export let debugResourceLoader = false; // debug pre-loading process for resources.
