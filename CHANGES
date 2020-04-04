@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.0.3
+version 7.0.3, 2020/04/04
 ==========================
 * Fix wrong page-break condition for some case.
 o Added default option to constructor of PagedHtmlElement({styleSheets:[]}).
