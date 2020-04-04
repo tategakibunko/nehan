@@ -23,7 +23,7 @@ import { PagedHtmlDocument } from 'nehan';
 
 const $result = document.querySelector("#result");
 
-new PagedHtmlDocument("<h1>hello, nehan!</h1>").render({
+new PagedHtmlDocument("<h1>hello, nehan!</h1>", {}).render({
   onPage: (ctx) => {
     const evaluatedPage = ctx.caller.getPage(ctx.page.index);
     $result.appendChild(evaluatedPage.dom);
@@ -70,7 +70,7 @@ new PagedHtmlDocument("<h1>hello, nehan!</h1>", {
 });
 ```
 
-## About logical direction.
+## About logical direction
 
 ### logical direction(`start` and `end`)
 
