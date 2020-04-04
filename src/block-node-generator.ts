@@ -64,7 +64,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     let childElement: HtmlElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
       const display = Display.load(childElement);
-      if (display.isNone() || WhiteSpace.isWhiteSpaceElement(childElement)) {
+      const whiteSpace = WhiteSpace.load(childElement);
+      if (display.isNone() || (!whiteSpace.isPre() && WhiteSpace.isWhiteSpaceElement(childElement))) {
         if (Config.debugLayout) {
           console.log("skip element:", childElement);
         }
