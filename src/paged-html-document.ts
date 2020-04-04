@@ -34,7 +34,7 @@ export class PagedHtmlDocument extends HtmlDocument {
   private pages: Page[];
   private timestamp: number;
 
-  constructor(src: string, options: HtmlDocumentOptions) {
+  constructor(src: string, options: HtmlDocumentOptions = { styleSheets: [] }) {
     super(src, options);
     this.generator = options.generator || LogicalNodeGenerator.createRoot(this.body);
     this.evaluator = options.evaluator || this.createEvaluator(WritingMode.load(this.body));
