@@ -26,7 +26,7 @@ export class TextLexer extends Lexer<ICharacter>{
       });
     if (!args.isPre) {
       normSrc = normSrc.replace(/^\n+/, "");
-      normSrc = normSrc.replace(/n+$/, "");
+      normSrc = normSrc.replace(/\n+$/, "");
       normSrc = Utils.String.multiSpaceToSingle2(normSrc);
     }
     return normSrc;
