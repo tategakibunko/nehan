@@ -6,8 +6,9 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.0.4
+version 7.0.4, 2020/04/04
 ==========================
+* Fix invalid text normalizer.
 
 version 7.0.3, 2020/04/04
 ==========================
