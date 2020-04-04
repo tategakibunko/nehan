@@ -53,9 +53,6 @@ export class ReNodeGenerator implements ILogicalNodeGenerator {
       yield LayoutResult.pageBreak(this.context, "re extent is not enough for restExtent");
     }
     yield this.context.acceptLayoutReducer(this.reducer, logicalSize, physicalSize);
-    if (logicalSize.extent >= this.context.maxExtent) {
-      yield LayoutResult.pageBreak(this.context, "rest extent is full-filled by re");
-    }
     if (Config.debugLayout) {
       console.groupEnd();
     }

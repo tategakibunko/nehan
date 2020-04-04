@@ -109,9 +109,6 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
 
     if (this.context.characters.length > 0) {
       yield this.context.acceptLayoutReducer(this.reducer, false);
-      if (this.context.restExtent <= this.context.env.font.lineExtent) {
-        yield LayoutResult.pageBreak(this.context, "rest extent is full-filled by lineExtent(sweep out)");
-      }
     }
     // console.groupEnd();
   }
