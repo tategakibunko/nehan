@@ -101,9 +101,6 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           this.hyphenator.hyphenate(this.context);
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield LayoutResult.lineBreak(this.context, "char token overflows measure");
-          if (this.context.restExtent <= lineExtent) {
-            yield LayoutResult.pageBreak(this.context, "rest extent is full-filled by lineExtent");
-          }
         }
       } else {
         this.context.addCharacter(token);
