@@ -132,7 +132,8 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           break;
         }
         if (value.type === 'line-break') {
-          const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
+          const isBr = value.body.env.element.tagName === "br";
+          const line = this.context.acceptLayoutReducer(this.lineFormatReducer, isBr);
           this.context.addLine(line.body);
         } else if (value.type === 'page-break') {
           // sweep out rest inline

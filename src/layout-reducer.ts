@@ -125,7 +125,7 @@ export class LineReducer implements ILayoutReducer {
     return false;
   }
 
-  visit(context: FlowFormatContext): LayoutResult {
+  visit(context: FlowFormatContext, isBr = false): LayoutResult {
     const pos = context.lineHeadPos;
     const measure = context.maxMeasure;
     const children = context.inlineNodes;
@@ -191,7 +191,7 @@ export class LineReducer implements ILayoutReducer {
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    // console.log("[%s] reduceLine:%o", context.name, lineNode);
+    // console.log("[%s] reduceLine:%o(isBr=%o)", context.name, lineNode, isBr);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
