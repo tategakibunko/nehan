@@ -34,7 +34,10 @@ export class DynamicStyleUtils {
   // 1. calc margin by em, rem relative.
   // 2. clear header margin before if header is displayed block head pos of each page.
   static smartHeader(ctx: DynamicStyleContext): CssDeclarationBlock {
-    const parentCtx: ILayoutFormatContext | undefined = ctx.parentContext;
+    let parentCtx: ILayoutFormatContext | undefined = ctx.parentContext;
+    if (parentCtx instanceof FlowFormatContext && parentCtx.env.display.isInlineLevel()) {
+      parentCtx = parentCtx.parentBlock;
+    }
     if (!parentCtx) {
       return {};
     }
@@ -50,7 +53,6 @@ export class DynamicStyleUtils {
       style.marginBefore = "0px";
     }
     return style;
-
   }
 
   // just set the break point when dynamic style is loaded.
