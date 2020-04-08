@@ -1,33 +1,27 @@
 import {
-  Utils,
-  BasicStyle,
   HtmlElement,
   CssCascade,
 } from "./public-api";
 
-export enum OverflowWrapValue {
+export type OverflowWrapValue =
   // if single word overflow line-max, just overflow,
   // otherwise start new line.
   // [this is]
   // [toolong]wooooooord <- overflow
-  NORMAL = "normal",
+  "normal" |
 
   // if single word overflow line-max, breaks word.
   // [this is]
   // [toolong] <- break word
   // [woooooo] <- break word
   // [ord    ]
-  BREAK_WORD = "break-word"
-}
+  "break-word"
 
 export class OverflowWrap {
-  public value: string;
-  static values: string[] = Utils.Enum.toValueArray(OverflowWrapValue);
+  public value: OverflowWrapValue;
 
   constructor(value: OverflowWrapValue) {
-    this.value = BasicStyle.selectOrDefault(
-      "overflow-wrap", value, OverflowWrap.values
-    );
+    this.value = value;
   }
 
   static load(element: HtmlElement): OverflowWrap {
@@ -36,10 +30,10 @@ export class OverflowWrap {
   }
 
   public isNormal(): boolean {
-    return this.value === OverflowWrapValue.NORMAL;
+    return this.value === "normal";
   }
 
   public isBreakWord(): boolean {
-    return this.value === OverflowWrapValue.BREAK_WORD;
+    return this.value === "break-word";
   }
 }
