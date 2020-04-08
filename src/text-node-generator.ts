@@ -46,11 +46,12 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       const isVertical = this.context.env.writingMode.isTextVertical();
       // Note that this metricsArgs can be updated if parent is <::first-line>.
       const metricsArgs = { font, isVertical, empha };
+      const isLineHead = this.context.isLineHead();
 
       if (this.context.restExtent < lineExtent) {
         yield LayoutResult.pageBreak(this.context, "lineExtent is not enough for text-fmt-context");
       }
-      if (this.context.isLineHead()) {
+      if (isLineHead) {
         // console.log("lineHead:", this.context);
         if (this.context.maxMeasure < font.size) {
           yield LayoutResult.skip(this.context, "too narrow space");
@@ -84,13 +85,22 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       }
       if (this.context.restMeasure < token.size.measure) {
         if (token instanceof Word) {
-          // word-break: break-all
-          if (this.context.env.wordBreak.isBreakAll()) {
+          // overflow-wrap: break-word
+          if (isLineHead && this.context.env.overflowWrap.isBreakWord()) {
             lexer.pushBack();
             this.context.addCharacter(token.breakWord(this.context.restMeasure));
-          } else if (this.context.isLineHead()) { // line-head, but too long word.
+          }
+          // word-break: break-all
+          else if (this.context.env.wordBreak.isBreakAll()) {
+            lexer.pushBack();
+            this.context.addCharacter(token.breakWord(this.context.restMeasure));
+          }
+          // line-head, but too long word.
+          else if (isLineHead) {
             this.context.addCharacter(token); // will overflow, but ignore!
-          } else {
+          }
+          // move this word to head of next line.
+          else {
             lexer.pushBack();
             this.hyphenator.hyphenate(this.context);
           }
