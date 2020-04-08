@@ -4,6 +4,7 @@ import {
   LogicalNodeGenerator,
   HtmlElement,
   ILogicalNodeGenerator,
+  BlockMargin,
   InlineMargin,
   ILayoutReducer,
   FlowFormatContext,
@@ -32,6 +33,8 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
     if (Config.debugLayout) {
       console.group(`inline: ${this.context.name}`);
     }
+
+    let prevChildGen: ILogicalNodeGenerator | undefined = undefined;
 
     if (this.context.rootExtent < this.context.contextBoxEdge.borderBoxExtent ||
       this.context.rootMeasure < this.context.contextBoxEdge.borderBoxMeasure) {
@@ -62,9 +65,23 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
       }
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
-      if (this.context.child.context.env.display.isBlockLevel() && this.context.inlineNodes.length > 0) {
-        yield this.context.acceptLayoutReducer(this.reducer, true);
-        yield LayoutResult.lineBreak(this.context, "sweep out inlines for next block");
+      if (this.context.child.context.env.display.isBlockLevel()) {
+        if (this.context.inlineNodes.length > 0) {
+          yield this.context.acceptLayoutReducer(this.reducer, true);
+          yield LayoutResult.lineBreak(this.context, "sweep out inlines for next block");
+        }
+      }
+      // If cur child has some margin between latest flow block, add it before yielding it's content.
+      const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.child, prevChildGen);
+      const parentBlockCtx = this.context.parentBlock;
+      if (parentBlockCtx && beforeMargin > 0) {
+        if (parentBlockCtx.restExtent < beforeMargin) {
+          yield LayoutResult.pageBreak(this.context, `block-fmt-context: before-margin(${beforeMargin}) is not enough.`);
+        }
+        if (parentBlockCtx instanceof FlowFormatContext) {
+          parentBlockCtx.addBlockMarginEdge("before", beforeMargin);
+          // console.log(`[${this.context.name}] margin(${beforeMargin}px) is added before ${childElement.tagName}`);
+        }
       }
       while (true) {
         const value = this.context.child.getNext();
@@ -104,6 +121,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
           yield value; // delegate to parent.
         }
       }
+      prevChildGen = childGen.generator;
       childElement = childGen.nextElement;
     }
 
