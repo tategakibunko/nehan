@@ -4,6 +4,7 @@ import {
   CssDeclarationBlock,
   HtmlElement,
   ILayoutFormatContext,
+  FlowFormatContext,
 } from "./public-api";
 
 function getRestExtent(parentContext: any): number {
@@ -33,39 +34,21 @@ export class DynamicStyleUtils {
   // 1. calc margin by em, rem relative.
   // 2. clear header margin before if header is displayed block head pos of each page.
   static smartHeader(ctx: DynamicStyleContext): CssDeclarationBlock {
-    let parentCtx = ctx.parentContext;
+    const parentCtx: ILayoutFormatContext | undefined = ctx.parentContext;
     if (!parentCtx) {
       return {};
     }
-    // ver >= 7
-    if (parentCtx.cursorPos) {
-      const pctx: ILayoutFormatContext = ctx.parentContext;
-      const style: CssDeclarationBlock = {
-        marginBefore: (2 * ctx.remSize - 0.14285714 * ctx.emSize) + "px",
-        marginStart: "0px",
-        marginEnd: "0px",
-        marginAfter: "1rem"
-      };
-      if (pctx.cursorPos.before === 0) {
-        style.marginBefore = "0px";
-      }
-      return style;
-    }
-    // ver <= 6
-    const isBlockHead = parentCtx.isBlockHead();
     const style: CssDeclarationBlock = {
       marginBefore: (2 * ctx.remSize - 0.14285714 * ctx.emSize) + "px",
       marginStart: "0px",
       marginEnd: "0px",
       marginAfter: "1rem"
     };
-    if (isBlockHead || ctx.element.isFirstChild()) {
+    if (parentCtx instanceof FlowFormatContext && parentCtx.pageRoot.blockNodes.length === 0) {
       style.marginBefore = "0px";
     }
-    if (ctx.element.isLastChild()) {
-      style.marginAfter = "0px";
-    }
     return style;
+
   }
 
   // just set the break point when dynamic style is loaded.

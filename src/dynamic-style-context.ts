@@ -3,6 +3,7 @@ import {
   HtmlElement,
   CssLength,
   ILayoutFormatContext,
+  FlowFormatContext,
 } from "./public-api";
 
 export interface DynamicStyleContextValue {
@@ -19,7 +20,7 @@ export class DynamicStyleContext {
   public selector: string;
   public name: string;
   public element: HtmlElement;
-  public parentContext?: any;
+  public parentContext?: ILayoutFormatContext;
 
   constructor(value: DynamicStyleContextValue) {
     this.selector = value.selector;
@@ -33,8 +34,8 @@ export class DynamicStyleContext {
   }
 
   public get remSize(): number {
-    if (this.parentContext && this.parentContext.root) {
-      this.parentContext.root.env.font.size;
+    if (this.parentContext instanceof FlowFormatContext && this.parentContext.pageRoot) {
+      this.parentContext.pageRoot.env.font.size;
     }
     return this.emSize;
   }
