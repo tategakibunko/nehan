@@ -6,6 +6,9 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.0.6
+==========================
+
 version 7.0.5, 2020/04/05
 ==========================
 * Avoid skipping spaces if white-space is pre in block level.
