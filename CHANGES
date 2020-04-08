@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.0.6
+version 7.0.6, 2020/04/08
 ==========================
 * Fix block level margin inside inline flow.
 * Fix smart header(set margin-before to zero if it's a first block element).
