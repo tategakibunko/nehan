@@ -11,6 +11,7 @@ export namespace Config {
     return html
       .replace(/\r/g, "") // remove CR
       .replace(/<rp>(.*?)<\/rp>/gi, "") // remove rp(for faster parse)
+      .replace(/<!--[\s\S]*?-->/g, "") // remove comment
       .replace(/\u2015{2}/g, "\u2014\u2014") // HORIZONTAL BAR{2} -> EM DASH{2}
       .replace(/\s+$/, "") // trim end
       // for our legacy page-break tag.
