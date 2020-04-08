@@ -152,7 +152,7 @@ export class HtmlElement {
       this.$node instanceof SVGSVGElement) {
       return this.$node.tagName.toLowerCase();
     }
-    console.warn("unsupported node type:%o", this);
+    console.info("unsupported node type:%o", this);
     return "???";
   }
 
