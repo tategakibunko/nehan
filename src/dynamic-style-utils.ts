@@ -38,13 +38,15 @@ export class DynamicStyleUtils {
     if (!parentCtx) {
       return {};
     }
+    const marginBefore = 2 * ctx.remSize - 0.14285714 * ctx.emSize;
     const style: CssDeclarationBlock = {
-      marginBefore: (2 * ctx.remSize - 0.14285714 * ctx.emSize) + "px",
+      marginBefore: marginBefore + "px",
       marginStart: "0px",
       marginEnd: "0px",
       marginAfter: "1rem"
     };
-    if (parentCtx instanceof FlowFormatContext && parentCtx.pageRoot.blockNodes.length === 0) {
+    // if it's first header block or margin-before will cause page-break, set margin-before to zero.
+    if (parentCtx.globalPos.before === 0 || parentCtx.restExtent < marginBefore) {
       style.marginBefore = "0px";
     }
     return style;
