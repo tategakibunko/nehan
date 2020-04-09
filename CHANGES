@@ -8,6 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 7.0.8
 ==========================
+o Discard line extent if no text is not included.
 * Fixed margin-collapse bug in some cases.
 o Added Config.ignoreZeroRe to discard zero size replaced element.
 

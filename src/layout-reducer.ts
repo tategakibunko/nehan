@@ -19,6 +19,7 @@ import {
   LogicalBlockReNode,
   LogicalInlineReNode,
   PhysicalSize,
+  PseudoElementTagName,
 } from './public-api'
 
 export interface ILayoutReducer {
@@ -176,9 +177,14 @@ export class LineReducer implements ILayoutReducer {
     }
     const lineNode = new LogicalLineNode(context.env, pos, size, autoSize, text, children, baseline);
     // If Config.ignoreEmptyInline or Config.ignoreZeroRe is enabled, empty line without br would be produced.
-    // It's not valid layout element, so discard block size.
+    // It's not valid layout element, so discard block size of line.
     if (!isBr && children.length === 0) {
-      // console.info("empty inline without br -> set zero size line!");
+      // console.log("empty inline without br -> set zero size!");
+      lineNode.size.extent = baseline.size.extent = 0;
+    }
+    // If only one children with empty text, discard block size of line.
+    if (children.length === 1 && children[0].text === "") {
+      // console.log("marker only line -> set zero size!");
       lineNode.size.extent = baseline.size.extent = 0;
     }
     context.cursorPos.start = 0;
