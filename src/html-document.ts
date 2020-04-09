@@ -30,7 +30,7 @@ export class HtmlDocument {
   protected selectorCache: SelectorCache;
 
   constructor(source: string, options: HtmlDocumentOptions = defaultOptions) {
-    console.time("initializeDocument");
+    // console.time("initializeDocument");
     this.source = Config.normalizeHtml(source);
     this.styleSheets = [
       new CssStyleSheet(UserAgentStyles)
@@ -56,10 +56,10 @@ export class HtmlDocument {
     // before css loading, initialize pseudo elements and set spec-styles to them.
     this.body.acceptEffectorAll(new PseudoElementInitializer(this.specStyleSheet.getPseudoRules()));
 
-    console.time("cssLoading");
+    // console.time("cssLoading");
     CssLoader.loadAll(this.body);
-    console.timeEnd("cssLoading");
-    console.timeEnd("initializeDocument");
+    // console.timeEnd("cssLoading");
+    // console.timeEnd("initializeDocument");
   }
 
   public querySelectorAll(query: string): HtmlElement[] {
