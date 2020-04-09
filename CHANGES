@@ -6,11 +6,12 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.0.8
+version 7.0.8, 2020/04/10
 ==========================
 o Discard line extent if no text is not included.
-* Fixed margin-collapse bug in some cases.
 o Added Config.ignoreZeroRe to discard zero size replaced element.
+* Fixed layouting trouble(table was discarded in inline-level).
+* Fixed margin-collapse bug in some cases.
 
 version 7.0.7, 2020/04/09
 ==========================
