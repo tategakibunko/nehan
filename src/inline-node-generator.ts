@@ -68,7 +68,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
       if (this.context.child.context.env.display.isBlockLevel()) {
         if (this.context.inlineNodes.length > 0) {
           yield this.context.acceptLayoutReducer(this.reducer, true);
-          yield LayoutResult.lineBreak(this.context, "sweep out inlines for next block");
+          yield LayoutResult.lineBreak(this.context, "sweep out inlines for next block(inside inline)");
         }
       }
       // If cur child has some margin between latest flow block, add it before yielding it's content.
@@ -113,11 +113,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
           this.context.addInlineRe(value.body);
         } else if (value.type === 'inline-block') {
           this.context.addInlineBlock(value.body);
-        } else if (value.type === 'block') {
-          if (this.context.inlineNodes.length > 0) {
-            yield this.context.acceptLayoutReducer(this.reducer, true);
-            yield LayoutResult.lineBreak(this.context, "sweep out inline by block");
-          }
+        } else if (value.isBlockLevel()) {
           yield value; // delegate to parent.
         }
       }

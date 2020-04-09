@@ -138,7 +138,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'page-break') {
           // sweep out rest inline
           if (this.context.inlineNodes.length > 0) {
-            const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
+            const line = this.context.acceptLayoutReducer(this.lineFormatReducer, false);
             this.context.addLine(line.body);
           }
           const block = this.context.acceptLayoutReducer(this.blockReducer);
@@ -183,7 +183,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     } // while (childElement !== null)
 
     if (this.context.inlineNodes.length > 0) {
-      const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
+      const line = this.context.acceptLayoutReducer(this.lineFormatReducer, false);
       this.context.addLine(line.body);
     }
 

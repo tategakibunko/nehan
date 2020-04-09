@@ -69,6 +69,20 @@ export class LayoutResult {
     return false;
   }
 
+  isBlockLevel(): boolean {
+    switch (this.type) {
+      case 'block':
+      case 'block-link':
+      case 're-block':
+      case 'table':
+      case 'table-cells':
+      case 'table-row-group':
+      case 'table-row':
+        return true;
+    }
+    return false;
+  }
+
   getBodyAsBlockNode(): LogicalBlockNode {
     if (this.body && this.body instanceof LogicalBlockNode) {
       return this.body;
