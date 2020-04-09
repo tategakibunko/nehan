@@ -177,11 +177,14 @@ export class LineReducer implements ILayoutReducer {
     }
     const lineNode = new LogicalLineNode(context.env, pos, size, autoSize, text, children, baseline);
     // If Config.ignoreEmptyInline or Config.ignoreZeroRe is enabled, empty line without br would be produced.
-    // Or marker only line, space only line will be also created in some case.
+    // Or marker only line with 'list-style:none', space only line will be also created in some case.
     // It's not valid layout element, so discard block size of line.
     if (!isBr && (children.length === 0 || text.trim() === "")) {
-      // console.log("empty inline without br -> set zero size!");
-      lineNode.size.extent = baseline.size.extent = 0;
+      const withListMarkerText = children[0] && children[0].env.display.isListItem() && !children[0].env.listStyle.isNone();
+      if (!withListMarkerText) {
+        // console.log("empty inline without br -> set zero size!");
+        lineNode.size.extent = baseline.size.extent = 0;
+      }
     }
     context.cursorPos.start = 0;
     context.inlineNodes = [];
