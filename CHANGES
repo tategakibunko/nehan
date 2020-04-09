@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.0.8
+==========================
+o Added Config.ignoreZeroRe to discard zero size replaced element.
+
 version 7.0.7, 2020/04/09
 ==========================
 o Support overflow-wrap: break-word.
