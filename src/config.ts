@@ -33,7 +33,7 @@ export namespace Config {
   export let ignoreEmptyInline = false;
 
   // If enabled, zero size replaced element will be discarded.
-  export let ignoreZeroRe = false;
+  export let ignoreZeroRe = true;
 
   // debug log settings.
   export let debugResourceLoader = false; // debug pre-loading process for resources.
