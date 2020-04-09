@@ -129,7 +129,7 @@ export class PagedHtmlDocument extends HtmlDocument {
       if (!result) {
         const time = performance.now() - this.timestamp;
         const pageCount = this.pages.length;
-        console.log(`finished ${time / 1000}sec, pageCount ${pageCount}`);
+        // console.log(`finished ${time / 1000}sec, pageCount ${pageCount}`);
         if (options.onComplete) {
           options.onComplete({ caller: this, time, pageCount });
         }
