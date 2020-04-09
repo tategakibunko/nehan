@@ -1,7 +1,9 @@
 import {
+  Config,
   HtmlElement,
   LogicalFloat,
   Position,
+  BoxEnv,
   ILogicalNodeGenerator,
   TextNodeGenerator,
 } from './public-api'
@@ -99,10 +101,14 @@ export class BlockMargin {
     return elements;
   }
 
-  static getCollapsedMarginBetween(element: HtmlElement, prevElement: HtmlElement): number {
-    const maxBefore = Math.max(...this.getBeforeElements(element).map(e => parseInt(e.computedStyle.getPropertyValue("margin-before") || "0")));
-    const maxPrevAfter = Math.max(...this.getAfterElements(prevElement).map(e => parseInt(e.computedStyle.getPropertyValue("margin-after") || "0")));
-    return Math.max(maxBefore, maxPrevAfter);
+  static getMaxMarginBefore(element: HtmlElement): number {
+    const beforeElements = this.getBeforeElements(element);
+    return Math.max(0, ...beforeElements.map(e => parseInt(e.computedStyle.getPropertyValue("margin-before") || "0")));
+  }
+
+  static getMaxMarginAfter(element: HtmlElement): number {
+    const afterElements = this.getAfterElements(element);
+    return Math.max(0, ...afterElements.map(e => parseInt(e.computedStyle.getPropertyValue("margin-after") || "0")));
   }
 
   /*
@@ -120,7 +126,7 @@ export class BlockMargin {
     | abs        |   -        -        -    -     -
     -------------------------------------------------
   */
-  static getFlowMarginFromLastElement(curGen: ILogicalNodeGenerator, prevGen?: ILogicalNodeGenerator): number {
+  static getFlowMarginFromLastElement(parentEnv: BoxEnv, curGen: ILogicalNodeGenerator, prevGen?: ILogicalNodeGenerator): number {
     const curEnv = curGen.context.env;
 
     // [cur = abs]
@@ -129,14 +135,12 @@ export class BlockMargin {
     if (curEnv.position.isAbsolute()) {
       return 0;
     }
-    const curMarginBefore = parseInt(curEnv.element.computedStyle.getPropertyValue("margin-before") || "0");
     const prevEnv = prevGen ? prevGen.context.env : undefined;
-    const prevMarginAfter = prevEnv ? parseInt(prevEnv.element.computedStyle.getPropertyValue("margin-after") || "0") : 0;
 
     // [cur = float]
     if (!curEnv.float.isNone()) {
       if (!prevEnv) {
-        return curMarginBefore;
+        return parseInt(curEnv.element.computedStyle.getPropertyValue("margin-before") || "0");
       }
       if (!prevEnv.float.isNone()) {
         return 0;
@@ -148,6 +152,8 @@ export class BlockMargin {
         return 0;
       }
       if (prevEnv.display.isBlockLevel()) {
+        const curMarginBefore = parseInt(curEnv.element.computedStyle.getPropertyValue("margin-before") || "0");
+        const prevMarginAfter = this.getMaxMarginAfter(prevEnv.element);
         return prevMarginAfter + curMarginBefore;
       }
     }
@@ -166,25 +172,31 @@ export class BlockMargin {
         return 0;
       }
       if (prevEnv.display.isBlockLevel()) {
-        return prevMarginAfter;
+        return this.getMaxMarginAfter(prevEnv.element);
       }
     }
     // [cur = block(with normal flow layout)]
     if (curEnv.display.isBlockLevel()) {
+      const isInternalBlock = !parentEnv.display.isFlowRoot() && parentEnv.display.isBlockLevel() && !parentEnv.position.isAbsolute() && parentEnv.float.isNone();
+      if (!prevEnv && isInternalBlock) {
+        return 0; // max margin-before is already added by parent block.
+      }
+      const maxMarginBefore = this.getMaxMarginBefore(curEnv.element);
       if (!prevEnv) {
-        return curMarginBefore;
+        return maxMarginBefore;
       }
       if (prevGen instanceof TextNodeGenerator || prevEnv.display.isInlineLevel()) {
-        return curMarginBefore;
+        return maxMarginBefore;
       }
       if (!prevEnv.float.isNone()) {
-        return curMarginBefore;
+        return maxMarginBefore;
       }
       if (prevEnv.position.isAbsolute()) {
-        return curMarginBefore;
+        return maxMarginBefore;
       }
       if (prevEnv.display.isBlockLevel()) {
-        return this.getCollapsedMarginBetween(curEnv.element, prevEnv.element);
+        const maxMarginAfter = this.getMaxMarginAfter(prevEnv.element);
+        return Math.max(maxMarginBefore, maxMarginAfter);
       }
     }
     return 0; // never

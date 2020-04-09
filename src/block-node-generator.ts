@@ -95,7 +95,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         this.context.cursorPos.before = Math.max(this.context.cursorPos.before, clearedExtent);
       }
       // If cur child has some margin between latest flow block, add it before yielding it's content.
-      const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.child, prevChildGen);
+      const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.env, this.context.child, prevChildGen);
       if (this.context.restExtent < beforeMargin) {
         yield isPageRoot ?
           this.context.acceptLayoutReducer(this.blockReducer) :

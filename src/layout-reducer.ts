@@ -167,19 +167,6 @@ export class LineReducer implements ILayoutReducer {
       startOffset: context.lineBoxStartOffset,
       blockOffset,
     };
-    /*
-    const lastBlockNode = context.lastBlockNode;
-    const isContinuousLine = lastBlockNode instanceof LogicalLineNode;
-    const isLocalFirstLine = context.localLineCount === 0;
-    // If this line is not continuous to previous line or first line of local page,
-    // (for example, this line is continuous to block element or at the beginning of local page block etc)
-    // and this line includes some decorated text(like empha, ruby) that has largest extent,
-    // then set before offset to prevent this line from overflowing previous(or parent) block.
-    if (baseLineExtent === maxDecoratedExtent && context.env.font.size < maxFont.size && (!isContinuousLine || isLocalFirstLine)) {
-      pos.before += baseLineOffset;
-      context.cursorPos.before += baseLineOffset;
-    }
-    */
     const autoMeasure = baseline.startOffset + context.cursorPos.start;
     const autoSize = new LogicalSize({ measure: autoMeasure, extent });
     // if empty line, shrink line-height to fontSize.
@@ -188,6 +175,12 @@ export class LineReducer implements ILayoutReducer {
       baseline.blockOffset = 0;
     }
     const lineNode = new LogicalLineNode(context.env, pos, size, autoSize, text, children, baseline);
+    // If Config.ignoreEmptyInline or Config.ignoreZeroRe is enabled, empty line without br would be produced.
+    // It's not valid layout element, so discard block size.
+    if (!isBr && children.length === 0) {
+      // console.info("empty inline without br -> set zero size line!");
+      lineNode.size.extent = baseline.size.extent = 0;
+    }
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";

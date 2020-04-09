@@ -72,7 +72,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
         }
       }
       // If cur child has some margin between latest flow block, add it before yielding it's content.
-      const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.child, prevChildGen);
+      const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.env, this.context.child, prevChildGen);
       const parentBlockCtx = this.context.parentBlock;
       if (parentBlockCtx && beforeMargin > 0) {
         if (parentBlockCtx.restExtent < beforeMargin) {
