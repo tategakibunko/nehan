@@ -102,11 +102,11 @@ export class LineReducer implements ILayoutReducer {
   static instance = new LineReducer();
   private constructor() { }
 
-  isDecoratedText(node: ILogicalNode): boolean {
+  private isDecoratedText(node: ILogicalNode): boolean {
     return !node.env.textEmphasis.isNone() || node instanceof LogicalRubyNode;
   }
 
-  getDecoratedExtent(node: ILogicalNode): number {
+  private getDecoratedExtent(node: ILogicalNode): number {
     if (!node.env.textEmphasis.isNone()) {
       return node.env.font.size * 2;
     }
@@ -116,7 +116,7 @@ export class LineReducer implements ILayoutReducer {
     return 0;
   }
 
-  isReChild(node: ILogicalNode): boolean {
+  private isReChild(node: ILogicalNode): boolean {
     if (node instanceof LogicalInlineReNode) {
       return true;
     }
@@ -124,6 +124,18 @@ export class LineReducer implements ILayoutReducer {
       return node.children.some(child => this.isReChild(child));
     }
     return false;
+  }
+
+  private isEmptyLine(children: ILogicalNode[], lineText: string): boolean {
+    if (children.length === 0) {
+      return true;
+    }
+    // If list-marker(list-style-type !== none) is included, text of first child is not empty.
+    // Note that text of list-marker is not included in lineText.
+    if (children[0].text.trim() !== "") {
+      return false;
+    }
+    return lineText.trim() === "";
   }
 
   visit(context: FlowFormatContext, isBr = false): LayoutResult {
@@ -179,12 +191,8 @@ export class LineReducer implements ILayoutReducer {
     // If Config.ignoreEmptyInline or Config.ignoreZeroRe is enabled, empty line without br would be produced.
     // Or marker only line with 'list-style:none', space only line will be also created in some case.
     // It's not valid layout element, so discard block size of line.
-    if (!isBr && (children.length === 0 || text.trim() === "")) {
-      const withListMarkerText = children[0] && children[0].env.display.isListItem() && !children[0].env.listStyle.isNone();
-      if (!withListMarkerText) {
-        // console.log("empty inline without br -> set zero size!");
-        lineNode.size.extent = baseline.size.extent = 0;
-      }
+    if (!isBr && this.isEmptyLine(children, text)) {
+      lineNode.size.extent = baseline.size.extent = 0;
     }
     context.cursorPos.start = 0;
     context.inlineNodes = [];
