@@ -192,6 +192,7 @@ export class LineReducer implements ILayoutReducer {
     // Or marker only line with 'list-style:none', space only line will be also created in some case.
     // It's not valid layout element, so discard block size of line.
     if (!isBr && this.isEmptyLine(children, text)) {
+      // console.log("discard empty line");
       lineNode.size.extent = baseline.size.extent = 0;
     }
     context.cursorPos.start = 0;
