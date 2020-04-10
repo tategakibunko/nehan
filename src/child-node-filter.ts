@@ -50,8 +50,8 @@ export class WhiteSpaceEliminator implements ChildNodeFilter {
   }
 }
 
-export class IgnoredBlockEliminator implements ChildNodeFilter {
-  static instance = new IgnoredBlockEliminator();
+export class ValidBlockSelector implements ChildNodeFilter {
+  static instance = new ValidBlockSelector();
   private constructor() { }
 
   private isWhiteSpaceOrIgnoredElement(element: HtmlElement): boolean {
@@ -80,11 +80,11 @@ export class IgnoredBlockEliminator implements ChildNodeFilter {
       return true;
     }
     if (element.childNodes.length === 0) {
-      // console.log("remove empty block:", element);
+      // console.log("remove empty block:", element.getNodeName());
       return false;
     }
     if (element.childNodes.every(child => this.isWhiteSpaceOrIgnoredElement(child))) {
-      // console.log("remove ignored block:", element);
+      // console.log("remove ignored block:", element.getNodeName());
       return false;
     }
     return true;
