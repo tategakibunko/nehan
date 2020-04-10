@@ -35,7 +35,7 @@ export class DynamicStyleContext {
 
   public get remSize(): number {
     if (this.parentContext instanceof FlowFormatContext && this.parentContext.pageRoot) {
-      this.parentContext.pageRoot.env.font.size;
+      return this.parentContext.pageRoot.env.font.size;
     }
     return this.emSize;
   }

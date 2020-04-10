@@ -8,7 +8,7 @@ import {
   PseudoElementInitializer,
   ILogicalNodeGenerator,
   ILogicalNodeEvaluator,
-  EmptyBlockEliminator,
+  IgnoredBlockEliminator,
 } from "./public-api";
 
 export interface HtmlDocumentOptions {
@@ -61,7 +61,7 @@ export class HtmlDocument {
     CssLoader.loadAll(this.body);
 
     // after css loading, remove empty block node from element tree.
-    this.body.acceptChildFilter(EmptyBlockEliminator.instance);
+    this.body.acceptChildFilter(IgnoredBlockEliminator.instance);
     // console.timeEnd("cssLoading");
     // console.timeEnd("initializeDocument");
   }

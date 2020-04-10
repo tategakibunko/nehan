@@ -1,4 +1,5 @@
 import {
+  Config,
   HtmlElement,
   Display,
   WhiteSpace,
@@ -49,21 +50,38 @@ export class WhiteSpaceEliminator implements ChildNodeFilter {
   }
 }
 
-export class EmptyBlockEliminator implements ChildNodeFilter {
-  static instance = new EmptyBlockEliminator();
+export class IgnoredBlockEliminator implements ChildNodeFilter {
+  static instance = new IgnoredBlockEliminator();
   private constructor() { }
 
+  private isWhiteSpaceOrIgnoredElement(element: HtmlElement): boolean {
+    if (WhiteSpace.isWhiteSpaceElement(element)) {
+      return true;
+    }
+    if (Config.ignoredTags.includes(element.tagName)) {
+      return true;
+    }
+    if (Display.load(element).isNone()) {
+      return true;
+    }
+    return false;
+  }
+
   visit(element: HtmlElement): boolean {
+    if (element.isTextElement()) {
+      return true;
+    }
+    console.log(`visit:${element.getNodeName()}`);
     const display = Display.load(element);
     if (!display.isBlockLevel()) {
       return true;
     }
     if (element.childNodes.length === 0) {
-      console.log("remove empty block:", element);
+      // console.log("remove empty block:", element);
       return false;
     }
-    if (element.childNodes.every(child => WhiteSpace.isWhiteSpaceElement(child))) {
-      console.log("remove white-space block:", element);
+    if (element.childNodes.every(child => this.isWhiteSpaceOrIgnoredElement(child))) {
+      // console.log("remove ignored block:", element);
       return false;
     }
     return true;

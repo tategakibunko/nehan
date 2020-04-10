@@ -117,6 +117,11 @@ export namespace Config {
     "strong",
   ]
 
+  export let ignoredTags = [
+    "script",
+    "noscript",
+  ]
+
   // Ignored css props that is defined in inline-style.
   // @example if you set this props like
   //
