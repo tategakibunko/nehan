@@ -71,6 +71,10 @@ export class IgnoredBlockEliminator implements ChildNodeFilter {
     if (element.isTextElement()) {
       return true;
     }
+    // self closing element is not discarded even if children is empty.
+    if (["br", "hr"].includes(element.tagName)) {
+      return true;
+    }
     const display = Display.load(element);
     if (!display.isBlockLevel()) {
       return true;
