@@ -58,6 +58,10 @@ export class LogicalSize {
     return this.measure === 0 && this.extent === 0;
   }
 
+  public hasZero(): boolean {
+    return this.measure === 0 || this.extent === 0;
+  }
+
   public getPhysicalSize(writingMode: WritingMode): PhysicalSize {
     return new PhysicalSize({
       width: this.getWidth(writingMode),

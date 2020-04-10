@@ -360,7 +360,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addBlockRe(block: LogicalBlockReNode) {
-    if (Config.ignoreZeroRe && block.size.isZero()) {
+    if (Config.ignoreZeroRe && block.size.hasZero()) {
       return;
     }
     this.pushBlockNode(block);
@@ -424,7 +424,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addInlineRe(inline: LogicalInlineReNode) {
-    if (Config.ignoreZeroRe && inline.size.isZero()) {
+    if (Config.ignoreZeroRe && inline.size.hasZero()) {
       return;
     }
     this.pushInlineNode(inline);
