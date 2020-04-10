@@ -71,7 +71,6 @@ export class IgnoredBlockEliminator implements ChildNodeFilter {
     if (element.isTextElement()) {
       return true;
     }
-    console.log(`visit:${element.getNodeName()}`);
     const display = Display.load(element);
     if (!display.isBlockLevel()) {
       return true;
