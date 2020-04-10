@@ -18,7 +18,7 @@ export class ValidBlockSelector implements ChildNodeFilter {
       return true;
     }
     if (Config.ignoredTags.includes(element.tagName)) {
-      console.log("remove ignored element:", element.getNodeName());
+      // console.log("remove ignored element:", element.getNodeName());
       return false;
     }
     // self closing element is not discarded even if children is empty.
