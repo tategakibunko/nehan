@@ -79,12 +79,13 @@ export class ValidBlockSelector implements ChildNodeFilter {
     if (!display.isBlockLevel()) {
       return true;
     }
+    element.acceptChildFilter(this);
     if (element.childNodes.length === 0) {
-      // console.log("remove empty block:", element.getNodeName());
+      console.log("remove empty block:", element.getNodeName());
       return false;
     }
     if (element.childNodes.every(child => this.isWhiteSpaceOrIgnoredElement(child))) {
-      // console.log("remove ignored block:", element.getNodeName());
+      console.log("remove ignored block:", element.getNodeName());
       return false;
     }
     return true;

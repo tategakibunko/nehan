@@ -34,8 +34,7 @@ export class HtmlElement {
 
   public acceptChildFilter(visitor: ChildNodeFilter): HtmlElement {
     this.childNodes = this.childNodes
-      .filter(node => visitor.visit(node))
-      .map(node => node.acceptChildFilter(visitor));
+      .filter(node => visitor.visit(node));
     return this;
   }
 
