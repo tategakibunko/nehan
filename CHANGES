@@ -10,6 +10,7 @@ version 7.0.8, 2020/04/10
 ==========================
 o Discard line extent if no text is not included.
 o Added Config.ignoreZeroRe to discard zero size replaced element.
+* Prevents the occurrence of pages containing only a single line.
 * Fixed layouting trouble(table was discarded in inline-level).
 * Fixed margin-collapse bug in some cases.
 
