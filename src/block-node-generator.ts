@@ -143,8 +143,10 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
             this.context.addLine(line.body);
           }
           const block = this.context.acceptLayoutReducer(this.blockReducer);
-          yield block;
-          if (!isPageRoot) {
+          if (isPageRoot) {
+            yield block;
+          } else {
+            yield block;
             yield value; // propagate 'page-break' until page-root.
           }
         } else if (value.type === 'block') {
