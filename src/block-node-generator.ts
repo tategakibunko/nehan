@@ -68,9 +68,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       const display = Display.load(childElement);
       const whiteSpace = WhiteSpace.load(childElement);
       if (display.isNone() || (!whiteSpace.isPre() && WhiteSpace.isWhiteSpaceElement(childElement))) {
-        if (Config.debugLayout) {
-          console.log("skip element:", childElement);
-        }
+        // console.log("skip element:", childElement);
         childElement = childElement.nextSibling;
         continue;
       }
@@ -99,9 +97,10 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       // If cur child has some margin between latest flow block, add it before yielding it's content.
       const beforeMargin = BlockMargin.getFlowMarginFromLastElement(this.context.env, this.context.child, prevChildGen);
       if (this.context.restExtent < beforeMargin) {
-        yield isPageRoot ?
-          this.context.acceptLayoutReducer(this.blockReducer) :
-          LayoutResult.pageBreak(this.context, `block-fmt-context: before-margin(${beforeMargin}) is not enough.`);
+        yield this.context.acceptLayoutReducer(this.blockReducer);
+        if (!isPageRoot) {
+          yield LayoutResult.pageBreak(this.context, `block-fmt-context: before-margin(${beforeMargin}) overflow.`);
+        }
       }
       if (beforeMargin > 0) {
         this.context.addBlockMarginEdge("before", beforeMargin);
