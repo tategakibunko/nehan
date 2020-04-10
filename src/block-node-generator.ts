@@ -11,6 +11,7 @@ import {
   BlockMargin,
   ILayoutReducer,
   FlowFormatContext,
+  PageRootFormatContext,
   LineReducer,
   BlockReducer,
   WhiteSpace,
@@ -42,7 +43,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     this.context.flowRoot.openElement(this.context.env.element);
 
     const progressDelta = 1 / this.context.env.element.childNodes.length;
-    const isPageRoot = this.context.env.element.tagName === Config.pageRootTagName;
+    const isPageRoot = this.context instanceof PageRootFormatContext;
     let prevChildGen: ILogicalNodeGenerator | undefined = undefined;
 
     if (this.context.env.pageBreakBefore.isAlways()) {
