@@ -238,6 +238,8 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     switch (this.env.element.tagName) {
       case "img": return visitor.visitBlockImage(this);
+      case "video": return visitor.visitBlockVideo(this);
+      case "iframe": return visitor.visitBlockIframe(this);
     }
     console.error("unsupported replaced element:", this);
     throw new Error("unsupported replaced element");
@@ -265,6 +267,8 @@ export class LogicalInlineReNode implements ILogicalNode {
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     switch (this.env.element.tagName) {
       case "img": return visitor.visitInlineImage(this);
+      case "video": return visitor.visitInlineVideo(this);
+      case "iframe": return visitor.visitInlineIframe(this);
     }
     console.error("unsupported replaced element:", this);
     throw new Error("unsupported replaced element");

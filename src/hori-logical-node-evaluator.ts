@@ -293,6 +293,48 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
+  visitBlockVideo(videoNode: LogicalBlockReNode): HTMLElement {
+    const node = videoNode.env.element.$node.cloneNode(true) as HTMLElement;
+    node.setAttribute("width", String(videoNode.physicalSize.width));
+    node.setAttribute("height", String(videoNode.physicalSize.height));
+    node.style.position = "absolute";
+    node.style.marginLeft = videoNode.edge.margin.start + "px";
+    node.style.marginRight = videoNode.edge.margin.end + "px";
+    node.style.verticalAlign = "bottom";
+    videoNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    videoNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    videoNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    videoNode.env.element.style.callDomCallbacks(videoNode, node);
+    return node;
+  }
+
+  visitInlineVideo(videoNode: LogicalInlineReNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("span", ["inline"], videoNode);
+    node.style.display = "none";
+    node.style.width = "0";
+    node.style.height = "0";
+    node.innerHTML = "Sorry, inline video is not supported yet!";
+    return node;
+  }
+
+  visitBlockIframe(iframeNode: LogicalBlockReNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("div", ["block"], iframeNode);
+    node.style.display = "none";
+    node.style.width = "0";
+    node.style.height = "0";
+    node.innerHTML = "Sorry, block iframe is not supported yet!";
+    return node;
+  }
+
+  visitInlineIframe(iframeNode: LogicalInlineReNode): HTMLElement {
+    const node = LogicalNodeEvaluator.createElementFromNode("span", ["inline"], iframeNode);
+    node.style.display = "none";
+    node.style.width = "0";
+    node.style.height = "0";
+    node.innerHTML = "Sorry, inline iframe is not supported yet!";
+    return node;
+  }
+
   visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {
     const node = LogicalNodeEvaluator.createElementFromNode("a", ["inline"], linkNode);
     const href = linkNode.env.element.getAttribute("href");

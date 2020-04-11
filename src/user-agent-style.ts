@@ -255,7 +255,7 @@ export const UserAgentStyles: CssRules = {
     "font-style": "italic"
   },
   "iframe": {
-    "display": "none"
+    "display": "none" // TODO
   },
   "img": {
     "display": "inline"
@@ -534,6 +534,7 @@ export const UserAgentStyles: CssRules = {
     "font-style": "italic"
   },
   "video": {
+    "display": "block"
   },
   "wbr": {
   },

@@ -21,8 +21,8 @@ export class ValidBlockSelector implements ChildNodeFilter {
       // console.log("remove ignored element:", element.getNodeName());
       return false;
     }
-    // self closing element is not discarded even if children is empty.
-    if (["br", "hr", "img", "wbr"].includes(element.tagName)) {
+    // self closing elements or iframe, video are not discarded even if children is empty.
+    if (["br", "hr", "img", "wbr", "video", "iframe"].includes(element.tagName)) {
       return true;
     }
     const display = Display.load(element);

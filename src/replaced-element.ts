@@ -4,10 +4,11 @@ import {
 
 export class ReplacedElement {
   static isReplacedElement(element: HtmlElement): boolean {
-    switch(element.tagName){
-    case "img":
-    case "video":
-      return true;
+    switch (element.tagName) {
+      case "img":
+      case "video":
+      case "iframe":
+        return true;
     }
     return false;
   }
