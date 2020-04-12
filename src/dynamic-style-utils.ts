@@ -90,15 +90,15 @@ export class DynamicStyleUtils {
   //   2. replaced-element with some extent > 0.
   // This style prevents element from being created that consists only of border-before.
   static smartBorderBreak(ctx: DynamicStyleContext): CssDeclarationBlock {
+    const edge = LogicalBoxEdge.load(ctx.element);
+    if (edge.border.width.before <= 0) {
+      return {};
+    }
     if (!ctx.parentContext) {
       return {};
     }
     const firstAtomElement = getFirstAtomElement(ctx.element);
     if (!firstAtomElement) {
-      return {};
-    }
-    const edge = LogicalBoxEdge.load(firstAtomElement);
-    if (edge.border.width.before <= 0) {
       return {};
     }
     const restExtent = ctx.parentContext.restExtent;
