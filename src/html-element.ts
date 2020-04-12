@@ -319,18 +319,18 @@ export class HtmlElement {
   }
 
   public get firstTextElement(): HtmlElement | null {
-    const first_child = this.firstChild;
-    if (!first_child) {
+    const firstChild = this.firstChild;
+    if (!firstChild) {
       return null;
     }
-    if (first_child.isTextElement()) {
-      return first_child;
+    if (firstChild.isTextElement()) {
+      return firstChild;
     }
-    const next_child = first_child.nextSibling;
-    if (!next_child) {
+    const nextChild = firstChild.nextSibling;
+    if (!nextChild) {
       return null;
     }
-    return next_child.firstTextElement;
+    return nextChild.firstTextElement;
   }
 
   public get lastChild(): HtmlElement | null {
