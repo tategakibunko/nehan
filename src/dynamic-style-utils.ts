@@ -8,7 +8,41 @@ import {
   WhiteSpace,
   ReplacedElement,
   PhysicalSize,
+  LogicalBoxEdge,
+  WritingMode,
 } from "./public-api";
+
+function getFirstAtomElement(element: HtmlElement): HtmlElement | null {
+  for (let i = 0; i < element.childNodes.length; i++) {
+    const child = element.childNodes[i];
+    if (child.isTextElement()) {
+      if (!WhiteSpace.isWhiteSpaceElement(child)) {
+        return child;
+      }
+    } else if (ReplacedElement.isReplacedElement(child)) {
+      const size = PhysicalSize.load(child);
+      if (size && !size.hasZero()) {
+        return child;
+      }
+    } else {
+      const atomElement = getFirstAtomElement(child);
+      if (atomElement) {
+        return atomElement;
+      }
+    }
+  }
+  return null;
+}
+
+function getMinAtomExtent(atomElement: HtmlElement, lineExtent: number, writingMode: WritingMode): number {
+  if (atomElement.isTextElement()) {
+    return lineExtent;
+  }
+  if (ReplacedElement.isReplacedElement(atomElement)) {
+    return PhysicalSize.load(atomElement).getLogicalSize(writingMode).extent;
+  }
+  return 0; // never
+}
 
 export class DynamicStyleUtils {
   // page break before if rest extent is smaller than [size].
@@ -46,6 +80,35 @@ export class DynamicStyleUtils {
       style.marginBefore = "0px";
     }
     return style;
+  }
+
+  // Break page before if
+  //   1. border-before-width is not zero
+  //   2. restExtent < (firstAtomElement.extent + border-width-before + padding-before)
+  // where firstAtomElement is
+  //   1. text-element that does not consist of only whitespace.
+  //   2. replaced-element with some extent > 0.
+  // This style prevents element from being created that consists only of border-before.
+  static smartBorderBreak(ctx: DynamicStyleContext): CssDeclarationBlock {
+    if (!ctx.parentContext) {
+      return {};
+    }
+    const firstAtomElement = getFirstAtomElement(ctx.element);
+    if (!firstAtomElement) {
+      return {};
+    }
+    const edge = LogicalBoxEdge.load(firstAtomElement);
+    if (edge.border.width.before <= 0) {
+      return {};
+    }
+    const restExtent = ctx.parentContext.restExtent;
+    const lineExtent = ctx.parentContext.env.font.lineExtent;
+    const writingMode = ctx.parentContext.env.writingMode;
+    const minExtent = getMinAtomExtent(firstAtomElement, lineExtent, writingMode) + edge.before;
+    if (restExtent < minExtent) {
+      return { "page-break-before": "always" };
+    }
+    return {};
   }
 
   // just set the break point when dynamic style is loaded.
