@@ -5,6 +5,9 @@ import {
   SelectorParser,
   ChildNodeFilter,
   NodeEffector,
+  WhiteSpace,
+  ReplacedElement,
+  PhysicalSize,
 } from "./public-api";
 
 // For performance reason, we use this [HtmlElement] class for both [Node] and [HTMLElement].

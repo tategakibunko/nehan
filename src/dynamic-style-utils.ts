@@ -5,16 +5,10 @@ import {
   HtmlElement,
   ILayoutFormatContext,
   FlowFormatContext,
+  WhiteSpace,
+  ReplacedElement,
+  PhysicalSize,
 } from "./public-api";
-
-function getRestExtent(parentContext: any): number {
-  // version <= 6
-  if (parentContext.region) {
-    return parentContext.region.restContextBoxExtent;
-  }
-  // version >= 7
-  return parentContext.restExtent;
-}
 
 export class DynamicStyleUtils {
   // page break before if rest extent is smaller than [size].
@@ -23,8 +17,7 @@ export class DynamicStyleUtils {
       if (!ctx.parentContext) {
         return {};
       }
-      const restExtent = getRestExtent(ctx.parentContext);
-      if (restExtent < requiredExtent) {
+      if (ctx.parentContext.restExtent < requiredExtent) {
         return { "page-break-before": "always" };
       }
       return { "page-break-before": "auto" };
