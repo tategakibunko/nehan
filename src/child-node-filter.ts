@@ -26,6 +26,9 @@ export class ValidBlockSelector implements ChildNodeFilter {
     if (["br", "hr", "img", "wbr", "video", "iframe"].includes(element.tagName)) {
       return true;
     }
+    if (PseudoElement.isPseudoElement(element)) {
+      return true;
+    }
     const display = Display.load(element);
     if (display.isNone()) {
       // console.log("remove display = none:", element.getNodeName());
