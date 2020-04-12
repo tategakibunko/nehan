@@ -1,6 +1,7 @@
 import {
   CssStyleSheet,
   CssRules,
+  DynamicStyleContext,
 } from "./public-api";
 
 export interface SemanticStyleCreateOptions {
@@ -131,7 +132,18 @@ const typography: CssRules = {
     "extent": "1em",
     "line-height": "1",
     "float": "start",
-    "font-size": "4em"
+    "font-size": "4em",
+    "!page-break": (ctx: DynamicStyleContext) => {
+      if (!ctx.parentContext) {
+        return {};
+      }
+      const fontSize = ctx.emSize * 4;
+      const restExtent = ctx.parentContext.restExtent;
+      if (restExtent >= fontSize) {
+        return {};
+      }
+      return { "page-break-before": "always" };
+    }
   }
 };
 
