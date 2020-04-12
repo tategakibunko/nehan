@@ -319,14 +319,14 @@ export class HtmlElement {
   }
 
   public get firstTextElement(): HtmlElement | null {
-    let first_child = this.firstChild;
+    const first_child = this.firstChild;
     if (!first_child) {
       return null;
     }
     if (first_child.isTextElement()) {
       return first_child;
     }
-    let next_child = first_child.nextSibling;
+    const next_child = first_child.nextSibling;
     if (!next_child) {
       return null;
     }
