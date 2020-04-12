@@ -131,7 +131,6 @@ export namespace Config {
   // then position of following tag is ignored by Nehan.CssParser::parseInlineStyle.
   // <span style='positoin:abosolute'>foo</span>
   export let IgnoredInlineStyleProps: string[] = [
-    "position",
   ]
 
   // \u0021-\u007E, block = Basic Latin(without \u0026, \u003B)

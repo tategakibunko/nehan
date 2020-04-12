@@ -3,6 +3,7 @@ import {
   HtmlElement,
   Display,
   WhiteSpace,
+  PseudoElement,
 } from './public-api';
 
 export interface ChildNodeFilter {

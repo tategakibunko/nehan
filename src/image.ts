@@ -5,11 +5,14 @@ import {
 } from "./public-api";
 
 export class Image {
-  static load(element: HtmlElement, context?: ResourceLoaderContext): Promise<HtmlElement> {
+  // 1. load image data from [srcAttr].
+  // 2. get image width/height.
+  // 3. set width/height to attribute.
+  static load(element: HtmlElement, srcAttr: string, context?: ResourceLoaderContext): Promise<HtmlElement> {
     return new Promise<HtmlElement>((resolve, reject) => {
-      const $node = element.$node as HTMLImageElement;
+      const $node = element.$node as HTMLElement;
       const image = document.createElement("img") as HTMLImageElement;
-      image.src = $node.src;
+      image.setAttribute("src", $node.getAttribute(srcAttr) || "");
       image.onload = (evt: Event) => {
         // console.log("image.onload:width=%d, height=%d", image.width, image.height);
         $node.setAttribute("width", String(image.width));
