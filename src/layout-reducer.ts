@@ -19,7 +19,6 @@ import {
   LogicalBlockReNode,
   LogicalInlineReNode,
   PhysicalSize,
-  PseudoElementTagName,
 } from './public-api'
 
 export interface ILayoutReducer {
