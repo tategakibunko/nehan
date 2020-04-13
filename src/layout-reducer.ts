@@ -145,6 +145,7 @@ export class LineReducer implements ILayoutReducer {
     const iblockChildren = children.filter(node => node instanceof LogicalInlineBlockNode);
     const decoratedChildren = children.filter(node => this.isDecoratedText(node));
     const maxFont = children.reduce((acm, node) => node.env.font.size > acm.size ? node.env.font : acm, context.env.font);
+    const minChildExtent = Math.min(...children.map(child => child.extent));
     const maxDecoratedExtent = Math.max(...decoratedChildren.map(node => this.getDecoratedExtent(node)));
     const maxReExtent = Math.max(...reChildren.map(node => node.extent));
     const maxIblockExtent = Math.max(...iblockChildren.map(node => node.extent));
@@ -181,8 +182,8 @@ export class LineReducer implements ILayoutReducer {
     };
     const autoMeasure = baseline.startOffset + context.cursorPos.start;
     const autoSize = new LogicalSize({ measure: autoMeasure, extent });
-    // if empty line, shrink line-height to fontSize.
-    if (children.length === 0) {
+    // if empty line or min child is smaller than fontSize, shrink line-height to fontSize.
+    if (children.length === 0 || minChildExtent < context.env.font.size) {
       size.extent = autoSize.extent = baseline.size.extent = baseline.textBodySize.extent = context.env.font.size;
       baseline.blockOffset = 0;
     }
