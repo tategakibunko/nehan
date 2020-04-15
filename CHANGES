@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.1.0
+==========================
+! Changed return type of DynamicStyleCallback.
+
 version 7.0.13, 2020/04/15
 ==========================
 * Fix logic of skipping <br> tag just after line-break after inline overflow of text-node.

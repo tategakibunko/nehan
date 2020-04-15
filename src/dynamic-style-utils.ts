@@ -47,9 +47,9 @@ function getMinAtomExtent(atomElement: HtmlElement, lineExtent: number, writingM
 export class DynamicStyleUtils {
   // page break before if rest extent is smaller than [size].
   static requiredExtent(requiredExtent: number): DynamicStyleCallback {
-    return (ctx: DynamicStyleContext): CssDeclarationBlock => {
+    return (ctx: DynamicStyleContext): CssDeclarationBlock | undefined => {
       if (!ctx.parentContext) {
-        return {};
+        return undefined;
       }
       if (ctx.parentContext.restExtent < requiredExtent) {
         return { "page-break-before": "always" };
@@ -60,13 +60,13 @@ export class DynamicStyleUtils {
 
   // 1. calc margin by em, rem relative.
   // 2. clear header margin before if header is displayed block head pos of each page.
-  static smartHeader(ctx: DynamicStyleContext): CssDeclarationBlock {
+  static smartHeader(ctx: DynamicStyleContext): CssDeclarationBlock | undefined {
     let parentCtx: ILayoutFormatContext | undefined = ctx.parentContext;
     if (parentCtx instanceof FlowFormatContext && parentCtx.env.display.isInlineLevel()) {
       parentCtx = parentCtx.parentBlock;
     }
     if (!parentCtx) {
-      return {};
+      return undefined;
     }
     const marginBefore = 2 * ctx.remSize - 0.14285714 * ctx.emSize;
     const style: CssDeclarationBlock = {

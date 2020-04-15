@@ -2,6 +2,7 @@ import {
   CssStyleSheet,
   CssRules,
   DynamicStyleContext,
+  CssDeclarationBlock,
 } from "./public-api";
 
 export interface SemanticStyleCreateOptions {
@@ -133,14 +134,14 @@ const typography: CssRules = {
     "line-height": "1",
     "float": "start",
     "font-size": "4em",
-    "!page-break": (ctx: DynamicStyleContext) => {
+    "!page-break": (ctx: DynamicStyleContext): CssDeclarationBlock | undefined => {
       if (!ctx.parentContext) {
-        return {};
+        return undefined;
       }
       const fontSize = ctx.emSize * 4;
       const restExtent = ctx.parentContext.restExtent;
       if (restExtent >= fontSize) {
-        return {};
+        return undefined;
       }
       return { "page-break-before": "always" };
     }
