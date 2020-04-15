@@ -12,7 +12,7 @@ import {
   WritingMode,
 } from "./public-api";
 
-function getFirstAtomElement(element: HtmlElement): HtmlElement | null {
+function getFirstAtomChildElement(element: HtmlElement): HtmlElement | null {
   for (let i = 0; i < element.childNodes.length; i++) {
     const child = element.childNodes[i];
     if (child.isTextElement()) {
@@ -25,7 +25,7 @@ function getFirstAtomElement(element: HtmlElement): HtmlElement | null {
         return child;
       }
     } else {
-      const atomElement = getFirstAtomElement(child);
+      const atomElement = getFirstAtomChildElement(child);
       if (atomElement) {
         return atomElement;
       }
@@ -97,7 +97,7 @@ export class DynamicStyleUtils {
     if (!ctx.parentContext) {
       return {};
     }
-    const firstAtomElement = getFirstAtomElement(ctx.element);
+    const firstAtomElement = getFirstAtomChildElement(ctx.element);
     if (!firstAtomElement) {
       return {};
     }
