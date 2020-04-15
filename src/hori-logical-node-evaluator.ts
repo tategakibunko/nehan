@@ -297,6 +297,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = videoNode.env.element.$node.cloneNode(true) as HTMLElement;
     node.setAttribute("width", String(videoNode.physicalSize.width));
     node.setAttribute("height", String(videoNode.physicalSize.height));
+    node.removeAttribute("style"); // remove inline style attribute from cloned node.
     node.style.position = "absolute";
     node.style.marginLeft = videoNode.edge.margin.start + "px";
     node.style.marginRight = videoNode.edge.margin.end + "px";
