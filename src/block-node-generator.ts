@@ -129,7 +129,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           break;
         }
         if (value.type === 'skip') {
-          console.warn(`${childElement.tagName} is skipped.`);
+          // console.warn(`${childElement.tagName} is skipped.`);
           break;
         }
         if (value.type === 'line-break') {
