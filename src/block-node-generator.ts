@@ -187,7 +187,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'text') {
           const textNode = value.body as LogicalTextNode;
           // Prevent double line-break by <br> that follows overflow-indent of text-node.
-          if (textNode.indent && childGen.nextElement && childGen.nextElement.tagName === "br") {
+          if (textNode.skipBr && childGen.nextElement && childGen.nextElement.tagName === "br") {
             childGen.nextElement = childGen.nextElement.nextSibling;
           }
           this.context.addText(textNode);

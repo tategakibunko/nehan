@@ -35,7 +35,8 @@ export class TextReducer implements ILayoutReducer {
     const size = new LogicalSize({ measure, extent });
     const text = context.text;
     const children = context.characters;
-    const textNode = new LogicalTextNode(context.env, size, text, indent, children);
+    const skipBr = !context.lexer.hasNext() && indent;
+    const textNode = new LogicalTextNode(context.env, size, text, skipBr, children);
     // console.log("reduceText:%o", textNode);
     context.characters = [];
     context.text = "";
