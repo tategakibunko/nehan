@@ -6,14 +6,14 @@ import {
 } from './public-api';
 
 export interface IHyphenator {
-  hyphenate: (context: TextFormatContext) => void;
+  hyphenate: (context: TextFormatContext) => number;
 }
 
 export class Hyphenator implements IHyphenator {
   static instance = new Hyphenator();
   private constructor() { }
 
-  public hyphenate(context: TextFormatContext) {
+  public hyphenate(context: TextFormatContext): number {
     const lexer = context.lexer;
     const moveCount = this.getHyphenateCount(lexer);
 
@@ -22,7 +22,7 @@ export class Hyphenator implements IHyphenator {
       // console.log("OI-DASHI:", moveCount);
       const popCount = -moveCount;
       if (popCount >= context.characters.length) {
-        return;
+        return 0;
       }
       for (let i = 0; i < popCount; i++) {
         context.characters.pop();
@@ -37,6 +37,7 @@ export class Hyphenator implements IHyphenator {
         context.addCharacter(lexer.getNext());
       }
     }
+    return moveCount;
   }
 
   private getHyphenateCount(lexer: Lexer<ICharacter>): number {
