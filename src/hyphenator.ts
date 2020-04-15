@@ -30,7 +30,7 @@ export class Hyphenator implements IHyphenator {
         lexer.setPos(lexer.getPos() - 1);
       }
     }
-    // if offst is plus, it's 'BURA-SAGARI'.
+    // if offset is plus, it's 'BURA-SAGARI'.
     else if (moveCount > 0) {
       // console.log("BURA-SAGARI:", moveCount);
       for (let i = 0; i < moveCount; i++) {
