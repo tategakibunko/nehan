@@ -2,6 +2,7 @@ import {
   Config,
   LayoutResult,
   LogicalNodeGenerator,
+  LogicalTextNode,
   HtmlElement,
   ILogicalNodeGenerator,
   BlockMargin,
@@ -104,7 +105,12 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'inline') {
           this.context.addInline(value.body);
         } else if (value.type === 'text') {
-          this.context.addText(value.body);
+          const textNode = value.body as LogicalTextNode;
+          // Prevent double line-break by <br> that follows overflow-indent of text-node.
+          if (textNode.indent && childGen.nextElement && childGen.nextElement.tagName === "br") {
+            childGen.nextElement = childGen.nextElement.nextSibling;
+          }
+          this.context.addText(textNode);
         } else if (value.type === 'ruby') {
           this.context.addInline(value.body);
         } else if (value.type === 'inline-link') {

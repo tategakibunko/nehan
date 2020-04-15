@@ -7,7 +7,7 @@ import {
   Display,
   LogicalClear,
   LogicalFloat,
-  LogicalBlockNode,
+  LogicalTextNode,
   InlineMargin,
   BlockMargin,
   ILayoutReducer,
@@ -185,7 +185,12 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'list-marker') {
           this.context.addListMarker(value.body);
         } else if (value.type === 'text') {
-          this.context.addText(value.body);
+          const textNode = value.body as LogicalTextNode;
+          // Prevent double line-break by <br> that follows overflow-indent of text-node.
+          if (textNode.indent && childGen.nextElement && childGen.nextElement.tagName === "br") {
+            childGen.nextElement = childGen.nextElement.nextSibling;
+          }
+          this.context.addText(textNode);
         } else if (value.type === 'ruby') {
           this.context.addRuby(value.body);
         } else if (value.type === 're-block') {
