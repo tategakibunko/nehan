@@ -211,7 +211,7 @@ export class Display {
       display.setBlockLevel();
     }
     // display of <a> is dynamically decided by it's first element.
-    if (withDynamicLoad && element.tagName === "a") {
+    if (withDynamicLoad && element.tagName === "a" && display.isInlineLevel()) {
       const firstElement = element.firstElementChild;
       if (!firstElement) {
         return display;
