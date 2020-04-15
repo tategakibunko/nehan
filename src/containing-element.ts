@@ -22,7 +22,7 @@ export class ContainingElement {
   static getBlockAncestor(element: HtmlElement): HtmlElement {
     let parent = element.parent;
     while (parent) {
-      const display = Display.load(parent, false);
+      const display = Display.load(parent);
       if (display.isBlockLevel() || display.isFlowRoot()) {
         return parent;
       }
@@ -42,7 +42,7 @@ export class ContainingElement {
     if (position === "absolute" || position === "fixed") {
       return this.getAbsAncestor(element);
     }
-    if (Display.load(element, false).isBlockLevel()) {
+    if (Display.load(element).isBlockLevel()) {
       return this.getBlockAncestor(element);
     }
     return element.parent;

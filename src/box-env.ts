@@ -22,6 +22,7 @@ import {
   PageBreakBefore,
   PageBreakAfter,
   BorderCollapse,
+  CssLoader,
 } from "./public-api";
 
 // In paged media, displayed box of each element is splited by page.
@@ -58,7 +59,7 @@ export class BoxEnv {
     this.measure = LogicalSize.loadMeasure(element);
     this.extent = LogicalSize.loadExtent(element);
     this.float = LogicalFloat.load(element);
-    this.display = Display.load(element);
+    this.display = this.loadDisplay(element);
     this.position = Position.load(element);
     this.absPos = LogicalPos.load(element);
     this.writingMode = WritingMode.load(element);
@@ -78,6 +79,20 @@ export class BoxEnv {
     this.pageBreakAfter = PageBreakAfter.load(element);
     this.backgroundPos = LogicalBackgroundPos.load(element);
     this.borderCollapse = BorderCollapse.load(element);
+  }
+
+  protected loadDisplay(element: HtmlElement): Display {
+    const display = Display.load(element);
+    // display of <a> is dynamically decided by it's first element.
+    if (element.tagName === "a" && display.isInlineLevel()) {
+      const firstElement = element.firstElementChild;
+      if (!firstElement) {
+        return display;
+      }
+      CssLoader.load(firstElement);
+      return Display.load(firstElement);
+    }
+    return display;
   }
 
   protected loadEdge(element: HtmlElement, display: Display): LogicalBoxEdge {

@@ -199,7 +199,7 @@ export class Display {
     }
   }
 
-  static load(element: HtmlElement, withDynamicLoad = true): Display {
+  static load(element: HtmlElement): Display {
     const value = CssCascade.getValue(element, "display");
     const display = new Display(value as DisplayValue);
     const float = LogicalFloat.load(element);
@@ -209,15 +209,6 @@ export class Display {
     }
     if (display.isInlineLevel() && !float.isNone()) {
       display.setBlockLevel();
-    }
-    // display of <a> is dynamically decided by it's first element.
-    if (withDynamicLoad && element.tagName === "a" && display.isInlineLevel()) {
-      const firstElement = element.firstElementChild;
-      if (!firstElement) {
-        return display;
-      }
-      CssLoader.load(firstElement);
-      return Display.load(firstElement);
     }
     return display;
   }
