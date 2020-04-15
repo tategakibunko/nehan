@@ -43,7 +43,7 @@ export type CssRules = { [selector: string]: CssDeclarationBlock };
     name: string,
     element: HtmlElement,
     parentContext: FlowContext
-  } -> css_declr_block
+  } -> css_declr_block | undefined
 
   and dom_callback = {
     selector:string,

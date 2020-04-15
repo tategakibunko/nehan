@@ -3,4 +3,4 @@ import {
   CssDeclarationBlock
 } from "./public-api";
 
-export type DynamicStyleCallback = (context: DynamicStyleContext) => CssDeclarationBlock;
+export type DynamicStyleCallback = (context: DynamicStyleContext) => CssDeclarationBlock | undefined;

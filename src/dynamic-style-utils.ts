@@ -89,17 +89,17 @@ export class DynamicStyleUtils {
   //   1. text-element that does not consist of only whitespace.
   //   2. replaced-element with some extent > 0.
   // This style prevents element from being created that consists only of border-before.
-  static smartBorderBreak(ctx: DynamicStyleContext): CssDeclarationBlock {
+  static smartBorderBreak(ctx: DynamicStyleContext): CssDeclarationBlock | undefined {
     const edge = LogicalBoxEdge.load(ctx.element);
     if (edge.border.width.before <= 0) {
-      return {};
+      return undefined;
     }
     if (!ctx.parentContext) {
-      return {};
+      return undefined;
     }
     const firstAtomElement = getFirstAtomChildElement(ctx.element);
     if (!firstAtomElement) {
-      return {};
+      return undefined;
     }
     const restExtent = ctx.parentContext.restExtent;
     const lineExtent = ctx.parentContext.env.font.lineExtent;
@@ -108,30 +108,30 @@ export class DynamicStyleUtils {
     if (restExtent < minExtent) {
       return { "page-break-before": "always" };
     }
-    return {};
+    return undefined;
   }
 
   // just set the break point when dynamic style is loaded.
-  static breakPoint(ctx: DynamicStyleContext): CssDeclarationBlock {
+  static breakPoint(ctx: DynamicStyleContext): CssDeclarationBlock | undefined {
     debugger;
-    return {};
+    return undefined;
   }
 
   static replaceContent(fn_replace: (content: string, ctx: DynamicStyleContext) => string):
-    (ctx: DynamicStyleContext) => CssDeclarationBlock {
+    (ctx: DynamicStyleContext) => CssDeclarationBlock | undefined {
     return (ctx: DynamicStyleContext) => {
       let old_content = ctx.element.textContent;
       let new_content = fn_replace(old_content, ctx);
       let doc = new DOMParser().parseFromString(new_content, "text/html");
       if (!doc.body) {
-        return {};
+        return undefined;
       }
       ctx.element.childNodes = [];
       let children = doc.body.childNodes, root = ctx.element.root;
       for (let i = 0; i < children.length; i++) {
         ctx.element.appendChild(new HtmlElement(children[i], root));
       }
-      return {};
+      return undefined;
     };
   }
 }
