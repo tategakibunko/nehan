@@ -5,6 +5,7 @@ import {
   ICharacter,
   Word,
   DualChar,
+  SpaceChar,
   ILayoutReducer,
   TextFormatContext,
   TextReducer,
@@ -106,6 +107,27 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           }
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield LayoutResult.lineBreak(this.context, "long word is broken by word-break: break-all");
+        } else if (token instanceof SpaceChar) {
+          const prevToken = lexer.peek(-2);
+          const nextToken = lexer.peek();
+          // Omit a space at the beginning of a line surrounded by two words.
+          //
+          // ...... [word1]
+          // [space][word2]
+          // =>
+          // ...... [word1]
+          // [word2]
+          if (!(prevToken instanceof Word && nextToken instanceof Word)) {
+            // If this space is not between two words, we have to add it at the begining of next line.
+            lexer.pushBack();
+          }
+          /* else {
+            console.log("skip heading space token between two words(%s, %s)", prevToken.text, nextToken.text);
+          }
+          */
+          this.hyphenator.hyphenate(this.context);
+          yield this.context.acceptLayoutReducer(this.reducer, true);
+          yield LayoutResult.lineBreak(this.context, "char token overflows measure(by spaceChar)");
         } else {
           lexer.pushBack();
           this.hyphenator.hyphenate(this.context);
