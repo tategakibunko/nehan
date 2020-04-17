@@ -157,6 +157,7 @@ export class LineReducer implements ILayoutReducer {
     const lineBodyExtent = Math.max(maxFontLineExtent, maxChildExtent); // decorated extent is not included here!
     const textBodyExtent = Math.max(maxFont.size, maxNonTextExtent);
     const baseLineOffset = maxFontLineExtent - maxFont.size;
+    const isNonTextLine = children.length === (iblockChildren.length + reChildren.length);
     // If body size of line is created by max non-text element(such as re, iblock),
     // then add some rest space for line(if rest extent is enough).
     let extent = (lineBodyExtent === maxNonTextExtent && context.restExtent >= baseLineOffset) ? lineBodyExtent + baseLineOffset : lineBodyExtent;
@@ -183,8 +184,8 @@ export class LineReducer implements ILayoutReducer {
     };
     const autoMeasure = baseline.startOffset + context.cursorPos.start;
     const autoSize = new LogicalSize({ measure: autoMeasure, extent });
-    // if empty line or min child is smaller than fontSize, shrink line-height to fontSize.
-    if (children.length === 0 || minChildExtent < context.env.font.size) {
+    // if empty line or non-text-line(re or iblock only) and min-child is smaller than fontSize, shrink line-height to fontSize.
+    if (children.length === 0 || (minChildExtent < context.env.font.size && isNonTextLine)) {
       size.extent = autoSize.extent = baseline.size.extent = baseline.textBodySize.extent = context.env.font.size;
       baseline.blockOffset = 0;
     }
