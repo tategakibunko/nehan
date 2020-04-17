@@ -8,6 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 7.1.0
 ==========================
+o Omit a space at the beginning of a line surrounded by two words.
 * Fixed baseline size in some case.
 ! Changed return type of DynamicStyleCallback.
 
