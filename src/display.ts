@@ -190,6 +190,11 @@ export class Display {
         this.inside = DisplayInside.FLOW_ROOT;
         break;
 
+      case DisplayInternal.TABLE_CAPTION:
+        this.outside = DisplayOutside.BLOCK;
+        this.inside = DisplayInside.FLOW_ROOT;
+        break;
+
       case DisplayValue.INLINE: // inline flow
       default:
         this.outside = DisplayOutside.INLINE;
