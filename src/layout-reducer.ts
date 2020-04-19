@@ -186,7 +186,7 @@ export class LineReducer implements ILayoutReducer {
     const autoSize = new LogicalSize({ measure: autoMeasure, extent });
     // if empty line or non-text-line(re or iblock only) and min-child is smaller than fontSize, shrink line-height to fontSize.
     if (children.length === 0 || (minChildExtent < context.env.font.size && isNonTextLine)) {
-      const shrinkExtent = isNonTextLine ? minChildExtent : context.env.font.size;
+      const shrinkExtent = (isNonTextLine && children.length > 0) ? minChildExtent : context.env.font.size;
       size.extent = autoSize.extent = baseline.size.extent = baseline.textBodySize.extent = shrinkExtent;
       baseline.blockOffset = 0;
     }
