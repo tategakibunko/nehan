@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.1.1
+==========================
+* Fixed extent of line when it's not a text-line.
+
 version 7.1.0, 2020/04/17
 ==========================
 o Omit a space at the beginning of a line surrounded by two words.
