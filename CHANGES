@@ -8,6 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 7.1.1
 ==========================
+* Fixed outside flow of table-caption.
 * Fixed extent of line when it's not a text-line.
 
 version 7.1.0, 2020/04/17
