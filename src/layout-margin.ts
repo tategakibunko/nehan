@@ -64,7 +64,7 @@ export class BlockMargin {
       if (!isFlowElement(last)) {
         break;
       }
-      if (last.computedStyle.getPropertyValue("border-after-width") !== "0") {
+      if (last.computedStyle.getPropertyValue("border-after-width") !== "0px") {
         break;
       }
       lastChildren.push(last);
@@ -80,7 +80,7 @@ export class BlockMargin {
       if (!isFlowElement(first)) {
         break;
       }
-      if (first.computedStyle.getPropertyValue("border-before-width") !== "0") {
+      if (first.computedStyle.getPropertyValue("border-before-width") !== "0px") {
         break;
       }
       firstChildren.push(first);
