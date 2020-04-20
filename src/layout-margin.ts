@@ -5,6 +5,7 @@ import {
   BoxEnv,
   ILogicalNodeGenerator,
   TextNodeGenerator,
+  WhiteSpace,
 } from './public-api'
 
 function isFlowElement(element: HtmlElement): boolean {
@@ -20,6 +21,22 @@ function isFlowElement(element: HtmlElement): boolean {
     return false;
   }
   return true;
+}
+
+function getFirstCollapseTarget(element: HtmlElement): HtmlElement | null {
+  let firstChild = element.firstChild;
+  while (firstChild && firstChild.isTextElement() && WhiteSpace.isWhiteSpaceElement(firstChild)) {
+    firstChild = firstChild.nextSibling;
+  }
+  return firstChild;
+}
+
+function getLastCollapseTarget(element: HtmlElement): HtmlElement | null {
+  let lastChild = element.lastChild;
+  while (lastChild && lastChild.isTextElement() && WhiteSpace.isWhiteSpaceElement(lastChild)) {
+    lastChild = lastChild.previousSibling;
+  }
+  return lastChild;
 }
 
 export class InlineMargin {
@@ -41,72 +58,46 @@ export class InlineMargin {
 
 export class BlockMargin {
   static getLastChildren(element: HtmlElement): HtmlElement[] {
-    let children = element.children.filter(isFlowElement); // text node is not included
+    let last = getLastCollapseTarget(element);
     let lastChildren = [];
-    while (children.length > 0) {
-      const last = children[children.length - 1];
+    while (last) {
+      if (!isFlowElement(last)) {
+        break;
+      }
+      if (last.computedStyle.getPropertyValue("border-after-width") !== "0") {
+        break;
+      }
       lastChildren.push(last);
-      children = last.children.filter(isFlowElement);
+      last = getLastCollapseTarget(last);
     }
     return lastChildren;
   }
 
   static getFirstChildren(element: HtmlElement): HtmlElement[] {
-    let children = element.children.filter(isFlowElement);
+    let first = getFirstCollapseTarget(element);
     let firstChildren = [];
-    while (children.length > 0) {
-      const first = children[0];
+    while (first) {
+      if (!isFlowElement(first)) {
+        break;
+      }
+      if (first.computedStyle.getPropertyValue("border-before-width") !== "0") {
+        break;
+      }
       firstChildren.push(first);
-      children = first.children.filter(isFlowElement);
+      first = getFirstCollapseTarget(first);
     }
     return firstChildren;
   }
 
-  static getBeforeElements(element: HtmlElement): HtmlElement[] {
-    let elements = this.getFirstChildren(element).concat(element);
-    if (!element.isFirstElementChild()) {
-      return elements;
-    }
-    let parent = element.parent;
-    while (parent) {
-      if (!isFlowElement(parent)) {
-        break;
-      }
-      if (!parent.isFirstElementChild()) {
-        break;
-      }
-      elements.push(parent);
-      parent = parent.parent;
-    }
-    return elements;
-  }
-
-  static getAfterElements(element: HtmlElement): HtmlElement[] {
-    let elements = this.getLastChildren(element).concat(element);
-    if (!element.isLastElementChild()) {
-      return elements;
-    }
-    let parent = element.parent;
-    while (parent) {
-      if (!isFlowElement(parent)) {
-        break;
-      }
-      if (!parent.isLastElementChild()) {
-        break;
-      }
-      elements.push(parent);
-      parent = parent.parent;
-    }
-    return elements;
-  }
-
   static getMaxMarginBefore(element: HtmlElement): number {
-    const beforeElements = this.getBeforeElements(element);
+    const beforeElements = this.getFirstChildren(element).concat(element); // child-first-chain
+    // console.log("beforeElements for %s is %o", element.tagName, beforeElements);
     return Math.max(0, ...beforeElements.map(e => parseInt(e.computedStyle.getPropertyValue("margin-before") || "0")));
   }
 
   static getMaxMarginAfter(element: HtmlElement): number {
-    const afterElements = this.getAfterElements(element);
+    const afterElements = this.getLastChildren(element).concat(element); // child-last-chain
+    // console.log("afterElements for %s is %o", element.tagName, afterElements);
     return Math.max(0, ...afterElements.map(e => parseInt(e.computedStyle.getPropertyValue("margin-after") || "0")));
   }
 
@@ -176,6 +167,14 @@ export class BlockMargin {
     }
     // [cur = block(with normal flow layout)]
     if (curEnv.display.isBlockLevel()) {
+      // has before border
+      if (curEnv.edge.border.width.before > 0) {
+        if (prevEnv) {
+          const maxMarginAfter = this.getMaxMarginAfter(prevEnv.element);
+          return Math.max(curEnv.edge.margin.before, maxMarginAfter);
+        }
+        return curEnv.edge.margin.before;
+      }
       const isInternalBlock = !parentEnv.display.isFlowRoot() && parentEnv.display.isBlockLevel() && !parentEnv.position.isAbsolute() && parentEnv.float.isNone();
       if (!prevEnv && isInternalBlock) {
         return 0; // max margin-before is already added by parent block.
