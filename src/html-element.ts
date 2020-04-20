@@ -5,6 +5,9 @@ import {
   SelectorParser,
   ChildNodeFilter,
   NodeEffector,
+  WhiteSpace,
+  ReplacedElement,
+  PhysicalSize,
 } from "./public-api";
 
 // For performance reason, we use this [HtmlElement] class for both [Node] and [HTMLElement].
@@ -366,6 +369,26 @@ export class HtmlElement {
       prev = prev.previousSibling;
     }
     return prev;
+  }
+
+  // atomChild is
+  // 1. text-element consists of non-whitespace content 
+  // 2. replaced element that has valid size.
+  public get firstAtomChild(): HtmlElement | null {
+    for (let i = 0; i < this.childNodes.length; i++) {
+      const child = this.childNodes[i];
+      if (child.isTextElement() && !WhiteSpace.isWhiteSpaceElement(child)) {
+        return child;
+      }
+      if (ReplacedElement.isReplacedElement(child) && !PhysicalSize.load(child).hasZero()) {
+        return child;
+      }
+      const firstAtomChild = child.firstAtomChild;
+      if (firstAtomChild) {
+        return firstAtomChild;
+      }
+    }
+    return null;
   }
 
   public get siblings(): HtmlElement[] {

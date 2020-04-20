@@ -5,36 +5,13 @@ import {
   HtmlElement,
   ILayoutFormatContext,
   FlowFormatContext,
-  WhiteSpace,
   ReplacedElement,
   PhysicalSize,
   LogicalBoxEdge,
   WritingMode,
 } from "./public-api";
 
-function getFirstAtomChildElement(element: HtmlElement): HtmlElement | null {
-  for (let i = 0; i < element.childNodes.length; i++) {
-    const child = element.childNodes[i];
-    if (child.isTextElement()) {
-      if (!WhiteSpace.isWhiteSpaceElement(child)) {
-        return child;
-      }
-    } else if (ReplacedElement.isReplacedElement(child)) {
-      const size = PhysicalSize.load(child);
-      if (size && !size.hasZero()) {
-        return child;
-      }
-    } else {
-      const atomElement = getFirstAtomChildElement(child);
-      if (atomElement) {
-        return atomElement;
-      }
-    }
-  }
-  return null;
-}
-
-function getMinAtomExtent(atomElement: HtmlElement, lineExtent: number, writingMode: WritingMode): number {
+function getAtomExtent(atomElement: HtmlElement, lineExtent: number, writingMode: WritingMode): number {
   if (atomElement.isTextElement()) {
     return lineExtent;
   }
@@ -97,14 +74,14 @@ export class DynamicStyleUtils {
     if (!ctx.parentContext) {
       return undefined;
     }
-    const firstAtomElement = getFirstAtomChildElement(ctx.element);
+    const firstAtomElement = ctx.element.firstAtomChild;
     if (!firstAtomElement) {
       return undefined;
     }
     const restExtent = ctx.parentContext.restExtent;
     const lineExtent = ctx.parentContext.env.font.lineExtent;
     const writingMode = ctx.parentContext.env.writingMode;
-    const minExtent = getMinAtomExtent(firstAtomElement, lineExtent, writingMode) + edge.before;
+    const minExtent = getAtomExtent(firstAtomElement, lineExtent, writingMode) + edge.before;
     if (restExtent < minExtent) {
       return { "page-break-before": "always" };
     }
