@@ -78,7 +78,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   public get flowRoot(): IFlowRootFormatContext {
     let ctx: ILayoutFormatContext | undefined = this;
     while (ctx) {
-      if (ctx.env.display.isFlowRoot()) {
+      if (ctx.env.display.isFlowRoot() || ctx instanceof PageRootFormatContext) {
         return ctx as IFlowRootFormatContext;
       }
       ctx = ctx.parent;

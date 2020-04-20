@@ -63,8 +63,6 @@ export const UserAgentStyles: CssRules = {
     "margin": "1.12em 40px"
   },
   "body": {
-    // In nehan, block margin of body is not collapsed.
-    // Because in paged-media, body always wraps different children for each page.
     "display": "flow-root",
     // "text-align": "justify",
     "font-size": "16px",
