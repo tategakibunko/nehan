@@ -8,7 +8,7 @@ import {
   WhiteSpace,
 } from './public-api'
 
-function isFlowElement(element: HtmlElement): boolean {
+function isCollapseTarget(element: HtmlElement): boolean {
   if (element.isTextElement()) {
     return false;
   }
@@ -61,7 +61,7 @@ export class BlockMargin {
     let last = getLastCollapseTarget(element);
     let lastChildren = [];
     while (last) {
-      if (!isFlowElement(last)) {
+      if (!isCollapseTarget(last)) {
         break;
       }
       if (last.computedStyle.getPropertyValue("border-after-width") !== "0px") {
@@ -77,7 +77,7 @@ export class BlockMargin {
     let first = getFirstCollapseTarget(element);
     let firstChildren = [];
     while (first) {
-      if (!isFlowElement(first)) {
+      if (!isCollapseTarget(first)) {
         break;
       }
       if (first.computedStyle.getPropertyValue("border-before-width") !== "0px") {
