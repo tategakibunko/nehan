@@ -88,10 +88,12 @@ To handle documents that are independent of the character direction, we use the 
 
 To handle documents that are independent of the character direction, we use the `logical direction`.
 
-- `start` means inline level heading direction, `end` means inline level trailing direction.
-- `before` measn block level heading direction, `after` means block level trailing direction.
+- `start` means inline level heading direction.
+- `end` means inline level trailing direction.
+- `before` measn block level heading direction.
+- `after` means block level trailing direction.
 
-#### Example (logical-margin - physical-margin table)
+#### Example1 (logical-margin - physical-margin table)
 
 | logical-direction\writing-mode | horizontal-tb | vertical-rl   | vertical-lr   |
 | ------------------------------ | ------------- | ------------- | ------------- |
@@ -100,7 +102,18 @@ To handle documents that are independent of the character direction, we use the 
 | margin-before                  | margin-top    | margin-right  | margin-left   |
 | margin-after                   | margin-bottom | margin-left   | margin-right  |
 
-### shothanded logical property
+The same is true for `padding` and `border`(`border-xxx-width`, `border-xxx-color`, `border-xxx-style`).
+
+#### Example2 (logical-border-radius - physical-border-radius table)
+
+| logical-direction\writing-mode | horizontal-tb | vertical-rl   | vertical-lr   |
+| ------------------------------ | ------------- | ------------- | ------------- |
+| border-before-start-radius     | border-top-left-radius  | border-top-right-radius    | border-top-left-radius    |
+| border-before-end-radius     | border-top-right-radius  | border-bottom-right-radius    | border-bottom-left-radius    |
+| border-after-end-radius     | border-bottom-right-radius  | border-bottom-left-radius    | border-bottom-right-radius    |
+| border-after-start-radius     | border-bottom-left-radius  | border-top-left-radius    | border-top-right-radius    |
+
+### Shothanded logical property
 
 If you set `margin` like `margin:1em 2em 3em 4em`, then it means `margin-before:1em`, `margin-end:2em`, `margin-after:3em`, `margin-start:4em`.
 
