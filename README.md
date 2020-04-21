@@ -70,15 +70,35 @@ new PagedHtmlDocument("<h1>hello, nehan!</h1>", {
 });
 ```
 
+## About logical size
+
+To handle documents that are independent of the character direction, we use the `logical size`.
+
+- `measure` means the size in the inline direction.
+- `extent` means the size in the block direction.
+
+### logical-size - physical-size table
+
+| logical-size\writing-mode | horizontal-tb | vertical-rl   | vertical-lr   |
+| ------------------------- | ------------- | ------------- | ------------- |
+| measure                   | width         | height        | height        |
+| extent                    | height        | width         | width         |
+
 ## About logical direction
 
-### logical direction(`start` and `end`)
+To handle documents that are independent of the character direction, we use the `logical direction`.
 
-`start` means inline level heading direction, `end` means inline level trailing direction. So if you choose `horizontal-tb` as `writing-mode`, `margin-start` means `margin-left`, and `margin-end` means `margin-right`.
+- `start` means inline level heading direction, `end` means inline level trailing direction.
+- `before` measn block level heading direction, `after` means block level trailing direction.
 
-### logical directoin(`before` and `after`)
+#### Example (logical-margin - physical-margin table)
 
-`before` measn block level heading direction, `after` means block level trailing direction. So if you choose `horizontal-tb` as `writing-mode`, `margin-before` means `margin-top`, and `margin-after` means `margin-bottom`.
+| logical-direction\writing-mode | horizontal-tb | vertical-rl   | vertical-lr   |
+| ------------------------------ | ------------- | ------------- | ------------- |
+| margin-start                   | margin-left   | margin-top    | margin-top    |
+| margin-end                     | margin-right  | margin-bottom | margin-bottom |
+| margin-before                  | margin-top    | margin-right  | margin-left   |
+| margin-after                   | margin-bottom | margin-left   | margin-right  |
 
 ### shothanded logical property
 
