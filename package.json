@@ -44,7 +44,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.9.1",
-    "@types/node": "^12.12.36",
+    "@types/node": "^12.12.37",
     "jest": "^25.4.0",
     "jest-cli": "^25.4.0",
     "node-sass": "^4.13.1",
