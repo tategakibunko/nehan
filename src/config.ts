@@ -141,7 +141,7 @@ export namespace Config {
     /^[\u0021-\u0025\u0027-\u003A\u003C-\u007E\u00C0-\u02A8\u2000-\u206F\uFB00-\uFB06]+/;
 
   // character-reference pattern
-  export let rexRefChar: RegExp = /^&.+?;/;
+  export let rexRefChar: RegExp = /^&[\S]+?;/;
 
   // tate-chu-yoko (unicode)
   // \u203C = DOUBLE EXCLAMATION MARK
