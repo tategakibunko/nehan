@@ -8,6 +8,7 @@ import {
   LogicalInlineReNode,
   LogicalInlineBlockNode,
   LogicalInlineNode,
+  LogicalTextNode,
   LogicalTableCellsNode,
   LogicalLineNode,
   LogicalCursorPos,
@@ -442,7 +443,10 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.pushInlineNode(marker, false);
   }
 
-  public addText(text: ILogicalNode) {
+  public addText(text: LogicalTextNode) {
+    if (text.children.length === 0) {
+      return;
+    }
     this.pushInlineNode(text);
   }
 

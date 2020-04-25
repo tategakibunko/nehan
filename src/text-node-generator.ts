@@ -54,7 +54,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       }
       if (isLineHead) {
         // console.log("lineHead:", this.context);
-        if (this.context.maxMeasure < font.size) {
+        if (this.context.restMeasure < font.size) {
           yield LayoutResult.skip(this.context, "too narrow space");
           break;
         }
