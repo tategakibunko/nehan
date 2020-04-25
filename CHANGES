@@ -8,7 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 7.1.2
 ==========================
-* To prevent infinite loop in some cases, skip text node when rest measure is too small.
+* Skip text node when rest measure is too small even if it's at the head of line.
 * Fixed regexp for character reference.
 
 version 7.1.1, 2020/04/21
