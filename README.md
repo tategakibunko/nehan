@@ -127,7 +127,7 @@ The same is true for `padding` and `border`(`border-xxx-width`, `border-xxx-colo
 
 ## Dynamic Style
 
-You can define functional value for each selector.
+You can define functional value for each selector(css property name is `!xxx`).
 
 In following example, all elements that matches `.require-xx` will cause page-break if rest block size(restExtent) is smaller than `xx`px.
 
@@ -157,12 +157,12 @@ const myStyleSheet = new CssStyleSheet({
 
 ## DOM generation hook
 
-You can define dom generation hook for each selector element like this.
+You can define dom generation hook for each selector element like this(css property name is `@xxx`).
 
 ```typescript
 const myStyleSheet = new CssStyleSheet({
   ".foo": {
-    "@create": (ctx: DomCallbackContext): HTMLElement => {
+    "@create": (ctx: DomCallbackContext) => {
       ctx.dom.onclick = (e) => {
         alert(`${ctx.selector} is clicked!`); // .foo is clicked!
       };
