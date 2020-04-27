@@ -133,7 +133,7 @@ In following example, all elements that matches `.require-xx` will cause page-br
 
 ```typescript
 function requiredExtent(ctx: DynamicStyleContext): CssDeclarationBlock | undefined {
-  const requiredSize = parseInt(ctx.selector.replace(/\.require-(\d+)/, (m, px) => px), 0);
+  const requiredSize = parseInt(ctx.selector.replace(/\.require-(\d+)/, (m, px) => px));
   if(isNaN(requiredSize)){
     return undefined;
   }
