@@ -123,6 +123,54 @@ If you set `margin` like `margin:1em 2em`, then it means `margin-before:1em`, `m
 
 If you set `margin` like `margin:1em`, then it means `margin-before:1em`, `margin-end:1em`, `margin-after:1em`, `margin-start:1em`.
 
+The same is true for `padding` and `border`(`border-xxx-width`, `border-xxx-color`, `border-xxx-style`).
+
+## Dynamic Style
+
+You can define functional value for each selector.
+
+In following example, all elements that matches `.require-xx` will cause page-break if rest block size(restExtent) is smaller than `xx`px.
+
+```typescript
+function requiredExtent(ctx: DynamicStyleContext): CssDeclarationBlock | undefined {
+  const requiredSize = parseInt(ctx.selector.replace(/\.require-(\d+)/, (m, px) => px), 0);
+  if(isNaN(requiredSize)){
+    return undefined;
+  }
+  if(!ctx.parentContext){
+    return undefined;
+  }
+  const restExtent = ctx.parentContext.restExtent;
+  if(restExtent >= requiredSize){
+    return undefined; // enough block size is left!
+  }
+  // restExtent < requiredSize(not enough block size left)
+  return {"pageb-break-before": "always"};
+}
+
+const myStyleSheet = new CssStyleSheet({
+  ".require-60": {
+    "!dynamic": (ctx: DynamicStyleContext) => requiredExtent(ctx)
+  }
+});
+```
+
+## DOM generation hook
+
+You can define dom generation hook for each selector element like this.
+
+```typescript
+const myStyleSheet = new CssStyleSheet({
+  ".foo": {
+    "@create": (ctx: DomCallbackContext): HTMLElement => {
+      ctx.dom.onclick = (e) => {
+        alert(`${ctx.selector} is clicked!`); // .foo is clicked!
+      };
+    }
+  }
+});
+```
+
 ## Demo
 
 [Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja) at Chrome Web Store.
