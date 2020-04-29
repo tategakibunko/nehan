@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.1.3
+==========================
+* Fixed margin from inline-level.
+
 version 7.1.2, 2020/04/25
 ==========================
 * Skip text node when rest measure is too small even if it's at the head of line.

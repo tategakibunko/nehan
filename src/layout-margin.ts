@@ -147,7 +147,7 @@ export class BlockMargin {
         return prevMarginAfter + curMarginBefore;
       }
     }
-    // [cur = text]
+    // [cur = text | inline]
     if (curGen instanceof TextNodeGenerator || curEnv.display.isInlineLevel()) {
       if (!prevEnv) {
         return 0;
