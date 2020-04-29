@@ -108,12 +108,12 @@ export class BlockMargin {
     - : do nothing
 
     -------------------------------------------------
-    | cur / prev | block text/inline float abs  none
+    | cur / prev  | block text/inline float abs  none
     -------------------------------------------------
-    | block      |   o        △        △    △     △
-    | text       |   ▽        -        -    -     -
-    | float      | ▽ + △      -        -    -     △
-    | abs        |   -        -        -    -     -
+    | block       |   o        △        △    △     △
+    | text/inline |   ▽        -        -    -     -
+    | float       | ▽ + △      -        -    -     △
+    | abs         |   -        -        -    -     -
     -------------------------------------------------
   */
   static getFlowMarginFromLastElement(parentEnv: BoxEnv, curGen: ILogicalNodeGenerator, prevGen?: ILogicalNodeGenerator): number {
@@ -148,7 +148,7 @@ export class BlockMargin {
       }
     }
     // [cur = text]
-    if (curGen instanceof TextNodeGenerator) {
+    if (curGen instanceof TextNodeGenerator || curEnv.display.isInlineLevel()) {
       if (!prevEnv) {
         return 0;
       }
