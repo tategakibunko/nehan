@@ -112,7 +112,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
           }
           this.context.addText(textNode);
         } else if (value.type === 'ruby') {
-          this.context.addInline(value.body);
+          this.context.addRuby(value.body);
         } else if (value.type === 'inline-link') {
           this.context.addInlineLink(value.body);
         } else if (value.type === 're-inline') {
