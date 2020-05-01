@@ -5,10 +5,7 @@ import {
 } from "./public-api";
 
 export type TextEmphasisStroke = "filled" | "open" | "none"
-const DefaultStroke: TextEmphasisStroke = "none"
-
 export type TextEmphasisMark = "dot" | "circle" | "double-circle" | "triangle" | "sesame"
-const DefaultMark: TextEmphasisMark = "dot"
 
 const EmphaEncodeMaps: { [value: string]: string } = {
   "filled dot": "\u2022",
@@ -39,8 +36,8 @@ export class TextEmphasisStyle {
   static load(element: HtmlElement): TextEmphasisStyle {
     const value = CssCascade.getValue(element, this.property);
     const cssText = new CssText({ prop: this.property, value: value });
-    let stroke = DefaultStroke;
-    let mark = DefaultMark;
+    let stroke: TextEmphasisStroke = "none";
+    let mark: TextEmphasisMark = "dot";
     cssText.split().forEach(value => {
       if (this.isStrokeValue(value)) {
         stroke = value;
