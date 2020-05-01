@@ -36,7 +36,7 @@ export namespace Config {
   export let ignoreZeroRe = true;
 
   // debug log settings.
-  export let debugResourceLoader = false; // debug pre-loading process for resources.
+  export let debugImageLoader = false; // debug pre-loading process for <img>, <video>.
   export let debugCharacter = false; // enable debug log even if it's single character.
   export let debugLayout = false; // enable debug log in layout-context and layout-generator.
 

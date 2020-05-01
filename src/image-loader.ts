@@ -1,17 +1,17 @@
 import {
-  ResourceLoaderContext,
-  HtmlElement,
   Config,
-  ResourceLoaderCallbacks,
+  HtmlElement,
+  ImageLoaderContext,
+  ImageLoaderCallbacks,
 } from "./public-api";
 
-export class ResourceLoader {
-  constructor(private imageElements: HtmlElement[], private context: ResourceLoaderContext) { }
+export class ImageLoader {
+  constructor(private imageElements: HtmlElement[], private context: ImageLoaderContext) { }
 
-  public async loadImages(callbacks: ResourceLoaderCallbacks): Promise<boolean> {
+  public async load(callbacks: ImageLoaderCallbacks): Promise<boolean> {
     try {
       const images = await Promise.all(this.imageElements.map(element => {
-        const $node = (element.$node as HTMLImageElement);
+        const $node = element.$node as HTMLImageElement;
         if ($node.width && $node.height) {
           this.context.successCount++;
           if (callbacks.onProgressImage) {
@@ -28,7 +28,7 @@ export class ResourceLoader {
       return true;
     }
     catch (reason) {
-      if (Config.debugResourceLoader) {
+      if (Config.debugImageLoader) {
         console.error(reason);
       }
       return false;
@@ -45,7 +45,7 @@ export class ResourceLoader {
   // 1. load image data from [srcAttr].
   // 2. get image width/height.
   // 3. set width/height to attribute.
-  private loadImage(element: HtmlElement, srcAttr: string, callbacks: ResourceLoaderCallbacks): Promise<HtmlElement> {
+  private loadImage(element: HtmlElement, srcAttr: string, callbacks: ImageLoaderCallbacks): Promise<HtmlElement> {
     return new Promise<HtmlElement>((resolve, reject) => {
       const $node = element.$node as HTMLElement;
       const image = document.createElement("img") as HTMLImageElement;
@@ -58,7 +58,7 @@ export class ResourceLoader {
         image.setAttribute("data-src", dataSrc);
       }
       if (!src && !dataSrc) {
-        if (Config.debugResourceLoader) {
+        if (Config.debugImageLoader) {
           console.error("Invalid resource. Both src and data-src are not defined:", element);
         }
         this.context.errorCount++;
@@ -73,7 +73,7 @@ export class ResourceLoader {
         $node.setAttribute("width", String(image.width));
         $node.setAttribute("height", String(image.height));
 
-        if (Config.debugResourceLoader) {
+        if (Config.debugImageLoader) {
           console.info("%s is successfully loaded(%dx%d)", image.src, image.width, image.height);
         }
         this.context.successCount++;
@@ -83,7 +83,7 @@ export class ResourceLoader {
         resolve(element);
       };
       image.onerror = (reason: any) => {
-        if (Config.debugResourceLoader) {
+        if (Config.debugImageLoader) {
           console.error(reason);
         }
         this.context.errorCount++;

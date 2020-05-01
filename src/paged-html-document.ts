@@ -9,19 +9,19 @@ import {
   ILogicalNodeEvaluator,
   ILayoutOutlineEvaluator,
   LayoutOutlineEvaluator,
-  ResourceLoader,
   WritingMode,
   HoriCssEvaluator,
   HoriLogicalNodeEvaluator,
   VertCssEvaluator,
   VertLogicalNodeEvaluator,
   LogicalTextJustifier,
-  ResourceLoaderContext,
+  ImageLoader,
+  ImageLoaderContext,
 } from './public-api';
 
 export interface PagedHtmlRenderOptions {
-  onProgressImage?: (ctx: ResourceLoaderContext) => void
-  onCompleteImage?: (ctx: ResourceLoaderContext) => void
+  onProgressImage?: (ctx: ImageLoaderContext) => void
+  onCompleteImage?: (ctx: ImageLoaderContext) => void
   onPage?: (context: { caller: PagedHtmlDocument, page: Page }) => void;
   onComplete?: (context: { caller: PagedHtmlDocument, time: number, pageCount: number }) => void;
 }
@@ -115,8 +115,8 @@ export class PagedHtmlDocument extends HtmlDocument {
 
   public render(options: PagedHtmlRenderOptions = {}): PagedHtmlDocument {
     const images = this.querySelectorAll("img").concat(this.querySelectorAll("video"));
-    const context = new ResourceLoaderContext(images.length);
-    new ResourceLoader(images, context).loadImages(options).then(_ => {
+    const context = new ImageLoaderContext(images.length);
+    new ImageLoader(images, context).load(options).then(_ => {
       this.timestamp = performance.now();
       this.renderAsync(options);
     });

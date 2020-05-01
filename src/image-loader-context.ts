@@ -1,9 +1,9 @@
-export class ResourceLoaderCallbacks {
-  onProgressImage?: (ctx: ResourceLoaderContext) => void
-  onCompleteImage?: (ctx: ResourceLoaderContext) => void
+export class ImageLoaderCallbacks {
+  onProgressImage?: (ctx: ImageLoaderContext) => void
+  onCompleteImage?: (ctx: ImageLoaderContext) => void
 }
 
-export class ResourceLoaderContext {
+export class ImageLoaderContext {
   public totalItemCount: number;
   public successCount: number;
   public errorCount: number;
