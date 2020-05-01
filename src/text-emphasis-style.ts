@@ -33,15 +33,6 @@ export class TextEmphasisStyle {
   public mark: TextEmphasisMark;
   static property: string = "text-emphasis-style";
 
-  static isStrokeValue(value: string): boolean {
-    return StrokeValues.includes(value);
-  }
-
-  static isMarkValue(value: string): boolean {
-    return MarkValues.includes(value);
-  }
-
-  /*
   static isStrokeValue(value: string): value is TextEmphasisStroke {
     return StrokeValues.includes(value);
   }
@@ -49,14 +40,13 @@ export class TextEmphasisStyle {
   static isMarkValue(value: string): value is TextEmphasisMark {
     return MarkValues.includes(value);
   }
-  */
 
   static load(element: HtmlElement): TextEmphasisStyle {
     const value = CssCascade.getValue(element, this.property);
-    const css_text = new CssText({ prop: this.property, value: value });
-    const css_values = css_text.split();
-    const stroke: TextEmphasisStroke = css_values.find(val => this.isStrokeValue(val)) || DefaultStroke;
-    const mark: TextEmphasisMark | undefined = css_values.find(val => this.isMarkValue(val)) || DefaultMark;
+    const cssText = new CssText({ prop: this.property, value: value });
+    const cssValues = cssText.split();
+    const stroke: TextEmphasisStroke = cssValues.find(val => this.isStrokeValue(val)) || DefaultStroke;
+    const mark: TextEmphasisMark | undefined = cssValues.find(val => this.isMarkValue(val)) || DefaultMark;
     return new TextEmphasisStyle(stroke, mark);
   }
 
@@ -69,16 +59,20 @@ export class TextEmphasisStyle {
     return [this.stroke, this.mark];
   }
 
-  public get value(): string {
-    return this.values.join(" ");
-  }
-
   public get scale(): number {
-    return 1.0; // TODO
+    switch (this.mark) {
+      case "circle":
+      case "double-circle":
+      case "triangle":
+      case "sesame":
+        return 0.5;
+    }
+    return 1.0;
   }
 
   public get text(): string {
-    return EmphaEncodeMaps[this.value] || "\u2022";
+    const key = this.values.join(" ");
+    return EmphaEncodeMaps[key] || "\u2022";
   }
 
   public isNone(): boolean {

@@ -9,6 +9,7 @@ import {
 export interface TextEmphaData {
   text: string;
   styles: string[];
+  scale: number;
 }
 
 export class TextEmphasis {
@@ -58,7 +59,8 @@ export class TextEmphasis {
   public get textEmphaData(): TextEmphaData {
     return {
       text: this.text,
-      styles: this.style.values
+      styles: this.style.values,
+      scale: this.style.scale,
     };
   }
 
