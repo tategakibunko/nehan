@@ -1,12 +1,10 @@
 import {
   Config,
   HtmlElement,
+  PagedHtmlRenderOptions,
 } from "./public-api";
 
-export class ImageLoaderCallbacks {
-  onProgressImage?: (ctx: ImageLoaderContext) => void
-  onCompleteImage?: (ctx: ImageLoaderContext) => void
-}
+export type ImageLoaderCallbacks = Pick<PagedHtmlRenderOptions, "onProgressImage" | "onCompleteImage">
 
 export class ImageLoaderContext {
   public totalItemCount: number;
