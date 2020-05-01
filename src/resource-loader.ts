@@ -1,41 +1,100 @@
 import {
-  HtmlDocument,
   ResourceLoaderContext,
   HtmlElement,
-  Image,
+  Config,
   ResourceLoaderCallbacks,
 } from "./public-api";
 
 export class ResourceLoader {
-  static loadImageAll(document: HtmlDocument, callbacks?: ResourceLoaderCallbacks): Promise<HtmlDocument> {
-    const images = document.querySelectorAll("img");
-    const videos = document.querySelectorAll("video");
-    const imgElements = images.concat(videos);
-    const context = new ResourceLoaderContext(imgElements.length, callbacks);
-    return Promise.all(imgElements.map(element => {
-      switch (element.tagName) {
-        case "img": return this.loadImage(element, "src", context);
-        case "video": return this.loadImage(element, "poster", context);
+  constructor(private imageElements: HtmlElement[], private context: ResourceLoaderContext) { }
+
+  public async loadImages(callbacks: ResourceLoaderCallbacks): Promise<boolean> {
+    try {
+      const images = await Promise.all(this.imageElements.map(element => {
+        const $node = (element.$node as HTMLImageElement);
+        if ($node.width && $node.height) {
+          this.context.successCount++;
+          if (callbacks.onProgressImage) {
+            callbacks.onProgressImage(this.context);
+          }
+          return Promise.resolve(element);
+        }
+        const imageAttr = this.getImageAttr(element.tagName);
+        return this.loadImage(element, imageAttr, callbacks);
+      }));
+      if (callbacks.onCompleteImage) {
+        callbacks.onCompleteImage(this.context);
       }
-    }))
-      .then(images => {
-        return new Promise((resolve, reject) => {
-          resolve(document);
-        });
-      })
-      .catch(reason => {
-        return new Promise((resolve, reject) => {
-          resolve(document);
-        });
-      }) as Promise<HtmlDocument>;
+      return true;
+    }
+    catch (reason) {
+      if (Config.debugResourceLoader) {
+        console.error(reason);
+      }
+      return false;
+    }
   }
 
-  static loadImage(element: HtmlElement, srcAttr: string, context: ResourceLoaderContext): Promise<HtmlElement> {
-    const $node = element.$node as HTMLImageElement;
-    if ($node.width && $node.height) {
-      context.success(element);
-      return Promise.resolve(element);
+  private getImageAttr(tagName: string): string {
+    switch (tagName) {
+      case "video": return "poster";
+      default: return "src";
     }
-    return Image.load(element, srcAttr, context);
+  }
+
+  // 1. load image data from [srcAttr].
+  // 2. get image width/height.
+  // 3. set width/height to attribute.
+  private loadImage(element: HtmlElement, srcAttr: string, callbacks: ResourceLoaderCallbacks): Promise<HtmlElement> {
+    return new Promise<HtmlElement>((resolve, reject) => {
+      const $node = element.$node as HTMLElement;
+      const image = document.createElement("img") as HTMLImageElement;
+      const src = $node.getAttribute(srcAttr);
+      if (src) {
+        image.setAttribute("src", src);
+      }
+      const dataSrc = $node.getAttribute("data-src");
+      if (dataSrc) {
+        image.setAttribute("data-src", dataSrc);
+      }
+      if (!src && !dataSrc) {
+        if (Config.debugResourceLoader) {
+          console.error("Invalid resource. Both src and data-src are not defined:", element);
+        }
+        this.context.errorCount++;
+        if (callbacks.onProgressImage) {
+          callbacks.onProgressImage(this.context);
+        }
+        resolve(element);
+        return;
+      }
+      image.onload = (evt: Event) => {
+        // console.log("image.onload:width=%d, height=%d", image.width, image.height);
+        $node.setAttribute("width", String(image.width));
+        $node.setAttribute("height", String(image.height));
+
+        if (Config.debugResourceLoader) {
+          console.info("%s is successfully loaded(%dx%d)", image.src, image.width, image.height);
+        }
+        this.context.successCount++;
+        if (callbacks.onProgressImage) {
+          callbacks.onProgressImage(this.context);
+        }
+        resolve(element);
+      };
+      image.onerror = (reason: any) => {
+        if (Config.debugResourceLoader) {
+          console.error(reason);
+        }
+        this.context.errorCount++;
+        if (callbacks.onProgressImage) {
+          callbacks.onProgressImage(this.context);
+        }
+        if (!element.getAttribute("alt")) {
+          $node.setAttribute("style", "display:none");
+        }
+        resolve(element);
+      }
+    });
   }
 }

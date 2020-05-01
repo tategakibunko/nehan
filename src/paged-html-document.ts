@@ -1,17 +1,14 @@
 import {
   Config,
   Page,
-  HtmlElement,
   HtmlDocument,
   HtmlDocumentOptions,
   LogicalNodeGenerator,
   ILogicalNodeGenerator,
   LogicalBlockNode,
   ILogicalNodeEvaluator,
-  WritingModeValue,
   ILayoutOutlineEvaluator,
   LayoutOutlineEvaluator,
-  ResourceLoadingContext,
   ResourceLoader,
   WritingMode,
   HoriCssEvaluator,
@@ -19,11 +16,12 @@ import {
   VertCssEvaluator,
   VertLogicalNodeEvaluator,
   LogicalTextJustifier,
+  ResourceLoaderContext,
 } from './public-api';
 
 export interface PagedHtmlRenderOptions {
-  onProgressImage?: (ctx: ResourceLoadingContext) => void
-  onCompleteImage?: (ctx: ResourceLoadingContext) => void
+  onProgressImage?: (ctx: ResourceLoaderContext) => void
+  onCompleteImage?: (ctx: ResourceLoaderContext) => void
   onPage?: (context: { caller: PagedHtmlDocument, page: Page }) => void;
   onComplete?: (context: { caller: PagedHtmlDocument, time: number, pageCount: number }) => void;
 }
@@ -116,7 +114,9 @@ export class PagedHtmlDocument extends HtmlDocument {
   }
 
   public render(options: PagedHtmlRenderOptions = {}): PagedHtmlDocument {
-    ResourceLoader.loadImageAll(this, options).then(doc => {
+    const images = this.querySelectorAll("img").concat(this.querySelectorAll("video"));
+    const context = new ResourceLoaderContext(images.length);
+    new ResourceLoader(images, context).loadImages(options).then(_ => {
       this.timestamp = performance.now();
       this.renderAsync(options);
     });
