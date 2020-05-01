@@ -55,8 +55,13 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const textNode = document.createElement("div");
     textNode.appendChild(document.createTextNode(char.text));
     emphaNode.appendChild(document.createTextNode(empha.text));
+    if (empha.scale < 1.0) {
+      emphaNode.style.fontSize = String(empha.scale) + "em";
+      emphaNode.style.paddingLeft = String(empha.scale / 2) + "em";
+    }
     node.style.textAlign = "center";
     node.style.display = "flex";
+    node.style.alignItems = "center";
     node.appendChild(textNode);
     node.appendChild(emphaNode);
     return node;
