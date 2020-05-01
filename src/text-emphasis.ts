@@ -15,10 +15,10 @@ export class TextEmphasis {
   public style!: TextEmphasisStyle;
   public color!: string;
 
-  static parseShorthand(css_text: CssText): PropValue<string, string>[] {
-    let vals = css_text.split();
+  static parseShorthand(cssText: CssText): PropValue<string, string>[] {
+    let vals = cssText.split();
     let declr: PropValue<string, string>[] = [];
-    if (css_text.value === "none" || vals.length === 0) {
+    if (cssText.value === "none" || vals.length === 0) {
       return declr;
     }
     let stroke = "", mark = "", color = "";
@@ -42,10 +42,10 @@ export class TextEmphasis {
   }
 
   static load(element: HtmlElement): TextEmphasis {
-    let text_empha = new TextEmphasis();
-    text_empha.style = TextEmphasisStyle.load(element);
-    text_empha.color = TextEmphasis.loadColor(element);
-    return text_empha;
+    let textEmpha = new TextEmphasis();
+    textEmpha.style = TextEmphasisStyle.load(element);
+    textEmpha.color = TextEmphasis.loadColor(element);
+    return textEmpha;
   }
 
   static loadColor(element: HtmlElement): string {
