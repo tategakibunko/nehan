@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.2.1, 2020/05/01
+==========================
+* Fixed type guards for text-emphasis.
+
 version 7.2.0, 2020/05/01
 ==========================
 ! Renamed class(ResourceLoader -> ImageLoader, ResourceLoaderContext -> ImageLoaderContext).

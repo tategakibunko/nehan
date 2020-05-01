@@ -1,18 +1,13 @@
 import {
-  Utils,
   CssText,
-  HtmlElement,
   CssCascade,
+  HtmlElement,
 } from "./public-api";
 
-const StrokeValues = ["filled", "open", "none"]
-const Strokes = Utils.Enum.fromArray(StrokeValues)
-export type TextEmphasisStroke = keyof typeof Strokes
+export type TextEmphasisStroke = "filled" | "open" | "none"
 const DefaultStroke: TextEmphasisStroke = "none"
 
-const MarkValues = ["dot", "circle", "double-circle", "triangle", "sesame"]
-const Marks = Utils.Enum.fromArray(MarkValues)
-export type TextEmphasisMark = keyof typeof Marks
+export type TextEmphasisMark = "dot" | "circle" | "double-circle" | "triangle" | "sesame"
 const DefaultMark: TextEmphasisMark = "dot"
 
 const EmphaEncodeMaps: { [value: string]: string } = {
@@ -34,19 +29,25 @@ export class TextEmphasisStyle {
   static property: string = "text-emphasis-style";
 
   static isStrokeValue(value: string): value is TextEmphasisStroke {
-    return StrokeValues.includes(value);
+    return value === "filled" || value === "open";
   }
 
   static isMarkValue(value: string): value is TextEmphasisMark {
-    return MarkValues.includes(value);
+    return value === "dot" || value === "circle" || value === "double-circle" || value === "triangle" || value === "sesame";
   }
 
   static load(element: HtmlElement): TextEmphasisStyle {
     const value = CssCascade.getValue(element, this.property);
     const cssText = new CssText({ prop: this.property, value: value });
-    const cssValues = cssText.split();
-    const stroke: TextEmphasisStroke = cssValues.find(val => this.isStrokeValue(val)) || DefaultStroke;
-    const mark: TextEmphasisMark | undefined = cssValues.find(val => this.isMarkValue(val)) || DefaultMark;
+    let stroke = DefaultStroke;
+    let mark = DefaultMark;
+    cssText.split().forEach(value => {
+      if (this.isStrokeValue(value)) {
+        stroke = value;
+      } else if (this.isMarkValue(value)) {
+        mark = value;
+      }
+    })
     return new TextEmphasisStyle(stroke, mark);
   }
 
