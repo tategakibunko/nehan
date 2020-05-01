@@ -73,6 +73,10 @@ export class TextEmphasisStyle {
     return this.values.join(" ");
   }
 
+  public get scale(): number {
+    return 1.0; // TODO
+  }
+
   public get text(): string {
     return EmphaEncodeMaps[this.value] || "\u2022";
   }
