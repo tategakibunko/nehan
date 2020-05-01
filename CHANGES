@@ -6,8 +6,9 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.1.3
+version 7.2.0
 ==========================
+! Renamed class(ResourceLoader -> ImageLoader, ResourceLoaderContext -> ImageLoaderContext).
 * Fixed the case that ruby isn't displayed when Config.ignoreEmptyInline is true and parent display is inline.
 * Fixed margin from inline-level.
 
