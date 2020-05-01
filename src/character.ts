@@ -29,17 +29,3 @@ export interface ICharacter {
   toString: () => string;
   acceptEvaluator: (visitor: ILogicalNodeEvaluator) => HTMLElement | Node;
 }
-
-export type EmphasizableChar = Char | RefChar;
-
-export let isCharacter = (value: any) => {
-  return (value instanceof Char ||
-    value instanceof SpaceChar ||
-    value instanceof HalfChar ||
-    value instanceof RefChar ||
-    value instanceof SmpUniChar ||
-    value instanceof MixChar ||
-    value instanceof DualChar ||
-    value instanceof Tcy ||
-    value instanceof Word);
-};
