@@ -44,6 +44,10 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const textNode = document.createElement("div");
     emphaNode.appendChild(document.createTextNode(empha.text));
     textNode.appendChild(document.createTextNode(char.text));
+    if (empha.scale < 1.0) {
+      emphaNode.style.fontSize = String(empha.scale) + "em";
+      emphaNode.style.paddingBottom = String(empha.scale / 2) + "em";
+    }
     node.style.display = "inline-block";
     node.style.textAlign = "center";
     node.appendChild(emphaNode);
