@@ -27,7 +27,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
   constructor(
     public context: FlowFormatContext,
     protected blockReducer: ILayoutReducer = BlockReducer.instance,
-    protected lineFormatReducer: ILayoutReducer = LineReducer.instance,
+    protected lineReducer: ILayoutReducer = LineReducer.instance,
   ) {
     this.generator = this.createGenerator();
   }
@@ -77,7 +77,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
       // before switching to next block, check there is inlines that are not still wrapped by anon-line-box.
       if ((!float.isNone() || display.isBlockLevel()) && this.context.inlineNodes.length > 0) {
         // console.info("sweep out remaining inlines as line");
-        const line = this.context.acceptLayoutReducer(this.lineFormatReducer);
+        const line = this.context.acceptLayoutReducer(this.lineReducer);
         this.context.addLine(line.body); // never overflows!
       }
       this.context.curChildStartMargin = InlineMargin.getMarginFromParentBlock(childElement);
@@ -134,12 +134,12 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
         }
         if (value.type === 'line-break') {
           const isBr = value.body.env.element.tagName === "br";
-          const line = this.context.acceptLayoutReducer(this.lineFormatReducer, isBr);
+          const line = this.context.acceptLayoutReducer(this.lineReducer, isBr);
           this.context.addLine(line.body);
         } else if (value.type === 'page-break') {
           // sweep out rest inline
           if (this.context.inlineNodes.length > 0) {
-            const line = this.context.acceptLayoutReducer(this.lineFormatReducer, false);
+            const line = this.context.acceptLayoutReducer(this.lineReducer, false); // isBr = false
             this.context.addLine(line.body);
           }
           const block = this.context.acceptLayoutReducer(this.blockReducer);
@@ -210,7 +210,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     } // while (childElement !== null)
 
     if (this.context.inlineNodes.length > 0) {
-      const line = this.context.acceptLayoutReducer(this.lineFormatReducer, false);
+      const line = this.context.acceptLayoutReducer(this.lineReducer, false); // isBr = false
       this.context.addLine(line.body);
     }
 

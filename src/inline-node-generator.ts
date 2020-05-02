@@ -66,10 +66,19 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
       }
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;
+      // [example]
+      // In this example, text1 is swept out by <p>, and text3 is swept out by <div>.
+      // <span><b>text1<p>p1</p>text2<div>text3</div></span>
       if (this.context.child.context.env.display.isBlockLevel()) {
         if (this.context.inlineNodes.length > 0) {
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield LayoutResult.lineBreak(this.context, "sweep out inlines for next block(inside inline)");
+        }
+        // [example]
+        // In this example, div.parentBlock.localPos.start > 0 when div start in span(inline level).
+        // text1<span><div>text2</div></span>text2
+        if (this.context.parentBlock && this.context.parentBlock.localPos.start > 0) {
+          yield LayoutResult.lineBreak(this.context, "line break from inner inline");
         }
       }
       // If cur child has some margin between latest flow block, add it before yielding it's content.
