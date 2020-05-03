@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.2.3
+==========================
+* Removed node-sass from devDependencies.
+
 version 7.2.2, 2020/05/02
 ==========================
 * Added line-break before block level inside inline if inline pos of parent block is larger than zero.
