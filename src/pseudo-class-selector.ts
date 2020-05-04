@@ -26,7 +26,10 @@ export class PseudoClassSelector extends Selector {
   }
 
   public testFirstChild(element: HtmlElement): boolean {
-    return element.index === 0;
+    if (element.parent) {
+      return element.parent.firstElementChild === element;
+    }
+    return true; // root node is always first-child itself.
   }
 
   private getNthExpr(src: string): string {
