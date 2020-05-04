@@ -341,7 +341,7 @@ export class HtmlElement {
   }
 
   public get lastElementChild(): HtmlElement | null {
-    let children = this.children;
+    const children = this.children;
     return children[children.length - 1] || null;
   }
 
