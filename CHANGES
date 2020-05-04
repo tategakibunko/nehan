@@ -8,6 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 7.2.3
 ==========================
+* Fixed first-child selector.
 * Removed node-sass from devDependencies.
 
 version 7.2.2, 2020/05/02
