@@ -25,20 +25,6 @@ export class PseudoClassSelector extends Selector {
     return this.testEven(element) === false;
   }
 
-  public testFirstChild(element: HtmlElement): boolean {
-    if (element.parent) {
-      return element.parent.firstElementChild === element;
-    }
-    return true; // root node is always first-child itself.
-  }
-
-  public testLastChild(element: HtmlElement): boolean {
-    if (element.parent) {
-      return element.parent.lastElementChild === element;
-    }
-    return true; // root node is always last-child itself.
-  }
-
   private getNthExpr(src: string): string {
     return src.replace(/\s/g, "").replace(/^nth-child\((.+)\)/, "$1");
   }
@@ -75,7 +61,7 @@ export class PseudoClassSelector extends Selector {
   }
 
   public testNthChild(element: HtmlElement): boolean {
-    return this.testNthExpr(element.index);
+    return this.testNthExpr(element.indexOfElement);
   }
 
   // TODO
@@ -85,10 +71,10 @@ export class PseudoClassSelector extends Selector {
 
   public test(element: HtmlElement): boolean {
     if (this.src === "first-child") {
-      return this.testFirstChild(element);
+      return element.isFirstElementChild();
     }
     if (this.src === "last-child") {
-      return this.testLastChild(element);
+      return element.isLastElementChild();
     }
     if (this.src === "odd") {
       return this.testOdd(element);

@@ -275,12 +275,18 @@ export class HtmlElement {
   }
 
   public isFirstChild(): boolean {
-    return this.siblings.indexOf(this) === 0;
+    if (!this.parent) {
+      return true;
+    }
+    return this.parent.childNodes.indexOf(this) === 0;
   }
 
   public isLastChild(): boolean {
-    const siblings = this.siblings;
-    return (siblings.length > 0) ? siblings[siblings.length - 1] === this : false;
+    if (!this.parent) {
+      return true;
+    }
+    const children = this.parent.childNodes;
+    return children[children.length - 1] === this;
   }
 
   public isFirstElementChild(): boolean {
@@ -291,8 +297,11 @@ export class HtmlElement {
   }
 
   public isLastElementChild(): boolean {
-    let siblings = this.siblings.filter(sib => !sib.isTextElement());
-    return (siblings.length > 0) ? siblings[siblings.length - 1] === this : false;
+    if (!this.parent) {
+      return true;
+    }
+    const children = this.parent.children;
+    return children[children.length - 1] === this;
   }
 
   public isNthChild(nth: number): boolean {
@@ -400,24 +409,28 @@ export class HtmlElement {
 
   public get index(): number {
     if (!this.parent) {
-      return -1;
+      return 0;
     }
     return this.parent.childNodes.indexOf(this);
   }
 
   public get indexOfType(): number {
     if (!this.parent) {
-      return -1;
+      return 0;
     }
-    let siblings = this.parent.childNodes.filter(child => child.tagName === this.tagName);
-    return siblings.indexOf(this);
+    return this.parent.childNodes.filter(child => child.tagName === this.tagName).indexOf(this);
+  }
+
+  public get indexOfElement(): number {
+    if (!this.parent) {
+      return 0;
+    }
+    return this.parent.children.indexOf(this);
   }
 
   // HTMLElement only
   public get children(): HtmlElement[] {
-    return this.childNodes.filter((element) => {
-      return element.isTextElement() === false;
-    });
+    return this.childNodes.filter(element => !element.isTextElement());
   }
 
   public getAttribute(name: string): string | null {
