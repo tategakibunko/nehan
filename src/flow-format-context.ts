@@ -57,7 +57,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   public get inlineRoot(): IFlowFormatContext {
     let ctx: ILayoutFormatContext | undefined = this;
     while (ctx) {
-      if (ctx.env.display.isBlockLevel()) {
+      if (ctx.env.display.isBlockLevel() || ctx.env.display.isFlowRoot()) {
         return ctx as IFlowFormatContext;
       }
       ctx = ctx.parent;

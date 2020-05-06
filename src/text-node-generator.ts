@@ -55,7 +55,8 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       if (isLineHead) {
         // console.log("lineHead:", this.context);
         if (this.context.restMeasure < font.size) {
-          yield LayoutResult.skip(this.context, "too narrow space");
+          const msg = `too narrow space: restM:${this.context.restMeasure}, start:${this.context.inlineRoot.cursorPos.start}`;
+          yield LayoutResult.skip(this.context, msg);
           break;
         }
       }
@@ -131,7 +132,9 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
         } else {
           lexer.pushBack();
           this.hyphenator.hyphenate(this.context);
-          yield this.context.acceptLayoutReducer(this.reducer, true);
+          if (this.context.characters.length > 0) {
+            yield this.context.acceptLayoutReducer(this.reducer, true);
+          }
           yield LayoutResult.lineBreak(this.context, "char token overflows measure");
         }
       } else {
