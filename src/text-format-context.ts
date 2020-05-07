@@ -62,7 +62,20 @@ export class TextFormatContext implements ILayoutFormatContext {
 
   // parent of text node must have some inlines.
   public isLineHead(): boolean {
-    return this.cursorPos.start === 0 && this.inlineRoot.inlineNodes.length === 0;
+    if (this.cursorPos.start > 0) {
+      return false;
+    }
+    let ctx: ILayoutFormatContext | undefined = this.parent;
+    while (ctx) {
+      if (ctx.env.display.isBlockLevel() || ctx.env.display.isFlowRoot()) {
+        return (ctx as IFlowFormatContext).inlineNodes.length === 0;
+      }
+      if (ctx.cursorPos.start > 0) {
+        return false;
+      }
+      ctx = ctx.parent;
+    }
+    throw new Error("inline root not found!");
   }
 
   public get maxMeasure(): number {
