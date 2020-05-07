@@ -29,6 +29,7 @@ export type LayoutResultType =
   'skip' |
   'page-break' |
   'line-break' |
+  'iblock-inline-break' |
   LogicalNodeType
 
 export class LayoutResult {
@@ -44,6 +45,14 @@ export class LayoutResult {
       console.log("created line-break(%s):", msg, ctx);
     }
     return new LayoutResult('line-break', ctx);
+  }
+
+  // This command is output from text-gen when the inline-block starts where the remaining size of the inline is too small.
+  static iblockInlineBreak(ctx: ILayoutFormatContext, msg = ""): LayoutResult {
+    if (Config.debugLayout) {
+      console.log("created iblock-inline-break(%s):", msg, ctx);
+    }
+    return new LayoutResult('iblock-inline-break', ctx);
   }
 
   static pageBreak(ctx: ILayoutFormatContext, msg = ""): LayoutResult {

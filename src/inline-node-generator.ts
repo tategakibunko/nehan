@@ -104,6 +104,8 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
         if (value.type === 'line-break') {
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield value; // line-break
+        } else if (value.type == 'iblock-inline-break') {
+          yield value; // delegate to parent.
         } else if (value.type === 'page-break') {
           if (this.context.inlineNodes.length > 0) {
             yield this.context.acceptLayoutReducer(this.reducer, true);

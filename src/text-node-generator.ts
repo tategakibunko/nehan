@@ -55,9 +55,13 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
       if (isLineHead) {
         // console.log("lineHead:", this.context);
         if (this.context.restMeasure < font.size) {
-          const msg = `too narrow space: restM:${this.context.restMeasure}, start:${this.context.inlineRoot.cursorPos.start}`;
-          yield LayoutResult.skip(this.context, msg);
-          break;
+          if (this.context.inlineRoot.env.display.isInlineBlockFlow()) {
+            yield LayoutResult.iblockInlineBreak(this.context, "iblock starts from too narrow space");
+          } else {
+            const msg = `too narrow space: restM:${this.context.restMeasure}, start:${this.context.inlineRoot.cursorPos.start}`;
+            yield LayoutResult.skip(this.context, msg);
+            break;
+          }
         }
       }
       const token: ICharacter = lexer.getNext();
