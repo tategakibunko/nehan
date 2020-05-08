@@ -65,8 +65,7 @@ export class InlineReducer implements ILayoutReducer {
     if (indent) {
       context.cursorPos.start = 0;
     }
-    // console.log("reduceInline:%o", inlineNode);
-    console.log("[%s] InlineReducer: size:%s, %s", context.name, inlineNode.size.toString(), text);
+    // console.log("[%s] InlineReducer: size:%s, %s", context.name, inlineNode.size.toString(), text);
     return LayoutResult.logicalNode(this.type, inlineNode);
   }
 }
@@ -202,8 +201,7 @@ export class LineReducer implements ILayoutReducer {
     context.cursorPos.start = 0;
     context.inlineNodes = [];
     context.inlineText = "";
-    // console.log("[%s] reduceLine:%o(isBr=%o)", context.name, lineNode, isBr);
-    console.log("[%s] LineReducer: size:%s, %s", context.name, lineNode.size.toString(), text);
+    // console.log("[%s] LineReducer: size:%s, %s", context.name, lineNode.size.toString(), text);
     return LayoutResult.logicalNode('line', lineNode);
   }
 }
@@ -223,8 +221,7 @@ export class BlockReducer implements ILayoutReducer {
       size.extent -= context.getBorderCollapseAfterSize();
     }
     const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children, context.progress);
-    console.log("[%s] BlockReducer: size:%s, %s", context.name, blockNode.size.toString(), text);
-    // console.log("[%s] reduceBlock(%s) as %s at %s, %o", context.name, size.toString(), this.type, pos.toString(), blockNode.text);
+    // console.log("[%s] BlockReducer: size:%s, %s", context.name, blockNode.size.toString(), text);
     context.text = "";
     context.blockNodes = [];
     context.cursorPos = LogicalCursorPos.zero;
@@ -250,8 +247,7 @@ export class RootBlockReducer implements ILayoutReducer {
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
     const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children, context.progress);
-    // console.log("[%s] reduceRootBlock at %s, %o", context.name, pos.toString(), blockNode.text);
-    console.log("[%s] RootBlockReducer: size:%s, %s", context.name, blockNode.size.toString(), text);
+    // console.log("[%s] RootBlockReducer: size:%s, %s", context.name, blockNode.size.toString(), text);
     context.text = "";
     context.blockNodes = [];
     context.floatNodes = [];
@@ -282,8 +278,7 @@ export class InlineBlockReducer implements ILayoutReducer {
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
     const iblockNode = new LogicalInlineBlockNode(context.env, pos, size, autoSize, text, edge, children);
-    console.log("[%s] InlineBlockReducer: size:%s, %s", context.name, iblockNode.size.toString(), text);
-    // console.log("[%s] reduceInlineBlock at %s, %o", context.name, pos.toString(), iblockNode);
+    // console.log("[%s] InlineBlockReducer: size:%s, %s", context.name, iblockNode.size.toString(), text);
     context.text = "";
     context.blockNodes = [];
     context.floatNodes = [];
