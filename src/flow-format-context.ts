@@ -263,10 +263,9 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public get autoContentInlineBlockSize(): LogicalSize {
-    return new LogicalSize({
-      measure: this.cursorPos.start,
-      extent: this.cursorPos.before - this.contextBoxEdge.borderWidth.extent
-    });
+    const measure = Math.max(...this.blockNodes.map(block => block.measure));
+    const extent = this.cursorPos.before - this.contextBoxEdge.borderWidth.extent
+    return new LogicalSize({ measure, extent });
   }
 
   // localPos = position from start-before-corner of border box.
