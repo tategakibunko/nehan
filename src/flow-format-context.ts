@@ -257,13 +257,13 @@ export class FlowFormatContext implements IFlowFormatContext {
 
   // shrink to fit size
   public get contentInlineBlockSize(): LogicalSize {
-    const measure = Math.max(...this.blockNodes.map(block => block.measure));
+    const measure = this.env.measure || Math.max(...this.blockNodes.map(block => block.measure));
     const extent = (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent;
     return new LogicalSize({ measure, extent });
   }
 
   public get autoContentInlineBlockSize(): LogicalSize {
-    const measure = Math.max(...this.blockNodes.map(block => block.measure));
+    const measure = this.env.measure || Math.max(...this.blockNodes.map(block => block.measure));
     const extent = this.cursorPos.before - this.contextBoxEdge.borderWidth.extent
     return new LogicalSize({ measure, extent });
   }
@@ -424,7 +424,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addInlineBlock(inlineBlock: LogicalInlineBlockNode) {
-    if (Config.ignoreEmptyInline && inlineBlock.children.length === 0) {
+    if (Config.ignoreEmptyInline && inlineBlock.size.hasZero() && inlineBlock.children.length === 0) {
       return;
     }
     this.pushInlineNode(inlineBlock);
