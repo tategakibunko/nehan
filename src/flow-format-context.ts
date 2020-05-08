@@ -242,15 +242,29 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.rootExtent;
   }
 
-  public get contentBoxSize(): LogicalSize {
+  public get contentBlockSize(): LogicalSize {
     const measure = this.maxMeasure;
     const extent = (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent;
     return new LogicalSize({ measure, extent });
   }
 
-  public get autoContentBoxSize(): LogicalSize {
+  public get autoContentBlockSize(): LogicalSize {
     return new LogicalSize({
       measure: this.maxMeasure,
+      extent: this.cursorPos.before - this.contextBoxEdge.borderWidth.extent
+    });
+  }
+
+  // shrink to fit size
+  public get contentInlineBlockSize(): LogicalSize {
+    const measure = Math.max(...this.blockNodes.map(block => block.measure));
+    const extent = (this.env.extent || this.cursorPos.before) - this.contextBoxEdge.borderWidth.extent;
+    return new LogicalSize({ measure, extent });
+  }
+
+  public get autoContentInlineBlockSize(): LogicalSize {
+    return new LogicalSize({
+      measure: this.cursorPos.start,
       extent: this.cursorPos.before - this.contextBoxEdge.borderWidth.extent
     });
   }

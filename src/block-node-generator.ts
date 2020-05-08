@@ -137,14 +137,19 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
           const line = this.context.acceptLayoutReducer(this.lineReducer, isBr);
           this.context.addLine(line.body);
         } else if (value.type === 'iblock-inline-break') {
-          if (this.context.inlineNodes.length > 0) {
+          // inline-block
+          if (this.context.env.display.isInlineBlockFlow()) {
+            const line = this.context.acceptLayoutReducer(this.lineReducer, false); // isBr = false
+            if (line.body.size.hasZero()) {
+              yield value; // propagate to parent
+            } else {
+              this.context.addLine(line.body);
+            }
+          }
+          // block level
+          else {
             const line = this.context.acceptLayoutReducer(this.lineReducer, false); // isBr = false
             this.context.addLine(line.body);
-          }
-          if (this.context.env.display.isInlineBlockFlow()) {
-            const block = this.context.acceptLayoutReducer(this.blockReducer);
-            yield block;
-            yield value; // propagate to parent(until block level).
           }
         } else if (value.type === 'page-break') {
           // sweep out rest inline

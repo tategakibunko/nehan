@@ -102,13 +102,18 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
           break;
         }
         if (value.type === 'line-break') {
-          yield this.context.acceptLayoutReducer(this.reducer, true);
+          yield this.context.acceptLayoutReducer(this.reducer, true); // indent = true
           yield value; // line-break
         } else if (value.type == 'iblock-inline-break') {
-          yield value; // delegate to parent.
+          if (this.context.inlineNodes.length > 0) {
+            yield this.context.acceptLayoutReducer(this.reducer, true); // indent = true
+            yield LayoutResult.lineBreak(this.context, "inline: iblock-inline-break -> line-break");
+          } else {
+            yield value; // propagate to parent.
+          }
         } else if (value.type === 'page-break') {
           if (this.context.inlineNodes.length > 0) {
-            yield this.context.acceptLayoutReducer(this.reducer, true);
+            yield this.context.acceptLayoutReducer(this.reducer, true); // indent = true
             yield value; // page-break
           } else {
             yield value; // page-break
@@ -131,7 +136,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
         } else if (value.type === 'inline-block') {
           this.context.addInlineBlock(value.body);
         } else if (value.isBlockLevel()) {
-          yield value; // delegate to parent.
+          yield value; // propagate to parent.
         }
       }
       prevChildGen = childGen.generator;
