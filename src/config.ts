@@ -75,7 +75,6 @@ export namespace Config {
     "background-image",
     "background-color",
     "background-position",
-    "color",
     "z-index"
   ]
 

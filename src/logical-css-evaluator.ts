@@ -1,6 +1,7 @@
 import {
   Config,
   Font,
+  Color,
   LogicalSize,
   LogicalPos,
   LogicalCursorPos,
@@ -20,6 +21,7 @@ import {
 
 export interface ILogicalCssEvaluator {
   visitFont: (font: Font) => NativeStyleMap;
+  visitColor: (color: Color) => NativeStyleMap;
   visitSize: (size: LogicalSize) => NativeStyleMap;
   visitPos: (pos: LogicalCursorPos) => NativeStyleMap;
   visitLogicalPos: (pos: LogicalPos) => NativeStyleMap;
@@ -56,6 +58,12 @@ export class LogicalCssEvaluator implements ILogicalCssEvaluator {
     css.set("font-stretch", font.stretch);
     css.set("font-size", font.size + "px");
     css.set("font-family", font.family);
+    return css;
+  }
+
+  visitColor(color: Color): NativeStyleMap {
+    const css = new NativeStyleMap();
+    css.set("color", color.value);
     return css;
   }
 

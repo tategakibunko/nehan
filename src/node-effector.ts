@@ -515,6 +515,7 @@ export class CssComputedValueLoader implements NodeEffector {
     }
 
     this.setCascadedValue(element, "writing-mode");
+    this.setCascadedValue(element, "color");
     this.setFontSize(element);
     this.setLineHeight(element);
 

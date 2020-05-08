@@ -140,6 +140,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.display = "inline-block";
     node.style.textAlign = "center";
     rubyNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    rubyNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     rubyNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
   }
@@ -152,6 +153,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.overflow = "visible";
     node.style.top = lineNode.pos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    lineNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
 
     const baseLineNode = document.createElement("div");
@@ -178,6 +180,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.marginLeft = inlineNode.edge.margin.start + "px";
     node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    inlineNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
     inlineNode.children.forEach(child => {
@@ -192,6 +195,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.marginLeft = inlineNode.edge.margin.start + "px";
     node.style.marginRight = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    inlineNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
     inlineNode.children.forEach(child => {
@@ -353,6 +357,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.marginLeft = linkNode.edge.margin.start + "px";
     node.style.marginRight = linkNode.edge.margin.end + "px";
     linkNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    linkNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.element.style.callDomCallbacks(linkNode, node);
     linkNode.children.forEach(child => {

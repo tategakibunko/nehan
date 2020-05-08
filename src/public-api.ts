@@ -61,6 +61,7 @@ export * from "./dynamic-style-context"
 export * from "./dynamic-style-utils"
 export * from "./dynamic-style"
 export * from "./font"
+export * from './color'
 export * from "./id-selector"
 export * from "./layout-outline-callbacks"
 export * from "./layout-outline-parser"

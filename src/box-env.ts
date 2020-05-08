@@ -6,6 +6,7 @@ import {
   Position,
   WritingMode,
   Font,
+  Color,
   LogicalBoxEdge,
   LogicalFloat,
   LogicalTextAlign,
@@ -32,6 +33,7 @@ export class BoxEnv {
   public element: HtmlElement;
   public measure: number | null;
   public extent: number | null;
+  public color: Color
   public absPos: LogicalPos;
   public display: Display;
   public position: Position;
@@ -56,6 +58,7 @@ export class BoxEnv {
 
   constructor(element: HtmlElement) {
     this.element = element;
+    this.color = Color.load(element);
     this.measure = LogicalSize.loadMeasure(element);
     this.extent = LogicalSize.loadExtent(element);
     this.float = LogicalFloat.load(element);
