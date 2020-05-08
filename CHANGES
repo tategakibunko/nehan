@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.2.5, 2020/05/08
+==========================
+* Fixed measure size of inline-block in some cases.
+
 version 7.2.4, 2020/05/08
 ==========================
 * Fixed inline-block size in some cases.
