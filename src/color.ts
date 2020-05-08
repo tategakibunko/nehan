@@ -26,7 +26,7 @@ import {
   As a result, <b>.color is not inherited to <p> in output form of DOM collectly.
   Because parent of <p> is no longer <b>(but div.parent) in output form of DOM!
 
-  This is why we have to treat 'color' property inside nehan.
+  This is why we have to treat 'color' inside nehan.
 */
 export class Color {
   private constructor(public value: string) { }
