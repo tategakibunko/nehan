@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.2.7
+version 7.2.7, 2020/05/09
 ==========================
 * Use specified length for the size of inline block even if it's zero.
 * Fixed justify spacing size.
