@@ -6,5 +6,6 @@ src
 example
 tests
 local
+debug
 v6-backups
 *.txt
