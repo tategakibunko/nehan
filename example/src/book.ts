@@ -1,3 +1,5 @@
+// Normally, you can import nehan like following.
+// import * as Nehan from "nehan";
 import * as Nehan from "../../dist";
 import * as SampleReader from "./sample-document";
 
