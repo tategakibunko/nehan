@@ -44,11 +44,11 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.9.1",
-    "@types/node": "^12.12.43",
+    "@types/node": "^12.12.44",
     "jest": "^25.5.4",
     "jest-cli": "^25.5.4",
     "ts-jest": "^24.3.0",
     "ts-loader": "^6.2.2",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.5"
   }
 }
