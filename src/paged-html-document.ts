@@ -10,11 +10,7 @@ import {
   ILayoutOutlineEvaluator,
   LayoutOutlineEvaluator,
   WritingMode,
-  HoriCssEvaluator,
-  HoriLogicalNodeEvaluator,
-  VertCssEvaluator,
-  VertLogicalNodeEvaluator,
-  LogicalTextJustifier,
+  LogicalNodeEvaluatorFactory,
   ImageLoader,
   ImageLoaderContext,
 } from './public-api';
@@ -35,34 +31,9 @@ export class PagedHtmlDocument extends HtmlDocument {
   constructor(src: string, options: HtmlDocumentOptions = { styleSheets: [] }) {
     super(src, options);
     this.generator = options.generator || LogicalNodeGenerator.createRoot(this.body);
-    this.evaluator = options.evaluator || this.createEvaluator(WritingMode.load(this.body));
+    this.evaluator = options.evaluator || LogicalNodeEvaluatorFactory.createEvaluator(WritingMode.load(this.body));
     this.pages = [];
     this.timestamp = 0;
-  }
-
-  private createEvaluator(writingMode: WritingMode): ILogicalNodeEvaluator {
-    switch (writingMode.value) {
-      case "horizontal-tb":
-        return new HoriLogicalNodeEvaluator(
-          writingMode,
-          new HoriCssEvaluator(writingMode),
-          LogicalTextJustifier.instance,
-        );
-      case "vertical-rl":
-        return new VertLogicalNodeEvaluator(
-          writingMode,
-          new VertCssEvaluator(writingMode),
-          LogicalTextJustifier.instance,
-        );
-      case "vertical-lr":
-        return new VertLogicalNodeEvaluator(
-          writingMode,
-          new VertCssEvaluator(writingMode),
-          LogicalTextJustifier.instance,
-        );
-      default:
-        throw new Error(`undefined writing mode: ${writingMode.value}`);
-    }
   }
 
   private addPageNode(node: LogicalBlockNode): Page {
