@@ -25,13 +25,15 @@ import {
   LogicalBoxEdge,
   ILogicalTextJustifier,
   WritingMode,
+  HoriCssEvaluator,
+  LogicalTextJustifier,
 } from './public-api'
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(
     private writingMode: WritingMode,
-    private cssVisitor: ILogicalCssEvaluator,
-    private textJustifier: ILogicalTextJustifier,
+    private cssVisitor: ILogicalCssEvaluator = new HoriCssEvaluator(writingMode),
+    private textJustifier: ILogicalTextJustifier = LogicalTextJustifier.instance,
   ) { }
 
   visitChar(char: Char): HTMLElement | Node {

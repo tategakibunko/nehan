@@ -26,13 +26,15 @@ import {
   ILogicalTextJustifier,
   ILogicalNode,
   WritingMode,
+  VertCssEvaluator,
+  LogicalTextJustifier,
 } from './public-api'
 
 export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(
     private writingMode: WritingMode,
-    private cssVisitor: ILogicalCssEvaluator,
-    private textJustifier: ILogicalTextJustifier,
+    private cssVisitor: ILogicalCssEvaluator = new VertCssEvaluator(writingMode),
+    private textJustifier: ILogicalTextJustifier = LogicalTextJustifier.instance,
   ) { }
 
   private isReOrIblock(node: ILogicalNode): boolean {
