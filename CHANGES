@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.2.9
+==========================
+* Fixed tsconfig(removed: module:"commonjs", added: moduleResolution: "node").
+
 version 7.2.8, 2020/06/07
 ==========================
 o Added LogicalNodeEvaluatorFactory.
