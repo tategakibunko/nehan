@@ -42,12 +42,13 @@ export type CssRules = { [selector: string]: CssDeclarationBlock };
     selector: string,
     name: string,
     element: HtmlElement,
-    parentContext: FlowContext
+    parentContext?: ILayoutFormatContext
   } -> css_declr_block | undefined
 
   and dom_callback = {
     selector:string,
-    box:LogicalBox,
+    name: string, // callback name starts with '@'(for example '@create')
+    box:ILogicalNode,
     dom:HTMLElement
   } -> unit
 
