@@ -30,14 +30,14 @@
     },
     "globals": {
       "ts-jest": {
-        "tsConfig": "../src/tsconfig.json",
+        "tsConfig": "./tsconfig.json",
         "diagnostics": {
           "warnOnly": true
         }
       }
     },
     "testMatch": [
-      "**/tests/**/*.test.ts"
+      "**/src/**/*.test.ts"
     ]
   },
   "author": "Watanabe Masaki",

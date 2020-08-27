@@ -1,4 +1,4 @@
-import { LogicalRect, LogicalCursorPos, LogicalSize } from '../dist';
+import { LogicalRect, LogicalCursorPos, LogicalSize } from './public-api';
 
 test("logical-rect.end/after", () => {
   const r1 = new LogicalRect(new LogicalCursorPos({ start: 0, before: 0 }), new LogicalSize({ measure: 100, extent: 100 }));

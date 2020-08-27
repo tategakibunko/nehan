@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 //let text = "&shy;foo&shy;haa";
 //let text = "goﬀ";

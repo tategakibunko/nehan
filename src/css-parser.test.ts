@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 test("CssParser.parseInlineStyle", () => {
   const declrs = Nehan.CssParser.parseInlineStyle("  font-size : 1em; margin:1em ");

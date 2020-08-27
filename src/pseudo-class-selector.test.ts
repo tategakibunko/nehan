@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 test("nth-child(2)", () => {
   let pseudo = new Nehan.PseudoClassSelector("nth-child(2)");

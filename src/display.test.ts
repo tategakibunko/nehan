@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 test("block", () => {
   let display = new Nehan.Display("block" as Nehan.DisplayValue);

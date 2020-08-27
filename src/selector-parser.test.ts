@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 test("selector parser simple", () => {
   let query = "main>div";

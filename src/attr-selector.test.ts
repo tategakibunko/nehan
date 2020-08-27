@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 test("attr-selector[title]", () => {
   let element = new Nehan.HtmlDocument("").createElement("div");

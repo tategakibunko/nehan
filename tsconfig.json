@@ -8,7 +8,7 @@
     ],
     "sourceMap": true,
     "declaration": true,
-    "outDir": "../dist",
+    "outDir": "./dist",
     "strict": true,
     "preserveConstEnums": true,
     "pretty": false,
@@ -16,8 +16,14 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
   },
+  "include": [
+    "src/**/*",
+  ],
   "exclude": [
+    "src/**/*.test.ts",
     "node_modules",
+    "local",
+    "example",
     "dist",
   ]
 }

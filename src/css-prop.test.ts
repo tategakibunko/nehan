@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 test("normalize to chain-case", () => {
   expect(new Nehan.CssProp("fontSize").value).toBe("font-size");

@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 test("sort", () => {
   let s1 = new Nehan.Specificity(1, 0, 0);

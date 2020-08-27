@@ -1,4 +1,4 @@
-import { CssLength, HtmlDocument, CssStyleSheet } from "../dist";
+import { CssLength, HtmlDocument, CssStyleSheet } from "./public-api";
 
 let test_style = new CssStyleSheet({
   "body": {

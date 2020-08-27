@@ -1,4 +1,4 @@
-import { HtmlDocument, CssLength } from '../dist';
+import { HtmlDocument, CssLength } from './public-api';
 
 test("CssEdgeSize(border by keyword value)", () => {
   let element = new HtmlDocument("").createElement("div");

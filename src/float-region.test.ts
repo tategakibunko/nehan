@@ -3,7 +3,7 @@ import {
   LogicalSize,
   LogicalRect,
   LogicalCursorPos,
-} from '../dist';
+} from './public-api';
 
 test("float-region(scenario 1)", () => {
   const region = new FloatRegion(new LogicalSize({ measure: 100, extent: 100 }), 0);

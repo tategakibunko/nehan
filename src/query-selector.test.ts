@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 test("querySelector from different query root", () => {
   let doc = new Nehan.HtmlDocument([

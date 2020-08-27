@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 let sample_list = function () {
   let list = new Nehan.DomTokenList();

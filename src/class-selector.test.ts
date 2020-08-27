@@ -1,4 +1,4 @@
-import * as Nehan from '../dist';
+import * as Nehan from './public-api';
 
 let doc = new Nehan.HtmlDocument("");
 
