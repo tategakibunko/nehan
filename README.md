@@ -10,6 +10,12 @@ Html layout engine for paged-media written by [Typescript](https://www.typescrip
 npm install nehan
 ```
 
+## Build
+
+```
+make -f Makefile.public
+```
+
 ## Example
 
 See [example](https://github.com/tategakibunko/nehan/tree/master/example) directory.

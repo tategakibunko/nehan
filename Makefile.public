@@ -1,4 +1,6 @@
+TSC=./node_modules/typescript/bin/tsc
+
 all:engine
 
 engine:
-	cd src && make -f Makefile.public
+	rm -rf dist/* && $(TSC)
