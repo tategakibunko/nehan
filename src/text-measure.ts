@@ -94,7 +94,7 @@ class EasyTextMetricsMeasure implements TextMetricsMeasure {
 const textMetricsMeasure: TextMetricsMeasure =
   OffCanvasTextMetricsMeasure.isEnabled() ? new OffCanvasTextMetricsMeasure() :
     CanvasTextMetricsMeasure.isEnabled() ? new CanvasTextMetricsMeasure() :
-      typeof DomNodeTextMetricsMeasure.isEnabled() ? new DomNodeTextMetricsMeasure() :
+      DomNodeTextMetricsMeasure.isEnabled() ? new DomNodeTextMetricsMeasure() :
         new EasyTextMetricsMeasure();
 
 export class TextMeasure {
