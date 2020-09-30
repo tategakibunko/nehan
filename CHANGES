@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.3.5, 2020/09/30
+==========================
+* Fixed initializer of TextMetricsMeasure.
+
 version 7.3.4, 2020/09/30
 ==========================
 * Removed extra debug code.
