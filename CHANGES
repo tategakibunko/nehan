@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.3.3, 2020/09/30
+==========================
+o Set more strict measure using canvas2d context(for safari, firefox).
+
 version 7.3.2, 2020/09/30
 ==========================
 * Fixed space size for Safari, Firefox.
