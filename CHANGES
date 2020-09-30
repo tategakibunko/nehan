@@ -6,6 +6,12 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.3.7, 2020/10/01
+==========================
+o Added jest-canvas-mock.
+* Removed unused class from text-measure.
+* Fixed warning in html-element.test.ts.
+
 version 7.3.6, 2020/09/30
 ==========================
 o Added Config.useStrictFormatContextName.
