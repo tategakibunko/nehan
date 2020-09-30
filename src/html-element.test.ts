@@ -47,7 +47,7 @@ test("removeChild(first)", () => {
     "</div>",
   ].join(""));
   let div = d.body.firstChild;
-  let first = div!.removeChild(div!.firstChild);
+  let first = div!.removeChild(div!.firstChild!);
   expect(first.className).toBe("foo");
   expect(div!.firstChild!.className).toBe("bar");
 });

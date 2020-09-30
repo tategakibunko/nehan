@@ -21,6 +21,9 @@
   ],
   "jest": {
     "testURL": "http://localhost/",
+    "setupFiles": [
+      "jest-canvas-mock"
+    ],
     "moduleFileExtensions": [
       "ts",
       "js"
@@ -46,6 +49,7 @@
     "@types/jest": "^26.0.14",
     "@types/node": "^12.12.62",
     "jest": "^26.4.2",
+    "jest-canvas-mock": "^2.3.0",
     "jest-cli": "^26.4.2",
     "ts-jest": "^26.4.1",
     "ts-loader": "^8.0.4",
