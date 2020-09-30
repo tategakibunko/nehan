@@ -6,24 +6,13 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.3.5, 2020/09/30
+version 7.3.6, 2020/09/30
 ==========================
-* Fixed initializer of TextMetricsMeasure.
-
-version 7.3.4, 2020/09/30
-==========================
-* Removed extra debug code.
-
-version 7.3.3, 2020/09/30
-==========================
+o Added Config.useStrictFormatContextName.
 o Set more strict measure using canvas2d context(for safari, firefox).
-
-version 7.3.2, 2020/09/30
-==========================
+* Fixed initializer of TextMetricsMeasure.
+* Removed extra debug code.
 * Fixed space size for Safari, Firefox.
-
-version 7.3.1, 2020/09/30
-==========================
 * Added work around of 'text-combine-upright' for Safari(use '-webkit-text-combine: horizontal' instead).
 
 version 7.3.0, 2020/07/02
