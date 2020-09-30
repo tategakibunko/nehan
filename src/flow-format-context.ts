@@ -41,7 +41,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   public progress: number;
 
   constructor(public env: BoxEnv, public parent?: ILayoutFormatContext) {
-    this.name = env.element.toString(true);
+    this.name = Config.useStrictFormatContextName ? env.element.toString(true) : env.element.getNodeName();
     this.cursorPos = LogicalCursorPos.zero;
     this.contextBoxEdge = new ContextBoxEdge(env.edge);
     this.suspendedGens = [];

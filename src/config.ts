@@ -39,6 +39,7 @@ export namespace Config {
   export let debugImageLoader = false; // debug pre-loading process for <img>, <video>.
   export let debugCharacter = false; // enable debug log even if it's single character.
   export let debugLayout = false; // enable debug log in layout-context and layout-generator.
+  export let useStrictFormatContextName = false; // enable strict path of FormatContextName(like body>p>span(0)).
 
   export let defaultFontSize = 16;
   export let defaultFontFamily = [
