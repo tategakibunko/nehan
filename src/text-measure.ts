@@ -15,6 +15,9 @@ function createOffscreenCanvasContext2d(): OffscreenCanvasRenderingContext2D | n
 }
 
 function createCanvasContext2d(): CanvasRenderingContext2D | null {
+  if (typeof document === "undefined") { // for jest testing by node.
+    return null;
+  }
   const canvas = document.createElement("canvas");
   canvas.style.display = "hidden";
   canvas.style.width = canvas.style.height = "0";
@@ -22,9 +25,9 @@ function createCanvasContext2d(): CanvasRenderingContext2D | null {
   return canvas.getContext("2d");
 }
 
-function createDummyElement(): HTMLElement {
+function createDummyElement(): HTMLElement | null {
   if (typeof document === "undefined") {
-    return { style: {}, innerHTML: "" } as HTMLElement; // for node.js(local stub)
+    return null; // for jest testing by node.
   }
   const dom = document.createElement("span"); // for browser
   const style = dom.style;
@@ -72,10 +75,13 @@ class CanvasTextMetricsMeasure implements TextMetricsMeasure {
 class DomNodeTextMetricsMeasure implements TextMetricsMeasure {
   static node = createDummyElement();
   static isEnabled(): boolean {
-    return typeof document !== "undefined";
+    return this.node !== null;
   }
   getMeasure(text: string, font: Font): number {
     const node = DomNodeTextMetricsMeasure.node;
+    if (!node) {
+      return 0;
+    }
     node.style.font = font.css;
     node.innerHTML = text;
     document.body.appendChild(node);
