@@ -66,6 +66,12 @@ export class SpaceChar implements ICharacter {
     empha?: TextEmphaData;
   }) {
     this.size = TextMeasure.getWordSize(opts.font, this.text);
+    // In Safari & Firefox(offscreen-canvas is not supported),
+    // width of getBoundingClientRect for white-spaces is zero.
+    // So this is work around for Safari, Firefox etc.
+    if (this.size.measure === 0) {
+      this.size.measure = this.size.extent * this.info.advanceRate;
+    }
   }
 
   public toString(): string {
