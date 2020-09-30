@@ -70,6 +70,7 @@ export class SpaceChar implements ICharacter {
     // width of getBoundingClientRect for white-spaces is zero.
     // So this is work around for Safari, Firefox etc.
     if (this.size.measure === 0) {
+      console.log("measure is zero!");
       this.size.measure = this.size.extent * this.info.advanceRate;
     }
   }
