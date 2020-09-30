@@ -120,6 +120,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = document.createElement("div");
     node.style.writingMode = "vertical-rl";
     node.style.textCombineUpright = "all";
+    node.style.setProperty("-webkit-text-combine", "horizontal"); // for Safari
     node.appendChild(document.createTextNode(tcy.text));
     return node;
   }
