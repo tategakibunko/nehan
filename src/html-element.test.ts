@@ -13,9 +13,9 @@ test("children.length", () => {
 });
 
 test("getPrevElement", () => {
-  expect(div.children[1].previousSibling.tagName).toBe("zero");
-  expect(div.children[2].previousSibling.tagName).toBe("one");
-  expect(div.children[4].previousSibling.tagName).toBe("three");
+  expect(div.children[1].previousSibling!.tagName).toBe("zero");
+  expect(div.children[2].previousSibling!.tagName).toBe("one");
+  expect(div.children[4].previousSibling!.tagName).toBe("three");
 });
 
 test("getNodeName", () => {
@@ -47,9 +47,9 @@ test("removeChild(first)", () => {
     "</div>",
   ].join(""));
   let div = d.body.firstChild;
-  let first = div.removeChild(div.firstChild);
+  let first = div!.removeChild(div!.firstChild);
   expect(first.className).toBe("foo");
-  expect(div.firstChild.className).toBe("bar");
+  expect(div!.firstChild!.className).toBe("bar");
 });
 
 test("removeChild(second)", () => {
@@ -61,9 +61,9 @@ test("removeChild(second)", () => {
     "</div>",
   ].join(""));
   let div = d.body.firstChild;
-  let second = div.removeChild(div.firstChild.nextSibling);
+  let second = div!.removeChild(div!.firstChild!.nextSibling!);
   expect(second.className).toBe("bar");
-  expect(div.firstChild.nextSibling.className).toBe("baz");
+  expect(div!.firstChild!.nextSibling!.className).toBe("baz");
 });
 
 test("removeChild(last)", () => {
@@ -75,7 +75,7 @@ test("removeChild(last)", () => {
     "</div>",
   ].join(""));
   let div = d.body.firstChild;
-  let last = div.removeChild(div.lastChild);
+  let last = div!.removeChild(div!.lastChild!);
   expect(last.className).toBe("baz");
 });
 
@@ -87,9 +87,9 @@ test("replaceChild", () => {
   ].join(""));
   let node = d.createElement("section");
   let div = d.body.firstChild;
-  let new_child = div.replaceChild(node, div.firstChild);
+  let new_child = div!.replaceChild(node, div!.firstChild);
   expect(new_child.tagName).toBe("section");
-  expect(div.firstChild.tagName).toBe("section");
+  expect(div!.firstChild!.tagName).toBe("section");
 });
 
 test("appendChild", () => {
@@ -100,8 +100,8 @@ test("appendChild", () => {
   ].join(""));
   let node = d.createElement("section");
   let div = d.body.firstChild;
-  div.appendChild(node);
-  expect(div.firstChild.nextSibling.tagName).toBe("section");
+  div!.appendChild(node);
+  expect(div!.firstChild!.nextSibling!.tagName).toBe("section");
 });
 
 test("insertBefore", () => {
@@ -113,16 +113,16 @@ test("insertBefore", () => {
     "</div>",
   ].join(""));
   let div = d.querySelector("div");
-  let foo = div.querySelector("span.foo"); // 0
-  let bar = div.querySelector("span.bar"); // 1
-  expect(bar.index).toBe(1);
+  let foo = div!.querySelector("span.foo"); // 0
+  let bar = div!.querySelector("span.bar"); // 1
+  expect(bar!.index).toBe(1);
 
   let new_node = d.createElement("strong");
-  let inserted = div.insertBefore(new_node, bar);
-  expect(inserted.tagName).toBe("strong");
-  expect(inserted.index).toBe(1);
-  expect(bar.index).toBe(2);
-  expect(bar.indexOfType).toBe(1);
+  let inserted = div!.insertBefore(new_node, bar);
+  expect(inserted!.tagName).toBe("strong");
+  expect(inserted!.index).toBe(1);
+  expect(bar!.index).toBe(2);
+  expect(bar!.indexOfType).toBe(1);
 });
 
 test("getElementById", () => {
@@ -132,5 +132,5 @@ test("getElementById", () => {
   ].join(""));
 
   let div_foo = d.getElementById("foo");
-  expect(div_foo.id).toBe("foo");
+  expect(div_foo!.id).toBe("foo");
 });

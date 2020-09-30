@@ -15,9 +15,6 @@ function createOffscreenCanvasContext2d(): OffscreenCanvasRenderingContext2D | n
 }
 
 function createCanvasContext2d(): CanvasRenderingContext2D | null {
-  if (typeof document === "undefined") { // for jest testing by node.
-    return null;
-  }
   const canvas = document.createElement("canvas");
   canvas.style.display = "hidden";
   canvas.style.width = canvas.style.height = "0";
@@ -25,11 +22,8 @@ function createCanvasContext2d(): CanvasRenderingContext2D | null {
   return canvas.getContext("2d");
 }
 
-function createDummyElement(): HTMLElement | null {
-  if (typeof document === "undefined") {
-    return null; // for jest testing by node.
-  }
-  const dom = document.createElement("span"); // for browser
+function createDomContextElement(): HTMLElement {
+  const dom = document.createElement("span");
   const style = dom.style;
   style.display = "inline";
   style.margin = "0";
@@ -73,10 +67,7 @@ class CanvasTextMetricsMeasure implements TextMetricsMeasure {
 }
 
 class DomNodeTextMetricsMeasure implements TextMetricsMeasure {
-  static node = createDummyElement();
-  static isEnabled(): boolean {
-    return this.node !== null;
-  }
+  static node = createDomContextElement();
   getMeasure(text: string, font: Font): number {
     const node = DomNodeTextMetricsMeasure.node;
     if (!node) {
@@ -91,17 +82,9 @@ class DomNodeTextMetricsMeasure implements TextMetricsMeasure {
   }
 }
 
-class EasyTextMetricsMeasure implements TextMetricsMeasure {
-  getMeasure(text: string, font: Font): number {
-    return Math.round(text.length * font.size / 2);
-  }
-}
-
 const textMetricsMeasure: TextMetricsMeasure =
   OffCanvasTextMetricsMeasure.isEnabled() ? new OffCanvasTextMetricsMeasure() :
-    CanvasTextMetricsMeasure.isEnabled() ? new CanvasTextMetricsMeasure() :
-      DomNodeTextMetricsMeasure.isEnabled() ? new DomNodeTextMetricsMeasure() :
-        new EasyTextMetricsMeasure();
+    CanvasTextMetricsMeasure.isEnabled() ? new CanvasTextMetricsMeasure() : new DomNodeTextMetricsMeasure();
 
 export class TextMeasure {
   static getWordSize(font: Font, word: string): LogicalSize {
