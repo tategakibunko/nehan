@@ -52,7 +52,7 @@
     "jest-canvas-mock": "^2.3.0",
     "jest-cli": "^26.6.1",
     "ts-jest": "^26.4.2",
-    "ts-loader": "^8.0.6",
+    "ts-loader": "^8.0.7",
     "typescript": "^3.9.7"
   }
 }
