@@ -48,11 +48,11 @@
   "devDependencies": {
     "@types/jest": "^26.0.15",
     "@types/node": "^12.19.3",
-    "jest": "^26.6.2",
+    "jest": "^26.6.3",
     "jest-canvas-mock": "^2.3.0",
-    "jest-cli": "^26.6.2",
+    "jest-cli": "^26.6.3",
     "ts-jest": "^26.4.3",
-    "ts-loader": "^8.0.7",
+    "ts-loader": "^8.0.9",
     "typescript": "^3.9.7"
   }
 }
