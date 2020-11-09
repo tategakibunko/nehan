@@ -47,12 +47,12 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.15",
-    "@types/node": "^12.19.3",
+    "@types/node": "^12.19.4",
     "jest": "^26.6.3",
     "jest-canvas-mock": "^2.3.0",
     "jest-cli": "^26.6.3",
     "ts-jest": "^26.4.4",
-    "ts-loader": "^8.0.10",
+    "ts-loader": "^8.0.11",
     "typescript": "^3.9.7"
   }
 }
