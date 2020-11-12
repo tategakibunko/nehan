@@ -29,7 +29,7 @@ export class CssRule {
     (a) Initialize pseudo element phase.
       1. rule.test(element, true) => true
          This matching is for searching 'parent element' of pseudo-element.
-      2. rule has some pseudo element(::first-letter), so we inserted '::first-letter' to element. Name it 'peRL'.
+      2. rule has some pseudo element(::first-letter), so we inserted '::first-letter' to element. Name it 'peFL'.
       3. Then we set rule.style to peFL.style.
 
     (b) Matching phase
