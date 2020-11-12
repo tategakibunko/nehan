@@ -349,6 +349,19 @@ export class PseudoElementInitializer implements NodeEffector {
     throw new Error("undefined pseudo element:" + peTagName);
   }
 
+  /*
+    (a) Initialize pseudo element (PseudoElementInitializer) for all rules that contains pseudo-element.
+      1. If rule.test(element, matchAsPeOwner = true) is true,
+         correspond pseudo element is inserted to the element(pseudo element owner).
+         Note that 'rule.test(element, matchAsOwner = true)' is done to find 'owner element' of the pseudo element.
+      2. If owner element of pseudo element is found, then we set rule.style(pseudo element style) to the pseudo element.
+  
+    (b) Matching phase
+      1. Now matching for this rule must be disabled because rule.style is effective against pseudo element,
+         not against owner element.
+         So we call 'test' metdhod with second arugment false.
+         rule.test(element, matchAsPeOwner = false) => false
+  */
   visit(element: HtmlElement) {
     this.pseudoRules.forEach(rule => {
       // assert(rule.peSelector !== null)

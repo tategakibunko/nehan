@@ -60,7 +60,7 @@ export class ComplexSelector extends Selector {
 
   public toString(): string {
     let str = this.leafSelector.toString();
-    for (var spos = 1, cpos = 0; spos < this.selectors.length; spos++ , cpos++) {
+    for (var spos = 1, cpos = 0; spos < this.selectors.length; spos++, cpos++) {
       str = this.selectors[spos].toString() + this.combinators[cpos] + str;
     }
     return str;
@@ -147,7 +147,7 @@ export class ComplexSelector extends Selector {
     return null;
   }
 
-  public test(element: HtmlElement, matchPeRoot = false): boolean {
+  public test(element: HtmlElement, matchAsPeOwner = false): boolean {
     let spos = 0, cpos = 0;
     let slen = this.selectors.length, clen = this.combinators.length;
     let cur: HtmlElement | null = element;
@@ -156,7 +156,7 @@ export class ComplexSelector extends Selector {
         break;
       }
       let left = this.selectors[spos];
-      if (spos === 0 && !left.test(cur, matchPeRoot)) { // if spos > 0, left.test is already executed.
+      if (spos === 0 && !left.test(cur, matchAsPeOwner)) { // if spos > 0, left.test is already executed.
         return false;
       }
       if (cpos >= clen) {

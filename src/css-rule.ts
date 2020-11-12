@@ -18,27 +18,8 @@ export class CssRule {
     return "(rule):" + this.selector.toString();
   }
 
-  /*
-    Matching for parent of pseudo-element is only required once by PseudoElementInitializer.
-    So if matchPeRoot is false, matching for all rule including pseudo element returns false.
-
-    Assume that
-      'element' is p.add-first-letter,
-      'rule' is "p.add-first-letter::first-letter{ font-size: 4em }"
-
-    (a) Initialize pseudo element phase.
-      1. rule.test(element, true) => true
-         This matching is for searching 'parent element' of pseudo-element.
-      2. rule has some pseudo element(::first-letter), so we inserted '::first-letter' to element. Name it 'peFL'.
-      3. Then we set rule.style to peFL.style.
-
-    (b) Matching phase
-      1. Now matching for pseudo-element must be disabled because rule.style is for 'peFL', not for element.style.
-         so we call 'test' metdhod with second arugment false.
-         rule.test(element, false) => false
-  */
-  public test(element: HtmlElement, matchPeRoot = false): boolean {
-    return this.selector.test(element, matchPeRoot);
+  public test(element: HtmlElement, matchAsPeOwner = false): boolean {
+    return this.selector.test(element, matchAsPeOwner);
   }
 
   public get pseudoElementName(): string {
