@@ -47,14 +47,14 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.15",
-    "@types/node": "^12.19.4",
+    "@types/node": "^14.14.7",
     "jest": "^26.6.3",
     "jest-canvas-mock": "^2.3.0",
     "jest-cli": "^26.6.3",
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.11",
+    "typescript": "^3.9.7",
     "webpack": "^5.4.0",
-    "webpack-cli": "^4.2.0",
-    "typescript": "^3.9.7"
+    "webpack-cli": "^4.2.0"
   }
 }
