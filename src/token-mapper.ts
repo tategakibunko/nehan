@@ -1,7 +1,6 @@
-import { ICharacter } from "./character";
-
 import {
   Word,
+  ICharacter,
 } from "./public-api";
 
 export interface TokenMapper<T> {
