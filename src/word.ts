@@ -39,11 +39,7 @@ export class Word implements ICharacter {
 
   // Word("No") => [Tcy("N"), Tcy("o")]
   public toTcys(): Tcy[] {
-    let tcys: Tcy[] = [];
-    for (let i = 0; i < this.text.length; i++) {
-      tcys.push(new Tcy(this.text.charAt(i)));
-    }
-    return tcys;
+    return this.text.split("").map(chr => new Tcy(chr));
   }
 
   // overflow-wrap:break-word
