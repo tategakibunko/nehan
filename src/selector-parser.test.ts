@@ -1,16 +1,18 @@
 import * as Nehan from './public-api';
 
 test("selector parser simple", () => {
-  let query = "main>div";
-  let selector = Nehan.SelectorParser.parse(query);
+  const query = "main>div";
+  const lexer = new Nehan.SelectorLexer(query);
+  const selector = new Nehan.SelectorParser(lexer).parse();
   expect(selector.getSelectorItem(1).getTagName()).toBe("main");
   expect(selector.getSelectorItem(0).getTagName()).toBe("div");
   expect(selector.getCombinatorItem(0)).toBe(">");
 });
 
 test("selector parser complex", () => {
-  let query = "body:first-child > main.foo div * a#hoge[title*=foo]::first-letter";
-  let selector = Nehan.SelectorParser.parse(query);
+  const query = "body:first-child > main.foo div * a#hoge[title*=foo]::first-letter";
+  const lexer = new Nehan.SelectorLexer(query);
+  const selector = new Nehan.SelectorParser(lexer).parse();
   //console.log("query:", query);
   //console.log("cmbs:", cmbs.map((c) => { return "[" + c + "]" }).join(", "));
   //console.log("sels:", sels.map((s) => { return s.toString() }).join(", "));

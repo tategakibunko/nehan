@@ -1,32 +1,34 @@
 import * as Nehan from './public-api';
 
 test("spec", () => {
-  expect(Nehan.SelectorParser.parse("p").specificity).toEqual({
+  expect(new Nehan.SelectorParser(new Nehan.SelectorLexer("p")).parse().specificity).toEqual({
     a: 0, b: 0, c: 1
   });
-  expect(Nehan.SelectorParser.parse("p.hoge").specificity).toEqual({
+  expect(new Nehan.SelectorParser(new Nehan.SelectorLexer("p.hoge")).parse().specificity).toEqual({
     a: 0, b: 1, c: 1
   });
-  expect(Nehan.SelectorParser.parse("p#hoge").specificity).toEqual({
+  expect(new Nehan.SelectorParser(new Nehan.SelectorLexer("p#hoge")).parse().specificity).toEqual({
     a: 1, b: 0, c: 1
   });
-  expect(Nehan.SelectorParser.parse("p#hoge.foo").specificity).toEqual({
+  expect(new Nehan.SelectorParser(new Nehan.SelectorLexer("p#hoge.foo")).parse().specificity).toEqual({
     a: 1, b: 1, c: 1
   });
-  expect(Nehan.SelectorParser.parse("p#hoge.foo>span").specificity).toEqual({
+  expect(new Nehan.SelectorParser(new Nehan.SelectorLexer("p#hoge.foo>span")).parse().specificity).toEqual({
     a: 1, b: 1, c: 2
   });
 });
 
 test("querySelector", () => {
-  let html = "<main><p class='foo'>hoge</p><p>hige</p></main>";
-  let doc = new Nehan.HtmlDocument(html);
-  let query = "body>main>p:nth-child(2)";
-  let selector = Nehan.SelectorParser.parse(query);
+  const html = "<main><p class='foo'>hoge</p><p>hige</p></main>";
+  const doc = new Nehan.HtmlDocument(html);
+  const query = "body>main>p:nth-child(2)";
+  const lexer = new Nehan.SelectorLexer(query);
+  const parser = new Nehan.SelectorParser(lexer);
+  const selector = parser.parse();
   console.info("complex selector:", selector.toString());
   console.info("specificity:", selector.specificity);
-  //let elements = selector.querySelectorAll(doc);
-  let elements = doc.querySelectorAll(query);
+  //const elements = selector.querySelectorAll(doc);
+  const elements = doc.querySelectorAll(query);
   elements.forEach((e) => {
     console.log(e.toString());
   });

@@ -9,6 +9,7 @@ import {
   PropValue,
   SelectorText,
   SelectorParser,
+  SelectorLexer,
   DynamicStyle,
   DynamicStyleCallback,
   DomCallback,
@@ -113,8 +114,9 @@ export class CssParser {
   */
   static parseRule(selectorSrc: string, declrBlock: CssDeclarationBlock): CssRule[] {
     return new SelectorText(selectorSrc).split().map((stext) => {
-      let selector = SelectorParser.parse(stext);
-      let declrs = this.parseDeclarationBlock(stext, declrBlock);
+      const lexer = new SelectorLexer(stext);
+      const selector = new SelectorParser(lexer).parse();
+      const declrs = this.parseDeclarationBlock(stext, declrBlock);
       return new CssRule(selector, declrs);
     });
   }

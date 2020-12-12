@@ -24,11 +24,11 @@ export class Hyphenator implements IHyphenator {
       if (popCount >= context.characters.length) {
         return 0;
       }
-      for (let i = 0; i < popCount; i++) {
-        context.characters.pop();
-        context.text = context.text.slice(0, -1);
-        lexer.setPos(lexer.getPos() - 1);
-      }
+      // console.log("OI-DASHI(before = %s)", context.text);
+      context.characters = context.characters.slice(0, -popCount);
+      context.text = context.characters.reduce((acm, ichar) => acm + ichar.text, "");
+      lexer.pushBack(popCount);
+      // console.log("OI-DASHI(after = %s)", context.text);
     }
     // if offset is plus, it's 'BURA-SAGARI'.
     else if (moveCount > 0) {

@@ -1,5 +1,6 @@
 import {
-  SelectorLexer,
+  ILexer,
+  SelectorToken,
   SimpleSelectors,
   SelectorTokenType,
   UniversalSelector,
@@ -14,7 +15,9 @@ import {
 } from "./public-api";
 
 export class SelectorParser {
-  static normalizeAttr(src: string) {
+  constructor(private lexer: ILexer<SelectorToken>) { }
+
+  private normalizeAttr(src: string) {
     let norm = src.trim()
       .replace(/^\[/, "")
       .replace(/\]$/, "")
@@ -23,7 +26,7 @@ export class SelectorParser {
     return norm;
   }
 
-  static parseAttrSelector(src: string): AttrSelector {
+  private parseAttrSelector(src: string): AttrSelector {
     let body = this.normalizeAttr(src);
     if (body.indexOf("=") < 0) {
       return new AttrSelector(body);
@@ -39,14 +42,14 @@ export class SelectorParser {
     throw new Error("syntax error(attribute selector)");
   }
 
-  static parseCompoundSelector(lexer: SelectorLexer): CompoundSelector {
+  private parseCompoundSelector(): CompoundSelector {
     let loop = true, prop_count = 0;
     let selectors: SimpleSelectors = {
       classSelectors: [],
       pseudoClasses: []
     };
-    while (loop && lexer.hasNext()) {
-      let token = lexer.getNext();
+    while (loop && this.lexer.hasNext()) {
+      let token = this.lexer.getNext();
       switch (token.type) {
         case SelectorTokenType.UNIVERSAL_SELECTOR:
           selectors.univSelector = new UniversalSelector();
@@ -77,7 +80,7 @@ export class SelectorParser {
           prop_count++;
           break;
         default:
-          lexer.pushBack(); // not simple selector
+          this.lexer.pushBack(1); // not simple selector
           loop = false;
           break;
       }
@@ -88,38 +91,37 @@ export class SelectorParser {
     return new CompoundSelector(selectors);
   }
 
-  static parseCombinator(lexer: SelectorLexer): string {
-    let token = lexer.getNext();
+  private parseCombinator(): string {
+    let token = this.lexer.getNext();
     if (token.type !== SelectorTokenType.COMBINATOR) {
       throw new Error("syntax error. combinator required.");
     }
     return token.value;
   }
 
-  static parse(source: string): ComplexSelector {
-    let lexer = new SelectorLexer(source);
+  public parse(): ComplexSelector {
     let selectors: CompoundSelector[] = [];
     let combinators: string[] = [];
     let right = null;
 
     // main div.foo>p
     // => [sel('p'), cmb('>'), sel('div.foo'), cmb(' '), sel('main')]
-    while (lexer.hasNext()) {
+    while (this.lexer.hasNext()) {
       // first right selector
       if (!right) {
-        right = this.parseCompoundSelector(lexer);
+        right = this.parseCompoundSelector();
         selectors.push(right);
       }
-      if (!lexer.hasNext()) {
+      if (!this.lexer.hasNext()) {
         break;
       }
-      let combinator = this.parseCombinator(lexer);
+      let combinator = this.parseCombinator();
       combinators.push(combinator);
-      if (!lexer.hasNext()) {
+      if (!this.lexer.hasNext()) {
         // missing second value of combinator.
         throw new Error("missing left value for combinator[" + combinator + "]");
       }
-      let left = this.parseCompoundSelector(lexer);
+      let left = this.parseCompoundSelector();
       selectors.push(left);
       right = left; // left side selector become next right side selector.
     }

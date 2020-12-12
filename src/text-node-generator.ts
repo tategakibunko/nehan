@@ -93,12 +93,12 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
         if (token instanceof Word) {
           // overflow-wrap: break-word
           if (isLineHead && this.context.env.overflowWrap.isBreakWord()) {
-            lexer.pushBack();
+            lexer.pushBack(1);
             this.context.addCharacter(token.breakWord(this.context.restMeasure));
           }
           // word-break: break-all
           else if (this.context.env.wordBreak.isBreakAll()) {
-            lexer.pushBack();
+            lexer.pushBack(1);
             this.context.addCharacter(token.breakWord(this.context.restMeasure));
           }
           // line-head, but too long word.
@@ -107,7 +107,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           }
           // move this word to head of next line.
           else {
-            lexer.pushBack();
+            lexer.pushBack(1);
             this.hyphenator.hyphenate(this.context);
           }
           yield this.context.acceptLayoutReducer(this.reducer, true);
@@ -124,7 +124,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           // [word2]
           if (!(prevToken instanceof Word && nextToken instanceof Word)) {
             // If this space is not between two words, we have to add it at the begining of next line.
-            lexer.pushBack();
+            lexer.pushBack(1);
           }
           /* else {
             console.log("skip heading space token between two words(%s, %s)", prevToken.text, nextToken.text);
@@ -134,7 +134,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           yield this.context.acceptLayoutReducer(this.reducer, true);
           yield LayoutResult.lineBreak(this.context, "char token overflows measure(by spaceChar)");
         } else {
-          lexer.pushBack();
+          lexer.pushBack(1);
           this.hyphenator.hyphenate(this.context);
           if (this.context.characters.length > 0) {
             yield this.context.acceptLayoutReducer(this.reducer, true);

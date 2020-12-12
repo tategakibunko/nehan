@@ -2,6 +2,7 @@ import {
   HtmlDocument,
   CssStyleDeclaration,
   DomTokenList,
+  SelectorLexer,
   SelectorParser,
   ChildNodeFilter,
   NodeEffector,
@@ -193,14 +194,16 @@ export class HtmlElement {
   }
 
   public querySelectorAll(query: string): HtmlElement[] {
-    let selector = SelectorParser.parse(query);
-    let elements = selector.querySelectorAll(this);
+    const lexer = new SelectorLexer(query);
+    const selector = new SelectorParser(lexer).parse();
+    const elements = selector.querySelectorAll(this);
     return elements;
   }
 
   public querySelector(query: string): HtmlElement | null {
-    let selector = SelectorParser.parse(query);
-    let element = selector.querySelector(this);
+    const lexer = new SelectorLexer(query);
+    const selector = new SelectorParser(lexer).parse();
+    const element = selector.querySelector(this);
     return element;
   }
 

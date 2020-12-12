@@ -1,7 +1,22 @@
-export class Lexer<T> {
+
+export interface TokenMapper<T> {
+  visit: (tokens: T[]) => T[];
+}
+
+export interface ILexer<T> {
+  tokens: T[];
+  src: string;
+  hasNext: () => boolean;
+  getNext: () => T;
+  peek: (offset: number) => T | undefined;
+  pushBack: (count: number) => void;
+  acceptTokenMapper: (visitor: TokenMapper<T>) => void;
+}
+
+export class Lexer<T> implements ILexer<T> {
   public tokens: T[];
   public src: string;
-  public pos: number;
+  protected pos: number;
   protected buff: string;
 
   constructor(src: string, args = {}) {
@@ -10,6 +25,10 @@ export class Lexer<T> {
     this.pos = 0;
     this.tokens = [];
     this.setupTokens(args);
+  }
+
+  public acceptTokenMapper(visitor: TokenMapper<T>) {
+    this.tokens = visitor.visit(this.tokens);
   }
 
   protected normalize(src: string, args = {}): string {
@@ -28,10 +47,6 @@ export class Lexer<T> {
 
   protected peekChar(): string {
     return this.buff.substring(0, 1);
-  }
-
-  public get length(): number {
-    return this.tokens.length;
   }
 
   public get progress(): number {
@@ -70,24 +85,11 @@ export class Lexer<T> {
     return this.buff !== "";
   }
 
-  public peek(count = 0): T | null {
-    return this.tokens[this.pos + count] || null;
+  public peek(offset = 0): T | undefined {
+    return this.tokens[this.pos + offset];
   }
 
-  public step(): number {
-    this.pos++;
-    return this.pos;
-  }
-
-  public pushBack() {
-    this.pos--;
-  }
-
-  public getPos(): number {
-    return this.pos;
-  }
-
-  public setPos(pos: number) {
-    this.pos = Math.max(0, pos);
+  public pushBack(count: number) {
+    this.pos = Math.max(0, this.pos - Math.abs(count));
   }
 }

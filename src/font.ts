@@ -8,6 +8,7 @@ import {
   CssCascade,
   NativeStyleMap,
   ILogicalCssEvaluator,
+  ILexer,
   Lexer,
 } from "./public-api";
 
@@ -90,7 +91,7 @@ class FontShorthandLexer extends Lexer<string> {
 }
 
 class FontShorthandParser {
-  constructor(private lexer: Lexer<string>) { }
+  constructor(private lexer: ILexer<string>) { }
 
   parseFontSize(fontSize: string): string {
     if (fontSize.indexOf("/") < 0) {
