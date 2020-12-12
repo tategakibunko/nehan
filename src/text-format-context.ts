@@ -1,6 +1,6 @@
 import {
   BoxEnv,
-  TextLexer,
+  ILexer,
   LayoutResult,
   LogicalCursorPos,
   ICharacter,
@@ -19,7 +19,7 @@ export class TextFormatContext implements ILayoutFormatContext {
   public text: string;
 
   constructor(
-    public lexer: TextLexer,
+    public lexer: ILexer<ICharacter>,
     public parent: ILayoutFormatContext,
   ) {
     this.progress = 1; // skip!

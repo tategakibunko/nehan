@@ -1,6 +1,6 @@
 import {
   DualChar,
-  Lexer,
+  ILexer,
   ICharacter,
   TextFormatContext,
 } from './public-api';
@@ -40,7 +40,7 @@ export class Hyphenator implements IHyphenator {
     return moveCount;
   }
 
-  private getHyphenateCount(lexer: Lexer<ICharacter>): number {
+  private getHyphenateCount(lexer: ILexer<ICharacter>): number {
     const tail = lexer.peek(-1);
     const head = lexer.peek(0);
     const next1 = lexer.peek(+1);

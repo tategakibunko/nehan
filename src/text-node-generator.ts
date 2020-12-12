@@ -114,7 +114,7 @@ export class TextNodeGenerator implements ILogicalNodeGenerator {
           yield LayoutResult.lineBreak(this.context, "long word is broken by word-break: break-all");
         } else if (token instanceof SpaceChar) {
           const prevToken = lexer.peek(-2);
-          const nextToken = lexer.peek();
+          const nextToken = lexer.peek(0);
           // Omit a space at the beginning of a line surrounded by two words.
           //
           // ...... [word1]
