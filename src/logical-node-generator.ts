@@ -5,6 +5,8 @@ import {
   Display,
   BoxEnv,
   CssLoader,
+  ICharacter,
+  ILexer,
   TextLexer,
   ILayoutFormatContext,
   FlowFormatContext,
@@ -62,7 +64,7 @@ export class LogicalNodeGenerator {
     return new BlockNodeGenerator(rootContext, RootBlockReducer.instance);
   }
 
-  static createTextLexer(element: HtmlElement, env: BoxEnv): TextLexer {
+  static createTextLexer(element: HtmlElement, env: BoxEnv): ILexer<ICharacter> {
     // console.log("createTextLexer:", element, env);
     const isPre = env.whiteSpace.isPre();
     const text = element.textContent || element.computedStyle.getPropertyValue("content") || "";

@@ -199,7 +199,7 @@ export class TextLexer extends Lexer<ICharacter>{
 // text-compine: upright
 export class TcyLexer extends TextLexer {
   public createToken(): ICharacter {
-    let tcy = new Tcy(this.src);
+    const tcy = new Tcy(this.src);
     this.stepBuff(this.src.length);
     return tcy;
   }
