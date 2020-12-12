@@ -1,7 +1,5 @@
 
-export interface TokenMapper<T> {
-  visit: (tokens: T[]) => T[];
-}
+import { TokenMapper } from "./public-api";
 
 export interface ILexer<T> {
   tokens: T[];

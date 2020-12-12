@@ -37,7 +37,8 @@ export class Word implements ICharacter {
     this.size = TextMeasure.getWordSize(opts.font, this.text);
   }
 
-  public convertTcys(): Tcy[] {
+  // Word("No") => [Tcy("N"), Tcy("o")]
+  public toTcys(): Tcy[] {
     let tcys: Tcy[] = [];
     for (let i = 0; i < this.text.length; i++) {
       tcys.push(new Tcy(this.text.charAt(i)));

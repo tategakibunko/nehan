@@ -32,15 +32,6 @@ export class TextLexer extends Lexer<ICharacter>{
     return normSrc;
   }
 
-  public uprightTokens() {
-    this.tokens = this.tokens.reduce((acm, token) => {
-      if (token instanceof Word) {
-        return acm.concat(token.convertTcys());
-      }
-      return acm.concat(token);
-    }, [] as ICharacter[]);
-  }
-
   private getShy(): string | null {
     if (this.buff.indexOf(RefChar.softHyphen) !== 0) {
       return null;

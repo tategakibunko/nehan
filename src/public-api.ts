@@ -15,6 +15,7 @@ export * from "./tcy"
 export * from './text-measure'
 export * from "./word"
 export * from "./mix-char"
+export * from "./token-mapper"
 export * from "./lexer"
 export * from "./selector"
 export * from "./anchor"
