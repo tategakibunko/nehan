@@ -10,6 +10,17 @@ Html layout engine for paged-media written by [Typescript](https://www.typescrip
 npm install nehan
 ```
 
+## Demo
+
+See [Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja) at Chrome Web Store.
+
+### How to use
+
+1. Install [Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja).
+2. Goto any site you want to read as paged-media.
+3. Click the browser action button <img src="https://raw.github.com/tategakibunko/nehan/master/example/images/nehan-reader-48.png" width="32" height="32" />
+4. Then you'll see paged site.
+
 ## Example
 
 See [example](https://github.com/tategakibunko/nehan/tree/master/example) directory.
@@ -170,17 +181,6 @@ const myStyleSheet = new CssStyleSheet({
   }
 });
 ```
-
-## Demo
-
-[Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja) at Chrome Web Store.
-
-### How to use
-
-1. Install [Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja).
-2. Goto any site you want to read as paged-media.
-3. Click the browser action button <img src="https://raw.github.com/tategakibunko/nehan/master/example/images/nehan-reader-48.png" width="32" height="32" />
-4. Then you'll see paged site.
 
 ## Development
 
