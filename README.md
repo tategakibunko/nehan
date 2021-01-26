@@ -14,7 +14,7 @@ npm install nehan
 
 See [Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja) at Chrome Web Store.
 
-### How to use
+### How to use Nehan Reader
 
 1. Install [Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja).
 2. Goto any site you want to read as paged-media.
