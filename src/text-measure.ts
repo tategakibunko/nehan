@@ -18,7 +18,9 @@ function createCanvasContext2d(): CanvasRenderingContext2D | null {
   const canvas = document.createElement("canvas");
   canvas.style.display = "hidden";
   canvas.style.width = canvas.style.height = "0";
-  document.body.appendChild(canvas);
+  if (document.body) {
+    document.body.appendChild(canvas);
+  }
   return canvas.getContext("2d");
 }
 
