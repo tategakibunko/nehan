@@ -5,12 +5,14 @@ import {
 
 export class CssCascade {
   static getValue(element: HtmlElement, prop: string): string {
-    const computedValue = element.computedStyle.getPropertyValue(prop) || "";
-    return computedValue || this.getSpecValue(element, prop);
+    // const computedValue = element.computedStyle.getPropertyValue(prop) || "";
+    const computedValue = element.computedStyle.getPropertyValue(prop);
+    return computedValue ?? this.getSpecValue(element, prop);
   }
 
   static getSpecValue(element: HtmlElement, prop: string): string {
-    const specValue = element.style.getPropertyValue(prop) || "";
+    // const specValue = element.style.getPropertyValue(prop) || "";
+    const specValue = element.style.getPropertyValue(prop) ?? "";
     const defaultCss = BasicStyle.get(prop);
     switch (specValue) {
       // no value specified
