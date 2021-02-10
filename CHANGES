@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.4.1
+==========================
+* Use '??' operator instead of '||' in CssCascade.
+
 version 7.4.0, 2021/02/05
 ==========================
 o Added TokenMapper(visitor of ILexer).
