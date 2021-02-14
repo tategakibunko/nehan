@@ -32,6 +32,6 @@ export class TcyTokenMapper implements TokenMapper<ICharacter> {
         return new Tcy(token.text);
       }
       return token;
-    }, [] as ICharacter[]);
+    });
   }
 }
