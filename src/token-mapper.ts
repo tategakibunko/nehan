@@ -26,8 +26,8 @@ export class TcyTokenMapper implements TokenMapper<ICharacter> {
       if (token instanceof Word === false) {
         return token;
       }
-      const prev = index > 0 ? tokens[index - 1].text : "";
-      const next = index < tokens.length - 1 ? tokens[index + 1].text : "";
+      const prev = tokens[index - 1];
+      const next = tokens[index + 1];
       if (Config.isTcyWord(token.text, { prev, next })) {
         return new Tcy(token.text);
       }

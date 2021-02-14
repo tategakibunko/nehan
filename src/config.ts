@@ -1,3 +1,5 @@
+import { ICharacter } from "./public-api";
+
 export namespace Config {
   // Language setting.
   export let lang = "ja";
@@ -148,7 +150,7 @@ export namespace Config {
   // Config.isTcyWord = (word: string, context: {prev: string, next: string}): boolean => {
   //   return word.length <= 2 && word.match(/^\d{1,2}$/) !== null;
   // }
-  export let isTcyWord = (word: string, context: { prev: string, next: string }): boolean => {
+  export let isTcyWord = (word: string, context: { prev?: ICharacter, next?: ICharacter }): boolean => {
     return false;
   }
 
