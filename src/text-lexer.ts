@@ -16,6 +16,10 @@ import {
 } from "./public-api";
 
 export class TextLexer extends Lexer<ICharacter>{
+  public hasWord(): boolean {
+    return this.tokens.findIndex(token => token instanceof Word) >= 0;
+  }
+
   protected normalize(src: string, args: { isPre: boolean }): string {
     let normSrc = src
       .replace(/&#x([0-9A-F]+);/gi, (match, p1) => {
@@ -40,7 +44,7 @@ export class TextLexer extends Lexer<ICharacter>{
     return RefChar.softHyphen;
   }
 
-  private getWordOrTcy(): Word | Tcy | null {
+  private getWord(): Word | null {
     let word = "";
     while (this.hasNextBuff()) {
       let word_match = Config.rexWord.exec(this.buff);
@@ -59,26 +63,7 @@ export class TextLexer extends Lexer<ICharacter>{
     if (word === "") {
       return null;
     }
-    if (Config.isTcyWord(word)) {
-      return new Tcy(word);
-    }
     return new Word(word);
-  }
-
-  private getTcy(): Tcy | null {
-    let tcy_match_uni = Config.rexTcyUni.exec(this.buff);
-    if (tcy_match_uni) {
-      let tcy = tcy_match_uni[0];
-      this.stepBuff(tcy.length);
-      return new Tcy(tcy);
-    }
-    let tcy_match = Config.rexTcy.exec(this.buff);
-    if (!tcy_match) {
-      return null;
-    }
-    let tcy = tcy_match[0];
-    this.stepBuff(tcy.length);
-    return new Tcy(tcy);
   }
 
   private getSpaceChar(): SpaceChar | null {
@@ -159,13 +144,9 @@ export class TextLexer extends Lexer<ICharacter>{
       this.stepBuff(1);
       return half_dual_char;
     }
-    const tcy = this.getTcy();
-    if (tcy !== null) {
-      return tcy;
-    }
-    const word_or_tcy = this.getWordOrTcy();
-    if (word_or_tcy !== null) {
-      return word_or_tcy;
+    const word = this.getWord();
+    if (word !== null) {
+      return word;
     }
     const space_char = this.getSpaceChar();
     if (space_char !== null) {

@@ -45,6 +45,7 @@ import {
   ReNodeGenerator,
   ConstantValueGenerator,
   UprightTokenMapper,
+  TcyTokenMapper,
 } from './public-api'
 
 export interface ChildGenerator {
@@ -71,6 +72,8 @@ export class LogicalNodeGenerator {
     const lexer = env.textCombineUpright.isNone() ? new TextLexer(text, { isPre }) : new TcyLexer(text);
     if (env.textOrientation.isUpright()) {
       lexer.acceptTokenMapper(new UprightTokenMapper());
+    } else if (lexer.hasWord()) {
+      lexer.acceptTokenMapper(new TcyTokenMapper());
     }
     return lexer;
   }

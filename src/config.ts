@@ -143,22 +143,12 @@ export namespace Config {
   // character-reference pattern
   export let rexRefChar: RegExp = /^&[\S]+?;/;
 
-  // tate-chu-yoko (unicode)
-  // \u203C = DOUBLE EXCLAMATION MARK
-  // \u2047 = DOUBLE QUESTION MARK
-  // \u2048 = QUESTION EXCLAMATION MARK
-  // \u2049 = EXCLAMATION QUESTION MARK
-  export let rexTcyUni: RegExp = /^[\u203C\u2047-\u2049]/;
-
-  // tate-chu-yoko pattern
-  export let rexTcy: RegExp = /^[!?]{1,2}(?![!?])/;
-
   // return true if word string is treated as tcy.
   // @example
-  // Config.isTcyWord = (word: string): boolean => {
+  // Config.isTcyWord = (word: string, context: {prev: string, next: string}): boolean => {
   //   return word.length <= 2 && word.match(/^\d{1,2}$/) !== null;
   // }
-  export let isTcyWord = (word: string): boolean => {
+  export let isTcyWord = (word: string, context: { prev: string, next: string }): boolean => {
     return false;
   }
 
