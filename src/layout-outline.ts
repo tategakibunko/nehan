@@ -10,6 +10,7 @@ export class LayoutOutline {
   public rootElement?: HtmlElement;
   public rootSection: LayoutSection;
   public curSection: LayoutSection;
+  private headers: { [header_key: string]: LayoutSection } = {};
 
   constructor() {
     this.rootSection = new LayoutSection();
@@ -43,6 +44,10 @@ export class LayoutOutline {
       return this.curSection;
     }
     return this.closeSection();
+  }
+
+  public getHeaderSection(element: HtmlElement): LayoutSection | undefined {
+    return this.headers[element.getPath(true)];
   }
 
   protected openSectionRoot(element: HtmlElement, pageIndex: number): LayoutSection {
@@ -94,6 +99,9 @@ export class LayoutOutline {
   protected createContextSection(pageIndex: number, header?: HtmlElement): LayoutSection {
     let section = new LayoutSection(header);
     section.pageIndex = pageIndex;
+    if (header) {
+      this.headers[header.getPath(true)] = section;
+    }
     return section;
   }
 
