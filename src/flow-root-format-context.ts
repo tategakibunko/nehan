@@ -61,11 +61,6 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
         const href = element.getAttribute("href");
         if (href) {
           node.setAttribute("href", href);
-          if (href.startsWith("#")) {
-            const anchorName = href.substring(1);
-            const anchor = this.getAnchor(anchorName);
-            console.log("link(%s) points to:%o", logicalNode.text, anchor);
-          }
         }
         const name = element.getAttribute("name");
         if (name) {
