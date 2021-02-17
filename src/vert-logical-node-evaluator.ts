@@ -217,7 +217,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
+    inlineNode.env.element.style.callDomCallbacks(inlineNode, node, this.pageRoot);
     inlineNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
@@ -231,7 +231,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     inlineNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    inlineNode.env.element.style.callDomCallbacks(inlineNode, node);
+    inlineNode.env.element.style.callDomCallbacks(inlineNode, node, this.pageRoot);
     inlineNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
@@ -249,7 +249,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     iblockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     iblockNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     iblockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    iblockNode.env.element.style.callDomCallbacks(iblockNode, node);
+    iblockNode.env.element.style.callDomCallbacks(iblockNode, node, this.pageRoot);
     iblockNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
@@ -270,7 +270,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    blockNode.env.element.style.callDomCallbacks(blockNode, node);
+    blockNode.env.element.style.callDomCallbacks(blockNode, node, this.pageRoot);
     blockNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
@@ -315,7 +315,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
       imgNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     }
     imgNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    imgNode.env.element.style.callDomCallbacks(imgNode, node);
+    imgNode.env.element.style.callDomCallbacks(imgNode, node, this.pageRoot);
     return node;
   }
 
@@ -329,7 +329,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.setAttribute("src", imgNode.env.element.getAttribute("src") || "");
     imgNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     imgNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    imgNode.env.element.style.callDomCallbacks(imgNode, node);
+    imgNode.env.element.style.callDomCallbacks(imgNode, node, this.pageRoot);
     return node;
   }
 
@@ -344,7 +344,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     videoNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     videoNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     videoNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    videoNode.env.element.style.callDomCallbacks(videoNode, node);
+    videoNode.env.element.style.callDomCallbacks(videoNode, node, this.pageRoot);
     return node;
   }
 
@@ -382,7 +382,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     linkNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    linkNode.env.element.style.callDomCallbacks(linkNode, node);
+    linkNode.env.element.style.callDomCallbacks(linkNode, node, this.pageRoot);
     linkNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
@@ -403,7 +403,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     linkNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    linkNode.env.element.style.callDomCallbacks(linkNode, node);
+    linkNode.env.element.style.callDomCallbacks(linkNode, node, this.pageRoot);
     linkNode.children.forEach(child => {
       const childNode = child.acceptEvaluator(this);
       node.appendChild(childNode);

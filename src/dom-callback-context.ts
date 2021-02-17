@@ -1,5 +1,6 @@
 import {
-  ILogicalNode
+  ILogicalNode,
+  IFlowRootFormatContext,
 } from './public-api';
 
 export interface DomCallbackContext {
@@ -7,5 +8,6 @@ export interface DomCallbackContext {
   name: string; // callback name like '@create'
   box: ILogicalNode;
   dom: HTMLElement;
+  flowRoot: IFlowRootFormatContext;
 }
 

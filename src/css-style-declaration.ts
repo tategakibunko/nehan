@@ -6,6 +6,7 @@ import {
   CssProp,
   CssText,
   ILogicalCssEvaluator,
+  IFlowRootFormatContext,
   NativeStyleMap,
 } from "./public-api";
 
@@ -35,8 +36,8 @@ export class CssStyleDeclaration {
   // [TODO]
   // To keep backward compatibility, we use 'any' type for box argument.
   // But this must be updated to ILogicalNode in the future.
-  public callDomCallbacks(box: any, dom: HTMLElement) {
-    this.domCallbacks.forEach(callback => callback.call(box, dom));
+  public callDomCallbacks(box: any, dom: HTMLElement, flowRoot: IFlowRootFormatContext) {
+    this.domCallbacks.forEach(callback => callback.call(box, dom, flowRoot));
   }
 
   public getPropertyValue(prop: string): string | null {
