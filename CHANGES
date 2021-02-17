@@ -6,6 +6,11 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.6.0
+==========================
+! Removed LogicalNodeEvaluatorFactory.
+* Set strict page index for header and anchor.
+
 version 7.5.1, 2021/02/14
 ==========================
 ! Updated context type from string to ICharacter in Config::isTcyWord.
