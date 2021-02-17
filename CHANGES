@@ -8,6 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 7.6.0
 ==========================
+o Added IFlowRootFormatContext to DomCallbackContext.
 ! Removed LogicalNodeEvaluatorFactory.
 * Set strict page index for header and anchor.
 
