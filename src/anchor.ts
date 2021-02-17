@@ -1,4 +1,7 @@
+import { HtmlElement } from "./public-api";
+
 export interface Anchor {
-  name: string;
+  element: HtmlElement;
   pageIndex: number;
+  dom?: HTMLElement;
 }

@@ -23,17 +23,15 @@ import {
   TextEmphaData,
   LogicalNodeEvaluator,
   LogicalBoxEdge,
+  IFlowRootFormatContext,
   ILogicalTextJustifier,
-  WritingMode,
-  HoriCssEvaluator,
-  LogicalTextJustifier,
 } from './public-api'
 
 export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(
-    private writingMode: WritingMode,
-    private cssVisitor: ILogicalCssEvaluator = new HoriCssEvaluator(writingMode),
-    private textJustifier: ILogicalTextJustifier = LogicalTextJustifier.instance,
+    private pageRoot: IFlowRootFormatContext,
+    private cssVisitor: ILogicalCssEvaluator,
+    private textJustifier: ILogicalTextJustifier,
   ) { }
 
   visitChar(char: Char): HTMLElement | Node {

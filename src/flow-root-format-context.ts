@@ -1,6 +1,7 @@
 import {
   Config,
   BoxEnv,
+  Anchor,
   HtmlElement,
   ILayoutFormatContext,
   LayoutOutline,
@@ -13,13 +14,15 @@ import {
   IFlowRootFormatContext,
   ILogicalNode,
   ILogicalPositionalNode,
+  ILayoutOutlineEvaluator,
 } from './public-api';
 
 export class FlowRootFormatContext extends FlowFormatContext implements IFlowRootFormatContext {
   public floatRegion?: FloatRegion;
   public floatNodes: ILogicalNode[] = [];
   public pageCount: number = 0;
-  public outline: LayoutOutline;
+  private outline: LayoutOutline;
+  private anchors: { [anchor_name: string]: Anchor } = {};
 
   constructor(public env: BoxEnv, public parent?: ILayoutFormatContext) {
     super(env, parent);
@@ -36,6 +39,18 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
 
   public closeElement(element: HtmlElement) {
     this.outline.closeElement(element);
+  }
+
+  public createOutline(evaluator: ILayoutOutlineEvaluator): HTMLElement {
+    return this.outline.acceptEvaluator(evaluator);
+  }
+
+  public setAnchor(name: string, anchor: Anchor) {
+    this.anchors[name] = anchor;
+  }
+
+  public getAnchor(name: string): Anchor | undefined {
+    return this.anchors[name];
   }
 
   public clearFloat(clear: LogicalClear): number {

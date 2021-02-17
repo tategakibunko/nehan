@@ -1,7 +1,7 @@
 import {
   HtmlElement,
-  LayoutOutline,
   BoxEnv,
+  Anchor,
   FloatRegion,
   ILayoutReducer,
   LogicalCursorPos,
@@ -12,6 +12,7 @@ import {
   LogicalClear,
   PageRootFormatContext,
   ILogicalPositionalNode,
+  ILayoutOutlineEvaluator,
 } from './public-api'
 
 export interface ILayoutFormatContext {
@@ -44,12 +45,14 @@ export interface IFlowFormatContext extends ILayoutFormatContext {
 }
 
 export interface IFlowRootFormatContext extends IFlowFormatContext {
-  outline: LayoutOutline;
   floatRegion?: FloatRegion;
   floatNodes: ILogicalNode[];
   pageCount: number;
   openElement: (element: HtmlElement) => void;
   closeElement: (element: HtmlElement) => void;
+  createOutline: (outlineEvaluator: ILayoutOutlineEvaluator) => HTMLElement;
   addFloat: (block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) => void;
+  setAnchor: (name: string, anchor: Anchor) => void;
+  getAnchor: (name: string) => Anchor | undefined;
   clearFloat: (clear: LogicalClear) => number;
 }

@@ -101,6 +101,12 @@ export class LogicalNodeGenerator {
       const nextElement = element.nextSibling;
       return { generator, nextElement };
     }
+    const name = element.getAttribute("name");
+    if (name) {
+      const flowRoot = parentContext.flowRoot;
+      const pageIndex = flowRoot.pageCount; // Note that this index is temporary, more strict value is given by eval phase.
+      flowRoot.setAnchor(name, { element, pageIndex });
+    }
     if (element.tagName === "a") {
       const context = new FlowFormatContext(env, parentContext);
       const generator = display.isInlineLevel() ?

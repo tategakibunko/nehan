@@ -25,16 +25,14 @@ import {
   LogicalBoxEdge,
   ILogicalTextJustifier,
   ILogicalNode,
-  WritingMode,
-  VertCssEvaluator,
-  LogicalTextJustifier,
+  IFlowRootFormatContext,
 } from './public-api'
 
 export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   constructor(
-    private writingMode: WritingMode,
-    private cssVisitor: ILogicalCssEvaluator = new VertCssEvaluator(writingMode),
-    private textJustifier: ILogicalTextJustifier = LogicalTextJustifier.instance,
+    private pageRoot: IFlowRootFormatContext,
+    private cssVisitor: ILogicalCssEvaluator,
+    private textJustifier: ILogicalTextJustifier,
   ) { }
 
   private isReOrIblock(node: ILogicalNode): boolean {

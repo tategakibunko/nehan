@@ -4,19 +4,16 @@ import {
   ILayoutOutlineCallbacks,
   LayoutOutlineParser,
   ILayoutOutlineEvaluator,
-  Anchor,
 } from "./public-api";
 
 export class LayoutOutline {
   public rootElement?: HtmlElement;
   public rootSection: LayoutSection;
   public curSection: LayoutSection;
-  public anchors: { [anchor_name: string]: Anchor };
 
   constructor() {
     this.rootSection = new LayoutSection();
     this.curSection = this.rootSection;
-    this.anchors = {};
   }
 
   public acceptEvaluator(visitor: ILayoutOutlineEvaluator): HTMLElement {
@@ -38,12 +35,6 @@ export class LayoutOutline {
     if (LayoutSection.isHeaderElement(element)) {
       return this.openHeader(element, pageIndex);
     }
-    if (element.tagName === "a") {
-      const anchorName = element.getAttribute("name") || "";
-      if (anchorName) {
-        this.addAnchor(anchorName, pageIndex);
-      }
-    }
     return undefined;
   }
 
@@ -52,10 +43,6 @@ export class LayoutOutline {
       return this.curSection;
     }
     return this.closeSection();
-  }
-
-  public getAnchor(anchorName: string): Anchor | undefined {
-    return this.anchors[anchorName];
   }
 
   protected openSectionRoot(element: HtmlElement, pageIndex: number): LayoutSection {
@@ -92,10 +79,6 @@ export class LayoutOutline {
     }
     // console.log("closeSection: %s -> %s", before, this.curTitle);
     return this.curSection;
-  }
-
-  protected addAnchor(anchorName: string, pageIndex: number) {
-    this.anchors[anchorName] = { name: anchorName, pageIndex };
   }
 
   protected openHeader(element: HtmlElement, pageIndex: number): LayoutSection {
