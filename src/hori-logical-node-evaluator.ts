@@ -42,7 +42,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.className = layoutNames.concat(originalTagName).map(layoutName => `nehan-${layoutName}`).concat(
       logicalNode.env.element.classList.values().map(klass => `nehan-e-${klass}`)
     ).join(" ");
-    if (anchor) {
+    if (anchor && !anchor.dom) {
       anchor.dom = node;
       anchor.pageIndex = this.pageRoot.pageCount - 1;
     }
