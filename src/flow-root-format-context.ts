@@ -46,6 +46,46 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     return this.outline.acceptEvaluator(evaluator);
   }
 
+  public createElement(tagName: string, layoutNames: string[], logicalNode: ILogicalNode): HTMLElement {
+    const node = document.createElement(tagName);
+    const element = logicalNode.env.element;
+    const originalTagName = element.tagName;
+    const id = logicalNode.env.element.id;
+    const anchor = this.getAnchor(id);
+    if (anchor && !anchor.dom) {
+      anchor.dom = node;
+      anchor.pageIndex = this.pageRoot.pageCount - 1; // set strict page index for anchor.
+    }
+    switch (originalTagName) {
+      case "a":
+        const href = element.getAttribute("href");
+        if (href) {
+          node.setAttribute("href", href);
+          if (href.startsWith("#")) {
+            const anchorName = href.substring(1);
+            const anchor = this.getAnchor(anchorName);
+            console.log("link(%s) points to:%o", logicalNode.text, anchor);
+          }
+        }
+        const name = element.getAttribute("name");
+        if (name) {
+          node.setAttribute("name", name);
+        }
+        break;
+      case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
+        const section = this.getHeaderSection(element);
+        const pageIndex = this.pageCount - 1;
+        if (section && section.pageIndex !== pageIndex) {
+          section.pageIndex = pageIndex; // set strict page index for header.
+        }
+        break;
+    }
+    node.className = layoutNames.concat(originalTagName).map(layoutName => `nehan-${layoutName}`).concat(
+      element.classList.values().map(klass => `nehan-e-${klass}`)
+    ).join(" ");
+    return node;
+  }
+
   public setAnchor(name: string, anchor: Anchor) {
     this.anchors[name] = anchor;
   }

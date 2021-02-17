@@ -39,7 +39,6 @@ export interface ILogicalNodeEvaluator {
   visitInlineEmpha: (inlineNode: LogicalInlineNode) => HTMLElement;
   visitLine: (lineNode: LogicalLineNode) => HTMLElement;
   visitBlock: (blockNode: LogicalBlockNode) => HTMLElement;
-  visitHeaderBlock: (blockNode: LogicalBlockNode) => HTMLElement;
   visitRootBlock: (blockNode: LogicalBlockNode) => HTMLElement;
   visitInlineBlock: (iblockNode: LogicalInlineBlockNode) => HTMLElement;
   visitTableCells: (tableCellsNode: LogicalTableCellsNode) => HTMLElement;

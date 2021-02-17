@@ -51,6 +51,7 @@ export interface IFlowRootFormatContext extends IFlowFormatContext {
   pageCount: number;
   openElement: (element: HtmlElement) => void;
   closeElement: (element: HtmlElement) => void;
+  createElement: (tagName: string, layoutNames: string[], logicalNode: ILogicalNode) => HTMLElement;
   createOutline: (outlineEvaluator: ILayoutOutlineEvaluator) => HTMLElement;
   addFloat: (block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) => void;
   setAnchor: (name: string, anchor: Anchor) => void;

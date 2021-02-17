@@ -165,13 +165,6 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
     switch (this.env.element.tagName) {
       case "a":
         return visitor.visitBlockLink(this);
-      case "h1":
-      case "h2":
-      case "h3":
-      case "h4":
-      case "h5":
-      case "h6":
-        return visitor.visitHeaderBlock(this);
       case Config.pageRootTagName:
         const rootBlock = visitor.visitRootBlock(this);
         rootBlock.appendChild(visitor.visitBlock(this));
