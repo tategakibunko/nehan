@@ -162,13 +162,20 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
   }
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
-    if (this.env.element.tagName === "a") {
-      return visitor.visitBlockLink(this);
-    }
-    if (this.env.element.tagName === Config.pageRootTagName) {
-      const rootBlock = visitor.visitRootBlock(this);
-      rootBlock.appendChild(visitor.visitBlock(this));
-      return rootBlock;
+    switch (this.env.element.tagName) {
+      case "a":
+        return visitor.visitBlockLink(this);
+      case "h1":
+      case "h2":
+      case "h3":
+      case "h4":
+      case "h5":
+      case "h6":
+        return visitor.visitHeaderBlock(this);
+      case Config.pageRootTagName:
+        const rootBlock = visitor.visitRootBlock(this);
+        rootBlock.appendChild(visitor.visitBlock(this));
+        return rootBlock;
     }
     return visitor.visitBlock(this);
   }

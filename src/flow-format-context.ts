@@ -445,8 +445,14 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   public addInlineLink(inline: LogicalInlineNode) {
-    if (Config.ignoreEmptyInline && inline.children.length === 0) {
+    const id = inline.env.element.id;
+    // if element has id(anchored element), keep it alive even if it's empty.
+    if (!id && Config.ignoreEmptyInline && inline.children.length === 0) {
       return;
+    }
+    // if empty anchor, use zero size.
+    if (id && inline.children.length === 0) {
+      inline.size.extent = 0;
     }
     this.pushInlineNode(inline);
   }
@@ -480,12 +486,6 @@ export class FlowFormatContext implements IFlowFormatContext {
   }
 
   private pushBlockNode(block: ILogicalNode) {
-    if (block.extent === 0) {
-      if (Config.debugLayout) {
-        console.info("[%s] ignored zero size block:", this.name, block);
-      }
-      return;
-    }
     const old = this.cursorPos.before;
     this.text += block.text;
     this.progress = Math.min(1, this.progress + block.progress / this.env.element.childNodes.length);

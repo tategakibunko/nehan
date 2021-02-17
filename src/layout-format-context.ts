@@ -2,6 +2,7 @@ import {
   HtmlElement,
   BoxEnv,
   Anchor,
+  LayoutSection,
   FloatRegion,
   ILayoutReducer,
   LogicalCursorPos,
@@ -54,5 +55,6 @@ export interface IFlowRootFormatContext extends IFlowFormatContext {
   addFloat: (block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) => void;
   setAnchor: (name: string, anchor: Anchor) => void;
   getAnchor: (name: string) => Anchor | undefined;
+  getHeaderSection: (element: HtmlElement) => LayoutSection | undefined;
   clearFloat: (clear: LogicalClear) => number;
 }

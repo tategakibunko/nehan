@@ -21,8 +21,8 @@ import {
 } from './public-api';
 
 export interface PagedHtmlRenderOptions {
-  onProgressImage?: (ctx: ImageLoaderContext) => void
-  onCompleteImage?: (ctx: ImageLoaderContext) => void
+  onProgressImage?: (ctx: ImageLoaderContext) => void;
+  onCompleteImage?: (ctx: ImageLoaderContext) => void;
   onPage?: (context: { caller: PagedHtmlDocument, page: Page }) => void;
   onComplete?: (context: { caller: PagedHtmlDocument, time: number, pageCount: number }) => void;
 }

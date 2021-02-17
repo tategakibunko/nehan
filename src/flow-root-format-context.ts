@@ -2,6 +2,7 @@ import {
   Config,
   BoxEnv,
   Anchor,
+  LayoutSection,
   HtmlElement,
   ILayoutFormatContext,
   LayoutOutline,
@@ -51,6 +52,10 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
 
   public getAnchor(name: string): Anchor | undefined {
     return this.anchors[name];
+  }
+
+  public getHeaderSection(element: HtmlElement): LayoutSection | undefined {
+    return this.outline.getHeaderSection(element);
   }
 
   public clearFloat(clear: LogicalClear): number {

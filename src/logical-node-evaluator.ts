@@ -18,7 +18,6 @@ import {
   LogicalBlockReNode,
   LogicalInlineReNode,
   TextEmphaData,
-  ILogicalNode,
 } from './public-api'
 
 export interface ILogicalNodeEvaluator {
@@ -40,6 +39,7 @@ export interface ILogicalNodeEvaluator {
   visitInlineEmpha: (inlineNode: LogicalInlineNode) => HTMLElement;
   visitLine: (lineNode: LogicalLineNode) => HTMLElement;
   visitBlock: (blockNode: LogicalBlockNode) => HTMLElement;
+  visitHeaderBlock: (blockNode: LogicalBlockNode) => HTMLElement;
   visitRootBlock: (blockNode: LogicalBlockNode) => HTMLElement;
   visitInlineBlock: (iblockNode: LogicalInlineBlockNode) => HTMLElement;
   visitTableCells: (tableCellsNode: LogicalTableCellsNode) => HTMLElement;
@@ -51,15 +51,4 @@ export interface ILogicalNodeEvaluator {
   visitInlineIframe: (iframeNode: LogicalInlineReNode) => HTMLElement;
   visitInlineLink: (link: LogicalInlineNode) => HTMLElement;
   visitBlockLink: (link: LogicalBlockNode) => HTMLElement;
-}
-
-export class LogicalNodeEvaluator {
-  static createElementFromNode(tagName: string, layoutNames: string[], logicalNode: ILogicalNode): HTMLElement {
-    const node = document.createElement(tagName);
-    const originalTagName = logicalNode.env.element.tagName;
-    node.className = layoutNames.concat(originalTagName).map(layoutName => `nehan-${layoutName}`).concat(
-      logicalNode.env.element.classList.values().map(klass => `nehan-e-${klass}`)
-    ).join(" ");
-    return node;
-  }
 }

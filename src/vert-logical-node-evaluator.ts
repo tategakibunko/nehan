@@ -21,7 +21,6 @@ import {
   LogicalBlockReNode,
   LogicalInlineReNode,
   TextEmphaData,
-  LogicalNodeEvaluator,
   LogicalBoxEdge,
   ILogicalTextJustifier,
   ILogicalNode,
@@ -43,6 +42,21 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
       return node.children.some(child => this.isReOrIblock(child));
     }
     return false;
+  }
+
+  private createElementFromNode(tagName: string, layoutNames: string[], logicalNode: ILogicalNode): HTMLElement {
+    const node = document.createElement(tagName);
+    const originalTagName = logicalNode.env.element.tagName;
+    const id = logicalNode.env.element.id;
+    const anchor = this.pageRoot.getAnchor(id);
+    node.className = layoutNames.concat(originalTagName).map(layoutName => `nehan-${layoutName}`).concat(
+      logicalNode.env.element.classList.values().map(klass => `nehan-e-${klass}`)
+    ).join(" ");
+    if (anchor) {
+      anchor.dom = node;
+      anchor.pageIndex = this.pageRoot.pageCount - 1;
+    }
+    return node;
   }
 
   visitChar(char: Char): HTMLElement | Node {
@@ -212,7 +226,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInline(inlineNode: LogicalInlineNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["inline"], inlineNode);
+    const node = this.createElementFromNode("div", ["inline"], inlineNode);
     node.style.marginTop = inlineNode.edge.margin.start + "px";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -226,7 +240,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineEmpha(inlineNode: LogicalInlineNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["inline", "empha"], inlineNode);
+    const node = this.createElementFromNode("div", ["inline", "empha"], inlineNode);
     node.style.marginTop = inlineNode.edge.margin.start + "px";
     node.style.marginBottom = inlineNode.edge.margin.end + "px";
     inlineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -240,7 +254,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineBlock(iblockNode: LogicalInlineBlockNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["iblock"], iblockNode);
+    const node = this.createElementFromNode("div", ["iblock"], iblockNode);
     node.style.boxSizing = "content-box";
     node.style.position = "relative";
     node.style.paddingTop = iblockNode.env.edge.padding.start + "px";
@@ -258,7 +272,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlock(blockNode: LogicalBlockNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["block"], blockNode);
+    const node = this.createElementFromNode("div", ["block"], blockNode);
     node.style.boxSizing = "content-box";
     node.style.position = (blockNode.env.element.tagName === Config.pageRootTagName) ? "relative" : "absolute";
     node.style.paddingTop = blockNode.env.edge.padding.start + "px";
@@ -278,8 +292,17 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
+  visitHeaderBlock(blockNode: LogicalBlockNode): HTMLElement {
+    const section = this.pageRoot.getHeaderSection(blockNode.env.element);
+    const pageIndex = this.pageRoot.pageCount - 1;
+    if (section && section.pageIndex !== pageIndex) {
+      section.pageIndex = pageIndex; // set strict page index.
+    }
+    return this.visitBlock(blockNode);
+  }
+
   visitRootBlock(rootBlockNode: LogicalBlockNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["root"], rootBlockNode);
+    const node = this.createElementFromNode("div", ["root"], rootBlockNode);
     const edge = LogicalBoxEdge.loadBoxEdge(rootBlockNode.env.element);
     node.style.width = rootBlockNode.extent + edge.extent + "px";
     node.style.height = rootBlockNode.measure + edge.measure + "px";
@@ -291,7 +314,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitTableCells(tableCellsNode: LogicalTableCellsNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["table-cells"], tableCellsNode);
+    const node = this.createElementFromNode("div", ["table-cells"], tableCellsNode);
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     tableCellsNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -303,7 +326,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockImage(imgNode: LogicalBlockReNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("img", ["block"], imgNode);
+    const node = this.createElementFromNode("img", ["block"], imgNode);
     node.style.position = "absolute";
     node.style.display = "block";
     node.style.width = imgNode.physicalSize.width + "px";
@@ -321,7 +344,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineImage(imgNode: LogicalInlineReNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("img", ["inline"], imgNode);
+    const node = this.createElementFromNode("img", ["inline"], imgNode);
     node.style.display = "block";
     node.style.width = imgNode.physicalSize.width + "px";
     node.style.height = imgNode.physicalSize.height + "px";
@@ -350,7 +373,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineVideo(videoNode: LogicalInlineReNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["inline"], videoNode);
+    const node = this.createElementFromNode("div", ["inline"], videoNode);
     node.style.display = "none";
     node.style.width = "0";
     node.style.height = "0";
@@ -359,7 +382,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockIframe(iframeNode: LogicalBlockReNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["block"], iframeNode);
+    const node = this.createElementFromNode("div", ["block"], iframeNode);
     node.style.display = "none";
     node.style.width = "0";
     node.style.height = "0";
@@ -368,7 +391,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineIframe(iframeNode: LogicalInlineReNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("div", ["inline"], iframeNode);
+    const node = this.createElementFromNode("div", ["inline"], iframeNode);
     node.style.display = "none";
     node.style.width = "0";
     node.style.height = "0";
@@ -377,7 +400,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("a", ["inline"], linkNode);
+    const node = this.createElementFromNode("a", ["inline"], linkNode);
     const href = linkNode.env.element.getAttribute("href");
     const name = linkNode.env.element.getAttribute("name");
     if (href) {
@@ -399,7 +422,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockLink(linkNode: LogicalBlockNode): HTMLElement {
-    const node = LogicalNodeEvaluator.createElementFromNode("a", ["block"], linkNode);
+    const node = this.createElementFromNode("a", ["block"], linkNode);
     const href = linkNode.env.element.getAttribute("href");
     const name = linkNode.env.element.getAttribute("name");
     if (href) {
