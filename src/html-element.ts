@@ -135,23 +135,6 @@ export class HtmlElement {
     return this.$node.textContent || "";
   }
 
-  /*
-  public get id(): string {
-    if (this.$node instanceof HTMLElement) {
-      return this.$node.id;
-    }
-    return "";
-  }
-  */
-
-  /*
-  public set id(str: string) {
-    if (this.$node instanceof HTMLElement) {
-      this.$node.id = str;
-    }
-  }
-  */
-
   protected getTagName(): string {
     if (this.$node instanceof Text) {
       return "(text)";
