@@ -53,6 +53,7 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     const id = logicalNode.env.element.id;
     const anchor = this.getAnchor(id);
     if (anchor && !anchor.dom) {
+      anchor.box = logicalNode;
       anchor.dom = node;
       anchor.pageIndex = this.pageRoot.pageCount - 1; // set strict page index for anchor.
     }
