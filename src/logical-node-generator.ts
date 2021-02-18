@@ -105,7 +105,7 @@ export class LogicalNodeGenerator {
     if (element.id) {
       const flowRoot = parentContext.flowRoot;
       const pageIndex = flowRoot.pageCount; // Note that this index is temporary, more strict value is given by eval phase.
-      flowRoot.setAnchor(element.id, { element, pageIndex });
+      flowRoot.setAnchor(element.id, { name: element.id, element, pageIndex });
     }
     if (element.tagName === "a") {
       const context = new FlowFormatContext(env, parentContext);
