@@ -98,7 +98,7 @@ export class LayoutOutline {
 
   protected createContextSection(pageIndex: number, header?: HtmlElement): LayoutSection {
     let section = new LayoutSection(header);
-    section.pageIndex = pageIndex;
+    section.pageIndex = header ? -1 : pageIndex;
     if (header) {
       this.headers[header.getPath(true)] = section;
     }

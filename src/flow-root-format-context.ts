@@ -50,11 +50,9 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     const node = document.createElement(tagName);
     const element = logicalNode.env.element;
     const originalTagName = element.tagName;
-    const pageIndex = this.pageCount - 1;
     const id = logicalNode.env.element.id;
     const anchor = this.getAnchor(id);
     if (anchor && !anchor.dom) {
-      anchor.pageIndex = pageIndex; // set strict page index for anchor.
       anchor.box = logicalNode;
       anchor.dom = node;
     }
@@ -67,12 +65,6 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
         const name = element.getAttribute("name");
         if (name) {
           node.setAttribute("name", name);
-        }
-        break;
-      case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
-        const section = this.getHeaderSection(element);
-        if (section && section.pageIndex !== pageIndex) {
-          section.pageIndex = pageIndex; // set strict page index for header.
         }
         break;
     }

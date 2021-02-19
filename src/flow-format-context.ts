@@ -480,6 +480,12 @@ export class FlowFormatContext implements IFlowFormatContext {
     if (hasText) {
       this.inlineText += inline.text;
     }
+    if (inline.env.element.id) {
+      const anchor = this.pageRoot.getAnchor(inline.env.element.id);
+      if (anchor && anchor.pageIndex < 0) {
+        anchor.pageIndex = this.pageRoot.pageCount;
+      }
+    }
     if (Config.debugLayout) {
       console.log("[%s] pushInlineNode:%o(%d -> %d)", this.name, inline, old, this.cursorPos.start);
     }
@@ -494,6 +500,14 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.blockNodeHistory.push(block);
     if (!block.env.position.isAbsolute()) {
       this.cursorPos.before += block.extent;
+    }
+    switch (block.env.element.tagName) {
+      case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
+        const section = this.pageRoot.getHeaderSection(block.env.element);
+        if (section && section.pageIndex < 0) {
+          section.pageIndex = this.pageRoot.pageCount; // set strict page index for header.
+        }
+        break;
     }
     if (Config.debugLayout) {
       console.log("[%s] pushBlockNode:%o(%d -> %d)", this.name, block, old, this.cursorPos.before);
