@@ -270,7 +270,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
-    blockNode.env.element.style.callDomCallbacks(blockNode, node, this.pageRoot);
+    blockNode.env.element.style.callDomCallbacks(blockNode, node, this.pageRoot, blockNode, node);
     blockNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
     });
