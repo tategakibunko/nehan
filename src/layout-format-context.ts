@@ -14,6 +14,7 @@ import {
   PageRootFormatContext,
   ILogicalPositionalNode,
   ILayoutOutlineEvaluator,
+  ILogicalNodeEvaluator,
 } from './public-api'
 
 export interface ILayoutFormatContext {
@@ -53,6 +54,7 @@ export interface IFlowRootFormatContext extends IFlowFormatContext {
   closeElement: (element: HtmlElement) => void;
   createElement: (tagName: string, layoutNames: string[], logicalNode: ILogicalNode) => HTMLElement;
   createOutline: (outlineEvaluator: ILayoutOutlineEvaluator) => HTMLElement;
+  createLogicalNodeEvaluator: () => ILogicalNodeEvaluator;
   addFloat: (block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) => void;
   setAnchor: (name: string, anchor: Anchor) => void;
   getAnchor: (name: string) => Anchor | undefined;

@@ -1,5 +1,6 @@
 import {
   Config,
+  WritingMode,
   BoxEnv,
   Anchor,
   LayoutSection,
@@ -16,6 +17,12 @@ import {
   ILogicalNode,
   ILogicalPositionalNode,
   ILayoutOutlineEvaluator,
+  ILogicalNodeEvaluator,
+  HoriLogicalNodeEvaluator,
+  VertLogicalNodeEvaluator,
+  HoriCssEvaluator,
+  VertCssEvaluator,
+  LogicalTextJustifier,
 } from './public-api';
 
 export class FlowRootFormatContext extends FlowFormatContext implements IFlowRootFormatContext {
@@ -72,6 +79,32 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
       element.classList.values().map(klass => `nehan-e-${klass}`)
     ).join(" ");
     return node;
+  }
+
+  public createLogicalNodeEvaluator(): ILogicalNodeEvaluator {
+    const writingMode = WritingMode.load(this.env.element);
+    switch (writingMode.value) {
+      case "horizontal-tb":
+        return new HoriLogicalNodeEvaluator(
+          this,
+          new HoriCssEvaluator(writingMode),
+          LogicalTextJustifier.instance,
+        );
+      case "vertical-rl":
+        return new VertLogicalNodeEvaluator(
+          this,
+          new VertCssEvaluator(writingMode),
+          LogicalTextJustifier.instance,
+        );
+      case "vertical-lr":
+        return new VertLogicalNodeEvaluator(
+          this,
+          new VertCssEvaluator(writingMode),
+          LogicalTextJustifier.instance,
+        );
+      default:
+        throw new Error(`undefined writing mode: ${writingMode.value}`);
+    }
   }
 
   public setAnchor(name: string, anchor: Anchor) {

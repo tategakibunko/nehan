@@ -1,4 +1,3 @@
-import { IFlowRootFormatContext } from './layout-format-context';
 import {
   Config,
   Page,
@@ -10,12 +9,6 @@ import {
   ILogicalNodeEvaluator,
   ILayoutOutlineEvaluator,
   LayoutOutlineEvaluator,
-  WritingMode,
-  HoriLogicalNodeEvaluator,
-  VertLogicalNodeEvaluator,
-  HoriCssEvaluator,
-  VertCssEvaluator,
-  LogicalTextJustifier,
   ImageLoader,
   ImageLoaderContext,
 } from './public-api';
@@ -36,35 +29,9 @@ export class PagedHtmlDocument extends HtmlDocument {
   constructor(src: string, options: HtmlDocumentOptions = { styleSheets: [] }) {
     super(src, options);
     this.generator = options.generator || LogicalNodeGenerator.createRoot(this.body);
-    this.evaluator = options.evaluator || this.createEvaluator(this.generator.context.pageRoot);
+    this.evaluator = options.evaluator || this.generator.context.pageRoot.createLogicalNodeEvaluator();
     this.pages = [];
     this.timestamp = 0;
-  }
-
-  private createEvaluator(pageRoot: IFlowRootFormatContext): ILogicalNodeEvaluator {
-    const writingMode = WritingMode.load(this.body);
-    switch (writingMode.value) {
-      case "horizontal-tb":
-        return new HoriLogicalNodeEvaluator(
-          pageRoot,
-          new HoriCssEvaluator(writingMode),
-          LogicalTextJustifier.instance,
-        );
-      case "vertical-rl":
-        return new VertLogicalNodeEvaluator(
-          pageRoot,
-          new VertCssEvaluator(writingMode),
-          LogicalTextJustifier.instance,
-        );
-      case "vertical-lr":
-        return new VertLogicalNodeEvaluator(
-          pageRoot,
-          new VertCssEvaluator(writingMode),
-          LogicalTextJustifier.instance,
-        );
-      default:
-        throw new Error(`undefined writing mode: ${writingMode.value}`);
-    }
   }
 
   private addPageNode(node: LogicalBlockNode): Page {
@@ -91,7 +58,6 @@ export class PagedHtmlDocument extends HtmlDocument {
   }
 
   public getAnchorPage(anchorName: string): Page {
-    // const anchor = this.generator.context.pageRoot.outline.getAnchor(anchorName);
     const anchor = this.generator.context.pageRoot.getAnchor(anchorName);
     if (!anchor) {
       throw new Error(`anchor(${anchorName}) is not found!`);
