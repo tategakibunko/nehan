@@ -473,6 +473,14 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.pushInlineNode(ruby);
   }
 
+  private addAnchorElement(id: string, node: ILogicalNode) {
+    const anchor = this.pageRoot.getAnchor(id);
+    if (anchor && anchor.pageIndex < 0) {
+      anchor.box = node;
+      anchor.pageIndex = this.pageRoot.pageCount;
+    }
+  }
+
   private pushInlineNode(inline: ILogicalNode, hasText = true) {
     const old = this.cursorPos.start;
     this.inlineNodes.push(inline);
@@ -481,10 +489,7 @@ export class FlowFormatContext implements IFlowFormatContext {
       this.inlineText += inline.text;
     }
     if (inline.env.element.id) {
-      const anchor = this.pageRoot.getAnchor(inline.env.element.id);
-      if (anchor && anchor.pageIndex < 0) {
-        anchor.pageIndex = this.pageRoot.pageCount;
-      }
+      this.addAnchorElement(inline.env.element.id, inline);
     }
     if (Config.debugLayout) {
       console.log("[%s] pushInlineNode:%o(%d -> %d)", this.name, inline, old, this.cursorPos.start);
@@ -500,6 +505,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     this.blockNodeHistory.push(block);
     if (!block.env.position.isAbsolute()) {
       this.cursorPos.before += block.extent;
+    }
+    if (block.env.element.id) {
+      this.addAnchorElement(block.env.element.id, block);
     }
     switch (block.env.element.tagName) {
       case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
