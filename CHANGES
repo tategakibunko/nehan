@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.6.2
+==========================
+o Added parent field to ILogicalNode.
+
 version 7.6.1, 2021/02/20
 ==========================
 * Fixed page index for anchor and header.
