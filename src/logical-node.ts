@@ -12,6 +12,7 @@ import {
 } from './public-api'
 
 export interface ILogicalNode {
+  parent?: ILogicalNode;
   env: BoxEnv;
   measure: number;
   extent: number;
