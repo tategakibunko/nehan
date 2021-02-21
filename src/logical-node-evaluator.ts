@@ -46,8 +46,6 @@ export interface ILogicalNodeEvaluator {
   visitInlineImage: (imgNode: LogicalInlineReNode) => HTMLElement;
   visitBlockVideo: (videoNode: LogicalBlockReNode) => HTMLElement;
   visitInlineVideo: (videoNode: LogicalInlineReNode) => HTMLElement;
-  // visitBlockRe: (blockReNode: LogicalBlockReNode) => HTMLElement;
-  // visitInlineRe: (inlineReNode: LogicalInlineReNode) => HTMLElement;
   visitInlineLink: (link: LogicalInlineNode) => HTMLElement;
   visitBlockLink: (link: LogicalBlockNode) => HTMLElement;
 }

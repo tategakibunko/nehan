@@ -357,26 +357,6 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  /*
-  visitBlockIframe(iframeNode: LogicalBlockReNode): HTMLElement {
-    const node = this.pageRoot.createElement("div", ["block"], iframeNode);
-    node.style.display = "none";
-    node.style.width = "0";
-    node.style.height = "0";
-    node.innerHTML = "Sorry, block iframe is not supported yet!";
-    return node;
-  }
-
-  visitInlineIframe(iframeNode: LogicalInlineReNode): HTMLElement {
-    const node = this.pageRoot.createElement("div", ["inline"], iframeNode);
-    node.style.display = "none";
-    node.style.width = "0";
-    node.style.height = "0";
-    node.innerHTML = "Sorry, inline iframe is not supported yet!";
-    return node;
-  }
-  */
-
   visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {
     const node = this.pageRoot.createElement("a", ["inline"], linkNode);
     node.style.marginTop = linkNode.edge.margin.start + "px";

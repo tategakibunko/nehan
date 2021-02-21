@@ -24,8 +24,6 @@ export interface ILogicalNodeEffector {
   visitInlineImage: (imgNode: LogicalInlineReNode) => void;
   visitBlockVideo: (videoNode: LogicalBlockReNode) => void;
   visitInlineVideo: (videoNode: LogicalInlineReNode) => void;
-  // visitBlockRe: (blockReNode: LogicalBlockReNode) => void;
-  // visitInlineRe: (inlineReNode: LogicalInlineReNode) => void;
   visitInlineLink: (link: LogicalInlineNode) => void;
   visitBlockLink: (link: LogicalBlockNode) => void;
 }
