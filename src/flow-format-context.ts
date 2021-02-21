@@ -349,7 +349,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     }
     const cells = this.blockNodes.find(child => child instanceof LogicalTableCellsNode);
     if (cells instanceof LogicalTableCellsNode) {
-      return Math.min(afterBorderSize, ...cells.children.map(cell => cell.border.width.after));
+      return Math.min(afterBorderSize, ...cells.children.map(cell => {
+        return cell instanceof LogicalBlockNode ? cell.border.width.after : 0;
+      }));
     }
     const lastChild = this.blockNodes[this.blockNodes.length - 1];
     if (lastChild instanceof LogicalBlockNode) {
@@ -404,8 +406,12 @@ export class FlowFormatContext implements IFlowFormatContext {
   // collapse target: firstChild -> table-row.before, else prev.after
   // where prev = this.blocks[this.blocks.length - 1]
   public addTableCells(cells: LogicalTableCellsNode) {
-    if (this.env.borderCollapse.isCollapse() && cells.children.some(cell => cell.border.width.before > 0)) {
-      const cellBeforeBorderSizes = cells.children.map(cell => cell.border.width.before);
+    if (this.env.borderCollapse.isCollapse() && cells.children.some(cell => {
+      return cell instanceof LogicalBlockNode ? cell.border.width.before > 0 : false;
+    })) {
+      const cellBeforeBorderSizes = cells.children.map(cell => {
+        return cell instanceof LogicalBlockNode ? cell.border.width.before : 0;
+      });
       const beforeBorderSize = this.contextBoxEdge.borderWidth.getSize("before");
       if (Math.min(...cellBeforeBorderSizes) > 0 && beforeBorderSize > 0) {
         const collapseSize = Math.min(beforeBorderSize, ...cellBeforeBorderSizes);

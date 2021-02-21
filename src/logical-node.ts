@@ -64,7 +64,9 @@ export class LogicalLineNode implements ILogicalPositionalNode {
     public children: ILogicalNode[],
     public baseline: LogicalBaseLineMetrics,
     public progress = 1,
-  ) { }
+  ) {
+    this.children.forEach(child => child.parent = this);
+  }
 
   get measure(): number {
     return this.size.measure;
@@ -90,6 +92,7 @@ export class LogicalRubyNode implements ILogicalNode {
     public rt: LogicalInlineNode,
     public progress = 1,
   ) {
+    this.children.forEach(child => child.parent = this);
   }
 
   get measure(): number {
@@ -121,7 +124,9 @@ export class LogicalInlineNode implements ILogicalNode {
     public edge: LogicalBoxEdge,
     public children: ILogicalNode[],
     public progress = 1,
-  ) { }
+  ) {
+    this.children.forEach(child => child.parent = this);
+  }
 
   get measure(): number {
     return this.size.measure + this.edge.measure;
@@ -152,7 +157,9 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
     public border: LogicalBorder,
     public children: ILogicalNode[],
     public progress: number,
-  ) { }
+  ) {
+    this.children.forEach(child => child.parent = this);
+  }
 
   get measure(): number {
     return this.size.measure + this.env.edge.measure;
@@ -185,7 +192,9 @@ export class LogicalInlineBlockNode implements ILogicalPositionalNode {
     public edge: LogicalBoxEdge,
     public children: ILogicalNode[],
     public progress = 1,
-  ) { }
+  ) {
+    this.children.forEach(child => child.parent = this);
+  }
 
   get measure(): number {
     return this.size.measure + this.edge.measure;
@@ -206,9 +215,11 @@ export class LogicalTableCellsNode implements ILogicalNode {
     public size: LogicalSize,
     public pos: LogicalCursorPos,
     public text: string,
-    public children: LogicalBlockNode[],
+    public children: ILogicalNode[],
     public progress = 1,
-  ) { }
+  ) {
+    this.children.forEach(child => child.parent = this);
+  }
 
   get measure(): number {
     return this.size.measure;
