@@ -20,7 +20,8 @@ import {
   TextEmphaData,
 } from './public-api'
 
-export interface ILogicalNodeEvaluator {
+export interface ILogicalNodeEffector {
+  /*
   visitChar: (char: Char) => HTMLElement | Node;
   visitCharEmpha: (char: Char, emphaData: TextEmphaData) => HTMLElement | Node;
   visitRefChar: (refChar: RefChar) => HTMLElement | Node;
@@ -35,19 +36,20 @@ export interface ILogicalNodeEvaluator {
   visitWord: (word: Word) => HTMLElement | Node;
   visitRuby: (ruby: LogicalRubyNode) => HTMLElement;
   visitText: (textNode: LogicalTextNode) => HTMLElement;
-  visitInline: (inlineNode: LogicalInlineNode) => HTMLElement;
-  visitInlineEmpha: (inlineNode: LogicalInlineNode) => HTMLElement;
-  visitLine: (lineNode: LogicalLineNode) => HTMLElement;
-  visitBlock: (blockNode: LogicalBlockNode) => HTMLElement;
-  visitRootBlock: (blockNode: LogicalBlockNode) => HTMLElement;
-  visitInlineBlock: (iblockNode: LogicalInlineBlockNode) => HTMLElement;
-  visitTableCells: (tableCellsNode: LogicalTableCellsNode) => HTMLElement;
-  visitBlockImage: (imgNode: LogicalBlockReNode) => HTMLElement;
-  visitInlineImage: (imgNode: LogicalInlineReNode) => HTMLElement;
-  visitBlockVideo: (videoNode: LogicalBlockReNode) => HTMLElement;
-  visitInlineVideo: (videoNode: LogicalInlineReNode) => HTMLElement;
-  // visitBlockRe: (blockReNode: LogicalBlockReNode) => HTMLElement;
-  // visitInlineRe: (inlineReNode: LogicalInlineReNode) => HTMLElement;
-  visitInlineLink: (link: LogicalInlineNode) => HTMLElement;
-  visitBlockLink: (link: LogicalBlockNode) => HTMLElement;
+  */
+  visitInline: (inlineNode: LogicalInlineNode) => void;
+  visitInlineEmpha: (inlineNode: LogicalInlineNode) => void;
+  visitLine: (lineNode: LogicalLineNode) => void;
+  visitBlock: (blockNode: LogicalBlockNode) => void;
+  visitRootBlock: (blockNode: LogicalBlockNode) => void;
+  visitInlineBlock: (iblockNode: LogicalInlineBlockNode) => void;
+  visitTableCells: (tableCellsNode: LogicalTableCellsNode) => void;
+  visitBlockImage: (imgNode: LogicalBlockReNode) => void;
+  visitInlineImage: (imgNode: LogicalInlineReNode) => void;
+  visitBlockVideo: (videoNode: LogicalBlockReNode) => void;
+  visitInlineVideo: (videoNode: LogicalInlineReNode) => void;
+  visitBlockRe: (blockReNode: LogicalBlockReNode) => void;
+  // visitInlineRe: (inlineReNode: LogicalInlineReNode) => void;
+  // visitInlineLink: (link: LogicalInlineNode) => void;
+  visitBlockLink: (link: LogicalBlockNode) => void;
 }

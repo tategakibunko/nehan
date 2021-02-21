@@ -3,6 +3,7 @@ import {
   BoxEnv,
   LogicalBorder,
   ILogicalNodeEvaluator,
+  ILogicalNodeEffector,
   LogicalCursorPos,
   LogicalBaseLineMetrics,
   LogicalBoxEdge,
@@ -19,6 +20,7 @@ export interface ILogicalNode {
   progress: number; // 0.0 ~ 1.0
   text: string;
   acceptEvaluator: (visitor: ILogicalNodeEvaluator, ...args: any[]) => HTMLElement | Node;
+  acceptEffector: (visitor: ILogicalNodeEffector, ...args: any[]) => void;
 }
 
 export interface ILogicalPositionalNode extends ILogicalNode {
@@ -52,6 +54,8 @@ export class LogicalTextNode implements ILogicalNode {
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitText(this);
   }
+
+  acceptEffector(visitor: ILogicalNodeEffector) { }
 }
 
 export class LogicalLineNode implements ILogicalPositionalNode {
@@ -79,6 +83,8 @@ export class LogicalLineNode implements ILogicalPositionalNode {
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitLine(this);
   }
+
+  acceptEffector(visitor: ILogicalNodeEffector) { }
 }
 
 export class LogicalRubyNode implements ILogicalNode {
@@ -114,6 +120,8 @@ export class LogicalRubyNode implements ILogicalNode {
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitRuby(this);
   }
+
+  acceptEffector(visitor: ILogicalNodeEffector) { }
 }
 
 export class LogicalInlineNode implements ILogicalNode {
@@ -145,6 +153,8 @@ export class LogicalInlineNode implements ILogicalNode {
     }
     return visitor.visitInline(this);
   }
+
+  acceptEffector(visitor: ILogicalNodeEffector) { }
 }
 
 export class LogicalBlockNode implements ILogicalPositionalNode {
@@ -180,6 +190,11 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
     }
     return visitor.visitBlock(this);
   }
+
+  acceptEffector(visitor: ILogicalNodeEffector) {
+    visitor.visitBlock(this);
+    this.children.forEach(child => child.acceptEffector(visitor));
+  }
 }
 
 export class LogicalInlineBlockNode implements ILogicalPositionalNode {
@@ -207,6 +222,11 @@ export class LogicalInlineBlockNode implements ILogicalPositionalNode {
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitInlineBlock(this);
   }
+
+  acceptEffector(visitor: ILogicalNodeEffector) {
+    visitor.visitInlineBlock(this);
+    this.children.forEach(child => child.acceptEffector(visitor));
+  }
 }
 
 export class LogicalTableCellsNode implements ILogicalNode {
@@ -231,6 +251,11 @@ export class LogicalTableCellsNode implements ILogicalNode {
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     return visitor.visitTableCells(this);
+  }
+
+  acceptEffector(visitor: ILogicalNodeEffector) {
+    visitor.visitTableCells(this);
+    this.children.forEach(child => child.acceptEffector(visitor));
   }
 }
 
@@ -257,10 +282,14 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
     switch (this.env.element.tagName) {
       case "img": return visitor.visitBlockImage(this);
       case "video": return visitor.visitBlockVideo(this);
-      case "iframe": return visitor.visitBlockIframe(this);
+      // case "iframe": return visitor.visitBlockRe(this);
     }
     console.error("unsupported replaced element:", this);
     throw new Error("unsupported replaced element");
+  }
+
+  acceptEffector(visitor: ILogicalNodeEffector) {
+    visitor.visitBlockRe(this);
   }
 }
 
@@ -286,9 +315,11 @@ export class LogicalInlineReNode implements ILogicalNode {
     switch (this.env.element.tagName) {
       case "img": return visitor.visitInlineImage(this);
       case "video": return visitor.visitInlineVideo(this);
-      case "iframe": return visitor.visitInlineIframe(this);
+      // case "iframe": return visitor.visitInlineRe(this);
     }
     console.error("unsupported replaced element:", this);
     throw new Error("unsupported replaced element");
   }
+
+  acceptEffector(visitor: ILogicalNodeEffector) { }
 }

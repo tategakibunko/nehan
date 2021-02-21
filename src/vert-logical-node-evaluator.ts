@@ -357,6 +357,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
+  /*
   visitBlockIframe(iframeNode: LogicalBlockReNode): HTMLElement {
     const node = this.pageRoot.createElement("div", ["block"], iframeNode);
     node.style.display = "none";
@@ -374,6 +375,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.innerHTML = "Sorry, inline iframe is not supported yet!";
     return node;
   }
+  */
 
   visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {
     const node = this.pageRoot.createElement("a", ["inline"], linkNode);
