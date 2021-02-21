@@ -28,20 +28,13 @@ export class CssStyleDeclaration {
     return this.dynamicStyles.length > 0;
   }
 
-  public hasCallbacks(): boolean {
-    return this.domCallbacks.length > 0;
-  }
-
   public isEmpty(): boolean {
     return this.styles.size === 0 &&
       this.dynamicStyles.length === 0 &&
       this.domCallbacks.length === 0;
   }
 
-  // [TODO]
-  // To keep backward compatibility, we use 'any' type for box argument.
-  // But this must be updated to ILogicalNode in the future.
-  public callDomCallbacks(box: any, dom: HTMLElement, flowRoot: IFlowRootFormatContext, parentBox?: ILogicalNode, parentDOM?: HTMLElement) {
+  public callDomCallbacks(box: any, dom: HTMLElement, flowRoot: IFlowRootFormatContext) {
     this.domCallbacks.forEach(callback => callback.call(box, dom, flowRoot));
   }
 
