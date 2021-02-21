@@ -6,7 +6,6 @@ import {
   CssProp,
   CssText,
   ILogicalCssEvaluator,
-  ILogicalNode,
   IFlowRootFormatContext,
   NativeStyleMap,
 } from "./public-api";
@@ -74,7 +73,7 @@ export class CssStyleDeclaration {
   }
 
   public forEach(fn: (key: string, value: string) => void) {
-    // [CAUTION] (value, key) in Map, but (key, value) in fn.
+    // [CAUTION] (value, key) in Map, but fn(key, value).
     this.styles.forEach((value: string, key: string) => fn(key, value));
   }
 
