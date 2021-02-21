@@ -14,7 +14,7 @@ import {
 
 export interface ILogicalNode {
   parent?: ILogicalNode;
-  dom?: HTMLElement;
+  dom?: HTMLElement; // set after evaluated by ILogicalNodeEvaluator.
   env: BoxEnv;
   measure: number;
   extent: number;
