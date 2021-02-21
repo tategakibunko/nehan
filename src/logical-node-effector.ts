@@ -1,4 +1,5 @@
 import {
+  LogicalLineNode,
   LogicalRubyNode,
   LogicalInlineNode,
   LogicalBlockNode,
@@ -10,8 +11,8 @@ import {
 
 export interface ILogicalNodeEffector {
   visitRuby: (ruby: LogicalRubyNode) => void;
+  visitLine: (line: LogicalLineNode) => void;
   visitInline: (inlineNode: LogicalInlineNode) => void;
-  visitInlineEmpha: (inlineNode: LogicalInlineNode) => void;
   visitBlock: (blockNode: LogicalBlockNode) => void;
   visitInlineBlock: (iblockNode: LogicalInlineBlockNode) => void;
   visitTableCells: (tableCellsNode: LogicalTableCellsNode) => void;
@@ -19,6 +20,4 @@ export interface ILogicalNodeEffector {
   visitInlineImage: (imgNode: LogicalInlineReNode) => void;
   visitBlockVideo: (videoNode: LogicalBlockReNode) => void;
   visitInlineVideo: (videoNode: LogicalInlineReNode) => void;
-  visitInlineLink: (link: LogicalInlineNode) => void;
-  visitBlockLink: (link: LogicalBlockNode) => void;
 }

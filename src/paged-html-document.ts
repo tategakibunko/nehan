@@ -9,10 +9,12 @@ import {
   ILogicalNodeGenerator,
   LogicalBlockNode,
   ILogicalNodeEvaluator,
+  ILogicalNodeEffector,
   ILayoutOutlineEvaluator,
   LayoutOutlineEvaluator,
   ImageLoader,
   ImageLoaderContext,
+  DomCallbackEffector,
 } from './public-api';
 
 export interface PagedHtmlRenderOptions {
@@ -25,6 +27,7 @@ export interface PagedHtmlRenderOptions {
 export class PagedHtmlDocument extends HtmlDocument {
   private generator: ILogicalNodeGenerator;
   private evaluator: ILogicalNodeEvaluator;
+  private effector: ILogicalNodeEffector;
   private pages: Page[];
   private timestamp: number;
 
@@ -32,6 +35,7 @@ export class PagedHtmlDocument extends HtmlDocument {
     super(src, options);
     this.generator = options.generator || LogicalNodeGenerator.createRoot(this.body);
     this.evaluator = options.evaluator || this.generator.context.pageRoot.createLogicalNodeEvaluator();
+    this.effector = new DomCallbackEffector(this.generator.context.pageRoot);
     this.pages = [];
     this.timestamp = 0;
   }
@@ -84,6 +88,7 @@ export class PagedHtmlDocument extends HtmlDocument {
       return page;
     }
     page.dom = page.node.acceptEvaluator(this.evaluator) as HTMLElement;
+    page.node.acceptEffector(this.effector); // fire dom callbacks.
     return page;
   }
 

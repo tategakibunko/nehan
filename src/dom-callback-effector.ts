@@ -1,3 +1,4 @@
+import { LogicalLineNode } from "./logical-node";
 import {
   ILogicalNode,
   ILogicalNodeEffector,
@@ -20,67 +21,61 @@ export class DomCallbackEffector implements ILogicalNodeEffector {
     private pageRoot: IFlowRootFormatContext,
   ) { }
 
-  private visitSingle(node: ILogicalNode) {
+  private visitNode(node: ILogicalNode) {
     if (node.dom) {
       node.env.element.style.callDomCallbacks(node, node.dom, this.pageRoot);
     }
   }
 
-  private visitMany(node: IContainerLogicalNode) {
-    if (node.dom) {
-      node.env.element.style.callDomCallbacks(node, node.dom, this.pageRoot);
-      node.children.forEach(child => child.acceptEffector(this));
-    }
+  private visitTree(node: IContainerLogicalNode) {
+    this.visitNode(node);
+    this.visitChildren(node.children);
+  }
+
+  private visitChildren(children: ILogicalNode[]) {
+    children.forEach(child => child.acceptEffector(this));
+  }
+
+  visitLine(node: LogicalLineNode) {
+    this.visitChildren(node.children);
   }
 
   visitRuby(node: LogicalRubyNode) {
-    this.visitSingle(node);
-    node.rt.acceptEffector(this);
-    node.rb.acceptEffector(this);
+    this.visitNode(node);
+    this.visitNode(node.rt);
+    this.visitNode(node.rb);
   }
 
   visitInline(node: LogicalInlineNode) {
-    this.visitMany(node);
-  }
-
-  visitInlineEmpha(node: LogicalInlineNode) {
-    this.visitMany(node);
+    this.visitTree(node);
   }
 
   visitBlock(node: LogicalBlockNode) {
-    this.visitMany(node);
+    this.visitTree(node);
   }
 
   visitInlineBlock(node: LogicalInlineBlockNode) {
-    this.visitMany(node);
+    this.visitTree(node);
   };
 
   visitTableCells(node: LogicalTableCellsNode) {
-    this.visitMany(node);
-  };
-
-  visitInlineLink(node: LogicalInlineNode) {
-    this.visitMany(node);
-  };
-
-  visitBlockLink(node: LogicalBlockNode) {
-    this.visitMany(node);
+    node.children.forEach(child => child.acceptEffector(this));
   };
 
   visitBlockImage(node: LogicalBlockReNode) {
-    this.visitSingle(node);
+    this.visitNode(node);
   };
 
   visitInlineImage(node: LogicalInlineReNode) {
-    this.visitSingle(node);
+    this.visitNode(node);
   };
 
   visitBlockVideo(node: LogicalBlockReNode) {
-    this.visitSingle(node);
+    this.visitNode(node);
   };
 
   visitInlineVideo(node: LogicalInlineReNode) {
-    this.visitSingle(node);
+    this.visitNode(node);
   };
 
 }

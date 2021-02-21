@@ -87,7 +87,9 @@ export class LogicalLineNode implements ILogicalPositionalNode {
     return visitor.visitLine(this);
   }
 
-  acceptEffector(visitor: ILogicalNodeEffector) { }
+  acceptEffector(visitor: ILogicalNodeEffector) {
+    visitor.visitLine(this);
+  }
 }
 
 export class LogicalRubyNode implements ILogicalNode {
@@ -198,14 +200,7 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
   }
 
   acceptEffector(visitor: ILogicalNodeEffector) {
-    switch (this.env.element.tagName) {
-      case "a":
-        visitor.visitBlockLink(this);
-        break;
-      default:
-        visitor.visitBlock(this);
-        break;
-    }
+    visitor.visitBlock(this);
   }
 }
 
@@ -304,9 +299,10 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
     switch (this.env.element.tagName) {
       case "img": visitor.visitBlockImage(this); break;
       case "video": visitor.visitBlockVideo(this); break;
+      default:
+        console.error("unsupported replaced element:", this);
+        throw new Error("unsupported replaced element");
     }
-    console.error("unsupported replaced element:", this);
-    throw new Error("unsupported replaced element");
   }
 }
 
@@ -342,8 +338,9 @@ export class LogicalInlineReNode implements ILogicalNode {
     switch (this.env.element.tagName) {
       case "img": visitor.visitInlineImage(this); break;
       case "video": visitor.visitInlineVideo(this); break;
+      default:
+        console.error("unsupported replaced element:", this);
+        throw new Error("unsupported replaced element");
     }
-    console.error("unsupported replaced element:", this);
-    throw new Error("unsupported replaced element");
   }
 }
