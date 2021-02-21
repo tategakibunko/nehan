@@ -16,9 +16,6 @@ export class DomCallback {
     this.callback = callback;
   }
 
-  // [TODO]
-  // To keep backward compatibility, we use 'any' type for box argument.
-  // But this must be updated to ILogicalNode in the future.
   public call(box: any, dom: HTMLElement, flowRoot: IFlowRootFormatContext) {
     return this.callback({
       selector: this.selector,
