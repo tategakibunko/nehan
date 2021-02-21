@@ -14,6 +14,7 @@ import {
 
 export interface ILogicalNode {
   parent?: ILogicalNode;
+  dom?: HTMLElement;
   env: BoxEnv;
   measure: number;
   extent: number;
@@ -41,6 +42,7 @@ export class LogicalTextNode implements ILogicalNode {
     public skipBr: boolean,
     public children: ICharacter[],
     public progress = 1,
+    public dom: HTMLElement | undefined = undefined,
   ) { }
 
   get measure(): number {
@@ -55,9 +57,7 @@ export class LogicalTextNode implements ILogicalNode {
     return visitor.visitText(this);
   }
 
-  acceptEffector(visitor: ILogicalNodeEffector) {
-    visitor.visitText(this);
-  }
+  acceptEffector(visitor: ILogicalNodeEffector) { }
 }
 
 export class LogicalLineNode implements ILogicalPositionalNode {
@@ -70,6 +70,7 @@ export class LogicalLineNode implements ILogicalPositionalNode {
     public children: ILogicalNode[],
     public baseline: LogicalBaseLineMetrics,
     public progress = 1,
+    public dom: HTMLElement | undefined = undefined,
   ) {
     this.children.forEach(child => child.parent = this);
   }
@@ -86,10 +87,7 @@ export class LogicalLineNode implements ILogicalPositionalNode {
     return visitor.visitLine(this);
   }
 
-  acceptEffector(visitor: ILogicalNodeEffector) {
-    visitor.visitLine(this);
-    this.children.forEach(child => child.acceptEffector(visitor));
-  }
+  acceptEffector(visitor: ILogicalNodeEffector) { }
 }
 
 export class LogicalRubyNode implements ILogicalNode {
@@ -100,6 +98,7 @@ export class LogicalRubyNode implements ILogicalNode {
     public rb: LogicalInlineNode,
     public rt: LogicalInlineNode,
     public progress = 1,
+    public dom: HTMLElement | undefined = undefined,
   ) { }
 
   get measure(): number {
@@ -135,6 +134,7 @@ export class LogicalInlineNode implements ILogicalNode {
     public edge: LogicalBoxEdge,
     public children: ILogicalNode[],
     public progress = 1,
+    public dom: HTMLElement | undefined = undefined,
   ) {
     this.children.forEach(child => child.parent = this);
   }
@@ -159,7 +159,6 @@ export class LogicalInlineNode implements ILogicalNode {
 
   acceptEffector(visitor: ILogicalNodeEffector) {
     visitor.visitInline(this);
-    this.children.forEach(child => child.acceptEffector(visitor));
   }
 }
 
@@ -173,6 +172,7 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
     public border: LogicalBorder,
     public children: ILogicalNode[],
     public progress: number,
+    public dom: HTMLElement | undefined = undefined,
   ) {
     this.children.forEach(child => child.parent = this);
   }
@@ -198,8 +198,14 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
   }
 
   acceptEffector(visitor: ILogicalNodeEffector) {
-    visitor.visitBlock(this);
-    this.children.forEach(child => child.acceptEffector(visitor));
+    switch (this.env.element.tagName) {
+      case "a":
+        visitor.visitBlockLink(this);
+        break;
+      default:
+        visitor.visitBlock(this);
+        break;
+    }
   }
 }
 
@@ -213,6 +219,7 @@ export class LogicalInlineBlockNode implements ILogicalPositionalNode {
     public edge: LogicalBoxEdge,
     public children: ILogicalNode[],
     public progress = 1,
+    public dom: HTMLElement | undefined = undefined,
   ) {
     this.children.forEach(child => child.parent = this);
   }
@@ -231,7 +238,6 @@ export class LogicalInlineBlockNode implements ILogicalPositionalNode {
 
   acceptEffector(visitor: ILogicalNodeEffector) {
     visitor.visitInlineBlock(this);
-    this.children.forEach(child => child.acceptEffector(visitor));
   }
 }
 
@@ -243,6 +249,7 @@ export class LogicalTableCellsNode implements ILogicalNode {
     public text: string,
     public children: ILogicalNode[],
     public progress = 1,
+    public dom: HTMLElement | undefined = undefined,
   ) {
     this.children.forEach(child => child.parent = this);
   }
@@ -261,7 +268,6 @@ export class LogicalTableCellsNode implements ILogicalNode {
 
   acceptEffector(visitor: ILogicalNodeEffector) {
     visitor.visitTableCells(this);
-    this.children.forEach(child => child.acceptEffector(visitor));
   }
 }
 
@@ -274,6 +280,7 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
     public pos: LogicalCursorPos,
     public text: string,
     public progress = 1,
+    public dom: HTMLElement | undefined = undefined,
   ) { }
 
   get measure(): number {
@@ -311,6 +318,7 @@ export class LogicalInlineReNode implements ILogicalNode {
     public edge: LogicalBoxEdge,
     public text: string,
     public progress = 1,
+    public dom: HTMLElement | undefined = undefined,
   ) { }
 
   get measure(): number {

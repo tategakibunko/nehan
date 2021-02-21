@@ -9,7 +9,5 @@ export interface DomCallbackContext {
   box: ILogicalNode;
   dom: HTMLElement;
   flowRoot: IFlowRootFormatContext;
-  parentBox?: ILogicalNode,
-  parentDOM?: HTMLElement,
 }
 

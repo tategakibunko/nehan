@@ -78,6 +78,7 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     node.className = layoutNames.concat(originalTagName).map(layoutName => `nehan-${layoutName}`).concat(
       element.classList.values().map(klass => `nehan-e-${klass}`)
     ).join(" ");
+    logicalNode.dom = node;
     return node;
   }
 
