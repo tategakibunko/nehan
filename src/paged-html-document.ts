@@ -1,9 +1,11 @@
 import {
   Config,
+  Anchor,
   Page,
   HtmlDocument,
   HtmlDocumentOptions,
   LogicalNodeGenerator,
+  ILogicalNode,
   ILogicalNodeGenerator,
   LogicalBlockNode,
   ILogicalNodeEvaluator,
@@ -57,12 +59,20 @@ export class PagedHtmlDocument extends HtmlDocument {
     return this.pages.length;
   }
 
+  public getAnchor(anchorName: string): Anchor | undefined {
+    return this.generator.context.pageRoot.getAnchor(anchorName);
+  }
+
   public getAnchorPage(anchorName: string): Page {
-    const anchor = this.generator.context.pageRoot.getAnchor(anchorName);
+    const anchor = this.getAnchor(anchorName);
     if (!anchor) {
       throw new Error(`anchor(${anchorName}) is not found!`);
     }
     return this.getPage(anchor.pageIndex);
+  }
+
+  public evalNode(node: ILogicalNode): HTMLElement | Node {
+    return node.acceptEvaluator(this.evaluator);
   }
 
   public getPage(index: number): Page {
