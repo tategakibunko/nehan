@@ -482,7 +482,7 @@ export class FlowFormatContext implements IFlowFormatContext {
   private addAnchorElement(id: string, node: ILogicalNode) {
     const anchor = this.pageRoot.getAnchor(id);
     if (anchor) {
-      anchor.box = node; // block node will overwrite this field for same element id.
+      anchor.box = node; // block-level node will overwrite this field for same element id.
       if (anchor.pageIndex < 0) {
         anchor.pageIndex = this.pageRoot.pageCount; // pageIndex is not overwritten.
       }
