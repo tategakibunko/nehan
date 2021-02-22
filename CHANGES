@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.6.3
+==========================
+* Fixed anchor target bug for some pattern.
+
 version 7.6.2, 2021/02/22
 ==========================
 o Added parent field to ILogicalNode.
