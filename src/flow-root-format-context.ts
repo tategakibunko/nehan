@@ -60,7 +60,6 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     const id = logicalNode.env.element.id;
     const anchor = this.getAnchor(id);
     if (anchor && !anchor.dom) {
-      anchor.box = logicalNode;
       anchor.dom = node;
     }
     switch (originalTagName) {
