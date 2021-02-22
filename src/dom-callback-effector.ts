@@ -1,8 +1,8 @@
-import { LogicalLineNode } from "./logical-node";
 import {
   ILogicalNode,
   ILogicalNodeEffector,
   IFlowRootFormatContext,
+  LogicalLineNode,
   LogicalBlockNode,
   LogicalRubyNode,
   LogicalInlineNode,
@@ -22,7 +22,7 @@ export class DomCallbackEffector implements ILogicalNodeEffector {
   ) { }
 
   private visitNode(node: ILogicalNode) {
-    if (node.dom) {
+    if (node.dom && node.env.element.style.hasDomCallbacks()) {
       node.env.element.style.callDomCallbacks(node, node.dom, this.pageRoot);
     }
   }

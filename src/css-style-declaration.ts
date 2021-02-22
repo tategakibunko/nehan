@@ -23,6 +23,10 @@ export class CssStyleDeclaration {
     this.domCallbacks = [];
   }
 
+  public hasDomCallbacks(): boolean {
+    return this.domCallbacks.length > 0;
+  }
+
   public hasDynamicStyles(): boolean {
     return this.dynamicStyles.length > 0;
   }

@@ -42,7 +42,7 @@ export class PagedHtmlDocument extends HtmlDocument {
 
   private addPageNode(node: LogicalBlockNode): Page {
     const index = this.pages.length;
-    const dom = (index === 0) ? node.acceptEvaluator(this.evaluator) : undefined; // evaluate first page only(lazy evaluation)
+    const dom = (index === 0) ? this.evalNode(node, true) as HTMLElement : undefined; // evaluate first page only(lazy evaluation)
     const prevPage = this.pages[index - 1];
     const progress = node.progress;
     const charCount = node.text.length;
@@ -75,8 +75,12 @@ export class PagedHtmlDocument extends HtmlDocument {
     return this.getPage(anchor.pageIndex);
   }
 
-  public evalNode(node: ILogicalNode): HTMLElement | Node {
-    return node.acceptEvaluator(this.evaluator);
+  public evalNode(node: ILogicalNode, useEffector = true): HTMLElement | Node {
+    const dom = node.acceptEvaluator(this.evaluator);
+    if (useEffector) {
+      node.acceptEffector(this.effector); // fire dom callbacks.
+    }
+    return dom;
   }
 
   public getPage(index: number): Page {
@@ -87,8 +91,7 @@ export class PagedHtmlDocument extends HtmlDocument {
     if (page.dom) {
       return page;
     }
-    page.dom = page.node.acceptEvaluator(this.evaluator) as HTMLElement;
-    page.node.acceptEffector(this.effector); // fire dom callbacks.
+    page.dom = this.evalNode(page.node, true) as HTMLElement;
     return page;
   }
 
