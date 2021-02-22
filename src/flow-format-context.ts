@@ -481,7 +481,7 @@ export class FlowFormatContext implements IFlowFormatContext {
 
   private addAnchorElement(id: string, node: ILogicalNode) {
     const anchor = this.pageRoot.getAnchor(id);
-    if (anchor && anchor.pageIndex < 0) {
+    if (anchor && !anchor.box && anchor.pageIndex < 0) {
       anchor.box = node;
       anchor.pageIndex = this.pageRoot.pageCount;
     }

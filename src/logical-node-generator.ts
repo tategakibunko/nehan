@@ -1,5 +1,6 @@
 import {
   Config,
+  Anchor,
   LayoutResult,
   HtmlElement,
   Display,
@@ -104,8 +105,9 @@ export class LogicalNodeGenerator {
     // if element has id, register it's position as anchor.
     if (element.id) {
       const flowRoot = parentContext.flowRoot;
+      const anchor: Anchor = { name: element.id, element, pageIndex: -1 };
       // Note that strict pageIndex is not determined at this point, so we set -1 temporarily.
-      flowRoot.setAnchor(element.id, { name: element.id, element, pageIndex: -1 });
+      flowRoot.setAnchor(element.id, anchor);
     }
     if (element.tagName === "a") {
       const context = new FlowFormatContext(env, parentContext);
