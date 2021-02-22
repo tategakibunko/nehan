@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.6.3
+version 7.6.3, 2021/02/22
 ==========================
 * Fixed anchor target bug for some pattern.
 
