@@ -302,8 +302,6 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
     switch (this.env.element.tagName) {
       case "img": visitor.visitBlockImage(this); break;
       case "video": visitor.visitBlockVideo(this); break;
-      default:
-        console.error("unsupported replaced element:", this);
     }
   }
 }
@@ -343,8 +341,6 @@ export class LogicalInlineReNode implements ILogicalNode {
     switch (this.env.element.tagName) {
       case "img": visitor.visitInlineImage(this); break;
       case "video": visitor.visitInlineVideo(this); break;
-      default:
-        console.error("unsupported replaced element:", this);
     }
   }
 }
