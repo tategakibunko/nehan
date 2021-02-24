@@ -109,6 +109,13 @@ export class LogicalNodeGenerator {
       // Note that strict pageIndex is not determined at this point, so we set -1 temporarily.
       flowRoot.setAnchor(element.id, anchor);
     }
+    if (ReplacedElement.isReplacedElement(element) || element.$node) {
+      const generator = new ReNodeGenerator(
+        new ReFormatContext(env, parentContext)
+      );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
     if (element.tagName === "a") {
       const context = new FlowFormatContext(env, parentContext);
       const generator = display.isInlineLevel() ?
@@ -120,13 +127,6 @@ export class LogicalNodeGenerator {
     if (element.tagName === "br") {
       const generator = new LineBreakGenerator(
         new FlowFormatContext(env, parentContext)
-      );
-      const nextElement = element.nextSibling;
-      return { generator, nextElement };
-    }
-    if (ReplacedElement.isReplacedElement(element)) {
-      const generator = new ReNodeGenerator(
-        new ReFormatContext(env, parentContext)
       );
       const nextElement = element.nextSibling;
       return { generator, nextElement };

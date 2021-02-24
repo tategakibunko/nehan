@@ -16,7 +16,7 @@ import {
 // if [this.$node] is [Node].
 export class HtmlElement {
   public $node: Node | HTMLElement;
-  public $dom: HTMLElement | undefined;
+  public $dom: HTMLElement | undefined; // dynamically created DOM.
   public tagName: string;
   public childNodes: HtmlElement[];
   public parent: HtmlElement | null;
@@ -28,7 +28,7 @@ export class HtmlElement {
 
   constructor(node: Node, root: HtmlDocument) {
     this.$node = node;
-    this.$dom = undefined; // used for dynamically loaded fiexed DOM.
+    this.$dom = undefined;
     this.tagName = this.getTagName();
     this.childNodes = [];
     this.parent = null;
