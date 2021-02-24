@@ -8,7 +8,7 @@ import {
   PhysicalSize,
   ReReducer,
   IReResizer,
-  ReNormalResizer,
+  ReShrinkResizer,
 } from './public-api';
 
 export class ReNodeGenerator implements ILogicalNodeGenerator {
@@ -17,7 +17,7 @@ export class ReNodeGenerator implements ILogicalNodeGenerator {
   constructor(
     public context: ReFormatContext,
     protected reducer: ILayoutReducer = ReReducer.instance,
-    protected resizer: IReResizer = ReNormalResizer.instance,
+    protected resizer: IReResizer = ReShrinkResizer.instance,
   ) {
     this.generator = this.createGenerator();
   }

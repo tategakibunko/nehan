@@ -47,7 +47,7 @@ import {
   ConstantValueGenerator,
   UprightTokenMapper,
   TcyTokenMapper,
-  ReNormalResizer,
+  ReShrinkResizer,
   ReRotateResizer,
   ReReducer,
 } from './public-api'
@@ -116,7 +116,7 @@ export class LogicalNodeGenerator {
       const generator = new ReNodeGenerator(
         new ReFormatContext(env, parentContext),
         ReReducer.instance,
-        ReNormalResizer.instance,
+        ReShrinkResizer.instance,
       );
       const nextElement = element.nextSibling;
       return { generator, nextElement };

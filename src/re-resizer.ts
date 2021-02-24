@@ -7,8 +7,8 @@ export interface IReResizer {
   resize: (context: ReFormatContext, originalSize: LogicalSize, maxSize: LogicalSize) => LogicalSize;
 }
 
-export class ReNormalResizer implements IReResizer {
-  static instance = new ReNormalResizer();
+export class ReShrinkResizer implements IReResizer {
+  static instance = new ReShrinkResizer();
   protected constructor() { }
 
   resize(context: ReFormatContext, originalSize: LogicalSize, maxSize: LogicalSize): LogicalSize {
