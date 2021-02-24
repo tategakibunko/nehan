@@ -317,12 +317,33 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
-  visitBlockReFixed(reNodeFixed: LogicalBlockReNode): HTMLElement {
-    return reNodeFixed.env.element.$dom as HTMLElement; // TODO
+  visitBlockReFixed(reNodeFixed: LogicalBlockReNode, fixedDOM: HTMLElement): HTMLElement {
+    const node = this.pageRoot.createElement("div", ["block"], reNodeFixed);
+    node.style.position = "absolute";
+    node.style.width = reNodeFixed.physicalSize.width + "px";
+    node.style.height = reNodeFixed.physicalSize.height + "px";
+    node.appendChild(fixedDOM);
+    reNodeFixed.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    if (reNodeFixed.env.position.isAbsolute()) {
+      reNodeFixed.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    } else {
+      reNodeFixed.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    }
+    reNodeFixed.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    return node;
   }
 
-  visitInlineReFixed(reNodeFixed: LogicalInlineReNode): HTMLElement {
-    return reNodeFixed.env.element.$dom as HTMLElement; // TODO
+  visitInlineReFixed(reNodeFixed: LogicalInlineReNode, fixedDOM: HTMLElement): HTMLElement {
+    const node = this.pageRoot.createElement("div", ["inline"], reNodeFixed);
+    node.style.display = "inline-block";
+    node.style.width = reNodeFixed.physicalSize.width + "px";
+    node.style.height = reNodeFixed.physicalSize.height + "px";
+    node.style.marginLeft = reNodeFixed.edge.margin.start + "px";
+    node.style.marginRight = reNodeFixed.edge.margin.end + "px";
+    node.appendChild(fixedDOM);
+    reNodeFixed.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    reNodeFixed.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    return node;
   }
 
   visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {

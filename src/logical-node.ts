@@ -288,7 +288,7 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     if (this.env.element.$dom) {
-      return visitor.visitBlockReFixed(this);
+      return visitor.visitBlockReFixed(this, this.env.element.$dom);
     }
     switch (this.env.element.tagName) {
       case "img": return visitor.visitBlockImage(this);
@@ -327,7 +327,7 @@ export class LogicalInlineReNode implements ILogicalNode {
 
   acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement {
     if (this.env.element.$dom) {
-      return visitor.visitInlineReFixed(this);
+      return visitor.visitInlineReFixed(this, this.env.element.$dom);
     }
     switch (this.env.element.tagName) {
       case "img": return visitor.visitInlineImage(this);
