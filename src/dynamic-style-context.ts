@@ -29,6 +29,10 @@ export class DynamicStyleContext {
     this.parentContext = value.parentContext;
   }
 
+  public setExternalDOM($dom: HTMLElement) {
+    this.element.$dom = $dom;
+  }
+
   public get fontSize(): number {
     return CssLength.computeFontSize(this.element);
   }
