@@ -16,3 +16,12 @@ export class ReNormalResizer implements IReResizer {
   }
 }
 
+// Resizer that doesn't change original size.
+export class ReIdResizer implements IReResizer {
+  static instance = new ReIdResizer();
+  protected constructor() { }
+
+  resize(_context: ReFormatContext, originalSize: LogicalSize, _maxSize: LogicalSize): LogicalSize {
+    return originalSize;
+  }
+}
