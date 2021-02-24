@@ -351,11 +351,11 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
   }
 
   visitBlockReFixed(reNodeFixed: LogicalBlockReNode): HTMLElement {
-    throw new Error("todo");
+    return reNodeFixed.env.element.$dom as HTMLElement; // TODO
   }
 
   visitInlineReFixed(reNodeFixed: LogicalInlineReNode): HTMLElement {
-    throw new Error("todo");
+    return reNodeFixed.env.element.$dom as HTMLElement; // TODO
   }
 
   visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {
