@@ -346,7 +346,6 @@ export class LogicalInlineReNode implements ILogicalNode {
       case "video": visitor.visitInlineVideo(this); break;
       default:
         console.error("unsupported replaced element:", this);
-        throw new Error("unsupported replaced element");
     }
   }
 }
