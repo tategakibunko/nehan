@@ -350,6 +350,14 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return node;
   }
 
+  visitBlockReFixed(reNodeFixed: LogicalBlockReNode): HTMLElement {
+    throw new Error("todo");
+  }
+
+  visitInlineReFixed(reNodeFixed: LogicalInlineReNode): HTMLElement {
+    throw new Error("todo");
+  }
+
   visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {
     const node = this.pageRoot.createElement("a", ["inline"], linkNode);
     node.style.marginTop = linkNode.edge.margin.start + "px";

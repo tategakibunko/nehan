@@ -48,4 +48,6 @@ export interface ILogicalNodeEvaluator {
   visitInlineVideo: (videoNode: LogicalInlineReNode) => HTMLElement;
   visitInlineLink: (link: LogicalInlineNode) => HTMLElement;
   visitBlockLink: (link: LogicalBlockNode) => HTMLElement;
+  visitBlockReFixed: (fixedElement: LogicalBlockReNode) => HTMLElement;
+  visitInlineReFixed: (fixedElement: LogicalInlineReNode) => HTMLElement;
 }
