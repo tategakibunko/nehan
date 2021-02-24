@@ -16,6 +16,21 @@ export class ReNormalResizer implements IReResizer {
   }
 }
 
+export class ReRotateResizer implements IReResizer {
+  static instance = new ReRotateResizer();
+  protected constructor() { }
+
+  resize(context: ReFormatContext, originalSize: LogicalSize, maxSize: LogicalSize): LogicalSize {
+    if (context.env.writingMode.isTextVertical()) {
+      return new LogicalSize({
+        measure: originalSize.extent,
+        extent: originalSize.measure,
+      });
+    }
+    return originalSize.resize(maxSize);
+  }
+}
+
 // Resizer that doesn't change original size.
 export class ReIdResizer implements IReResizer {
   static instance = new ReIdResizer();

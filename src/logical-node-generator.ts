@@ -47,6 +47,9 @@ import {
   ConstantValueGenerator,
   UprightTokenMapper,
   TcyTokenMapper,
+  ReNormalResizer,
+  ReRotateResizer,
+  ReReducer,
 } from './public-api'
 
 export interface ChildGenerator {
@@ -109,9 +112,20 @@ export class LogicalNodeGenerator {
       // Note that strict pageIndex is not determined at this point, so we set -1 temporarily.
       flowRoot.setAnchor(element.id, anchor);
     }
-    if (ReplacedElement.isReplacedElement(element) || element.$node) {
+    if (ReplacedElement.isReplacedElement(element)) {
       const generator = new ReNodeGenerator(
-        new ReFormatContext(env, parentContext)
+        new ReFormatContext(env, parentContext),
+        ReReducer.instance,
+        ReNormalResizer.instance,
+      );
+      const nextElement = element.nextSibling;
+      return { generator, nextElement };
+    }
+    if (element.$dom) {
+      const generator = new ReNodeGenerator(
+        new ReFormatContext(env, parentContext),
+        ReReducer.instance,
+        ReRotateResizer.instance,
       );
       const nextElement = element.nextSibling;
       return { generator, nextElement };
