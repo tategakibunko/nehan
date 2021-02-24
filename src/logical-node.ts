@@ -304,7 +304,6 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
       case "video": visitor.visitBlockVideo(this); break;
       default:
         console.error("unsupported replaced element:", this);
-        throw new Error("unsupported replaced element");
     }
   }
 }
