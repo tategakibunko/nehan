@@ -35,9 +35,9 @@ export class HtmlElement {
     this.root = root;
     this.style = new CssStyleDeclaration();
     this.computedStyle = new CssStyleDeclaration();
-    this.id = this.$node instanceof HTMLElement ? this.$node.id : "";
+    this.id = this.$node instanceof Element ? this.$node.id : "";
     this.classList = this.createClassList();
-    this.setupChildren(node, root);
+    this.setupChildren(this.$node, root);
   }
 
   public acceptChildFilter(visitor: ChildNodeFilter): HtmlElement {
@@ -80,7 +80,7 @@ export class HtmlElement {
   }
 
   protected createClassList(): DomTokenList {
-    if (this.$node instanceof HTMLElement) {
+    if (this.$node instanceof Element) {
       let items: string[] = [];
       // classList.values() is not defined in typescript signature...?
       for (let i = 0; i < this.$node.classList.length; i++) {
@@ -95,7 +95,7 @@ export class HtmlElement {
   }
 
   protected setupChildren(node: Node, root: HtmlDocument) {
-    if (node instanceof HTMLElement) {
+    if (node instanceof Element) {
       for (let i = 0; i < node.childNodes.length; i++) {
         let child = node.childNodes.item(i);
         let child_element = root.createElementFromDOM(child);
@@ -120,14 +120,14 @@ export class HtmlElement {
   }
 
   public get attributes(): NamedNodeMap | null {
-    if (this.$node instanceof HTMLElement) {
+    if (this.$node instanceof Element) {
       return this.$node.attributes;
     }
     return null;
   }
 
   public get dataset(): DOMStringMap {
-    if (this.$node instanceof HTMLElement) {
+    if (this.$node instanceof Element) {
       return this.$node.dataset;
     }
     throw new Error("dataset is not defined(not HTMLElement)");
@@ -141,8 +141,7 @@ export class HtmlElement {
     if (this.$node instanceof Text) {
       return "(text)";
     }
-    if (this.$node instanceof HTMLElement ||
-      this.$node instanceof SVGSVGElement) {
+    if (this.$node instanceof Element) {
       return this.$node.tagName.toLowerCase();
     }
     console.info("unsupported node type:%o", this);
@@ -253,7 +252,7 @@ export class HtmlElement {
   }
 
   public hasAttribute(name: string): boolean {
-    if (this.$node instanceof HTMLElement) {
+    if (this.$node instanceof Element) {
       return this.$node.hasAttribute(name);
     }
     return false;
@@ -311,7 +310,7 @@ export class HtmlElement {
   }
 
   public setAttribute(name: string, value: string) {
-    if (this.$node instanceof HTMLElement) {
+    if (this.$node instanceof Element) {
       this.$node.setAttribute(name, value);
     }
   }
@@ -428,7 +427,7 @@ export class HtmlElement {
   }
 
   public getAttribute(name: string): string | null {
-    if (this.$node instanceof HTMLElement) {
+    if (this.$node instanceof Element) {
       return this.$node.getAttribute(name);
     }
     return null;
