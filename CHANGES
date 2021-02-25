@@ -8,6 +8,7 @@ Mark "!": change that can break compatibility with older version
 
 version 7.6.4
 ==========================
+o Added HtmlElement::innerHTML(setter).
 o Added $dom property for HtmlElement to embed external dom directly.
 o Added DynamicStyleContext::setExternalDOM to embed external dom from dynamic style.
 
