@@ -9,6 +9,7 @@ import {
   WhiteSpace,
   ReplacedElement,
   PhysicalSize,
+  CssLoader,
 } from "./public-api";
 
 // For performance reason, we use this [HtmlElement] class for both [Node] and [HTMLElement].
@@ -94,14 +95,21 @@ export class HtmlElement {
     return new DomTokenList([] as string[]);
   }
 
-  protected setupChildren(node: Node, root: HtmlDocument) {
-    if (node instanceof Element) {
-      for (let i = 0; i < node.childNodes.length; i++) {
-        let child = node.childNodes.item(i);
+  protected setupChildren($node: Node, root: HtmlDocument) {
+    if ($node instanceof Element) {
+      for (let i = 0; i < $node.childNodes.length; i++) {
+        let child = $node.childNodes.item(i);
         let child_element = root.createElementFromDOM(child);
         this.appendChild(child_element);
       }
     }
+  }
+
+  public set innerHTML(html: string) {
+    (this.$node as HTMLElement).innerHTML = html;
+    this.childNodes = [];
+    this.setupChildren(this.$node, this.root);
+    CssLoader.loadAll(this);
   }
 
   public get className(): string {
