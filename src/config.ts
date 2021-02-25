@@ -135,12 +135,14 @@ export namespace Config {
   export let IgnoredInlineStyleProps: string[] = [
   ]
 
-  // \u0021-\u007E, block = Basic Latin(without \u0026, \u003B)
+  // \u0021-\u007E, block = Basic Latin
   // \u00C0-\u02A8, block = IPA Extensions
   // \u2000-\u206F, block = General Punctuation
   // \uFB00-\uFB06, block = Alphabetic Presentation Forms(but latin only)
-  export let rexWord: RegExp =
-    /^[\u0021-\u0025\u0027-\u003A\u003C-\u007E\u00C0-\u02A8\u2000-\u206F\uFB00-\uFB06]+/;
+  export let rexWord: RegExp = /^[\u0021-\u007E\u00C0-\u02A8\u2000-\u206F\uFB00-\uFB06]+/;
+
+  // without \u0026(AMPERSAND), \u003B(SEMICOLON)
+  // export let rexWord: RegExp = /^[\u0021-\u0025\u0027-\u003A\u003C-\u007E\u00C0-\u02A8\u2000-\u206F\uFB00-\uFB06]+/;
 
   // character-reference pattern
   export let rexRefChar: RegExp = /^&[\S]+?;/;
