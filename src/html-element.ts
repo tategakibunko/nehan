@@ -12,9 +12,10 @@ import {
   CssLoader,
 } from "./public-api";
 
-// For performance reason, we use this [HtmlElement] class for both [Node] and [HTMLElement].
-// Note that some properties(like [attributes], [childNodes] etc) are not available
-// if [this.$node] is [Node].
+// For performance reason, we use this `HtmlElement`(not HTMLElement!) class for both `Node` and `Element`.
+// Note that some properties(like `attributes`, `childNodes` etc) are not available
+// if `this.$node` is not `Element` but `Node`.
+// [TODO] remove selector cache on `HtmlDocument` if some node is removed from tree.
 export class HtmlElement {
   public $node: Node | HTMLElement;
   public $dom: HTMLElement | undefined; // dynamically created DOM.
