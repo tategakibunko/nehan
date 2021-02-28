@@ -35,6 +35,10 @@ export class LogicalCursorPos implements ILogicalCursorPos {
     return new LogicalCursorPos({ start: this.start, before: this.before });
   }
 
+  public cloneValue(): ILogicalCursorPos {
+    return { start: this.start, before: this.before };
+  }
+
   public get logicalPos(): LogicalPos {
     return new LogicalPos({ before: this.before, start: this.start });
   }
