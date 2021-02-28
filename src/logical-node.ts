@@ -27,7 +27,6 @@ export interface ILogicalNode {
 
 export interface ILogicalPositionalNode extends ILogicalNode {
   pos: LogicalCursorPos;
-  size: LogicalSize;
 }
 
 export class LogicalTextNode implements ILogicalNode {
