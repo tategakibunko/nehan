@@ -16,6 +16,7 @@ export interface ILogicalNode {
   parent?: ILogicalNode;
   dom?: HTMLElement; // set after evaluated by ILogicalNodeEvaluator.
   env: BoxEnv;
+  size: LogicalSize;
   measure: number;
   extent: number;
   progress: number; // 0.0 ~ 1.0
