@@ -306,10 +306,9 @@ export class FlowFormatContext implements IFlowFormatContext {
     // so we dont have to worry about inline 'absolute' distance here.
     const start = 0;
 
-    // For lineHeadPos, we need distance from inside the border.
-    // Unlike inline direction, border size of block direction(border-width-before/border-width-after)
-    // is added to cursorPos.before in generator logic,
-    // so we have to subtract it to get the accurate distance from inside the border.
+    // For lineHeadPos, we need distance from inside of the border.
+    // Unlike inline level, block border(border-width-before) is added to cursorPos.before in generator,
+    // so we have to subtract it to get the accurate distance from inside of the border.
     const before = this.cursorPos.before - this.contextBoxEdge.borderWidth.getSize("before");
     return new LogicalCursorPos({ start, before });
   }
