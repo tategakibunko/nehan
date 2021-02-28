@@ -1,6 +1,6 @@
 import {
   LogicalCursorPos,
-  LogicalCursorPosValue,
+  ILogicalCursorPos,
   LogicalSize,
 } from "./public-api";
 
@@ -22,7 +22,7 @@ export class LogicalRect {
     return this.size.canContain(size);
   }
 
-  public translate(value: LogicalCursorPosValue): LogicalRect {
+  public translate(value: ILogicalCursorPos): LogicalRect {
     return new LogicalRect(this.pos.translate(value), this.size);
   }
 

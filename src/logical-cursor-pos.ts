@@ -4,16 +4,16 @@ import {
   ILogicalCssEvaluator,
 } from "./public-api";
 
-export interface LogicalCursorPosValue {
+export interface ILogicalCursorPos {
   before: number,
   start: number,
 }
 
-export class LogicalCursorPos implements LogicalCursorPosValue {
+export class LogicalCursorPos implements ILogicalCursorPos {
   public before: number;
   public start: number;
 
-  constructor(value: LogicalCursorPosValue) {
+  constructor(value: ILogicalCursorPos) {
     this.start = value.start;
     this.before = value.before;
   }
@@ -22,7 +22,7 @@ export class LogicalCursorPos implements LogicalCursorPosValue {
     return new LogicalCursorPos(this.zeroValue);
   }
 
-  static get zeroValue(): LogicalCursorPosValue {
+  static get zeroValue(): ILogicalCursorPos {
     return { start: 0, before: 0 };
   }
 
@@ -43,7 +43,7 @@ export class LogicalCursorPos implements LogicalCursorPosValue {
     return `(${this.start}, ${this.before})`;
   }
 
-  public translate(offset: LogicalCursorPosValue): LogicalCursorPos {
+  public translate(offset: ILogicalCursorPos): LogicalCursorPos {
     return new LogicalCursorPos({
       before: this.before + offset.before,
       start: this.start + offset.start

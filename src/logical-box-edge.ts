@@ -3,7 +3,7 @@ import {
   LogicalPadding,
   LogicalBorder,
   LogicalMargin,
-  LogicalCursorPosValue,
+  ILogicalCursorPos,
   HtmlElement,
 } from "./public-api";
 
@@ -141,7 +141,7 @@ export class LogicalBoxEdge {
     return this.borderBoxStart + this.borderBoxStart;
   }
 
-  public getInnerBoxOffset(): LogicalCursorPosValue {
+  public getInnerBoxOffset(): ILogicalCursorPos {
     return {
       start: this.padding.start,
       before: this.padding.before
