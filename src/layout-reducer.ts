@@ -70,7 +70,7 @@ export class InlineReducer implements ILayoutReducer {
   protected constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowFormatContext, indent: boolean): LayoutResult {
-    debugContextPos(context, `inline(${context.env.element.tagName})`);
+    // debugContextPos(context, `inline(${context.env.element.tagName})`);
     const measure = context.cursorPos.start;
     const extent = Math.max(context.env.font.size, ...context.inlineNodes.map(node => node.extent));
     const children = context.inlineNodes;
@@ -94,7 +94,7 @@ export class RubyReducer implements ILayoutReducer {
   private constructor() { }
 
   visit(context: FlowFormatContext, rubyGroup: RubyGroup): LayoutResult {
-    debugContextPos(context, "ruby");
+    // debugContextPos(context, "ruby");
     const rb = rubyGroup.rb;
     const rt = rubyGroup.rt;
     const measure = Math.max(rb.size.measure, rt.size.measure);
@@ -159,7 +159,7 @@ export class LineReducer implements ILayoutReducer {
   }
 
   visit(context: FlowFormatContext, isBr = false): LayoutResult {
-    debugContextPos(context, `line(${context.env.element.tagName})`);
+    // debugContextPos(context, `line(${context.env.element.tagName})`);
     const pos = context.lineHeadPos;
     const measure = context.env.display.isInlineBlockFlow() ? context.cursorPos.start : context.maxMeasure;
     const children = context.inlineNodes;
@@ -232,7 +232,7 @@ export class BlockReducer implements ILayoutReducer {
   protected constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowFormatContext): LayoutResult {
-    debugContextPos(context, `block(${context.env.element.tagName})`);
+    // debugContextPos(context, `block(${context.env.element.tagName})`);
     const pos = context.blockPos;
     const size = context.contentBlockSize;
     const autoSize = context.autoContentBlockSize;
@@ -257,7 +257,7 @@ export class RootBlockReducer implements ILayoutReducer {
   protected constructor(public type: LogicalNodeType) { }
 
   visit(context: FlowRootFormatContext): LayoutResult {
-    debugContextPos(context, `root-block(${context.env.element.tagName})`);
+    // debugContextPos(context, `root-block(${context.env.element.tagName})`);
     const pos = context.blockPos;
     const size = context.contentBlockSize;
     const autoSize = context.autoContentBlockSize;
@@ -289,7 +289,7 @@ export class InlineBlockReducer implements ILayoutReducer {
   static instance = new InlineBlockReducer();
 
   visit(context: FlowRootFormatContext): LayoutResult {
-    debugContextPos(context, `inline-block(${context.env.element.tagName})`);
+    // debugContextPos(context, `inline-block(${context.env.element.tagName})`);
     const pos = context.blockPos;
     const size = context.contentInlineBlockSize;
     if (context.floatRegion) {
@@ -325,7 +325,7 @@ export class TableCellsReducer implements ILayoutReducer {
   private constructor() { }
 
   visit(context: TableCellsFormatContext): LayoutResult {
-    debugContextPos(context, `table-cells(${context.env.element.tagName})`);
+    // debugContextPos(context, `table-cells(${context.env.element.tagName})`);
     const measure = context.maxMeasure;
     const extent = Math.max(...context.cells.map(cell => cell.extent));
     const size = new LogicalSize({ measure, extent });
@@ -364,7 +364,7 @@ export class ReReducer implements ILayoutReducer {
   private constructor() { }
 
   private visitBlock(context: FlowFormatContext, logicalSize: LogicalSize, physicalSize: PhysicalSize): LayoutResult {
-    debugContextPos(context, `re-block(${context.env.element.tagName})`);
+    // debugContextPos(context, `re-block(${context.env.element.tagName})`);
     const edge = context.env.edge;
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
     const text = `(${context.env.element.tagName})`;
@@ -374,7 +374,7 @@ export class ReReducer implements ILayoutReducer {
   }
 
   private visitInline(context: FlowFormatContext, logicalSize: LogicalSize, physicalSize: PhysicalSize): LayoutResult {
-    debugContextPos(context, `re-inline(${context.env.element.tagName})`);
+    // debugContextPos(context, `re-inline(${context.env.element.tagName})`);
     const edge = context.env.edge;
     const text = `(${context.env.element.tagName})`;
     const re = new LogicalInlineReNode(context.env, logicalSize, physicalSize, edge, text);
