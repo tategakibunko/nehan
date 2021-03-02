@@ -433,7 +433,7 @@ export class BasicStyle {
     return this.get(prop).initial;
   }
 
-  static isInheritalbe(prop: string): boolean {
+  static isInheritable(prop: string): boolean {
     return this.get(prop).inherit;
   }
 }
