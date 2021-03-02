@@ -8,6 +8,7 @@ import {
   LogicalCursorPos,
   LayoutResult,
   ILogicalNode,
+  ILogicalNodePos,
   LogicalInlineNode,
   LogicalFloat,
   LogicalClear,
@@ -21,6 +22,7 @@ export interface ILayoutFormatContext {
   env: BoxEnv;
   parent?: ILayoutFormatContext;
   listMarker?: LogicalInlineNode;
+  boxPos: ILogicalNodePos;
   globalPos: LogicalCursorPos;
   flowRootPos: LogicalCursorPos;
   cursorPos: LogicalCursorPos;

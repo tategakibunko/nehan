@@ -10,6 +10,7 @@ import {
   IFlowRootFormatContext,
   IFlowFormatContext,
   PageRootFormatContext,
+  ILogicalNodePos,
 } from './public-api'
 
 export class RubyChildFormatContext extends FlowFormatContext {
@@ -46,6 +47,14 @@ export class RubyFormatContext implements ILayoutFormatContext {
 
   public acceptLayoutReducer(visitor: ILayoutReducer, rubyGroup: RubyGroup): LayoutResult {
     return visitor.visit(this, rubyGroup);
+  }
+
+  // start-before position of this context from nearest flowRoot.
+  public get boxPos(): ILogicalNodePos {
+    return {
+      offsetPos: this.parent.flowRootPos,
+      clientPos: { start: 0, before: 0 }
+    };
   }
 
   public get globalPos(): LogicalCursorPos {

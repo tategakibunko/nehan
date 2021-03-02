@@ -19,6 +19,7 @@ import {
   ILogicalNodeGenerator,
   ILayoutReducer,
   ILogicalNode,
+  ILogicalNodePos,
   IFlowFormatContext,
   IFlowRootFormatContext,
   PageRootFormatContext,
@@ -268,7 +269,18 @@ export class FlowFormatContext implements IFlowFormatContext {
     return new LogicalSize({ measure, extent });
   }
 
-  // localPos = position from start-before-corner of border box.
+  // start-before position of this context from nearest flowRoot.
+  public get boxPos(): ILogicalNodePos {
+    return {
+      offsetPos: this.parent ? this.parent.flowRootPos : this.cursorPos.cloneValue(),
+      clientPos: {
+        start: this.contextBoxEdge.borderBoxStartSize,
+        before: this.contextBoxEdge.borderBoxBeforeSize
+      }
+    };
+  }
+
+  // localPos = cursor position from start-before-corner of 'border box'(of this context).
   // Convert inline cursor(0 ~ this.maxMeasure) to (delta ~ delta + this.maxMeasure)
   // where delta = this.curChildStartMargin + this.contextBoxEdge.measure.
   // Note that contextBoxEdge.measure and inline margin is added to start-pos in this logic,
@@ -280,7 +292,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     });
   }
 
-  // flowRootPos = position from start-before-corner of flowRoot element of this context.
+  // flowRootPos = cursor position from start-before-corner of flowRoot element of this context.
   public get flowRootPos(): LogicalCursorPos {
     if (!this.parent || this.env.display.isFlowRoot()) {
       return this.localPos;
@@ -288,7 +300,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     return this.parent.flowRootPos.translate(this.localPos);
   }
 
-  // globalPos = position from start-before-corner of root element(body).
+  // globalPos = cursor position from start-before-corner of root element(body).
   public get globalPos(): LogicalCursorPos {
     if (!this.parent) {
       return this.localPos;

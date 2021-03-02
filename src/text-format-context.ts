@@ -9,6 +9,7 @@ import {
   IFlowRootFormatContext,
   IFlowFormatContext,
   PageRootFormatContext,
+  ILogicalNodePos,
 } from './public-api'
 
 export class TextFormatContext implements ILayoutFormatContext {
@@ -30,6 +31,14 @@ export class TextFormatContext implements ILayoutFormatContext {
 
   public get env(): BoxEnv {
     return this.parent.env;
+  }
+
+  // start-before position of this context from nearest flowRoot.
+  public get boxPos(): ILogicalNodePos {
+    return {
+      offsetPos: this.parent.flowRootPos,
+      clientPos: { start: 0, before: 0 }
+    };
   }
 
   public get globalPos(): LogicalCursorPos {
