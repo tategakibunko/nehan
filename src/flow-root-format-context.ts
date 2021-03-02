@@ -23,6 +23,7 @@ import {
   HoriCssEvaluator,
   VertCssEvaluator,
   LogicalTextJustifier,
+  ILogicalNodePos,
 } from './public-api';
 
 export class FlowRootFormatContext extends FlowFormatContext implements IFlowRootFormatContext {
@@ -39,6 +40,17 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
 
   public get flowRoot(): IFlowRootFormatContext {
     return this;
+  }
+
+  // start-before position of this context from nearest flowRoot.
+  public get boxPos(): ILogicalNodePos {
+    return {
+      offsetPos: { start: 0, before: 0 },
+      clientPos: {
+        start: this.contextBoxEdge.borderBoxStartSize,
+        before: this.contextBoxEdge.borderBoxBeforeSize
+      }
+    };
   }
 
   public openElement(element: HtmlElement) {

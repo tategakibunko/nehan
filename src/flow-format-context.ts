@@ -272,7 +272,11 @@ export class FlowFormatContext implements IFlowFormatContext {
   // start-before position of this context from nearest flowRoot.
   public get boxPos(): ILogicalNodePos {
     return {
-      offsetPos: this.parent ? this.parent.flowRootPos : this.cursorPos.cloneValue(),
+      offsetPos: this.parent ?
+        this.parent.flowRootPos.translate({
+          start: this.curChildStartMargin,
+          before: this.contextBoxEdge.margin.getSize("before")
+        }) : this.cursorPos.cloneValue(),
       clientPos: {
         start: this.contextBoxEdge.borderBoxStartSize,
         before: this.contextBoxEdge.borderBoxBeforeSize
