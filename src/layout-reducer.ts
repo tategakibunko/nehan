@@ -142,6 +142,7 @@ export class LineReducer implements ILayoutReducer {
   }
 
   visit(context: FlowFormatContext, isBr = false): LayoutResult {
+    // console.log(`line(${context.env.element.tagName})`, context.boxPos);
     const pos = context.lineHeadPos;
     const measure = context.env.display.isInlineBlockFlow() ? context.cursorPos.start : context.maxMeasure;
     const children = context.inlineNodes;
