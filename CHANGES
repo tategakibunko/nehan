@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.6.5
+==========================
+o Added ILogicalNode::ILogicalNodePos to obtain {offset, client}Pos of node.
+
 version 7.6.4, 2021/02/25
 ==========================
 o Added HtmlElement::innerHTML(setter).
