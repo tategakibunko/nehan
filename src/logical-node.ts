@@ -10,6 +10,7 @@ import {
   LogicalSize,
   PhysicalSize,
   ICharacter,
+  ILogicalNodePos,
 } from './public-api'
 
 export interface ILogicalNode {
@@ -21,6 +22,7 @@ export interface ILogicalNode {
   extent: number;
   progress: number; // 0.0 ~ 1.0
   text: string;
+  boxPos: ILogicalNodePos;
   acceptEvaluator: (visitor: ILogicalNodeEvaluator, ...args: any[]) => HTMLElement | Node;
   acceptEffector: (visitor: ILogicalNodeEffector, ...args: any[]) => void;
 }
@@ -32,6 +34,7 @@ export interface ILogicalPositionalNode extends ILogicalNode {
 export class LogicalTextNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public size: LogicalSize,
     public text: string,
     // Note that `skipBr` flag is true when
@@ -63,6 +66,7 @@ export class LogicalTextNode implements ILogicalNode {
 export class LogicalLineNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public pos: LogicalCursorPos,
     public size: LogicalSize,
     public autoSize: LogicalSize,
@@ -95,6 +99,7 @@ export class LogicalLineNode implements ILogicalPositionalNode {
 export class LogicalRubyNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public size: LogicalSize,
     public text: string,
     public rb: LogicalInlineNode,
@@ -131,6 +136,7 @@ export class LogicalRubyNode implements ILogicalNode {
 export class LogicalInlineNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public size: LogicalSize,
     public text: string,
     public edge: LogicalBoxEdge,
@@ -167,6 +173,7 @@ export class LogicalInlineNode implements ILogicalNode {
 export class LogicalBlockNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public pos: LogicalCursorPos,
     public size: LogicalSize, // padding box size
     public autoSize: LogicalSize, // size based with cursor pos
@@ -207,6 +214,7 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
 export class LogicalInlineBlockNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public pos: LogicalCursorPos,
     public size: LogicalSize, // padding box size
     public autoSize: LogicalSize, // size based with cursor pos
@@ -239,6 +247,7 @@ export class LogicalInlineBlockNode implements ILogicalPositionalNode {
 export class LogicalTableCellsNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public size: LogicalSize,
     public pos: LogicalCursorPos,
     public text: string,
@@ -269,6 +278,7 @@ export class LogicalTableCellsNode implements ILogicalNode {
 export class LogicalBlockReNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public size: LogicalSize, // logical content size
     public physicalSize: PhysicalSize,
     public edge: LogicalBoxEdge,
@@ -309,6 +319,7 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
 export class LogicalInlineReNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
+    public boxPos: ILogicalNodePos,
     public size: LogicalSize, // logical content size
     public physicalSize: PhysicalSize,
     public edge: LogicalBoxEdge,

@@ -37,7 +37,7 @@ export class TextReducer implements ILayoutReducer {
     const text = context.text;
     const children = context.characters;
     const skipBr = !context.lexer.hasNext() && indent;
-    const textNode = new LogicalTextNode(context.env, size, text, skipBr, children);
+    const textNode = new LogicalTextNode(context.env, context.boxPos, size, text, skipBr, children);
     // console.log("reduceText:%o", textNode);
     context.characters = [];
     context.text = "";
@@ -60,7 +60,7 @@ export class InlineReducer implements ILayoutReducer {
     const text = context.inlineText;
     const size = new LogicalSize({ measure, extent });
     const edge = context.contextBoxEdge.currentMarginBoxEdge;
-    const inlineNode = new LogicalInlineNode(context.env, size, text, edge, children);
+    const inlineNode = new LogicalInlineNode(context.env, context.boxPos, size, text, edge, children);
     context.contextBoxEdge.clear();
     context.inlineNodes = [];
     context.inlineText = "";
@@ -84,7 +84,7 @@ export class RubyReducer implements ILayoutReducer {
     const extent = rb.size.extent + rt.size.extent;
     const size = new LogicalSize({ measure, extent });
     const text = rb.text;
-    const rubyNode = new LogicalRubyNode(context.env, size, text, rb, rt);
+    const rubyNode = new LogicalRubyNode(context.env, context.boxPos, size, text, rb, rt);
     return LayoutResult.logicalNode('ruby', rubyNode);
   }
 }
@@ -193,7 +193,7 @@ export class LineReducer implements ILayoutReducer {
       size.extent = autoSize.extent = baseline.size.extent = baseline.textBodySize.extent = shrinkExtent;
       baseline.blockOffset = 0;
     }
-    const lineNode = new LogicalLineNode(context.env, pos, size, autoSize, text, children, baseline);
+    const lineNode = new LogicalLineNode(context.env, context.boxPos, pos, size, autoSize, text, children, baseline);
     // If Config.ignoreEmptyInline or Config.ignoreZeroRe is enabled, empty line without br would be produced.
     // Or marker only line with 'list-style:none', space only line will be also created in some case.
     // It's not valid layout element, so discard block size of line.
@@ -224,7 +224,7 @@ export class BlockReducer implements ILayoutReducer {
     if (context.env.borderCollapse.isCollapse()) {
       size.extent -= context.getBorderCollapseAfterSize();
     }
-    const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children, context.progress);
+    const blockNode = new LogicalBlockNode(context.env, context.boxPos, pos, size, autoSize, text, border, children, context.progress);
     // console.log("[%s] BlockReducer: size:%s, %s", context.name, blockNode.size.toString(), text);
     context.text = "";
     context.blockNodes = [];
@@ -251,7 +251,7 @@ export class RootBlockReducer implements ILayoutReducer {
     const border = context.contextBoxEdge.currentBorder;
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
-    const blockNode = new LogicalBlockNode(context.env, pos, size, autoSize, text, border, children, context.progress);
+    const blockNode = new LogicalBlockNode(context.env, context.boxPos, pos, size, autoSize, text, border, children, context.progress);
     // console.log("[%s] RootBlockReducer: size:%s, %s", context.name, blockNode.size.toString(), text);
     context.text = "";
     context.blockNodes = [];
@@ -283,7 +283,7 @@ export class InlineBlockReducer implements ILayoutReducer {
     edge.border = border;
     const text = context.text;
     const children = context.floatNodes ? context.blockNodes.concat(context.floatNodes) : context.blockNodes;
-    const iblockNode = new LogicalInlineBlockNode(context.env, pos, size, autoSize, text, edge, children);
+    const iblockNode = new LogicalInlineBlockNode(context.env, context.boxPos, pos, size, autoSize, text, edge, children);
     // console.log("[%s] InlineBlockReducer: size:%s, %s", context.name, iblockNode.size.toString(), text);
     context.text = "";
     context.blockNodes = [];
@@ -313,7 +313,7 @@ export class TableCellsReducer implements ILayoutReducer {
     const size = new LogicalSize({ measure, extent });
     const pos = LogicalCursorPos.zero;
     const text = context.cells.reduce((acm, cell) => acm + cell.text, "");
-    const block = new LogicalTableCellsNode(context.env, size, pos, text, context.cells);
+    const block = new LogicalTableCellsNode(context.env, context.boxPos, size, pos, text, context.cells);
     context.contextBoxEdge.clearBlock();
     context.cursorPos = LogicalCursorPos.zero;
     // console.log("[%s] reduceTableCells:", context.name, block);
@@ -350,7 +350,7 @@ export class ReReducer implements ILayoutReducer {
     const edge = context.env.edge;
     const pos = context.parent ? context.parent.localPos : LogicalCursorPos.zero;
     const text = `(${context.env.element.tagName})`;
-    const re = new LogicalBlockReNode(context.env, logicalSize, physicalSize, edge, pos, text);
+    const re = new LogicalBlockReNode(context.env, context.boxPos, logicalSize, physicalSize, edge, pos, text);
     // console.log("[%s] reduce Re(block):", context.name, re);
     return LayoutResult.logicalNode('re-block', re);
   }
@@ -359,7 +359,7 @@ export class ReReducer implements ILayoutReducer {
     // console.log(`re-inline(${context.env.element.tagName})`, context.boxPos);
     const edge = context.env.edge;
     const text = `(${context.env.element.tagName})`;
-    const re = new LogicalInlineReNode(context.env, logicalSize, physicalSize, edge, text);
+    const re = new LogicalInlineReNode(context.env, context.boxPos, logicalSize, physicalSize, edge, text);
     // console.log("[%s] reduce Re(inline):", context.name, re);
     return LayoutResult.logicalNode('re-inline', re);
   }
