@@ -430,7 +430,7 @@ export class FlowFormatContext implements IFlowFormatContext {
       const beforeBorderSize = this.contextBoxEdge.borderWidth.getSize("before");
       if (Math.min(...cellBeforeBorderSizes) > 0 && beforeBorderSize > 0) {
         const collapseSize = Math.min(beforeBorderSize, ...cellBeforeBorderSizes);
-        cells.pos.before -= collapseSize;
+        cells.rowPos.before -= collapseSize;
         this.cursorPos.before -= collapseSize;
         if (Config.debugLayout) {
           console.log("[%s] collapse before %d", this.name, collapseSize);
@@ -562,11 +562,11 @@ export class FlowFormatContext implements IFlowFormatContext {
     const beforeCollapseSize = this.getBorderCollapseBeforeSize(block);
     // Note that inline border is not added to cursorPos.
     // cursor of inline direction moves within 'content-area'(0 ~ maxMeasure) without border/padding.
-    block.pos.start = -startCollapseSize;
+    block.layoutPos.start = -startCollapseSize;
 
     // But cursor of block direction includes block border, ant it's added to cursorPos.
     // So to cancel border of block direction, we have to cancel both current border size and collapsed size.
-    block.pos.before -= this.contextBoxEdge.borderWidth.getSize("before") + beforeCollapseSize;
+    block.layoutPos.before -= this.contextBoxEdge.borderWidth.getSize("before") + beforeCollapseSize;
     this.cursorPos.before -= beforeCollapseSize;
 
     // console.log("[%s] collapseBeforeStartBorder(before = %d, start = %d)", this.name, beforeCollapseSize, startCollapseSize);

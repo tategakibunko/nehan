@@ -168,14 +168,14 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
         this.floatRegion.pushStart(flowRootPos.before, floatSize, contextMeasure) :
         this.floatRegion.pushEnd(flowRootPos.before, floatSize, contextMeasure);
       const start = float.isStart() ? flowRootPos.start : rect.start + block.env.edge.start;
-      block.pos = new LogicalCursorPos({
+      block.layoutPos = new LogicalCursorPos({
         start,
         before: rect.before
       });
       this.floatNodes.push(block);
       if (Config.debugLayout) {
-        console.log("added float. rect:%o, pos:%o", rect, block.pos);
-        console.log("spaceMeasure at %d = %d", block.pos.before, this.floatRegion.getSpaceMeasureAt(block.pos.before));
+        console.log("added float. rect:%o, pos:%o", rect, block.layoutPos);
+        console.log("spaceMeasure at %d = %d", block.layoutPos.before, this.floatRegion.getSpaceMeasureAt(block.layoutPos.before));
       }
     } catch (err) {
       console.error(err);

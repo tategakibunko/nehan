@@ -149,7 +149,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     node.style.overflow = "visible";
-    node.style.top = lineNode.pos.before + "px";
+    node.style.top = lineNode.layoutPos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -157,7 +157,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const baseLineNode = document.createElement("div");
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
-    baseLineNode.style.left = (lineNode.pos.start + lineNode.baseline.startOffset) + "px";
+    baseLineNode.style.left = (lineNode.layoutPos.start + lineNode.baseline.startOffset) + "px";
     baseLineNode.style.width = lineNode.size.measure + 2 * lineNode.env.font.size + "px"; // Prepare space for 'Bura-sagari'.
     baseLineNode.style.height = lineNode.baseline.size.extent + "px";
     baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
@@ -227,7 +227,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     if (blockNode.env.position.isAbsolute()) {
       blockNode.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     } else {
-      blockNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+      blockNode.layoutPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     }
     blockNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     blockNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -255,7 +255,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const node = this.pageRoot.createElement("div", ["table-cells"], tableCellsNode);
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
-    tableCellsNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    tableCellsNode.rowPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCellsNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     tableCellsNode.children.forEach(child => {
       node.appendChild(child.acceptEvaluator(this));
@@ -273,7 +273,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     if (imgNode.env.position.isAbsolute()) {
       imgNode.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     } else {
-      imgNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+      imgNode.layoutPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     }
     imgNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
@@ -302,7 +302,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.marginLeft = videoNode.edge.margin.start + "px";
     node.style.marginRight = videoNode.edge.margin.end + "px";
     node.style.verticalAlign = "bottom";
-    videoNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+    videoNode.layoutPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     videoNode.edge.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     videoNode.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
@@ -327,7 +327,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     if (reNodeFixed.env.position.isAbsolute()) {
       reNodeFixed.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     } else {
-      reNodeFixed.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+      reNodeFixed.layoutPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     }
     reNodeFixed.env.element.style.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     return node;
@@ -368,7 +368,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     if (linkNode.env.position.isAbsolute()) {
       linkNode.env.absPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     } else {
-      linkNode.pos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
+      linkNode.layoutPos.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     }
     linkNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     linkNode.border.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);

@@ -28,7 +28,7 @@ export interface ILogicalNode {
 }
 
 export interface ILogicalPositionalNode extends ILogicalNode {
-  pos: LogicalCursorPos;
+  layoutPos: LogicalCursorPos; // special positional value only used for evaluation.
 }
 
 export class LogicalTextNode implements ILogicalNode {
@@ -67,7 +67,7 @@ export class LogicalLineNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
     public boxPos: ILogicalNodePos,
-    public pos: LogicalCursorPos,
+    public layoutPos: LogicalCursorPos,
     public size: LogicalSize,
     public autoSize: LogicalSize,
     public text: string,
@@ -174,7 +174,7 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
     public boxPos: ILogicalNodePos,
-    public pos: LogicalCursorPos,
+    public layoutPos: LogicalCursorPos,
     public size: LogicalSize, // padding box size
     public autoSize: LogicalSize, // size based with cursor pos
     public text: string,
@@ -215,7 +215,7 @@ export class LogicalInlineBlockNode implements ILogicalPositionalNode {
   constructor(
     public env: BoxEnv,
     public boxPos: ILogicalNodePos,
-    public pos: LogicalCursorPos,
+    public layoutPos: LogicalCursorPos,
     public size: LogicalSize, // padding box size
     public autoSize: LogicalSize, // size based with cursor pos
     public text: string,
@@ -249,7 +249,7 @@ export class LogicalTableCellsNode implements ILogicalNode {
     public env: BoxEnv,
     public boxPos: ILogicalNodePos,
     public size: LogicalSize,
-    public pos: LogicalCursorPos,
+    public rowPos: LogicalCursorPos,
     public text: string,
     public children: ILogicalNode[],
     public progress = 1,
@@ -282,7 +282,7 @@ export class LogicalBlockReNode implements ILogicalPositionalNode {
     public size: LogicalSize, // logical content size
     public physicalSize: PhysicalSize,
     public edge: LogicalBoxEdge,
-    public pos: LogicalCursorPos,
+    public layoutPos: LogicalCursorPos,
     public text: string,
     public progress = 1,
     public dom: HTMLElement | undefined = undefined,
