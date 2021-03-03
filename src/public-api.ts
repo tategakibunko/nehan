@@ -42,7 +42,7 @@ export * from "./html-document"
 export * from './child-node-filter'
 export * from './node-effector'
 export * from './node-mapper'
-export * from "./html-element"
+export * from "./nehan-element"
 export * from "./attr-selector"
 export * from "./border-collapse"
 export * from "./class-selector"
