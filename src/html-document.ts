@@ -101,7 +101,7 @@ export class HtmlDocument {
   }
 
   public createElementFromDOM(node: HTMLElement | Node): NehanElement {
-    const tagName = ((node instanceof HTMLElement) ? node.tagName : (node instanceof Text) ? "(text)" : "??").toLowerCase();
+    const tagName = ((node instanceof Element) ? node.tagName : (node instanceof Text) ? "(text)" : "??").toLowerCase();
     if ((tagName === "body" || tagName === "html") && this.selectorCache.hasCache(tagName)) {
       return this.selectorCache.getCache(tagName)[0];
     }
