@@ -12,7 +12,7 @@ import {
   CssLoader,
 } from "./public-api";
 
-// For performance reason, we use this `NehanElement`(not HTMLElement!) class for both `Node` and `Element`.
+// For performance reason, we use this `NehanElement` class for both `Node` and `Element`.
 // Note that some properties(like `attributes`, `childNodes` etc) are not available
 // if `this.$node` is not `Element` but `Node`.
 // [TODO] remove selector cache on `HtmlDocument` if some node is removed from tree.
