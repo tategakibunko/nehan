@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -16,7 +16,7 @@ export class PageBreakAfter {
     return this.value === "always";
   }
 
-  static load(element: HtmlElement): PageBreakAfter {
+  static load(element: NehanElement): PageBreakAfter {
     let value = CssCascade.getValue(element, "page-break-after");
     return new PageBreakAfter(value as PageBreakValue);
   }
@@ -33,7 +33,7 @@ export class PageBreakBefore {
     return this.value === "always";
   }
 
-  static load(element: HtmlElement): PageBreakBefore {
+  static load(element: NehanElement): PageBreakBefore {
     let value = CssCascade.getValue(element, "page-break-before");
     return new PageBreakBefore(value as PageBreakValue);
   }

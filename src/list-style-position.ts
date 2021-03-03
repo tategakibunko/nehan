@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -20,7 +20,7 @@ export class ListStylePosition {
     return this.value === 'inside';
   }
 
-  static load(element: HtmlElement): ListStylePosition {
+  static load(element: NehanElement): ListStylePosition {
     let value = CssCascade.getValue(element, "list-style-position");
     return new ListStylePosition(value as ListStylePositionValue);
   }

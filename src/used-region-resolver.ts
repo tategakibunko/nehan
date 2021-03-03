@@ -1,6 +1,6 @@
 import {
   Config,
-  HtmlElement,
+  NehanElement,
   ComputedRegion,
   Display,
   BorderCollapse,
@@ -11,12 +11,12 @@ import {
 } from './public-api'
 
 export interface IRegionResolver {
-  resolve: (element: HtmlElement, computedResion: ComputedRegion, display: Display) => void;
+  resolve: (element: NehanElement, computedResion: ComputedRegion, display: Display) => void;
 }
 
 // https://www.w3.org/TR/CSS22/visudet.html#Computing_widths_and_margins
 export class UsedRegionResolver {
-  static select(element: HtmlElement) {
+  static select(element: NehanElement) {
     const display = Display.load(element);
     const float = CssCascade.getValue(element, "float") as LogicalFloatValue;
     const position = CssCascade.getValue(element, "position") as PositionValue;
@@ -46,7 +46,7 @@ class BlockRegionResolver implements IRegionResolver {
   static instance = new BlockRegionResolver();
   private constructor() { }
 
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     // In collapse mode, <tr>, <tbody>, <thead>, <tfoot> share the measure of block level parent(<table>).
     if (display.isTableRow() || display.isTableRowGroup()) {
       const parent = element.parent;
@@ -81,7 +81,7 @@ class ReBlockRegionResolver implements IRegionResolver {
   static instance = new ReBlockRegionResolver();
   private constructor() { }
 
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     if (region.logicalSize.measure.length === "auto") {
       region.edges.margin.clearAutoInline();
       return;
@@ -102,7 +102,7 @@ class ReBlockRegionResolver implements IRegionResolver {
 class FloatBlockRegionResolver implements IRegionResolver {
   static instance = new FloatBlockRegionResolver();
   private constructor() { }
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
       if (Config.debugLayout) {
@@ -116,7 +116,7 @@ class FloatBlockRegionResolver implements IRegionResolver {
 class ReFloatBlockRegionResolver implements IRegionResolver {
   static instance = new ReFloatBlockRegionResolver();
   private constructor() { }
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
       if (Config.debugLayout) {
@@ -130,7 +130,7 @@ class ReFloatBlockRegionResolver implements IRegionResolver {
 class InlineRegionResolver implements IRegionResolver {
   static instance = new InlineRegionResolver();
   private constructor() { }
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
   }
 }
@@ -138,7 +138,7 @@ class InlineRegionResolver implements IRegionResolver {
 class ReInlineRegionResolver implements IRegionResolver {
   static instance = new ReInlineRegionResolver();
   private constructor() { }
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
   }
 }
@@ -146,7 +146,7 @@ class ReInlineRegionResolver implements IRegionResolver {
 class InlineBlockRegionResolver implements IRegionResolver {
   static instance = new InlineBlockRegionResolver();
   private constructor() { }
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
       if (element.computedStyle.getPropertyValue("display") !== "table-cell") {
@@ -162,7 +162,7 @@ class InlineBlockRegionResolver implements IRegionResolver {
 class ReInlineBlockRegionResolver implements IRegionResolver {
   static instance = new ReInlineBlockRegionResolver();
   private constructor() { }
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
     if (region.logicalSize.measure.isAuto()) {
       if (Config.debugLayout) {
@@ -176,7 +176,7 @@ class ReInlineBlockRegionResolver implements IRegionResolver {
 class AbsoluteRegionResolver implements IRegionResolver {
   static instance = new AbsoluteRegionResolver();
   private constructor() { }
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
   }
 }
@@ -184,7 +184,7 @@ class AbsoluteRegionResolver implements IRegionResolver {
 class ReAbsoluteRegionResolver implements IRegionResolver {
   static instance = new ReAbsoluteRegionResolver();
   private constructor() { }
-  resolve(element: HtmlElement, region: ComputedRegion, display: Display) {
+  resolve(element: NehanElement, region: ComputedRegion, display: Display) {
     region.edges.margin.clearAutoInline();
   }
 }

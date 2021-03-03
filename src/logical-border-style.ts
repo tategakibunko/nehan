@@ -4,7 +4,7 @@ import {
   LogicalEdgeDirections,
   CssText,
   CssCascade,
-  HtmlElement,
+  NehanElement,
   PropValue,
   Utils,
   NativeStyleMap,
@@ -37,7 +37,7 @@ export class LogicalBorderStyle extends LogicalEdge<string>{
     ];
   }
 
-  static load(element: HtmlElement): LogicalBorderStyle {
+  static load(element: NehanElement): LogicalBorderStyle {
     return new LogicalBorderStyle(
       LogicalEdgeDirections.reduce((style, direction) => {
         style[direction] = CssCascade.getValue(element, `border-${direction}-style`);

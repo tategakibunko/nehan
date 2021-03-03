@@ -1,6 +1,6 @@
 import {
   Selector,
-  HtmlElement
+  NehanElement
 } from "./public-api";
 
 export class ClassSelector extends Selector {
@@ -16,7 +16,7 @@ export class ClassSelector extends Selector {
     return "." + this.className;
   }
 
-  public test(element: HtmlElement): boolean {
+  public test(element: NehanElement): boolean {
     return element.classList.contains(this.className);
   }
 }

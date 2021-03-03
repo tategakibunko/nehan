@@ -1,6 +1,6 @@
 import {
   Config,
-  HtmlElement,
+  NehanElement,
   ContainingElement,
   CssCascade,
   CssStyleDeclaration,
@@ -58,12 +58,12 @@ interface ComputedValue {
   save: (style: CssStyleDeclaration) => void;
 }
 
-function loadOptionalNumber(element: HtmlElement, prop: string): OptionalNumber {
+function loadOptionalNumber(element: NehanElement, prop: string): OptionalNumber {
   const value = CssCascade.getValue(element, prop);
   return (value === "none") ? value : parseInt(value, 10);
 }
 
-function loadAutableNumber(element: HtmlElement, prop: string): AutableNumber {
+function loadAutableNumber(element: NehanElement, prop: string): AutableNumber {
   const value = CssCascade.getValue(element, prop);
   return (value === "auto") ? value : parseInt(value, 10);
 }
@@ -71,7 +71,7 @@ function loadAutableNumber(element: HtmlElement, prop: string): AutableNumber {
 class ComputedLength implements ComputedValue {
   constructor(public length: AutableNumber, public prop: string) { }
 
-  static load(element: HtmlElement, prop: string): ComputedLength {
+  static load(element: NehanElement, prop: string): ComputedLength {
     const value = loadAutableNumber(element, prop);
     return new ComputedLength(value, prop);
   }
@@ -110,7 +110,7 @@ class ComputedPosition {
     public start: ComputedLength
   ) { }
 
-  static load(element: HtmlElement): ComputedPosition {
+  static load(element: NehanElement): ComputedPosition {
     return new ComputedPosition(
       ComputedLength.load(element, "before"),
       ComputedLength.load(element, "end"),
@@ -134,7 +134,7 @@ class ComputedPosition {
 class ComputedMinSize {
   constructor(private minSize: OptionalNumber, private prop: string) { }
 
-  static load(element: HtmlElement, prop: string): ComputedMinSize {
+  static load(element: NehanElement, prop: string): ComputedMinSize {
     return new ComputedMinSize(loadOptionalNumber(element, prop), prop);
   }
 
@@ -152,7 +152,7 @@ class ComputedMinSize {
 class ComputedMaxSize {
   constructor(private maxSize: OptionalNumber, private prop: string) { }
 
-  static load(element: HtmlElement, prop: string): ComputedMaxSize {
+  static load(element: NehanElement, prop: string): ComputedMaxSize {
     return new ComputedMaxSize(loadOptionalNumber(element, prop), prop);
   }
 
@@ -170,7 +170,7 @@ class ComputedMaxSize {
 class ComputedMinMaxRange {
   constructor(private minSize: ComputedMinSize, private maxSize: ComputedMaxSize) { }
 
-  static load(element: HtmlElement, minProp: string, maxProp: string): ComputedMinMaxRange {
+  static load(element: NehanElement, minProp: string, maxProp: string): ComputedMinMaxRange {
     return new ComputedMinMaxRange(
       ComputedMinSize.load(element, minProp),
       ComputedMaxSize.load(element, maxProp)
@@ -190,7 +190,7 @@ class ComputedMinMaxRange {
 class ComputedMinMaxBoxSize {
   constructor(private minMaxMeasure: ComputedMinMaxRange, private minMaxExtent: ComputedMinMaxRange) { }
 
-  static load(element: HtmlElement): ComputedMinMaxBoxSize {
+  static load(element: NehanElement): ComputedMinMaxBoxSize {
     return new ComputedMinMaxBoxSize(
       ComputedMinMaxRange.load(element, "min-measure", "max-measure"),
       ComputedMinMaxRange.load(element, "min-extent", "max-extent")
@@ -213,7 +213,7 @@ class ComputedMinMaxBoxSize {
 class ComputedLogicalSize {
   constructor(public measure: ComputedLength, public extent: ComputedLength) { }
 
-  static load(element: HtmlElement): ComputedLogicalSize {
+  static load(element: NehanElement): ComputedLogicalSize {
     let measure = ComputedLength.load(element, "measure");
     let extent = ComputedLength.load(element, "extent");
     if (!element.parent) {
@@ -232,13 +232,13 @@ class ComputedLogicalSize {
 class ComputedPhysicalSize {
   constructor(public width: ComputedLength, public height: ComputedLength) { }
 
-  static load(element: HtmlElement): ComputedPhysicalSize {
+  static load(element: NehanElement): ComputedPhysicalSize {
     const width = this.loadPhysicalSize(element, "width");
     const height = this.loadPhysicalSize(element, "height");
     return new ComputedPhysicalSize(width, height);
   }
 
-  static loadPhysicalSize(element: HtmlElement, prop: string): ComputedLength {
+  static loadPhysicalSize(element: NehanElement, prop: string): ComputedLength {
     // attr size must be defined by pixel size.
     // https://www.w3.org/wiki/Html/Elements/img#HTML_Attributes
     let attrSize = element.getAttribute(prop);
@@ -262,7 +262,7 @@ class ComputedMargin {
     public start: ComputedLength
   ) { }
 
-  static load(element: HtmlElement): ComputedMargin {
+  static load(element: NehanElement): ComputedMargin {
     return new ComputedMargin(
       ComputedLength.load(element, "margin-before"),
       ComputedLength.load(element, "margin-end"),
@@ -322,7 +322,7 @@ class ComputedBoxEdges {
     public margin: ComputedMargin,
   ) { }
 
-  static load(element: HtmlElement) {
+  static load(element: NehanElement) {
     return new ComputedBoxEdges(
       LogicalPadding.load(element),
       LogicalBorder.load(element),
@@ -363,7 +363,7 @@ export class ComputedRegion {
     public minMaxBoxSize: ComputedMinMaxBoxSize,
   ) { }
 
-  static load(element: HtmlElement): ComputedRegion | undefined {
+  static load(element: NehanElement): ComputedRegion | undefined {
     const containingElement = ContainingElement.get(element);
     const containingMeasure = ComputedLength.load(containingElement, "measure");
     const containingExtent = ComputedLength.load(containingElement, "extent");

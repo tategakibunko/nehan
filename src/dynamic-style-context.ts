@@ -1,6 +1,6 @@
 import {
   Utils,
-  HtmlElement,
+  NehanElement,
   CssLength,
   ILayoutFormatContext,
   FlowFormatContext,
@@ -9,7 +9,7 @@ import {
 export interface DynamicStyleContextValue {
   selector: string;
   name: string;
-  element: HtmlElement;
+  element: NehanElement;
   parentContext?: ILayoutFormatContext;
 }
 
@@ -19,7 +19,7 @@ export interface DynamicStyleContextValue {
 export class DynamicStyleContext {
   public selector: string;
   public name: string;
-  public element: HtmlElement;
+  public element: NehanElement;
   public parentContext?: ILayoutFormatContext;
 
   constructor(value: DynamicStyleContextValue) {

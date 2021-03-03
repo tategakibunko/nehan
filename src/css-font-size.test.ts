@@ -1,4 +1,4 @@
-import { HtmlElement, HtmlDocument, CssLength } from './public-api';
+import { NehanElement, HtmlDocument, CssLength } from './public-api';
 
 test("CssFontSize(absolute size)", () => {
   let doc = new HtmlDocument("dummy");

@@ -3,7 +3,7 @@ import {
   ILogicalNodeGenerator,
   LogicalNodeGenerator,
   LayoutResult,
-  HtmlElement,
+  NehanElement,
   Display,
   LogicalClear,
   LogicalFloat,
@@ -63,7 +63,7 @@ export class BlockNodeGenerator implements ILogicalNodeGenerator {
     // because content size of block element is already calculated in css loading.
     this.context.addBorderBoxEdge("start");
     this.context.addBorderBoxEdge("end");
-    let childElement: HtmlElement | null = this.context.env.element.firstChild;
+    let childElement: NehanElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
       const display = Display.load(childElement);
       const whiteSpace = WhiteSpace.load(childElement);

@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -12,7 +12,7 @@ export class LogicalClear {
     this.value = value;
   }
 
-  static load(element: HtmlElement): LogicalClear {
+  static load(element: NehanElement): LogicalClear {
     let value = CssCascade.getValue(element, "clear");
     return new LogicalClear(value as LogicalClearValue);
   }

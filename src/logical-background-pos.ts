@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   NativeStyleMap,
   CssCascade,
   ILogicalCssEvaluator,
@@ -12,7 +12,7 @@ export class LogicalBackgroundPos {
     this.value = value;
   }
 
-  static load(element: HtmlElement): LogicalBackgroundPos {
+  static load(element: NehanElement): LogicalBackgroundPos {
     const value = CssCascade.getValue(element, "background-position");
     return new LogicalBackgroundPos(value);
   }

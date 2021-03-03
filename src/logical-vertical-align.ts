@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -15,7 +15,7 @@ export class LogicalVerticalAlign {
     this.value = value;
   }
 
-  static load(element: HtmlElement): LogicalVerticalAlign {
+  static load(element: NehanElement): LogicalVerticalAlign {
     let value = CssCascade.getValue(element, "vertical-align");
     return new LogicalVerticalAlign(value as LogicalVerticalAlignValue);
   }

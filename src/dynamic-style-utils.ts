@@ -2,7 +2,7 @@ import {
   DynamicStyleContext,
   DynamicStyleCallback,
   CssDeclarationBlock,
-  HtmlElement,
+  NehanElement,
   ILayoutFormatContext,
   FlowFormatContext,
   ReplacedElement,
@@ -11,7 +11,7 @@ import {
   WritingMode,
 } from "./public-api";
 
-function getAtomExtent(atomElement: HtmlElement, lineExtent: number, writingMode: WritingMode): number {
+function getAtomExtent(atomElement: NehanElement, lineExtent: number, writingMode: WritingMode): number {
   if (atomElement.isTextElement()) {
     return lineExtent;
   }
@@ -106,7 +106,7 @@ export class DynamicStyleUtils {
       ctx.element.childNodes = [];
       let children = doc.body.childNodes, root = ctx.element.root;
       for (let i = 0; i < children.length; i++) {
-        ctx.element.appendChild(new HtmlElement(children[i], root));
+        ctx.element.appendChild(new NehanElement(children[i], root));
       }
       return undefined;
     };

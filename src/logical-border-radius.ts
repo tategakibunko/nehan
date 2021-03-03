@@ -1,7 +1,7 @@
 import {
   CssText,
   CssCascade,
-  HtmlElement,
+  NehanElement,
   PropValue,
   Utils,
 } from "./public-api";
@@ -52,7 +52,7 @@ export class LogicalBorderRadius {
     };
   }
 
-  static load(element: HtmlElement): LogicalBorderRadius {
+  static load(element: NehanElement): LogicalBorderRadius {
     let values = LogicalBorderRadius.corners.reduce((values, corner) => {
       let prop = `border-${corner}-radius`;
       let value = CssCascade.getValue(element, prop);

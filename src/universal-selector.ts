@@ -1,6 +1,6 @@
 import {
   Selector,
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export class UniversalSelector extends Selector {
@@ -8,7 +8,7 @@ export class UniversalSelector extends Selector {
     return "*";
   }
 
-  public test(element: HtmlElement): boolean {
+  public test(element: NehanElement): boolean {
     return true; // always true
   }
 }

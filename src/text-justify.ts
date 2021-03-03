@@ -1,7 +1,7 @@
 import {
   Utils,
   BasicStyle,
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -22,7 +22,7 @@ export class TextJustify {
     );
   }
 
-  static load(element: HtmlElement): TextJustify {
+  static load(element: NehanElement): TextJustify {
     let value = CssCascade.getValue(element, "text-justify");
     return new TextJustify(value as TextJustifyValue);
   }

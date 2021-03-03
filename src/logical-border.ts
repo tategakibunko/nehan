@@ -4,7 +4,7 @@ import {
   LogicalBorderWidth,
   LogicalBorderColor,
   LogicalBorderRadius,
-  HtmlElement,
+  NehanElement,
   NativeStyleMap,
   PropValue,
   CssText,
@@ -40,7 +40,7 @@ export class LogicalBorder {
     });
   }
 
-  static load(element: HtmlElement): LogicalBorder {
+  static load(element: NehanElement): LogicalBorder {
     return new LogicalBorder({
       style: LogicalBorderStyle.load(element),
       width: LogicalBorderWidth.load(element),

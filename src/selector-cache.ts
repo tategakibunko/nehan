@@ -1,15 +1,15 @@
 import {
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export class SelectorCache {
-  private cache: {[key: string]: HtmlElement []};
+  private cache: { [key: string]: NehanElement[] };
 
-  constructor(){
+  constructor() {
     this.cache = {};
   }
 
-  public clear(){
+  public clear() {
     this.cache = {};
   }
 
@@ -17,12 +17,12 @@ export class SelectorCache {
     return this.cache[selector] !== undefined;
   }
 
-  public getCache(selector: string): HtmlElement []{
+  public getCache(selector: string): NehanElement[] {
     return this.cache[selector] || [];
   }
 
-  public addCache(selector: string, element: HtmlElement): HtmlElement{
-    if(!this.hasCache(selector)){
+  public addCache(selector: string, element: NehanElement): NehanElement {
+    if (!this.hasCache(selector)) {
       this.cache[selector] = [element];
     } else {
       this.cache[selector].push(element);

@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
   Config,
 } from "./public-api";
@@ -17,12 +17,12 @@ export class WhiteSpace {
     return this.value === 'pre';
   }
 
-  static load(element: HtmlElement): WhiteSpace {
+  static load(element: NehanElement): WhiteSpace {
     let value = CssCascade.getValue(element, "white-space");
     return new WhiteSpace(value as WhiteSpaceValue);
   }
 
-  static isWhiteSpaceElement(element: HtmlElement): boolean {
+  static isWhiteSpaceElement(element: NehanElement): boolean {
     if (!element.isTextElement()) {
       return false;
     }

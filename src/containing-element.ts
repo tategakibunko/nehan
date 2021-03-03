@@ -1,13 +1,13 @@
 import {
   CssCascade,
-  HtmlElement,
+  NehanElement,
   PositionValue,
   Display,
 } from './public-api';
 
 export class ContainingElement {
   // if position is absolute, ancestor element is nearest element that is not 'static' positioned.
-  static getAbsAncestor(element: HtmlElement): HtmlElement {
+  static getAbsAncestor(element: NehanElement): NehanElement {
     let parent = element.parent;
     while (parent) {
       const position = parent.computedStyle.getPropertyValue("position");
@@ -19,7 +19,7 @@ export class ContainingElement {
     return parent || element.ownerDocument.body;
   }
 
-  static getBlockAncestor(element: HtmlElement): HtmlElement {
+  static getBlockAncestor(element: NehanElement): NehanElement {
     let parent = element.parent;
     while (parent) {
       const display = Display.load(parent);
@@ -31,7 +31,7 @@ export class ContainingElement {
     return element.ownerDocument.body;
   }
 
-  static get(element: HtmlElement): HtmlElement {
+  static get(element: NehanElement): NehanElement {
     const position = CssCascade.getValue(element, "position") as PositionValue;
     if (element.tagName === "body") {
       return element;

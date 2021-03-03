@@ -1,6 +1,6 @@
 import {
   CssCascade,
-  HtmlElement
+  NehanElement
 } from "./public-api";
 
 export class Content {
@@ -18,7 +18,7 @@ export class Content {
     return value; // TODO
   }
 
-  static load(element: HtmlElement): Content {
+  static load(element: NehanElement): Content {
     let value = CssCascade.getValue(element, "content");
     return new Content(value);
   }

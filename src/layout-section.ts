@@ -1,15 +1,15 @@
 import {
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export class LayoutSection {
   public parent?: LayoutSection;
-  public header?: HtmlElement; // heading of this section
+  public header?: NehanElement; // heading of this section
   public children: LayoutSection[];
   public closed: boolean;
   public pageIndex: number;
 
-  constructor(header?: HtmlElement) {
+  constructor(header?: NehanElement) {
     this.header = header;
     this.children = [];
     this.closed = false;
@@ -28,7 +28,7 @@ export class LayoutSection {
     return this.children.length === 0;
   }
 
-  public setHeader(header: HtmlElement) {
+  public setHeader(header: NehanElement) {
     if (!this.header) {
       this.header = header;
     }
@@ -51,7 +51,7 @@ export class LayoutSection {
     return (!this.parent) ? "(root)" : "no title"
   }
 
-  static isHeaderElement(element: HtmlElement): boolean {
+  static isHeaderElement(element: NehanElement): boolean {
     switch (element.tagName) {
       case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
         return true;
@@ -59,7 +59,7 @@ export class LayoutSection {
     return false;
   }
 
-  static getHeaderLevel(element: HtmlElement): number {
+  static getHeaderLevel(element: NehanElement): number {
     switch (element.tagName) {
       case "h1": return 1;
       case "h2": return 2;
@@ -71,7 +71,7 @@ export class LayoutSection {
     throw new Error(`Invalid header:${element.tagName}`);
   }
 
-  static isSectioningElement(element: HtmlElement): boolean {
+  static isSectioningElement(element: NehanElement): boolean {
     switch (element.tagName) {
       case "body":
       case "section":
@@ -83,7 +83,7 @@ export class LayoutSection {
     return false;
   }
 
-  static isSectioningRootElement(element: HtmlElement): boolean {
+  static isSectioningRootElement(element: NehanElement): boolean {
     switch (element.tagName) {
       case "body":
       case "blockquote":

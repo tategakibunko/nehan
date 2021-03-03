@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   BoxEnv,
   Anchor,
   LayoutSection,
@@ -52,14 +52,14 @@ export interface IFlowRootFormatContext extends IFlowFormatContext {
   floatRegion?: FloatRegion;
   floatNodes: ILogicalNode[];
   pageCount: number;
-  openElement: (element: HtmlElement) => void;
-  closeElement: (element: HtmlElement) => void;
+  openElement: (element: NehanElement) => void;
+  closeElement: (element: NehanElement) => void;
   createElement: (tagName: string, layoutNames: string[], logicalNode: ILogicalNode) => HTMLElement;
   createOutline: (outlineEvaluator: ILayoutOutlineEvaluator) => HTMLElement;
   createLogicalNodeEvaluator: () => ILogicalNodeEvaluator;
   addFloat: (block: ILogicalFloatableNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) => void;
   setAnchor: (name: string, anchor: Anchor) => void;
   getAnchor: (name: string) => Anchor | undefined;
-  getHeaderSection: (element: HtmlElement) => LayoutSection | undefined;
+  getHeaderSection: (element: NehanElement) => LayoutSection | undefined;
   clearFloat: (clear: LogicalClear) => number;
 }

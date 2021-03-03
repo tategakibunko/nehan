@@ -1,9 +1,9 @@
 import {
-  HtmlElement
+  NehanElement
 } from "./public-api";
 
 export class ReplacedElement {
-  static isReplacedElement(element: HtmlElement): boolean {
+  static isReplacedElement(element: NehanElement): boolean {
     switch (element.tagName) {
       case "img":
       case "video":

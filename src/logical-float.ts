@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -28,7 +28,7 @@ export class LogicalFloat {
     return this.value === "none";
   }
 
-  static load(element: HtmlElement): LogicalFloat {
+  static load(element: NehanElement): LogicalFloat {
     let value = CssCascade.getValue(element, "float");
     return new LogicalFloat(value as LogicalFloatValue);
   }

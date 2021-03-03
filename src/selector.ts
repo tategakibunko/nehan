@@ -1,16 +1,16 @@
 import {
   Specificity,
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export class Selector {
   public specificity: Specificity;
-  
-  constructor(){
+
+  constructor() {
     this.specificity = new Specificity(0, 0, 0);
   }
-  
-  public test(_: HtmlElement): boolean {
+
+  public test(_: NehanElement): boolean {
     return false;
   }
 }

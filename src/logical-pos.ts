@@ -1,6 +1,6 @@
 import {
   Utils,
-  HtmlElement,
+  NehanElement,
   CssCascade,
   NativeStyleMap,
   ILogicalCssEvaluator,
@@ -26,7 +26,7 @@ export class LogicalPos {
     this.start = value.start;
   }
 
-  static load(element: HtmlElement): LogicalPos {
+  static load(element: NehanElement): LogicalPos {
     let value: LogicalPosValue = {};
     value.before = this.loadEach(element, "before");
     value.end = this.loadEach(element, "end");
@@ -35,7 +35,7 @@ export class LogicalPos {
     return new LogicalPos(value);
   }
 
-  static loadEach(element: HtmlElement, prop: string): number | undefined {
+  static loadEach(element: NehanElement, prop: string): number | undefined {
     let value = CssCascade.getValue(element, prop);
     return (value === "auto") ? undefined : Utils.atoi(value, 10);
   }

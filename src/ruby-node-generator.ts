@@ -3,7 +3,7 @@ import {
   Config,
   ILogicalNodeGenerator,
   LayoutResult,
-  HtmlElement,
+  NehanElement,
   RubyFormatContext,
   RubyReducer,
   LogicalNodeGenerator,
@@ -31,7 +31,7 @@ export class RubyNodeGenerator implements ILogicalNodeGenerator {
     if (Config.debugLayout) {
       console.group("ruby");
     }
-    let childElement: HtmlElement | null = this.context.env.element.firstChild;
+    let childElement: NehanElement | null = this.context.env.element.firstChild;
     while (childElement !== null) {
       const childGen = LogicalNodeGenerator.createChild(childElement, this.context);
       this.context.child = childGen.generator;

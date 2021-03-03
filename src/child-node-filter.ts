@@ -1,20 +1,20 @@
 import {
   Config,
-  HtmlElement,
+  NehanElement,
   Display,
   WhiteSpace,
   PseudoElement,
 } from './public-api';
 
 export interface ChildNodeFilter {
-  visit: (element: HtmlElement) => boolean;
+  visit: (element: NehanElement) => boolean;
 }
 
 export class ValidBlockSelector implements ChildNodeFilter {
   static instance = new ValidBlockSelector();
   private constructor() { }
 
-  visit(element: HtmlElement): boolean {
+  visit(element: NehanElement): boolean {
     if (element.isTextElement()) {
       return true;
     }

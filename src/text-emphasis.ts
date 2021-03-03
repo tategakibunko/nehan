@@ -3,7 +3,7 @@ import {
   PropValue,
   CssText,
   CssCascade,
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export interface TextEmphaData {
@@ -42,14 +42,14 @@ export class TextEmphasis {
     return declr;
   }
 
-  static load(element: HtmlElement): TextEmphasis {
+  static load(element: NehanElement): TextEmphasis {
     let textEmpha = new TextEmphasis();
     textEmpha.style = TextEmphasisStyle.load(element);
     textEmpha.color = TextEmphasis.loadColor(element);
     return textEmpha;
   }
 
-  static loadColor(element: HtmlElement): string {
+  static loadColor(element: NehanElement): string {
     return CssCascade.getValue(element, "text-emphasis-color");
   }
 

@@ -1,6 +1,6 @@
 import {
   Utils,
-  HtmlElement,
+  NehanElement,
   Display,
   WhiteSpace,
 } from "./public-api";
@@ -20,7 +20,7 @@ let collapse_skip_tags = [
 ];
 
 export class MarginCollapse {
-  static collapse(element: HtmlElement) {
+  static collapse(element: NehanElement) {
     if (!this.isTarget(element)) {
       return;
     }
@@ -49,7 +49,7 @@ export class MarginCollapse {
     */
   }
 
-  static hasBorder(element: HtmlElement, dir: string): boolean {
+  static hasBorder(element: NehanElement, dir: string): boolean {
     let prop = "border-" + dir + "-width";
     let value = element.computedStyle.getPropertyValue(prop) || "0px";
     let size = Utils.atoi(value);
@@ -59,7 +59,7 @@ export class MarginCollapse {
   // previous,
   // last child of previous,
   // last child of last child of previous ....
-  static getMaxAfterOfBefore(element: HtmlElement): number {
+  static getMaxAfterOfBefore(element: NehanElement): number {
     if (this.hasBorder(element, "before")) {
       return 0;
     }
@@ -87,7 +87,7 @@ export class MarginCollapse {
   // parent,
   // last child of parent
   // last child of lasts child of parent ...
-  static getMaxAfterOfParent(element: HtmlElement): number {
+  static getMaxAfterOfParent(element: NehanElement): number {
     if (this.hasBorder(element, "after")) {
       return 0;
     }
@@ -106,13 +106,13 @@ export class MarginCollapse {
       if (!parent.parent) {
         break;
       }
-      let last: HtmlElement | null = parent.parent.lastChild;
+      let last: NehanElement | null = parent.parent.lastChild;
       if (last === null) {
         break;
       }
       // At this point, last is not null, but it's not recognized by typescript,
-      // so we use 'last as HtmlElement'.
-      while (WhiteSpace.isWhiteSpaceElement(last as HtmlElement)) {
+      // so we use 'last as NehanElement'.
+      while (WhiteSpace.isWhiteSpaceElement(last as NehanElement)) {
         last = last.previousSibling;
         if (last === null) {
           break;
@@ -126,7 +126,7 @@ export class MarginCollapse {
     return max;
   }
 
-  static isTarget(element: HtmlElement): boolean {
+  static isTarget(element: NehanElement): boolean {
     if (element.parent === null) { // root element
       return false;
     }

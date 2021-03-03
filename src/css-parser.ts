@@ -42,7 +42,7 @@ export type CssRules = { [selector: string]: CssDeclarationBlock };
   and dynamic_style = {
     selector: string,
     name: string,
-    element: HtmlElement,
+    element: NehanElement,
     parentContext?: ILayoutFormatContext
   } -> css_declr_block | undefined
 

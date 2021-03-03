@@ -1,7 +1,7 @@
 import {
   Utils,
   Selector,
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export class PseudoClassSelector extends Selector {
@@ -17,11 +17,11 @@ export class PseudoClassSelector extends Selector {
     return ":" + this.src;
   }
 
-  public testEven(element: HtmlElement): boolean {
+  public testEven(element: NehanElement): boolean {
     return (element.index + 1) % 2 === 0;
   }
 
-  public testOdd(element: HtmlElement): boolean {
+  public testOdd(element: NehanElement): boolean {
     return this.testEven(element) === false;
   }
 
@@ -60,16 +60,16 @@ export class PseudoClassSelector extends Selector {
     return this.testNthFuncExpr(index, expr);
   }
 
-  public testNthChild(element: HtmlElement): boolean {
+  public testNthChild(element: NehanElement): boolean {
     return this.testNthExpr(element.indexOfElement);
   }
 
   // TODO
-  public testMatch(element: HtmlElement): boolean {
+  public testMatch(element: NehanElement): boolean {
     throw new Error("pseudo-class 'match' is not implemented yet");
   }
 
-  public test(element: HtmlElement): boolean {
+  public test(element: NehanElement): boolean {
     if (this.src === "first-child") {
       return element.isFirstElementChild();
     }

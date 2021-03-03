@@ -1,6 +1,6 @@
 import {
   Selector,
-  HtmlElement,
+  NehanElement,
   PseudoElementTagNames,
 } from "./public-api";
 
@@ -28,7 +28,7 @@ export class PseudoElementSelector extends Selector {
     return "::" + this.pseudoName;
   }
 
-  public test(element: HtmlElement): boolean {
+  public test(element: NehanElement): boolean {
     return element.tagName === this.tagName;
   }
 }

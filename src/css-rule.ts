@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssStyleDeclaration,
   ComplexSelector,
   PseudoElementSelector
@@ -18,7 +18,7 @@ export class CssRule {
     return "(rule):" + this.selector.toString();
   }
 
-  public test(element: HtmlElement, matchAsPeOwner = false): boolean {
+  public test(element: NehanElement, matchAsPeOwner = false): boolean {
     return this.selector.test(element, matchAsPeOwner);
   }
 

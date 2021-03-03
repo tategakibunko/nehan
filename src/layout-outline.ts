@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   LayoutSection,
   ILayoutOutlineCallbacks,
   LayoutOutlineParser,
@@ -7,7 +7,7 @@ import {
 } from "./public-api";
 
 export class LayoutOutline {
-  public rootElement?: HtmlElement;
+  public rootElement?: NehanElement;
   public rootSection: LayoutSection;
   public curSection: LayoutSection;
   private headers: { [header_key: string]: LayoutSection } = {};
@@ -26,7 +26,7 @@ export class LayoutOutline {
     return LayoutOutlineParser.parseSection(this.rootSection, callbacks);
   }
 
-  public openElement(element: HtmlElement, pageIndex: number): LayoutSection | undefined {
+  public openElement(element: NehanElement, pageIndex: number): LayoutSection | undefined {
     if (LayoutSection.isSectioningRootElement(element)) {
       return this.openSectionRoot(element, pageIndex);
     }
@@ -39,18 +39,18 @@ export class LayoutOutline {
     return undefined;
   }
 
-  public closeElement(element?: HtmlElement): LayoutSection {
+  public closeElement(element?: NehanElement): LayoutSection {
     if (element && LayoutSection.isSectioningElement(element) === false) {
       return this.curSection;
     }
     return this.closeSection();
   }
 
-  public getHeaderSection(element: HtmlElement): LayoutSection | undefined {
+  public getHeaderSection(element: NehanElement): LayoutSection | undefined {
     return this.headers[element.getPath(true)];
   }
 
-  protected openSectionRoot(element: HtmlElement, pageIndex: number): LayoutSection {
+  protected openSectionRoot(element: NehanElement, pageIndex: number): LayoutSection {
     // console.log("openSectionRoot:", element.tagName);
     if (!this.rootElement) {
       return this.curSection;
@@ -86,7 +86,7 @@ export class LayoutOutline {
     return this.curSection;
   }
 
-  protected openHeader(element: HtmlElement, pageIndex: number): LayoutSection {
+  protected openHeader(element: NehanElement, pageIndex: number): LayoutSection {
     this.curSection = this.addHeader(element, pageIndex);
     return this.curSection;
   }
@@ -96,7 +96,7 @@ export class LayoutOutline {
     return this.curSection.title + closeState;
   }
 
-  protected createContextSection(pageIndex: number, header?: HtmlElement): LayoutSection {
+  protected createContextSection(pageIndex: number, header?: NehanElement): LayoutSection {
     let section = new LayoutSection(header);
     section.pageIndex = header ? -1 : pageIndex;
     if (header) {
@@ -105,7 +105,7 @@ export class LayoutOutline {
     return section;
   }
 
-  protected createStandAloneSubSection(pageIndex: number, header?: HtmlElement): LayoutSection {
+  protected createStandAloneSubSection(pageIndex: number, header?: NehanElement): LayoutSection {
     const section = this.createContextSection(pageIndex, header);
     section.closed = true; // stand alone
     this.curSection.addChild(section);
@@ -113,14 +113,14 @@ export class LayoutOutline {
     return section;
   }
 
-  protected createSubSection(pageIndex: number, header?: HtmlElement): LayoutSection {
+  protected createSubSection(pageIndex: number, header?: NehanElement): LayoutSection {
     const section = this.createContextSection(pageIndex, header);
     this.curSection.addChild(section);
     // console.log("[%s] create sub section:%s", this.curTitle, section.title);
     return section;
   }
 
-  protected createNextSection(pageIndex: number, header?: HtmlElement): LayoutSection {
+  protected createNextSection(pageIndex: number, header?: NehanElement): LayoutSection {
     const section = this.createContextSection(pageIndex, header);
     const rootSection = this.closeSection();
     rootSection.addChild(section);
@@ -136,7 +136,7 @@ export class LayoutOutline {
     return this.closeHigherSection(section.parent, maxLevel);
   }
 
-  protected createHigherSection(pageIndex: number, header: HtmlElement, max_level: number): LayoutSection {
+  protected createHigherSection(pageIndex: number, header: NehanElement, max_level: number): LayoutSection {
     // console.log("createHigherSection: %s, dst level:%d", header.textContent, max_level);
     if (this.curSection.parent) {
       this.curSection = this.closeHigherSection(this.curSection.parent, max_level);
@@ -144,7 +144,7 @@ export class LayoutOutline {
     return this.createNextSection(pageIndex, header);
   }
 
-  protected addHeader(header: HtmlElement, pageIndex: number): LayoutSection {
+  protected addHeader(header: NehanElement, pageIndex: number): LayoutSection {
     // console.log("[%s] addHeader(%s):%s", this.curTitle, header.tagName, header.textContent);
     if (!this.curSection.header) { // header is not set yet
       if (!this.curSection.parent) { // root section

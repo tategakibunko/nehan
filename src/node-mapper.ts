@@ -1,7 +1,7 @@
 import {
-  HtmlElement,
+  NehanElement,
 } from './public-api'
 
 export interface NodeMapper<T> {
-  visit: (element: HtmlElement) => T;
+  visit: (element: NehanElement) => T;
 }

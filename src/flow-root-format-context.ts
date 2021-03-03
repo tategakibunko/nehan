@@ -4,7 +4,7 @@ import {
   BoxEnv,
   Anchor,
   LayoutSection,
-  HtmlElement,
+  NehanElement,
   ILayoutFormatContext,
   LayoutOutline,
   FloatRegion,
@@ -53,11 +53,11 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     };
   }
 
-  public openElement(element: HtmlElement) {
+  public openElement(element: NehanElement) {
     this.outline.openElement(element, this.pageCount);
   }
 
-  public closeElement(element: HtmlElement) {
+  public closeElement(element: NehanElement) {
     this.outline.closeElement(element);
   }
 
@@ -127,7 +127,7 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     return this.anchors[name];
   }
 
-  public getHeaderSection(element: HtmlElement): LayoutSection | undefined {
+  public getHeaderSection(element: NehanElement): LayoutSection | undefined {
     return this.outline.getHeaderSection(element);
   }
 

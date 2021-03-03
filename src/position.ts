@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -12,7 +12,7 @@ export class Position {
     this.value = value;
   }
 
-  static load(element: HtmlElement): Position {
+  static load(element: NehanElement): Position {
     let value = CssCascade.getValue(element, "position");
     return new Position(value as PositionValue);
   }

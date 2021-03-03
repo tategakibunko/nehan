@@ -1,6 +1,6 @@
 import {
   CssStyleSheet,
-  HtmlElement,
+  NehanElement,
   UserAgentStyles,
   SelectorCache,
   CssLoader,
@@ -24,8 +24,8 @@ let defaultOptions: HtmlDocumentOptions = {
 export class HtmlDocument {
   public source: string;
   public $document: HTMLDocument;
-  public documentElement: HtmlElement;
-  public body: HtmlElement;
+  public documentElement: NehanElement;
+  public body: NehanElement;
   public styleSheets: CssStyleSheet[];
   public specStyleSheet: CssStyleSheet; // specificity sorted stylesheet.
   protected selectorCache: SelectorCache;
@@ -66,19 +66,19 @@ export class HtmlDocument {
     // console.timeEnd("initializeDocument");
   }
 
-  public querySelectorAll(query: string): HtmlElement[] {
+  public querySelectorAll(query: string): NehanElement[] {
     return this.documentElement.querySelectorAll(query);
   }
 
-  public querySelector(query: string): HtmlElement | null {
+  public querySelector(query: string): NehanElement | null {
     return this.documentElement.querySelector(query);
   }
 
-  public getElementById(id: string): HtmlElement | null {
+  public getElementById(id: string): NehanElement | null {
     return this.querySelector("#" + id);
   }
 
-  public getSelectorCache(selector: string): HtmlElement[] {
+  public getSelectorCache(selector: string): NehanElement[] {
     return this.selectorCache.getCache(selector);
   }
 
@@ -87,11 +87,11 @@ export class HtmlDocument {
     return this;
   }
 
-  public addSelectorCache(tag_name: string, element: HtmlElement) {
+  public addSelectorCache(tag_name: string, element: NehanElement) {
     this.selectorCache.addCache(tag_name, element);
   }
 
-  public createElement(tag_name: string): HtmlElement {
+  public createElement(tag_name: string): NehanElement {
     let element = this.createNativeElement(tag_name);
     return this.createElementFromDOM(element);
   }
@@ -100,12 +100,12 @@ export class HtmlDocument {
     return this.$document.createElement(tag_name);
   }
 
-  public createElementFromDOM(node: HTMLElement | Node): HtmlElement {
+  public createElementFromDOM(node: HTMLElement | Node): NehanElement {
     const tagName = ((node instanceof HTMLElement) ? node.tagName : (node instanceof Text) ? "(text)" : "??").toLowerCase();
     if ((tagName === "body" || tagName === "html") && this.selectorCache.hasCache(tagName)) {
       return this.selectorCache.getCache(tagName)[0];
     }
-    const element = new HtmlElement(node, this);
+    const element = new NehanElement(node, this);
     if (element.tagName === "body") {
       this.body = element;
     }
@@ -115,7 +115,7 @@ export class HtmlDocument {
     return element;
   }
 
-  public createTextNode(text: string): HtmlElement {
+  public createTextNode(text: string): NehanElement {
     const element = this.$document.createTextNode(text);
     return this.createElementFromDOM(element);
   }

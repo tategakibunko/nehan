@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   LogicalPos,
   LogicalSize,
   Display,
@@ -30,7 +30,7 @@ import {
 // As a result, actual size, position etc.. are all different.
 // But BoxEnv is set of 'constant' styles defined in each css settings.
 export class BoxEnv {
-  public element: HtmlElement;
+  public element: NehanElement;
   public measure: number | null;
   public extent: number | null;
   public color: Color
@@ -56,7 +56,7 @@ export class BoxEnv {
   public backgroundPos: LogicalBackgroundPos;
   public borderCollapse: BorderCollapse;
 
-  constructor(element: HtmlElement) {
+  constructor(element: NehanElement) {
     this.element = element;
     this.color = Color.load(element);
     this.measure = LogicalSize.loadMeasure(element);
@@ -84,7 +84,7 @@ export class BoxEnv {
     this.borderCollapse = BorderCollapse.load(element);
   }
 
-  protected loadDisplay(element: HtmlElement): Display {
+  protected loadDisplay(element: NehanElement): Display {
     const display = Display.load(element);
     // display of <a> is dynamically decided by it's first element.
     if (element.tagName === "a" && display.isInlineLevel()) {
@@ -98,7 +98,7 @@ export class BoxEnv {
     return display;
   }
 
-  protected loadEdge(element: HtmlElement, display: Display): LogicalBoxEdge {
+  protected loadEdge(element: NehanElement, display: Display): LogicalBoxEdge {
     return display.isNone() ? LogicalBoxEdge.none : LogicalBoxEdge.load(element);
   }
 }

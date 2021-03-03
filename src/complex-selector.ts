@@ -2,7 +2,7 @@ import {
   Selector,
   CompoundSelector,
   PseudoElementSelector,
-  HtmlElement,
+  NehanElement,
   Specificity
 } from "./public-api";
 
@@ -66,15 +66,15 @@ export class ComplexSelector extends Selector {
     return str;
   }
 
-  public queryDirectParent(element: HtmlElement, parent_sel: CompoundSelector):
-    HtmlElement | null {
+  public queryDirectParent(element: NehanElement, parent_sel: CompoundSelector):
+    NehanElement | null {
     if (element.parent && parent_sel.test(element.parent)) {
       return element.parent;
     }
     return null;
   }
 
-  public queryParent(element: HtmlElement, selector: CompoundSelector): HtmlElement | null {
+  public queryParent(element: NehanElement, selector: CompoundSelector): NehanElement | null {
     let parent = element.parent;
     while (parent) {
       if (selector.test(parent)) {
@@ -85,8 +85,8 @@ export class ComplexSelector extends Selector {
     return parent;
   }
 
-  public queryDirectSibling(element: HtmlElement, selector: CompoundSelector):
-    HtmlElement | null {
+  public queryDirectSibling(element: NehanElement, selector: CompoundSelector):
+    NehanElement | null {
     let prev_element = element.previousSibling;
     if (prev_element && selector.test(prev_element)) {
       return prev_element;
@@ -94,8 +94,8 @@ export class ComplexSelector extends Selector {
     return null;
   }
 
-  public querySibling(element: HtmlElement, prev_selector: CompoundSelector):
-    HtmlElement | null {
+  public querySibling(element: NehanElement, prev_selector: CompoundSelector):
+    NehanElement | null {
     let prev = element.previousSibling;
     while (prev) {
       if (!prev.isTextElement() && prev_selector.test(prev)) {
@@ -114,7 +114,7 @@ export class ComplexSelector extends Selector {
      @param elm start element searched by left_selector and combinator.
      @returns return matched html element, null if not found.
   */
-  public queryLeft(left: CompoundSelector, cmb: string, elm: HtmlElement): HtmlElement | null {
+  public queryLeft(left: CompoundSelector, cmb: string, elm: NehanElement): NehanElement | null {
     switch (cmb) {
       case " ":
         return this.queryParent(elm, left);
@@ -129,14 +129,14 @@ export class ComplexSelector extends Selector {
     }
   }
 
-  public querySelectorAll(element: HtmlElement): HtmlElement[] {
+  public querySelectorAll(element: NehanElement): NehanElement[] {
     let leaf_elements = this.leafSelector.querySelectorAll(element);
     return leaf_elements.filter((elm) => {
       return this.test(elm);
     });
   }
 
-  public querySelector(element: HtmlElement): HtmlElement | null {
+  public querySelector(element: NehanElement): NehanElement | null {
     let leaf_elements = this.leafSelector.querySelectorAll(element);
     for (let i = 0; i < leaf_elements.length; i++) {
       let elm = leaf_elements[i];
@@ -147,10 +147,10 @@ export class ComplexSelector extends Selector {
     return null;
   }
 
-  public test(element: HtmlElement, matchAsPeOwner = false): boolean {
+  public test(element: NehanElement, matchAsPeOwner = false): boolean {
     let spos = 0, cpos = 0;
     let slen = this.selectors.length, clen = this.combinators.length;
-    let cur: HtmlElement | null = element;
+    let cur: NehanElement | null = element;
     while (true) {
       if (spos >= slen) {
         break;

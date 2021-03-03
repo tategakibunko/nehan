@@ -1,6 +1,6 @@
 import {
   Config,
-  HtmlElement,
+  NehanElement,
   CssCascade,
   PositionValue,
   LogicalPadding,
@@ -35,7 +35,7 @@ export type AutableBoxLengthProps =
   "margin-before" |
   "margin-after"
 
-function getContainingBlock(element: HtmlElement): HtmlElement {
+function getContainingBlock(element: NehanElement): NehanElement {
   const position = CssCascade.getValue(element, "position") as PositionValue;
   if (position === "static") {
     return element.parent || element.ownerDocument.body;
@@ -56,12 +56,12 @@ export class CssLength {
     return CssLengthUnits.find(unit => value.endsWith(unit)) !== undefined;
   }
 
-  static computeRootFontSize(element: HtmlElement): number {
+  static computeRootFontSize(element: NehanElement): number {
     const value = CssCascade.getValue(element.ownerDocument.body, "font-size");
     return this.computeFontSize(element.ownerDocument.body, value);
   }
 
-  static computeContainingMeasure(contElement: HtmlElement): number {
+  static computeContainingMeasure(contElement: NehanElement): number {
     const contentMeasure = parseInt(CssCascade.getValue(contElement, "measure"));
     const position = CssCascade.getValue(contElement, "position") as PositionValue;
     if (position === "static") {
@@ -71,7 +71,7 @@ export class CssLength {
     return contentMeasure + padding.measure;
   }
 
-  static computeContainingExtent(contElement: HtmlElement): number {
+  static computeContainingExtent(contElement: NehanElement): number {
     const contentExtent = parseInt(CssCascade.getValue(contElement, "extent"));
     const position = CssCascade.getValue(contElement, "position") as PositionValue;
     if (position === "static") {
@@ -81,14 +81,14 @@ export class CssLength {
     return contentExtent + padding.extent;
   }
 
-  static computeParentFontSize(element: HtmlElement): number {
+  static computeParentFontSize(element: NehanElement): number {
     if (!element.parent) {
       return Config.defaultFontSize;
     }
     return parseInt(CssCascade.getValue(element.parent, "font-size"));
   }
 
-  static computeFontSize(element: HtmlElement, directValue?: string): number {
+  static computeFontSize(element: NehanElement, directValue?: string): number {
     const value = directValue || CssCascade.getValue(element, "font-size");
     if (value.endsWith("em")) {
       const ratio = parseFloat(value);
@@ -134,7 +134,7 @@ export class CssLength {
     element1.computedValue.getProperty("line-height") => '2.0'
     element2.computedValue.getProperty("line-height") => '16px'
   */
-  static computeLineHeight(element: HtmlElement, directValue?: string): string {
+  static computeLineHeight(element: NehanElement, directValue?: string): string {
     const value = directValue || CssCascade.getValue(element, "line-height");
     if (value === "normal") {
       return String(Config.defaultLineHeight);
@@ -161,7 +161,7 @@ export class CssLength {
     return String(parseFloat(value));
   }
 
-  static computeBaseBoxLength(element: HtmlElement, prop: string): number {
+  static computeBaseBoxLength(element: NehanElement, prop: string): number {
     const contElement = getContainingBlock(element);
     const isVert = WritingMode.load(element).isTextVertical();
     switch (prop) {
@@ -198,7 +198,7 @@ export class CssLength {
   }
 
   // (min|max)-(measure|extent)
-  static computeOptionalBoxLength(element: HtmlElement, prop: OptionalBoxLengthProps, directValue?: string): number | "none" {
+  static computeOptionalBoxLength(element: NehanElement, prop: OptionalBoxLengthProps, directValue?: string): number | "none" {
     const value = directValue || CssCascade.getValue(element, prop);
     if (value === "none") {
       return "none";
@@ -207,7 +207,7 @@ export class CssLength {
   }
 
   // margin-xxx, measure, extent, width, height, start, end, before, after
-  static computeAutableBoxLength(element: HtmlElement, prop: AutableBoxLengthProps, directValue?: string): number | "auto" {
+  static computeAutableBoxLength(element: NehanElement, prop: AutableBoxLengthProps, directValue?: string): number | "auto" {
     const value = directValue || CssCascade.getValue(element, prop);
     if (value === "auto") {
       return value;
@@ -216,7 +216,7 @@ export class CssLength {
   }
 
   // padding, border-width, border-radius
-  static computeBoxLength(element: HtmlElement, prop: string, directValue?: string): number {
+  static computeBoxLength(element: NehanElement, prop: string, directValue?: string): number {
     const value = directValue || CssCascade.getValue(element, prop);
     if (value.endsWith("em")) {
       const ratio = parseFloat(value);
@@ -244,7 +244,7 @@ export class CssLength {
     return parseFloat(value);
   }
 
-  static computeBorderWidth(element: HtmlElement, prop: string, directValue?: string): number {
+  static computeBorderWidth(element: NehanElement, prop: string, directValue?: string): number {
     const value = directValue || CssCascade.getValue(element, prop);
     if (LogicalBorderWidth.keywords.includes(value)) {
       return LogicalBorderWidthKeywordSize[value];
@@ -252,7 +252,7 @@ export class CssLength {
     return this.computeBoxLength(element, prop, value);
   }
 
-  static computeBorderRadius(element: HtmlElement, prop: string, directValue?: string): number {
+  static computeBorderRadius(element: NehanElement, prop: string, directValue?: string): number {
     throw new Error("todo(compute border radius)");
   }
 }

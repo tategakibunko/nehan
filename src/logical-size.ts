@@ -1,6 +1,6 @@
 import {
   Utils,
-  HtmlElement,
+  NehanElement,
   PhysicalSize,
   WritingMode,
   NativeStyleMap,
@@ -16,7 +16,7 @@ export class LogicalSize {
     this.extent = args.extent;
   }
 
-  static load(element: HtmlElement): LogicalSize | null {
+  static load(element: NehanElement): LogicalSize | null {
     let measure = this.loadMeasure(element);
     if (measure === null) {
       return null;
@@ -28,12 +28,12 @@ export class LogicalSize {
     return new LogicalSize({ measure: measure, extent: extent });
   }
 
-  static loadMeasure(element: HtmlElement): number | null {
+  static loadMeasure(element: NehanElement): number | null {
     let value = element.computedStyle.getPropertyValue("measure") || "auto";
     return (value === "auto") ? null : Utils.atoi(value);
   }
 
-  static loadExtent(element: HtmlElement): number | null {
+  static loadExtent(element: NehanElement): number | null {
     let value = element.computedStyle.getPropertyValue("extent") || "auto";
     return (value === "auto") ? null : Utils.atoi(value);
   }

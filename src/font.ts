@@ -4,7 +4,7 @@ import {
   Config,
   CssText,
   PropValue,
-  HtmlElement,
+  NehanElement,
   CssCascade,
   NativeStyleMap,
   ILogicalCssEvaluator,
@@ -237,7 +237,7 @@ export class Font {
     return propValue;
   }
 
-  static load(element: HtmlElement): Font {
+  static load(element: NehanElement): Font {
     let font = new Font();
     font.style = CssCascade.getValue(element, "font-style");
     font.variant = CssCascade.getValue(element, "font-variant");

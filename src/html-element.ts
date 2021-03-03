@@ -12,16 +12,16 @@ import {
   CssLoader,
 } from "./public-api";
 
-// For performance reason, we use this `HtmlElement`(not HTMLElement!) class for both `Node` and `Element`.
+// For performance reason, we use this `NehanElement`(not HTMLElement!) class for both `Node` and `Element`.
 // Note that some properties(like `attributes`, `childNodes` etc) are not available
 // if `this.$node` is not `Element` but `Node`.
 // [TODO] remove selector cache on `HtmlDocument` if some node is removed from tree.
-export class HtmlElement {
+export class NehanElement {
   public $node: Node | HTMLElement;
   public $dom: HTMLElement | undefined; // dynamically created DOM.
   public tagName: string;
-  public childNodes: HtmlElement[];
-  public parent: HtmlElement | null;
+  public childNodes: NehanElement[];
+  public parent: NehanElement | null;
   public root: HtmlDocument;
   public style: CssStyleDeclaration;
   public computedStyle: CssStyleDeclaration;
@@ -42,23 +42,23 @@ export class HtmlElement {
     this.setupChildren(this.$node, root);
   }
 
-  public acceptChildFilter(visitor: ChildNodeFilter): HtmlElement {
+  public acceptChildFilter(visitor: ChildNodeFilter): NehanElement {
     this.childNodes = this.childNodes.filter(node => visitor.visit(node));
     return this;
   }
 
-  public acceptEffector(visitor: NodeEffector): HtmlElement {
+  public acceptEffector(visitor: NodeEffector): NehanElement {
     visitor.visit(this);
     return this;
   }
 
-  public acceptEffectorAll(visitor: NodeEffector): HtmlElement {
+  public acceptEffectorAll(visitor: NodeEffector): NehanElement {
     visitor.visit(this);
     this.childNodes.forEach(node => node.acceptEffectorAll(visitor));
     return this;
   }
 
-  public get nextSibling(): HtmlElement | null {
+  public get nextSibling(): NehanElement | null {
     if (!this.parent) {
       return null;
     }
@@ -66,7 +66,7 @@ export class HtmlElement {
     return (index < 0 || index + 1 >= this.parent.childNodes.length) ? null : this.parent.childNodes[index + 1];
   }
 
-  public get previousSibling(): HtmlElement | null {
+  public get previousSibling(): NehanElement | null {
     if (!this.parent) {
       return null;
     }
@@ -74,7 +74,7 @@ export class HtmlElement {
     return (index > 0) ? this.parent.childNodes[index - 1] : null;
   }
 
-  public clone(deep = false): HtmlElement {
+  public clone(deep = false): NehanElement {
     const element = this.ownerDocument.createElementFromDOM(this.$node.cloneNode(deep));
     element.style = this.style;
     element.computedStyle = this.computedStyle;
@@ -192,21 +192,21 @@ export class HtmlElement {
     return str;
   }
 
-  public querySelectorAll(query: string): HtmlElement[] {
+  public querySelectorAll(query: string): NehanElement[] {
     const lexer = new SelectorLexer(query);
     const selector = new SelectorParser(lexer).parse();
     const elements = selector.querySelectorAll(this);
     return elements;
   }
 
-  public querySelector(query: string): HtmlElement | null {
+  public querySelector(query: string): NehanElement | null {
     const lexer = new SelectorLexer(query);
     const selector = new SelectorParser(lexer).parse();
     const element = selector.querySelector(this);
     return element;
   }
 
-  public queryLeafs(selector: string): HtmlElement[] {
+  public queryLeafs(selector: string): NehanElement[] {
     return this.root.getSelectorCache(selector).filter(leaf => {
       let parent = leaf.parent;
       while (parent) {
@@ -219,13 +219,13 @@ export class HtmlElement {
     });
   }
 
-  public appendChild(element: HtmlElement): HtmlElement {
+  public appendChild(element: NehanElement): NehanElement {
     element.parent = this;
     this.childNodes.push(element);
     return this;
   }
 
-  public replaceChild(new_child: HtmlElement, old_child: HtmlElement | null): HtmlElement {
+  public replaceChild(new_child: NehanElement, old_child: NehanElement | null): NehanElement {
     if (old_child) {
       const index = this.childNodes.indexOf(old_child);
       if (index >= 0) {
@@ -236,7 +236,7 @@ export class HtmlElement {
     return new_child;
   }
 
-  public removeChild(target_child: HtmlElement): HtmlElement {
+  public removeChild(target_child: NehanElement): NehanElement {
     const index = this.childNodes.indexOf(target_child);
     if (index >= 0) {
       this.childNodes.splice(index, 1);
@@ -244,7 +244,7 @@ export class HtmlElement {
     return target_child;
   }
 
-  public insertBefore(new_node: HtmlElement, ref_node: HtmlElement | null): HtmlElement | null {
+  public insertBefore(new_node: NehanElement, ref_node: NehanElement | null): NehanElement | null {
     if (!ref_node) {
       this.appendChild(new_node);
       return null;
@@ -328,11 +328,11 @@ export class HtmlElement {
     return this.root as HtmlDocument;
   }
 
-  public get firstChild(): HtmlElement | null {
+  public get firstChild(): NehanElement | null {
     return this.childNodes[0] || null;
   }
 
-  public get firstTextElement(): HtmlElement | null {
+  public get firstTextElement(): NehanElement | null {
     const firstChild = this.firstChild;
     if (!firstChild) {
       return null;
@@ -347,20 +347,20 @@ export class HtmlElement {
     return nextChild.firstTextElement;
   }
 
-  public get lastChild(): HtmlElement | null {
+  public get lastChild(): NehanElement | null {
     return this.childNodes[this.childNodes.length - 1] || null;
   }
 
-  public get lastElementChild(): HtmlElement | null {
+  public get lastElementChild(): NehanElement | null {
     const children = this.children;
     return children[children.length - 1] || null;
   }
 
-  public get firstElementChild(): HtmlElement | null {
+  public get firstElementChild(): NehanElement | null {
     return this.children[0] || null;
   }
 
-  public get nextElementSibling(): HtmlElement | null {
+  public get nextElementSibling(): NehanElement | null {
     let next = this.nextSibling;
     while (next) {
       if (next.isElement()) {
@@ -371,7 +371,7 @@ export class HtmlElement {
     return next;
   }
 
-  public get previousElementSibling(): HtmlElement | null {
+  public get previousElementSibling(): NehanElement | null {
     let prev = this.previousSibling;
     while (prev) {
       if (prev.isElement()) {
@@ -385,7 +385,7 @@ export class HtmlElement {
   // atomChild is
   // 1. text-element consists of non-whitespace content 
   // 2. replaced element that has valid size.
-  public get firstAtomChild(): HtmlElement | null {
+  public get firstAtomChild(): NehanElement | null {
     for (let i = 0; i < this.childNodes.length; i++) {
       const child = this.childNodes[i];
       if (child.isTextElement() && !WhiteSpace.isWhiteSpaceElement(child)) {
@@ -402,7 +402,7 @@ export class HtmlElement {
     return null;
   }
 
-  public get siblings(): HtmlElement[] {
+  public get siblings(): NehanElement[] {
     if (!this.parent) {
       return [];
     }
@@ -431,7 +431,7 @@ export class HtmlElement {
   }
 
   // HTMLElement only
-  public get children(): HtmlElement[] {
+  public get children(): NehanElement[] {
     return this.childNodes.filter(element => !element.isTextElement());
   }
 

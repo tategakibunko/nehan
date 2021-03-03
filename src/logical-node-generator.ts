@@ -2,7 +2,7 @@ import {
   Config,
   Anchor,
   LayoutResult,
-  HtmlElement,
+  NehanElement,
   Display,
   BoxEnv,
   CssLoader,
@@ -54,7 +54,7 @@ import {
 
 export interface ChildGenerator {
   generator: ILogicalNodeGenerator;
-  nextElement: HtmlElement | null;
+  nextElement: NehanElement | null;
 }
 
 export interface ILogicalNodeGenerator {
@@ -63,13 +63,13 @@ export interface ILogicalNodeGenerator {
 }
 
 export class LogicalNodeGenerator {
-  static createRoot(element: HtmlElement): ILogicalNodeGenerator {
+  static createRoot(element: NehanElement): ILogicalNodeGenerator {
     const rootEnv = new BoxEnv(element);
     const rootContext = new PageRootFormatContext(rootEnv);
     return new BlockNodeGenerator(rootContext, RootBlockReducer.instance);
   }
 
-  static createTextLexer(element: HtmlElement, env: BoxEnv): ILexer<ICharacter> {
+  static createTextLexer(element: NehanElement, env: BoxEnv): ILexer<ICharacter> {
     // console.log("createTextLexer:", element, env);
     const isPre = env.whiteSpace.isPre();
     const text = element.textContent || element.computedStyle.getPropertyValue("content") || "";
@@ -82,7 +82,7 @@ export class LogicalNodeGenerator {
     return lexer;
   }
 
-  static createChild(element: HtmlElement, parentContext: ILayoutFormatContext): ChildGenerator {
+  static createChild(element: NehanElement, parentContext: ILayoutFormatContext): ChildGenerator {
     if (element.isTextElement()) {
       const lexer = this.createTextLexer(element, parentContext.env);
       const nextElement = element.nextSibling;

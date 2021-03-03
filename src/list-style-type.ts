@@ -1,6 +1,6 @@
 import {
   SpaceChar,
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -17,7 +17,7 @@ export class ListStyleType {
   public value: ListStyleTypeValue;
   static property: string = "list-style-type";
 
-  static load(element: HtmlElement): ListStyleType {
+  static load(element: NehanElement): ListStyleType {
     let value = CssCascade.getValue(element, this.property);
     return new ListStyleType(value as ListStyleTypeValue);
   }

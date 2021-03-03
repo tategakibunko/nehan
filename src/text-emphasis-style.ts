@@ -1,7 +1,7 @@
 import {
   CssText,
   CssCascade,
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export type TextEmphasisStroke = "filled" | "open" | "none"
@@ -33,7 +33,7 @@ export class TextEmphasisStyle {
     return value === "dot" || value === "circle" || value === "double-circle" || value === "triangle" || value === "sesame";
   }
 
-  static load(element: HtmlElement): TextEmphasisStyle {
+  static load(element: NehanElement): TextEmphasisStyle {
     const value = CssCascade.getValue(element, this.property);
     const cssText = new CssText({ prop: this.property, value: value });
     let stroke: TextEmphasisStroke = "none";

@@ -1,6 +1,6 @@
 import {
   Utils,
-  HtmlElement,
+  NehanElement,
   WritingMode,
   LogicalSize,
 } from "./public-api";
@@ -19,7 +19,7 @@ export class PhysicalSize {
     this.height = size.height;
   }
 
-  static load(element: HtmlElement): PhysicalSize {
+  static load(element: NehanElement): PhysicalSize {
     const attr_width = element.getAttribute("width");
     const attr_height = element.getAttribute("height");
     const prop_width = attr_width || element.computedStyle.getPropertyValue("width");

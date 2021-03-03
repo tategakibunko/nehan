@@ -3,7 +3,7 @@ import {
   LayoutResult,
   LogicalNodeGenerator,
   LogicalTextNode,
-  HtmlElement,
+  NehanElement,
   ILogicalNodeGenerator,
   BlockMargin,
   InlineMargin,
@@ -57,7 +57,7 @@ export class InlineNodeGenerator implements ILogicalNodeGenerator {
 
     this.context.addBorderBoxEdge("start"); // context.cursorPos.start += startEdgeSize
 
-    let childElement: HtmlElement | null = this.context.env.element.firstChild;
+    let childElement: NehanElement | null = this.context.env.element.firstChild;
 
     while (childElement !== null) {
       const inlineMarginSize = InlineMargin.getMarginFromLastInline(childElement);

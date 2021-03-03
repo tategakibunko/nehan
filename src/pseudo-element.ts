@@ -1,6 +1,6 @@
 import {
   Utils,
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export enum PseudoElementTagName {
@@ -14,11 +14,11 @@ export enum PseudoElementTagName {
 export const PseudoElementTagNames = Utils.Enum.toValueArray(PseudoElementTagName);
 
 export class PseudoElement {
-  static isPseudoElement(element: HtmlElement): boolean {
+  static isPseudoElement(element: NehanElement): boolean {
     return element.tagName.substring(0, 2) === "::";
   }
 
-  static isFirstLine(element: HtmlElement): boolean {
+  static isFirstLine(element: NehanElement): boolean {
     return element.tagName === PseudoElementTagName.FIRST_LINE;
   }
 }

@@ -4,7 +4,7 @@ import {
   LogicalEdgeDirections,
   CssText,
   CssCascade,
-  HtmlElement,
+  NehanElement,
   PropValue,
   ILogicalCssEvaluator,
   NativeStyleMap,
@@ -21,7 +21,7 @@ export class LogicalBorderColor extends LogicalEdge<string>{
     ];
   }
 
-  static load(element: HtmlElement): LogicalBorderColor {
+  static load(element: NehanElement): LogicalBorderColor {
     return new LogicalBorderColor(
       LogicalEdgeDirections.reduce((colors, direction) => {
         colors[direction] = CssCascade.getValue(element, `border-${direction}-color`);

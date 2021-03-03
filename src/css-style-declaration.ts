@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   DynamicStyle,
   DomCallback,
   CssParser,
@@ -91,7 +91,7 @@ export class CssStyleDeclaration {
     return this;
   }
 
-  public getDynamicStyle(element: HtmlElement, parentCtx?: any): CssStyleDeclaration {
+  public getDynamicStyle(element: NehanElement, parentCtx?: any): CssStyleDeclaration {
     return this.dynamicStyles.reduce((style, dynamic) => {
       const dynamicStyle = dynamic.call(element, parentCtx) || {};
       return style.mergeFrom(dynamicStyle);

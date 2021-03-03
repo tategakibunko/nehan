@@ -1,11 +1,11 @@
 import {
-  HtmlElement,
+  NehanElement,
   ILogicalNode,
 } from "./public-api";
 
 export interface Anchor {
   name: string;
-  element: HtmlElement;
+  element: NehanElement;
   pageIndex: number;
   box?: ILogicalNode;
   dom?: HTMLElement;

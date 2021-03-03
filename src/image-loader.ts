@@ -1,6 +1,6 @@
 import {
   Config,
-  HtmlElement,
+  NehanElement,
   PagedHtmlRenderOptions,
 } from "./public-api";
 
@@ -27,7 +27,7 @@ export class ImageLoaderContext {
 }
 
 export class ImageLoader {
-  constructor(private imageElements: HtmlElement[], private context: ImageLoaderContext) { }
+  constructor(private imageElements: NehanElement[], private context: ImageLoaderContext) { }
 
   public async load(callbacks: ImageLoaderCallbacks): Promise<boolean> {
     try {
@@ -66,8 +66,8 @@ export class ImageLoader {
   // 1. load image data from [srcAttr].
   // 2. get image width/height.
   // 3. set width/height to attribute.
-  private loadImage(element: HtmlElement, srcAttr: string, callbacks: ImageLoaderCallbacks): Promise<HtmlElement> {
-    return new Promise<HtmlElement>((resolve, reject) => {
+  private loadImage(element: NehanElement, srcAttr: string, callbacks: ImageLoaderCallbacks): Promise<NehanElement> {
+    return new Promise<NehanElement>((resolve, reject) => {
       const $node = element.$node as HTMLElement;
       const image = document.createElement("img") as HTMLImageElement;
       const src = $node.getAttribute(srcAttr);

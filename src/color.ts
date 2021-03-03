@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   NativeStyleMap,
   ILogicalCssEvaluator,
 } from './public-api';
@@ -31,7 +31,7 @@ import {
 export class Color {
   private constructor(public value: string) { }
 
-  static load(element: HtmlElement): Color {
+  static load(element: NehanElement): Color {
     const value = element.computedStyle.getPropertyValue("color") || "inherit";
     return new Color(value);
   }

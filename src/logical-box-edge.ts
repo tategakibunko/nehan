@@ -4,7 +4,7 @@ import {
   LogicalBorder,
   LogicalMargin,
   ILogicalCursorPos,
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export interface LogicalBoxEdgeValue {
@@ -24,14 +24,14 @@ export class LogicalBoxEdge {
     this.margin = values.margin;
   }
 
-  static load(element: HtmlElement): LogicalBoxEdge {
+  static load(element: NehanElement): LogicalBoxEdge {
     if (element.tagName === Config.pageRootTagName) {
       return this.loadRootBoxEdge(element);
     }
     return this.loadBoxEdge(element);
   }
 
-  static loadRootBoxEdge(element: HtmlElement): LogicalBoxEdge {
+  static loadRootBoxEdge(element: NehanElement): LogicalBoxEdge {
     // In older engine(nehan <= 6), padding is available even for page-root element.
     if (Config.engineVersion <= 6) {
       return new LogicalBoxEdge({
@@ -45,7 +45,7 @@ export class LogicalBoxEdge {
     return this.none;
   }
 
-  static loadBoxEdge(element: HtmlElement): LogicalBoxEdge {
+  static loadBoxEdge(element: NehanElement): LogicalBoxEdge {
     return new LogicalBoxEdge({
       padding: LogicalPadding.load(element),
       border: LogicalBorder.load(element),

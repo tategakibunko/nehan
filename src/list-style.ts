@@ -2,7 +2,7 @@ import {
   ListStylePosition,
   ListStyleType,
   NativeStyleMap,
-  HtmlElement,
+  NehanElement,
   CssCascade,
   CssText,
   PropValue,
@@ -47,7 +47,7 @@ export class ListStyle {
     return css;
   }
 
-  public insertMarkerText(element: HtmlElement) {
+  public insertMarkerText(element: NehanElement) {
     const markerElement = element.firstChild;
     if (!markerElement || markerElement.tagName !== PseudoElementTagName.MARKER) {
       return;
@@ -64,7 +64,7 @@ export class ListStyle {
     markerElement.appendChild(markerTextNode);
   }
 
-  static load(element: HtmlElement): ListStyle {
+  static load(element: NehanElement): ListStyle {
     const listStyle = new ListStyle();
     listStyle.type_ = ListStyleType.load(element);
     listStyle.position = ListStylePosition.load(element);
@@ -72,7 +72,7 @@ export class ListStyle {
     return listStyle;
   }
 
-  static loadImage(element: HtmlElement): string {
+  static loadImage(element: NehanElement): string {
     return CssCascade.getValue(element, "list-style-image");
   }
 

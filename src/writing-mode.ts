@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
   LogicalEdgeDirection,
   PhysicalEdgeDirection,
@@ -14,7 +14,7 @@ export class WritingMode {
     this.value = value;
   }
 
-  static load(element: HtmlElement): WritingMode {
+  static load(element: NehanElement): WritingMode {
     let value = CssCascade.getValue(element, "writing-mode");
     return new WritingMode(value as WritingModeValue);
   }

@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   Config,
   LogicalEdgeDirections,
   CssCascade,
@@ -10,7 +10,7 @@ import {
 
 // element.style -> element.computedStyle
 export class ComputedStyle {
-  static setComputedValue(element: HtmlElement) {
+  static setComputedValue(element: NehanElement) {
     // always required.
     this.setValue(element, "display");
 
@@ -77,28 +77,28 @@ export class ComputedStyle {
     this.setValue(element, "background-position");
   }
 
-  static setValue(element: HtmlElement, prop: string) {
+  static setValue(element: NehanElement, prop: string) {
     const value = CssCascade.getValue(element, prop);
     element.computedStyle.setProperty(prop, value);
   }
 
-  static getFontSize(element: HtmlElement): number {
+  static getFontSize(element: NehanElement): number {
     return CssLength.computeFontSize(element);
   }
 
-  static getLineHeightString(element: HtmlElement): string {
+  static getLineHeightString(element: NehanElement): string {
     return CssLength.computeLineHeight(element);
   }
 
-  static getEdgeSize(element: HtmlElement, prop: string): number {
+  static getEdgeSize(element: NehanElement, prop: string): number {
     return CssLength.computeBoxLength(element, prop);
   }
 
-  static getBorderWidth(element: HtmlElement, prop: string): number {
+  static getBorderWidth(element: NehanElement, prop: string): number {
     return CssLength.computeBoxLength(element, prop);
   }
 
-  static setPadding(element: HtmlElement) {
+  static setPadding(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `padding-${direction}`;
       const size = CssLength.computeBoxLength(element, prop);
@@ -106,7 +106,7 @@ export class ComputedStyle {
     });
   }
 
-  static setBorderWidth(element: HtmlElement) {
+  static setBorderWidth(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-width`;
       const size = CssLength.computeBorderWidth(element, prop);
@@ -114,7 +114,7 @@ export class ComputedStyle {
     });
   }
 
-  static setBorderStyle(element: HtmlElement) {
+  static setBorderStyle(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-style`;
       const value = CssCascade.getValue(element, prop);
@@ -122,7 +122,7 @@ export class ComputedStyle {
     });
   }
 
-  static setBorderColor(element: HtmlElement) {
+  static setBorderColor(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-color`;
       const value = CssCascade.getValue(element, prop);
@@ -130,7 +130,7 @@ export class ComputedStyle {
     });
   }
 
-  static setBorderRadius(element: HtmlElement) {
+  static setBorderRadius(element: NehanElement) {
     LogicalBorderRadius.corners.forEach((corner: string) => {
       const prop = `border-${corner}-radius`;
       const size = CssLength.computeBoxLength(element, prop); // TODO(2d props)
@@ -138,7 +138,7 @@ export class ComputedStyle {
     });
   }
 
-  static setMargin(element: HtmlElement) {
+  static setMargin(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `margin-${direction}` as AutableBoxLengthProps;
       const computedValue = CssLength.computeAutableBoxLength(element, prop);
@@ -147,21 +147,21 @@ export class ComputedStyle {
     });
   }
 
-  static setMeasure(element: HtmlElement) {
+  static setMeasure(element: NehanElement) {
     const size = CssLength.computeAutableBoxLength(element, "measure");
     if (size !== "auto") {
       element.computedStyle.setProperty("measure", size + "px");
     }
   }
 
-  static setExtent(element: HtmlElement) {
+  static setExtent(element: NehanElement) {
     const size = CssLength.computeAutableBoxLength(element, "extent");
     if (size !== "auto") {
       element.computedStyle.setProperty("extent", size + "px");
     }
   }
 
-  static setPosition(element: HtmlElement) {
+  static setPosition(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const value = CssLength.computeAutableBoxLength(element, direction);
       if (value !== "auto") {

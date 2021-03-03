@@ -9,7 +9,7 @@ import {
   PseudoElementSelector,
   SimpleSelectors,
   Specificity,
-  HtmlElement
+  NehanElement
 } from "./public-api";
 
 export class CompoundSelector extends Selector {
@@ -93,7 +93,7 @@ export class CompoundSelector extends Selector {
     return this.typeSelector ? this.typeSelector.tagName : "*";
   }
 
-  public querySelector(element: HtmlElement): HtmlElement | null {
+  public querySelector(element: NehanElement): NehanElement | null {
     let elements = element.queryLeafs(this.leafSelector);
     for (let i = 0; i < elements.length; i++) {
       let element = elements[i];
@@ -104,23 +104,23 @@ export class CompoundSelector extends Selector {
     return null;
   }
 
-  public querySelectorAll(element: HtmlElement): HtmlElement[] {
+  public querySelectorAll(element: NehanElement): NehanElement[] {
     return element.queryLeafs(this.leafSelector).filter(elm => this.test(elm));
   }
 
-  private testClasses(element: HtmlElement): boolean {
+  private testClasses(element: NehanElement): boolean {
     return this.classSelectors.every((selector) => {
       return selector.test(element);
     });
   }
 
-  private testPseudoClasses(element: HtmlElement): boolean {
+  private testPseudoClasses(element: NehanElement): boolean {
     return this.pseudoClasses.every((selector) => {
       return selector.test(element);
     });
   }
 
-  public test(element: HtmlElement, matchAsPeOwner = false): boolean {
+  public test(element: NehanElement, matchAsPeOwner = false): boolean {
     // If matchAsPeOwner is false, don't match as parent of pseudo element.
     if (this.pseudoElement && !matchAsPeOwner) {
       return false;

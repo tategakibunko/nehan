@@ -1,7 +1,7 @@
 import {
   Config,
   CssLoader,
-  HtmlElement,
+  NehanElement,
   Display,
   CssLength,
   CssRule,
@@ -23,7 +23,7 @@ import {
 
 // side effect visitor
 export interface NodeEffector {
-  visit: (element: HtmlElement) => void;
+  visit: (element: NehanElement) => void;
 }
 
 // marker-element is inserted by pseudo-element-initializer
@@ -34,7 +34,7 @@ export class ListItemInitializer implements NodeEffector {
   static instance = new ListItemInitializer();
   private constructor() { }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     // at this time, computed value is already loaded to element(li).
     const display = Display.load(element);
     if (!display.isListItem() || display.isNone() || !element.parent) {
@@ -58,7 +58,7 @@ export class TableRowGroupInitializer implements NodeEffector {
   static instance = new TableRowGroupInitializer();
   private constructor() { }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     const parent = element.parent;
     const borderCollapse = BorderCollapse.load(element);
     if (!borderCollapse.isCollapse() || !parent) {
@@ -82,7 +82,7 @@ export class TableRowInitializer implements NodeEffector {
   static instance = new TableRowInitializer();
   private constructor() { }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     const parent = element.parent;
     const borderCollapse = BorderCollapse.load(element);
     if (!borderCollapse.isCollapse() || !parent) {
@@ -117,13 +117,13 @@ export class TableCellInitializer implements NodeEffector {
     return internalEdgeSize;
   }
 
-  private getTableCells(element: HtmlElement): HtmlElement[] {
+  private getTableCells(element: NehanElement): NehanElement[] {
     return element.children.filter(child => {
       return child.computedStyle.getPropertyValue("display") === "table-cell";
     });
   }
 
-  private findPrevCells(parent: HtmlElement, cellDims: number): HtmlElement[] | undefined {
+  private findPrevCells(parent: NehanElement, cellDims: number): NehanElement[] | undefined {
     let prevParent = parent.previousElementSibling;
     while (prevParent) {
       const prevCells = this.getTableCells(prevParent);
@@ -135,7 +135,7 @@ export class TableCellInitializer implements NodeEffector {
     return undefined;
   }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     const parent = element.parent;
     if (!parent || element.computedStyle.getPropertyValue("display") !== "table-cell") {
       return;
@@ -210,7 +210,7 @@ export class RubyNormalizer implements NodeEffector {
   static instance = new RubyNormalizer();
   private constructor() { }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     if (element.tagName !== "ruby") {
       return;
     }
@@ -249,7 +249,7 @@ export class PseudoElementInitializer implements NodeEffector {
   }
 
   /*
-  private findMarkerParent(element: HtmlElement): HtmlElement {
+  private findMarkerParent(element: NehanElement): NehanElement {
     const firstChild = element.firstChild;
     if (!firstChild || firstChild.isTextElement()) {
       return element;
@@ -261,7 +261,7 @@ export class PseudoElementInitializer implements NodeEffector {
   }
   */
 
-  private addMarker(element: HtmlElement): HtmlElement {
+  private addMarker(element: NehanElement): NehanElement {
     const markerElement = element.root.createElement(PseudoElementTagName.MARKER);
     markerElement.parent = element;
     element.insertBefore(markerElement, element.firstChild);
@@ -269,7 +269,7 @@ export class PseudoElementInitializer implements NodeEffector {
   }
 
   /*
-  private addMarker(element: HtmlElement): HtmlElement {
+  private addMarker(element: NehanElement): NehanElement {
     const markerParent = this.findMarkerParent(element);
     if (markerParent.tagName === PseudoElementTagName.MARKER) {
       return markerParent; // already created!
@@ -281,19 +281,19 @@ export class PseudoElementInitializer implements NodeEffector {
   }
   */
 
-  private addBefore(element: HtmlElement): HtmlElement {
+  private addBefore(element: NehanElement): NehanElement {
     const before = element.root.createElement(PseudoElementTagName.BEFORE);
     element.insertBefore(before, element.firstChild);
     return before;
   }
 
-  private addAfter(element: HtmlElement): HtmlElement {
+  private addAfter(element: NehanElement): NehanElement {
     const after = element.root.createElement(PseudoElementTagName.AFTER);
     element.appendChild(after);
     return after;
   }
 
-  private addFirstLine(element: HtmlElement): HtmlElement | null {
+  private addFirstLine(element: NehanElement): NehanElement | null {
     const firstLine = element.root.createElement(PseudoElementTagName.FIRST_LINE);
     const firstTextNode = element.firstTextElement;
     if (!firstTextNode) {
@@ -308,7 +308,7 @@ export class PseudoElementInitializer implements NodeEffector {
     return firstLine;
   }
 
-  private addFirstLetter(element: HtmlElement): HtmlElement | null {
+  private addFirstLetter(element: NehanElement): NehanElement | null {
     const firstTextNode = element.firstTextElement;
     if (!firstTextNode) {
       return null;
@@ -333,7 +333,7 @@ export class PseudoElementInitializer implements NodeEffector {
     return firstLetter;
   }
 
-  private addPseudoElement(element: HtmlElement, peTagName: string): HtmlElement | null {
+  private addPseudoElement(element: NehanElement, peTagName: string): NehanElement | null {
     switch (peTagName) {
       case PseudoElementTagName.MARKER:
         return this.addMarker(element);
@@ -362,7 +362,7 @@ export class PseudoElementInitializer implements NodeEffector {
          So we call 'test' metdhod with second arugment false.
          rule.test(element, matchAsPeOwner = false) => false
   */
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     this.pseudoRules.forEach(rule => {
       // assert(rule.peSelector !== null)
       if (rule.test(element, true) && rule.peSelector) {
@@ -382,7 +382,7 @@ export class CssSpecifiedValueLoader implements NodeEffector {
   static instance = new CssSpecifiedValueLoader();
   private constructor() { }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     // spec-style of pseudo element is already initialized by PseudoElementInitializer.
     if (element.isTextElement() || PseudoElement.isPseudoElement(element)) {
       return;
@@ -397,7 +397,7 @@ export class CssSpecifiedValueLoader implements NodeEffector {
 export class CssSpecifiedDynamicValueLoader implements NodeEffector {
   constructor(private parentCxt?: any) { }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     // get dynamic specified values from style-declaration (already matched and stored by CssSpecifiedValueLoader).
     const dynamicStyle = element.style.getDynamicStyle(element, this.parentCxt);
     element.style.mergeFrom(dynamicStyle);
@@ -415,7 +415,7 @@ export class CssSpecifiedInlineValueLoader implements NodeEffector {
   static instance = new CssSpecifiedInlineValueLoader();
   private constructor() { }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     const inlineStyleSrc = element.getAttribute("style") || "";
     const inlineStyle = CssParser.parseInlineStyle(inlineStyleSrc);
     element.style.mergeFrom(inlineStyle);
@@ -426,56 +426,56 @@ export class CssSpecifiedInlineValueLoader implements NodeEffector {
 export class CssComputedValueLoader implements NodeEffector {
   static instance = new CssComputedValueLoader();
 
-  private getLineHeightString(element: HtmlElement): string {
+  private getLineHeightString(element: NehanElement): string {
     return CssLength.computeLineHeight(element);
   }
 
-  private setCascadedValue(element: HtmlElement, prop: string): string {
+  private setCascadedValue(element: NehanElement, prop: string): string {
     const value = CssCascade.getValue(element, prop);
     element.computedStyle.setProperty(prop, value);
     return value;
   }
 
-  private setFontSize(element: HtmlElement) {
+  private setFontSize(element: NehanElement) {
     const fontSize = CssLength.computeFontSize(element);
     element.computedStyle.setProperty("font-size", fontSize + "px");
   }
 
-  private setLineHeight(element: HtmlElement) {
+  private setLineHeight(element: NehanElement) {
     const lineHeightStr = this.getLineHeightString(element);
     element.computedStyle.setProperty("line-height", lineHeightStr);
   }
 
-  private setBoxLength(element: HtmlElement, prop: string) {
+  private setBoxLength(element: NehanElement, prop: string) {
     const size = CssLength.computeBoxLength(element, prop);
     element.computedStyle.setProperty(prop, size + "px");
   }
 
-  private setAutableBoxLength(element: HtmlElement, prop: AutableBoxLengthProps) {
+  private setAutableBoxLength(element: NehanElement, prop: AutableBoxLengthProps) {
     const size = CssLength.computeAutableBoxLength(element, prop);
     const value = (size === "auto") ? size : size + "px";
     element.computedStyle.setProperty(prop, value);
   }
 
-  private setOptionalBoxLength(element: HtmlElement, prop: OptionalBoxLengthProps) {
+  private setOptionalBoxLength(element: NehanElement, prop: OptionalBoxLengthProps) {
     const size = CssLength.computeOptionalBoxLength(element, prop);
     const value = (size === "none") ? size : size + "px";
     element.computedStyle.setProperty(prop, value);
   }
 
-  private setMargin(element: HtmlElement) {
+  private setMargin(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       this.setAutableBoxLength(element, `margin-${direction}` as AutableBoxLengthProps);
     });
   }
 
-  private setPadding(element: HtmlElement) {
+  private setPadding(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       this.setBoxLength(element, `padding-${direction}`);
     });
   }
 
-  private setBorderWidth(element: HtmlElement) {
+  private setBorderWidth(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-width`;
       const size = CssLength.computeBorderWidth(element, prop);
@@ -483,7 +483,7 @@ export class CssComputedValueLoader implements NodeEffector {
     });
   }
 
-  private setBorderStyle(element: HtmlElement) {
+  private setBorderStyle(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-style`;
       const value = CssCascade.getValue(element, prop);
@@ -491,7 +491,7 @@ export class CssComputedValueLoader implements NodeEffector {
     });
   }
 
-  private setBorderColor(element: HtmlElement) {
+  private setBorderColor(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       const prop = `border-${direction}-color`;
       const value = CssCascade.getValue(element, prop);
@@ -499,7 +499,7 @@ export class CssComputedValueLoader implements NodeEffector {
     });
   }
 
-  private setBorderRadius(element: HtmlElement) {
+  private setBorderRadius(element: NehanElement) {
     LogicalBorderRadius.corners.forEach((corner: string) => {
       const prop = `border-${corner}-radius`;
       // [TODO] CssLength.computeBorderRadiusLength(element, prop)
@@ -508,13 +508,13 @@ export class CssComputedValueLoader implements NodeEffector {
     });
   }
 
-  private setPosition(element: HtmlElement) {
+  private setPosition(element: NehanElement) {
     LogicalEdgeDirections.forEach(direction => {
       this.setAutableBoxLength(element, direction);
     });
   }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     if (element.isTextElement()) {
       return;
     }
@@ -592,7 +592,7 @@ export class CssUsedRegionLoader implements NodeEffector {
   static instance = new CssUsedRegionLoader();
   private constructor() { }
 
-  visit(element: HtmlElement) {
+  visit(element: NehanElement) {
     const display = Display.load(element);
     if (display.isNone()) {
       return;

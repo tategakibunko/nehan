@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -12,7 +12,7 @@ export class WordBreak {
     this.value = value;
   }
 
-  static load(element: HtmlElement): WordBreak {
+  static load(element: NehanElement): WordBreak {
     let value = CssCascade.getValue(element, "word-break");
     return new WordBreak(value as WordBreakValue);
   }

@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.7.0
+==========================
+! Rename HtmlElement to NehanElement.
+
 version 7.6.5, 2021/03/03
 ==========================
 o Added ILogicalNode::ILogicalNodePos to obtain {offset, client}Pos of node.

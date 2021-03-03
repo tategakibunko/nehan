@@ -1,22 +1,22 @@
 import {
   Selector,
-  HtmlElement,
+  NehanElement,
 } from "./public-api";
 
 export class TypeSelector extends Selector {
   public tagName: string;
 
-  constructor(tag_name: string){
+  constructor(tag_name: string) {
     super();
     this.tagName = tag_name;
     this.specificity.c = 1;
   }
 
-  public toString(): string{
+  public toString(): string {
     return this.tagName;
   }
 
-  public test(element: HtmlElement): boolean {
+  public test(element: NehanElement): boolean {
     return this.tagName === element.tagName;
   }
 }

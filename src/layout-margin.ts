@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   LogicalFloat,
   Position,
   BoxEnv,
@@ -8,7 +8,7 @@ import {
   WhiteSpace,
 } from './public-api'
 
-function isCollapseTarget(element: HtmlElement): boolean {
+function isCollapseTarget(element: NehanElement): boolean {
   if (element.isTextElement()) {
     return false;
   }
@@ -23,7 +23,7 @@ function isCollapseTarget(element: HtmlElement): boolean {
   return true;
 }
 
-function getFirstCollapseTarget(element: HtmlElement): HtmlElement | null {
+function getFirstCollapseTarget(element: NehanElement): NehanElement | null {
   let firstChild = element.firstChild;
   while (firstChild && firstChild.isTextElement() && WhiteSpace.isWhiteSpaceElement(firstChild)) {
     firstChild = firstChild.nextSibling;
@@ -31,7 +31,7 @@ function getFirstCollapseTarget(element: HtmlElement): HtmlElement | null {
   return firstChild;
 }
 
-function getLastCollapseTarget(element: HtmlElement): HtmlElement | null {
+function getLastCollapseTarget(element: NehanElement): NehanElement | null {
   let lastChild = element.lastChild;
   while (lastChild && lastChild.isTextElement() && WhiteSpace.isWhiteSpaceElement(lastChild)) {
     lastChild = lastChild.previousSibling;
@@ -40,12 +40,12 @@ function getLastCollapseTarget(element: HtmlElement): HtmlElement | null {
 }
 
 export class InlineMargin {
-  static getMarginFromParentBlock(element: HtmlElement): number {
+  static getMarginFromParentBlock(element: NehanElement): number {
     const marginStart = parseInt(element.computedStyle.getPropertyValue("margin-start") || "0");
     return marginStart;
   }
 
-  static getMarginFromLastInline(element: HtmlElement): number {
+  static getMarginFromLastInline(element: NehanElement): number {
     const prev = element.previousSibling;
     const marginStart = parseInt(element.computedStyle.getPropertyValue("margin-start") || "0");
     if (!prev || prev.isTextElement()) {
@@ -57,7 +57,7 @@ export class InlineMargin {
 }
 
 export class BlockMargin {
-  static getLastChildren(element: HtmlElement): HtmlElement[] {
+  static getLastChildren(element: NehanElement): NehanElement[] {
     let last = getLastCollapseTarget(element);
     let lastChildren = [];
     while (last) {
@@ -73,7 +73,7 @@ export class BlockMargin {
     return lastChildren;
   }
 
-  static getFirstChildren(element: HtmlElement): HtmlElement[] {
+  static getFirstChildren(element: NehanElement): NehanElement[] {
     let first = getFirstCollapseTarget(element);
     let firstChildren = [];
     while (first) {
@@ -89,13 +89,13 @@ export class BlockMargin {
     return firstChildren;
   }
 
-  static getMaxMarginBefore(element: HtmlElement): number {
+  static getMaxMarginBefore(element: NehanElement): number {
     const beforeElements = this.getFirstChildren(element).concat(element); // child-first-chain
     // console.log("beforeElements for %s is %o", element.tagName, beforeElements);
     return Math.max(0, ...beforeElements.map(e => parseInt(e.computedStyle.getPropertyValue("margin-before") || "0")));
   }
 
-  static getMaxMarginAfter(element: HtmlElement): number {
+  static getMaxMarginAfter(element: NehanElement): number {
     const afterElements = this.getLastChildren(element).concat(element); // child-last-chain
     // console.log("afterElements for %s is %o", element.tagName, afterElements);
     return Math.max(0, ...afterElements.map(e => parseInt(e.computedStyle.getPropertyValue("margin-after") || "0")));

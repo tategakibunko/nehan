@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssSpecifiedValueLoader,
   CssSpecifiedInlineValueLoader,
   CssSpecifiedDynamicValueLoader,
@@ -8,7 +8,7 @@ import {
 } from "./public-api";
 
 export class CssLoader {
-  static loadAll(element: HtmlElement) {
+  static loadAll(element: NehanElement) {
     if (element.isTextElement()) {
       return;
     }
@@ -21,7 +21,7 @@ export class CssLoader {
     }
   }
 
-  static load(element: HtmlElement) {
+  static load(element: NehanElement) {
     if (element.isTextElement()) {
       return;
     }
@@ -36,7 +36,7 @@ export class CssLoader {
     element.acceptEffector(CssUsedRegionLoader.instance);
   }
 
-  static loadDynamic(element: HtmlElement, parentCtx?: any): boolean {
+  static loadDynamic(element: NehanElement, parentCtx?: any): boolean {
     if (!element.style.hasDynamicStyles()) {
       return false;
     }

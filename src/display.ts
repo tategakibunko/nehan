@@ -1,7 +1,7 @@
 import {
   Utils,
   BasicStyle,
-  HtmlElement,
+  NehanElement,
   CssCascade,
   LogicalFloat,
   Position,
@@ -203,7 +203,7 @@ export class Display {
     }
   }
 
-  static load(element: HtmlElement): Display {
+  static load(element: NehanElement): Display {
     const value = CssCascade.getValue(element, "display");
     const display = new Display(value as DisplayValue);
     const float = LogicalFloat.load(element);

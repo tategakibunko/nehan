@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssRule,
   CssStyleDeclaration,
   CssParser,
@@ -32,7 +32,7 @@ export class CssStyleSheet {
     return this.rules.filter(rule => rule.peSelector !== null);
   }
 
-  public getStyleOfElement(element: HtmlElement): CssStyleDeclaration {
+  public getStyleOfElement(element: NehanElement): CssStyleDeclaration {
     const rules = this.rules.filter(rule => rule.test(element));
     return rules.reduce((block: CssStyleDeclaration, rule: CssRule) => {
       return block.mergeFrom(rule.style);

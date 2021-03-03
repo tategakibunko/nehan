@@ -1,6 +1,6 @@
 import {
   BoxEnv,
-  HtmlElement,
+  NehanElement,
   FlowFormatContext,
   LogicalBlockNode,
   LogicalBlockReNode,
@@ -14,7 +14,7 @@ export class TableCellsFormatContext extends FlowFormatContext {
   public cells: LogicalBlockNode[];
 
   constructor(
-    public elements: HtmlElement[],
+    public elements: NehanElement[],
     public env: BoxEnv,
     public parent?: ILayoutFormatContext,
   ) {

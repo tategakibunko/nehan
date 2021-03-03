@@ -4,7 +4,7 @@ import {
   LogicalEdgeDirections,
   CssText,
   PropValue,
-  HtmlElement,
+  NehanElement,
   ILogicalCssEvaluator,
   NativeStyleMap,
 } from "./public-api";
@@ -20,7 +20,7 @@ export class LogicalPadding extends LogicalEdgeSize {
     ];
   }
 
-  static load(element: HtmlElement): LogicalPadding {
+  static load(element: NehanElement): LogicalPadding {
     return new LogicalPadding(
       LogicalEdgeDirections.reduce((size, direction) => {
         size[direction] = LogicalEdgeSize.loadDirection(element, `padding-${direction}`);

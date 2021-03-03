@@ -1,15 +1,15 @@
 import {
-  HtmlElement,
+  NehanElement,
   BasicStyle
 } from "./public-api";
 
 export class CssCascade {
-  static getValue(element: HtmlElement, prop: string): string {
+  static getValue(element: NehanElement, prop: string): string {
     const computedValue = element.computedStyle.getPropertyValue(prop);
     return computedValue ?? this.getSpecValue(element, prop);
   }
 
-  static getSpecValue(element: HtmlElement, prop: string): string {
+  static getSpecValue(element: NehanElement, prop: string): string {
     const specValue = element.style.getPropertyValue(prop) ?? "";
     const defaultCss = BasicStyle.get(prop);
     switch (specValue) {

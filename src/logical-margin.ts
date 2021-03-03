@@ -4,7 +4,7 @@ import {
   LogicalEdgeDirections,
   PropValue,
   CssText,
-  HtmlElement,
+  NehanElement,
   ILogicalCssEvaluator,
   NativeStyleMap,
 } from "./public-api";
@@ -20,7 +20,7 @@ export class LogicalMargin extends LogicalEdgeSize {
     ];
   }
 
-  static load(element: HtmlElement): LogicalMargin {
+  static load(element: NehanElement): LogicalMargin {
     return new LogicalMargin(
       LogicalEdgeDirections.reduce((size, direction) => {
         size[direction] = LogicalEdgeSize.loadDirection(element, `margin-${direction}`);

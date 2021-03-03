@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -12,7 +12,7 @@ export class LogicalTextAlign {
     this.value = value;
   }
 
-  static load(element: HtmlElement): LogicalTextAlign {
+  static load(element: NehanElement): LogicalTextAlign {
     let value = CssCascade.getValue(element, "text-align");
     return new LogicalTextAlign(value as LogicalTextAlignValue);
   }

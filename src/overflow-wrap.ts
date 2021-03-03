@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -24,7 +24,7 @@ export class OverflowWrap {
     this.value = value;
   }
 
-  static load(element: HtmlElement): OverflowWrap {
+  static load(element: NehanElement): OverflowWrap {
     let value = CssCascade.getValue(element, "overflow-wrap");
     return new OverflowWrap(value as OverflowWrapValue);
   }

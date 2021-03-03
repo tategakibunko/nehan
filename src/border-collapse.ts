@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade
 } from "./public-api";
 
@@ -20,7 +20,7 @@ export class BorderCollapse {
     return this.value === "separate";
   }
 
-  static load(element: HtmlElement) {
+  static load(element: NehanElement) {
     const value = CssCascade.getValue(element, "border-collapse");
     return new BorderCollapse(value as BorderCollapseValue);
   }

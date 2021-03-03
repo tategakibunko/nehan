@@ -1,5 +1,5 @@
 import {
-  HtmlElement,
+  NehanElement,
   CssCascade,
 } from "./public-api";
 
@@ -8,7 +8,7 @@ export type TextOrientationValue = "mixed" | "upright" | "sideways"
 export class TextOrientation {
   public value: TextOrientationValue;
 
-  static load(element: HtmlElement): TextOrientation {
+  static load(element: NehanElement): TextOrientation {
     let value = CssCascade.getValue(element, "text-orientation");
     return new TextOrientation(value as TextOrientationValue);
   }

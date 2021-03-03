@@ -5,7 +5,7 @@ import {
   Utils,
   CssText,
   PropValue,
-  HtmlElement,
+  NehanElement,
   NativeStyleMap,
   ILogicalCssEvaluator,
 } from "./public-api";
@@ -35,7 +35,7 @@ export class LogicalBorderWidth extends LogicalEdgeSize {
     ];
   }
 
-  static load(element: HtmlElement): LogicalBorderWidth {
+  static load(element: NehanElement): LogicalBorderWidth {
     return new LogicalBorderWidth(
       LogicalEdgeDirections.reduce((size, direction) => {
         size[direction] = LogicalEdgeSize.loadDirection(element, `border-${direction}-width`);
