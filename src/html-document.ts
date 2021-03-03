@@ -1,7 +1,6 @@
 import {
   CssStyleSheet,
   NehanElement,
-  NehanNode,
   UserAgentStyles,
   SelectorCache,
   CssLoader,
@@ -99,10 +98,6 @@ export class HtmlDocument {
 
   public createNativeElement(tag_name: string): HTMLElement {
     return this.$document.createElement(tag_name);
-  }
-
-  public createNehanNode(node: Node): NehanNode {
-    throw new Error("todo");
   }
 
   public createNehanElement(node: HTMLElement | Node): NehanElement {

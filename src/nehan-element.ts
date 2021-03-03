@@ -20,7 +20,7 @@ export class NehanElement {
   public $node: Node | HTMLElement;
   public $dom: HTMLElement | undefined; // dynamically created DOM.
   public tagName: string;
-  public childNodes: NehanElement[];
+  public childNodes: NehanElement[]; // [TODO] (NehanElement | NehanNode)[]
   public parent: NehanElement | null;
   public root: HtmlDocument;
   public style: CssStyleDeclaration;
