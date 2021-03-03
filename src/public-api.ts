@@ -42,7 +42,6 @@ export * from "./html-document"
 export * from "./child-node-filter"
 export * from "./node-effector"
 export * from "./node-mapper"
-// export * from "./nehan-node" [TODO]
 export * from "./nehan-element"
 export * from "./attr-selector"
 export * from "./border-collapse"
