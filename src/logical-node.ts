@@ -63,11 +63,11 @@ export class LogicalTextNode implements ILogicalNode {
   acceptEffector(visitor: ILogicalNodeEffector) { }
 }
 
-export class LogicalLineNode implements ILogicalPositionalNode {
+export class LogicalLineNode implements ILogicalNode {
   constructor(
     public env: BoxEnv,
     public boxPos: ILogicalNodePos,
-    public layoutPos: LogicalCursorPos,
+    public linePos: LogicalCursorPos,
     public size: LogicalSize,
     public autoSize: LogicalSize,
     public text: string,

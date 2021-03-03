@@ -149,7 +149,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     node.style.overflow = "visible";
-    node.style.top = lineNode.layoutPos.before + "px";
+    node.style.top = lineNode.linePos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -157,7 +157,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const baseLineNode = document.createElement("div");
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
-    baseLineNode.style.left = (lineNode.layoutPos.start + lineNode.baseline.startOffset) + "px";
+    baseLineNode.style.left = (lineNode.linePos.start + lineNode.baseline.startOffset) + "px";
     baseLineNode.style.width = lineNode.size.measure + 2 * lineNode.env.font.size + "px"; // Prepare space for 'Bura-sagari'.
     baseLineNode.style.height = lineNode.baseline.size.extent + "px";
     baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";

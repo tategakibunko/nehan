@@ -175,7 +175,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     node.style.boxSizing = "content-box";
     node.style.position = "absolute";
     node.style.overflow = "visible";
-    node.style[beforeProp] = lineNode.layoutPos.before + "px";
+    node.style[beforeProp] = lineNode.linePos.before + "px";
     lineNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.env.color.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
     lineNode.size.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);
@@ -183,7 +183,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     const baseLineNode = document.createElement("div");
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
-    baseLineNode.style.top = (lineNode.layoutPos.start + lineNode.baseline.startOffset) + "px";
+    baseLineNode.style.top = (lineNode.linePos.start + lineNode.baseline.startOffset) + "px";
     baseLineNode.style.height = "100%";
     baseLineNode.style.width = lineNode.baseline.size.extent + "px";
     baseLineNode.style.left = lineNode.baseline.blockOffset + "px";

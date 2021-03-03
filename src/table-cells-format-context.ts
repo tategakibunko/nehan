@@ -57,7 +57,9 @@ export class TableCellsFormatContext extends FlowFormatContext {
       if (diffSize > 0 && (valign === "middle" || valign === "after")) {
         const delta = valign === "middle" ? Math.floor(diffSize / 2) : diffSize;
         cell.children.forEach(child => {
-          if (child instanceof LogicalLineNode || child instanceof LogicalBlockNode || child instanceof LogicalBlockReNode) {
+          if (child instanceof LogicalLineNode) {
+            child.linePos.before += delta;
+          } else if (child instanceof LogicalBlockNode || child instanceof LogicalBlockReNode) {
             child.layoutPos.before += delta;
           }
         });
