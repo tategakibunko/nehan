@@ -75,7 +75,7 @@ export class NehanElement {
   }
 
   public clone(deep = false): NehanElement {
-    const element = this.ownerDocument.createNehanNode(this.$node.cloneNode(deep));
+    const element = this.ownerDocument.createNehanElement(this.$node.cloneNode(deep));
     element.style = this.style;
     element.computedStyle = this.computedStyle;
     return element;
@@ -100,7 +100,7 @@ export class NehanElement {
     if ($node instanceof Element) {
       for (let i = 0; i < $node.childNodes.length; i++) {
         let child = $node.childNodes.item(i);
-        let child_element = root.createNehanNode(child);
+        let child_element = root.createNehanElement(child);
         this.appendChild(child_element);
       }
     }

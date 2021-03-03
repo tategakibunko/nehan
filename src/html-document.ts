@@ -47,7 +47,7 @@ export class HtmlDocument {
     if (Config.debugLayout) {
       console.log(this.$document.body);
     }
-    this.documentElement = this.createNehanNode(this.$document.documentElement); // <html>, children = [<head>, <body>]
+    this.documentElement = this.createNehanElement(this.$document.documentElement); // <html>, children = [<head>, <body>]
     const body = this.documentElement.querySelector("body"); // <body>
     if (!body) {
       throw new Error("body not found");
@@ -94,14 +94,18 @@ export class HtmlDocument {
 
   public createElement(tag_name: string): NehanElement {
     let element = this.createNativeElement(tag_name);
-    return this.createNehanNode(element);
+    return this.createNehanElement(element);
   }
 
   public createNativeElement(tag_name: string): HTMLElement {
     return this.$document.createElement(tag_name);
   }
 
-  public createNehanNode(node: HTMLElement | Node): NehanElement {
+  public createNehanNode(node: Node): NehanNode {
+    throw new Error("todo");
+  }
+
+  public createNehanElement(node: HTMLElement | Node): NehanElement {
     const tagName = ((node instanceof Element) ? node.tagName : (node instanceof Text) ? "(text)" : "??").toLowerCase();
     if ((tagName === "body" || tagName === "html") && this.selectorCache.hasCache(tagName)) {
       return this.selectorCache.getCache(tagName)[0];
@@ -118,7 +122,7 @@ export class HtmlDocument {
 
   public createTextNode(text: string): NehanElement {
     const element = this.$document.createTextNode(text);
-    return this.createNehanNode(element);
+    return this.createNehanElement(element);
   }
 }
 
