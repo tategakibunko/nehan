@@ -13,7 +13,7 @@ import {
   LogicalFloat,
   LogicalClear,
   PageRootFormatContext,
-  ILogicalPositionalNode,
+  ILogicalFloatableNode,
   ILayoutOutlineEvaluator,
   ILogicalNodeEvaluator,
 } from './public-api'
@@ -57,7 +57,7 @@ export interface IFlowRootFormatContext extends IFlowFormatContext {
   createElement: (tagName: string, layoutNames: string[], logicalNode: ILogicalNode) => HTMLElement;
   createOutline: (outlineEvaluator: ILayoutOutlineEvaluator) => HTMLElement;
   createLogicalNodeEvaluator: () => ILogicalNodeEvaluator;
-  addFloat: (block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) => void;
+  addFloat: (block: ILogicalFloatableNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) => void;
   setAnchor: (name: string, anchor: Anchor) => void;
   getAnchor: (name: string) => Anchor | undefined;
   getHeaderSection: (element: HtmlElement) => LayoutSection | undefined;

@@ -23,7 +23,7 @@ import {
   IFlowFormatContext,
   IFlowRootFormatContext,
   PageRootFormatContext,
-  ILogicalPositionalNode,
+  ILogicalFloatableNode,
 } from './public-api'
 
 export class FlowFormatContext implements IFlowFormatContext {
@@ -375,7 +375,7 @@ export class FlowFormatContext implements IFlowFormatContext {
     return 0;
   }
 
-  public setFloat(block: ILogicalPositionalNode, float: LogicalFloat) {
+  public setFloat(block: ILogicalFloatableNode, float: LogicalFloat) {
     this.flowRoot.addFloat(block, float, this.maxMeasure, this.flowRootPos);
   }
 

@@ -27,7 +27,7 @@ export interface ILogicalNode {
   acceptEffector: (visitor: ILogicalNodeEffector, ...args: any[]) => void;
 }
 
-export interface ILogicalPositionalNode extends ILogicalNode {
+export interface ILogicalFloatableNode extends ILogicalNode {
   layoutPos: LogicalCursorPos; // special positional value only used for evaluation.
 }
 
@@ -170,7 +170,7 @@ export class LogicalInlineNode implements ILogicalNode {
   }
 }
 
-export class LogicalBlockNode implements ILogicalPositionalNode {
+export class LogicalBlockNode implements ILogicalFloatableNode {
   constructor(
     public env: BoxEnv,
     public boxPos: ILogicalNodePos,
@@ -211,7 +211,7 @@ export class LogicalBlockNode implements ILogicalPositionalNode {
   }
 }
 
-export class LogicalInlineBlockNode implements ILogicalPositionalNode {
+export class LogicalInlineBlockNode implements ILogicalFloatableNode {
   constructor(
     public env: BoxEnv,
     public boxPos: ILogicalNodePos,
@@ -275,7 +275,7 @@ export class LogicalTableCellsNode implements ILogicalNode {
   }
 }
 
-export class LogicalBlockReNode implements ILogicalPositionalNode {
+export class LogicalBlockReNode implements ILogicalFloatableNode {
   constructor(
     public env: BoxEnv,
     public boxPos: ILogicalNodePos,

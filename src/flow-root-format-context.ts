@@ -15,7 +15,7 @@ import {
   FlowFormatContext,
   IFlowRootFormatContext,
   ILogicalNode,
-  ILogicalPositionalNode,
+  ILogicalFloatableNode,
   ILayoutOutlineEvaluator,
   ILogicalNodeEvaluator,
   HoriLogicalNodeEvaluator,
@@ -147,7 +147,7 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     throw new Error("clear direction is not defined");
   }
 
-  public addFloat(block: ILogicalPositionalNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) {
+  public addFloat(block: ILogicalFloatableNode, float: LogicalFloat, contextMeasure: number, flowRootPos: LogicalCursorPos) {
     if (float.isNone()) {
       console.error("float direction is not set! ignored.");
       return;
