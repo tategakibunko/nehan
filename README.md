@@ -30,11 +30,11 @@ See [example](https://github.com/tategakibunko/nehan/tree/master/example) direct
 ### simple usage with no styling
 
 ```typescript
-import { PagedHtmlDocument } from 'nehan';
+import { PagedNehanDocument } from 'nehan';
 
 const $result = document.querySelector("#result");
 
-new PagedHtmlDocument("<h1>hello, nehan!</h1>", {}).render({
+new PagedNehanDocument("<h1>hello, nehan!</h1>", {}).render({
   onPage: (ctx) => {
     const evaluatedPage = ctx.caller.getPage(ctx.page.index);
     $result.appendChild(evaluatedPage.dom);
@@ -49,11 +49,11 @@ new PagedHtmlDocument("<h1>hello, nehan!</h1>", {}).render({
 ### render with style
 
 ```typescript
-import { PagedHtmlDocument, CssStyleSheet } from 'nehan';
+import { PagedNehanDocument, CssStyleSheet } from 'nehan';
 
 const $result = document.querySelector("#result");
 
-new PagedHtmlDocument("<h1>hello, nehan!</h1>", {
+new PagedNehanDocument("<h1>hello, nehan!</h1>", {
   styleSheets:[
     new CssStyleSheet({
       "body":{
@@ -143,6 +143,8 @@ You can define functional value for each selector(css property name is `!xxx`).
 In following example, all elements that matches `.require-xx` will cause page-break if rest block size(restExtent) is smaller than `xx`px.
 
 ```typescript
+import { CssStyleSheet, DynamicStyleContext, CssDeclarationBlock } from 'nehan';
+
 function requiredExtent(ctx: DynamicStyleContext): CssDeclarationBlock | undefined {
   const requiredSize = parseInt(ctx.selector.replace(/\.require-(\d+)/, (m, px) => px));
   if(isNaN(requiredSize)){
@@ -171,6 +173,8 @@ const myStyleSheet = new CssStyleSheet({
 You can define dom generation hook for each selector element like this(css property name is `@xxx`).
 
 ```typescript
+import { CssStyleSheet, DomCallbackContext } from 'nehan';
+
 const myStyleSheet = new CssStyleSheet({
   ".foo": {
     "@create": (ctx: DomCallbackContext) => {
