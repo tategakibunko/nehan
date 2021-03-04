@@ -9,3 +9,4 @@ local
 debug
 v6-backups
 *.txt
+*.code-workspace
