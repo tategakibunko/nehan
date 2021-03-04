@@ -1,5 +1,5 @@
 import {
-  HtmlDocument,
+  NehanDocument,
   CssStyleDeclaration,
   DomTokenList,
   SelectorLexer,
@@ -15,20 +15,20 @@ import {
 // For performance reason, we use this `NehanElement` class for both `Node` and `Element`.
 // Note that some properties(like `attributes`, `childNodes` etc) are not available
 // if `this.$node` is not `Element` but `Node`.
-// [TODO] remove selector cache on `HtmlDocument` if some node is removed from tree.
+// [TODO] remove selector cache on `NehanDocument` if some node is removed from tree.
 export class NehanElement {
   public $node: Node | HTMLElement;
   public $dom: HTMLElement | undefined; // dynamically created DOM.
   public tagName: string;
   public childNodes: NehanElement[]; // [TODO] (NehanElement | NehanNode)[]
   public parent: NehanElement | null;
-  public root: HtmlDocument;
+  public root: NehanDocument;
   public style: CssStyleDeclaration;
   public computedStyle: CssStyleDeclaration;
   public id: string;
   public classList: DomTokenList;
 
-  constructor(node: Node, root: HtmlDocument) {
+  constructor(node: Node, root: NehanDocument) {
     this.$node = node;
     this.$dom = undefined;
     this.tagName = this.getTagName();
@@ -96,7 +96,7 @@ export class NehanElement {
     return new DomTokenList([] as string[]);
   }
 
-  protected setupChildren($node: Node, root: HtmlDocument) {
+  protected setupChildren($node: Node, root: NehanDocument) {
     if ($node instanceof Element) {
       for (let i = 0; i < $node.childNodes.length; i++) {
         let child = $node.childNodes.item(i);
@@ -324,8 +324,8 @@ export class NehanElement {
     }
   }
 
-  public get ownerDocument(): HtmlDocument {
-    return this.root as HtmlDocument;
+  public get ownerDocument(): NehanDocument {
+    return this.root as NehanDocument;
   }
 
   public get firstChild(): NehanElement | null {

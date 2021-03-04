@@ -1,6 +1,6 @@
 import * as Nehan from './public-api';
 
-let doc = new Nehan.HtmlDocument("");
+let doc = new Nehan.NehanDocument("");
 let div = doc.createElement("div");
 doc.body.appendChild(div);
 
@@ -39,7 +39,7 @@ test("className(set/get)", () => {
 });
 
 test("removeChild(first)", () => {
-  let d = new Nehan.HtmlDocument([
+  let d = new Nehan.NehanDocument([
     "<div>",
     "<span class='foo'></span>",
     "<span class='bar'></span>",
@@ -53,7 +53,7 @@ test("removeChild(first)", () => {
 });
 
 test("removeChild(second)", () => {
-  let d = new Nehan.HtmlDocument([
+  let d = new Nehan.NehanDocument([
     "<div>",
     "<span class='foo'></span>",
     "<span class='bar'></span>",
@@ -67,7 +67,7 @@ test("removeChild(second)", () => {
 });
 
 test("removeChild(last)", () => {
-  let d = new Nehan.HtmlDocument([
+  let d = new Nehan.NehanDocument([
     "<div>",
     "<span class='foo'></span>",
     "<span class='bar'></span>",
@@ -80,7 +80,7 @@ test("removeChild(last)", () => {
 });
 
 test("replaceChild", () => {
-  let d = new Nehan.HtmlDocument([
+  let d = new Nehan.NehanDocument([
     "<div>",
     "<span class='foo'></span>",
     "</div>"
@@ -93,7 +93,7 @@ test("replaceChild", () => {
 });
 
 test("appendChild", () => {
-  let d = new Nehan.HtmlDocument([
+  let d = new Nehan.NehanDocument([
     "<div>",
     "<span class='foo'></span>",
     "</div>"
@@ -105,7 +105,7 @@ test("appendChild", () => {
 });
 
 test("insertBefore", () => {
-  let d = new Nehan.HtmlDocument([
+  let d = new Nehan.NehanDocument([
     "<div>",
     "<span class='foo'></span>",
     "<span class='bar'></span>",
@@ -126,7 +126,7 @@ test("insertBefore", () => {
 });
 
 test("getElementById", () => {
-  let d = new Nehan.HtmlDocument([
+  let d = new Nehan.NehanDocument([
     "<div id='foo'>foo</div>",
     "<div>hoge</div>",
   ].join(""));

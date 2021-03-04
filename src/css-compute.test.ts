@@ -33,7 +33,7 @@ let stylesheet = new Nehan.CssStyleSheet({
     "line-height": "2em"
   }
 });
-let doc = new Nehan.HtmlDocument(html, {
+let doc = new Nehan.NehanDocument(html, {
   styleSheets: [stylesheet]
 });
 

@@ -23,7 +23,7 @@ test("CssParser !dynamic", () => {
   // so normal 'font-size' wins in this case!!
   expect(rule.getPropertyValue("font-size")).toBe("30px");
 
-  const doc = new Nehan.HtmlDocument("");
+  const doc = new Nehan.NehanDocument("");
   const element = doc.createElement("h1");
   const important_style = rule.style.getDynamicStyle(element);
 

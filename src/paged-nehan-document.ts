@@ -2,8 +2,8 @@ import {
   Config,
   Anchor,
   Page,
-  HtmlDocument,
-  HtmlDocumentOptions,
+  NehanDocument,
+  NehanDocumentOptions,
   LogicalNodeGenerator,
   ILogicalNode,
   ILogicalNodeGenerator,
@@ -17,21 +17,21 @@ import {
   DomCallbackEffector,
 } from './public-api';
 
-export interface PagedHtmlRenderOptions {
+export interface PagedDocumentRenderOptions {
   onProgressImage?: (ctx: ImageLoaderContext) => void;
   onCompleteImage?: (ctx: ImageLoaderContext) => void;
-  onPage?: (context: { caller: PagedHtmlDocument, page: Page }) => void;
-  onComplete?: (context: { caller: PagedHtmlDocument, time: number, pageCount: number }) => void;
+  onPage?: (context: { caller: PagedNehanDocument, page: Page }) => void;
+  onComplete?: (context: { caller: PagedNehanDocument, time: number, pageCount: number }) => void;
 }
 
-export class PagedHtmlDocument extends HtmlDocument {
+export class PagedNehanDocument extends NehanDocument {
   private generator: ILogicalNodeGenerator;
   private evaluator: ILogicalNodeEvaluator;
   private effector: ILogicalNodeEffector;
   private pages: Page[];
   private timestamp: number;
 
-  constructor(src: string, options: HtmlDocumentOptions = { styleSheets: [] }) {
+  constructor(src: string, options: NehanDocumentOptions = { styleSheets: [] }) {
     super(src, options);
     this.generator = options.generator || LogicalNodeGenerator.createRoot(this.body);
     this.evaluator = options.evaluator || this.generator.context.pageRoot.createLogicalNodeEvaluator();
@@ -100,7 +100,7 @@ export class PagedHtmlDocument extends HtmlDocument {
     return this.generator.context.flowRoot.createOutline(evaluator);
   }
 
-  public render(options: PagedHtmlRenderOptions = {}): PagedHtmlDocument {
+  public render(options: PagedDocumentRenderOptions = {}): PagedNehanDocument {
     const images = this.querySelectorAll("img").concat(this.querySelectorAll("video"));
     const context = new ImageLoaderContext(images.length);
     new ImageLoader(images, context).load(options).then(_ => {
@@ -110,7 +110,7 @@ export class PagedHtmlDocument extends HtmlDocument {
     return this;
   }
 
-  private renderAsync(options: PagedHtmlRenderOptions) {
+  private renderAsync(options: PagedDocumentRenderOptions) {
     requestAnimationFrame(() => {
       const result = this.generator.getNext();
       if (!result) {

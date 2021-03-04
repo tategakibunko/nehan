@@ -1,10 +1,10 @@
 import {
   Config,
   NehanElement,
-  PagedHtmlRenderOptions,
+  PagedDocumentRenderOptions,
 } from "./public-api";
 
-export type ImageLoaderCallbacks = Pick<PagedHtmlRenderOptions, "onProgressImage" | "onCompleteImage">
+export type ImageLoaderCallbacks = Pick<PagedDocumentRenderOptions, "onProgressImage" | "onCompleteImage">
 
 export class ImageLoaderContext {
   public totalItemCount: number;

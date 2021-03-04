@@ -1,4 +1,4 @@
-import { CssLength, HtmlDocument, CssStyleSheet } from "./public-api";
+import { CssLength, NehanDocument, CssStyleSheet } from "./public-api";
 
 let test_style = new CssStyleSheet({
   "body": {
@@ -13,8 +13,8 @@ let test_style = new CssStyleSheet({
   }
 });
 
-const create_doc = (html: string): HtmlDocument => {
-  return new HtmlDocument(html, {
+const create_doc = (html: string): NehanDocument => {
+  return new NehanDocument(html, {
     styleSheets: [test_style]
   });
 };

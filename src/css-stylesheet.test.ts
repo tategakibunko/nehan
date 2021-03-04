@@ -49,7 +49,7 @@ test("style matching test", () => {
     }
   });
 
-  let doc = new Nehan.HtmlDocument(html, {
+  let doc = new Nehan.NehanDocument(html, {
     styleSheets: [stylesheet]
   });
   Nehan.CssLoader.loadAll(doc.body);

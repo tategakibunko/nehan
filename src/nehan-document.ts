@@ -11,17 +11,17 @@ import {
   ValidBlockSelector,
 } from "./public-api";
 
-export interface HtmlDocumentOptions {
+export interface NehanDocumentOptions {
   styleSheets?: CssStyleSheet[];
   generator?: ILogicalNodeGenerator;
   evaluator?: ILogicalNodeEvaluator;
 }
 
-let defaultOptions: HtmlDocumentOptions = {
+let defaultOptions: NehanDocumentOptions = {
   styleSheets: []
 };
 
-export class HtmlDocument {
+export class NehanDocument {
   public source: string;
   public $document: HTMLDocument;
   public documentElement: NehanElement;
@@ -30,7 +30,7 @@ export class HtmlDocument {
   public specStyleSheet: CssStyleSheet; // specificity sorted stylesheet.
   protected selectorCache: SelectorCache;
 
-  constructor(source: string, options: HtmlDocumentOptions = defaultOptions) {
+  constructor(source: string, options: NehanDocumentOptions = defaultOptions) {
     // console.time("initializeDocument");
     this.source = Config.normalizeHtml(source);
     this.styleSheets = [
@@ -82,7 +82,7 @@ export class HtmlDocument {
     return this.selectorCache.getCache(selector);
   }
 
-  public addStyleSheet(stylesheet: CssStyleSheet): HtmlDocument {
+  public addStyleSheet(stylesheet: CssStyleSheet): NehanDocument {
     this.styleSheets.push(stylesheet);
     return this;
   }

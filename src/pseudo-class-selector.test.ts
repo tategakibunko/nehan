@@ -44,7 +44,7 @@ test("nth-child(3n+4)", () => {
 });
 
 test("even, odd", () => {
-  let doc = new Nehan.HtmlDocument("<ul><li>1<li>2<li>3<li>4</ul>");
+  let doc = new Nehan.NehanDocument("<ul><li>1<li>2<li>3<li>4</ul>");
   let ul = doc.body!.firstChild;
   let li_list = ul!.children;
   let pseudo_even = new Nehan.PseudoClassSelector("even");
@@ -62,7 +62,7 @@ test("even, odd", () => {
 });
 
 test("first-child", () => {
-  let doc = new Nehan.HtmlDocument("<div>foo</div>");
+  let doc = new Nehan.NehanDocument("<div>foo</div>");
   let pseudo = new Nehan.PseudoClassSelector("first-child");
   expect(doc.body!.firstChild!.tagName).toBe("div");
   expect(pseudo.test(doc.body!.firstChild!)).toBe(true);

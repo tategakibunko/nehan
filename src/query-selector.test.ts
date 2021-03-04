@@ -1,7 +1,7 @@
 import * as Nehan from './public-api';
 
 test("querySelector from different query root", () => {
-  let doc = new Nehan.HtmlDocument([
+  let doc = new Nehan.NehanDocument([
     "<html><body>",
     "<main><ul><li>foo</li><li>bar</li><li>baz</li></ul></main>",
     "<nav><ul><li>hoge</li><li>hige</li></ul></main>",

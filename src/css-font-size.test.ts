@@ -1,7 +1,7 @@
-import { NehanElement, HtmlDocument, CssLength } from './public-api';
+import { NehanElement, NehanDocument, CssLength } from './public-api';
 
 test("CssFontSize(absolute size)", () => {
-  let doc = new HtmlDocument("dummy");
+  let doc = new NehanDocument("dummy");
   let element = doc.createElement("div");
   expect(CssLength.computeFontSize(element, "xx-small")).toBe(8);
   expect(CssLength.computeFontSize(element, "x-small")).toBe(10);
@@ -13,7 +13,7 @@ test("CssFontSize(absolute size)", () => {
 });
 
 test("CssFontSize(relative size)", () => {
-  let doc = new HtmlDocument("<body style='font-size:16px'><div>foo</div></div>");
+  let doc = new NehanDocument("<body style='font-size:16px'><div>foo</div></div>");
   let div = doc.querySelector("div");
   expect(CssLength.computeFontSize(div!, "smaller")).toBe(Math.floor(0.8 * 16));
   expect(CssLength.computeFontSize(div!, "larger")).toBe(Math.floor(1.2 * 16));

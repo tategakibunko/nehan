@@ -1,6 +1,6 @@
 import * as Nehan from './public-api';
 
-let doc = new Nehan.HtmlDocument("");
+let doc = new Nehan.NehanDocument("");
 
 test("class selector", () => {
   let div = doc.createElement("div");

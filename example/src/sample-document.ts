@@ -1,12 +1,12 @@
 import * as Nehan from "../../dist";
 
-export let create = (html: string, opt?: any): Nehan.PagedHtmlDocument => {
+export let create = (html: string, opt?: any): Nehan.PagedNehanDocument => {
 	opt = opt || {
 		writingMode: "horizontal-tb",
 		measure: "640px",
 		extent: "480px",
 	};
-	return new Nehan.PagedHtmlDocument(html, {
+	return new Nehan.PagedNehanDocument(html, {
 		styleSheets: [
 			Nehan.SemanticStyle.create({ all: true }), // Apply pre-defined utility styles
 			new Nehan.CssStyleSheet({

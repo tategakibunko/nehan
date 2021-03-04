@@ -20,7 +20,7 @@ test("spec", () => {
 
 test("querySelector", () => {
   const html = "<main><p class='foo'>hoge</p><p>hige</p></main>";
-  const doc = new Nehan.HtmlDocument(html);
+  const doc = new Nehan.NehanDocument(html);
   const query = "body>main>p:nth-child(2)";
   const lexer = new Nehan.SelectorLexer(query);
   const parser = new Nehan.SelectorParser(lexer);
