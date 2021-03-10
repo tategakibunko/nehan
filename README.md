@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Html layout engine for paged-media written by [Typescript](https://www.typescriptlang.org/).
+Dynamic html layout engine for paged-media written by [Typescript](https://www.typescriptlang.org/).
 
 ## Install
 
