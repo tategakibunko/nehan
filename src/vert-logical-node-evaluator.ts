@@ -381,6 +381,7 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
 
   visitInlineLink(linkNode: LogicalInlineNode): HTMLElement {
     const node = this.pageRoot.createElement("a", ["inline"], linkNode);
+    node.style.textDecoration = "none"; // for vertical link only(it makes underline for each vertical character!)
     node.style.marginTop = linkNode.edge.margin.start + "px";
     node.style.marginBottom = linkNode.edge.margin.end + "px";
     linkNode.env.font.acceptCssEvaluator(this.cssVisitor).applyTo(node.style);

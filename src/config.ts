@@ -70,7 +70,7 @@ export namespace Config {
     "\u3000"
   ]
 
-  // [unmanagedCssProps] are properties that are NOT affected to nehan.js layout structure,
+  // [unmanagedCssProps] are properties that are NOT affected to nehan layout structure,
   // so they are transparently applied(copied) to box element as they are.
   // Feel free to add props to this field if it doesn't do any bad to your page.
   export let unmanagedCssProps = [
@@ -78,6 +78,7 @@ export namespace Config {
     "background-image",
     "background-color",
     "background-position",
+    "text-decoration",
     "z-index"
   ]
 
