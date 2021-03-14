@@ -42,6 +42,10 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     return this;
   }
 
+  public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
+    return this.outline.getSectionByPageIndex(pageIndex);
+  }
+
   // start-before position of this context from nearest flowRoot.
   public get boxPos(): ILogicalNodePos {
     return {

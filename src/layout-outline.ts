@@ -17,6 +17,10 @@ export class LayoutOutline {
     this.curSection = this.rootSection;
   }
 
+  public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
+    return this.rootSection.getSectionByPageIndex(pageIndex);
+  }
+
   public acceptEvaluator(visitor: ILayoutOutlineEvaluator): HTMLElement {
     return visitor.visitSectionRoot(this.rootSection);
   }

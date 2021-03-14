@@ -2,6 +2,7 @@ import {
   Config,
   Anchor,
   Page,
+  LayoutSection,
   NehanDocument,
   NehanDocumentOptions,
   LogicalNodeGenerator,
@@ -98,6 +99,10 @@ export class PagedNehanDocument extends NehanDocument {
   public createOutline(outlineEvaluator?: ILayoutOutlineEvaluator): HTMLElement {
     const evaluator = outlineEvaluator || new LayoutOutlineEvaluator();
     return this.generator.context.flowRoot.createOutline(evaluator);
+  }
+
+  public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
+    return this.generator.context.flowRoot.getSectionByPageIndex(pageIndex);
   }
 
   public render(options: PagedDocumentRenderOptions = {}): PagedNehanDocument {

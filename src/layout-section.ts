@@ -51,6 +51,19 @@ export class LayoutSection {
     return (!this.parent) ? "(root)" : "no title"
   }
 
+  public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
+    if (this.pageIndex === pageIndex) {
+      return this;
+    }
+    for (let i = 0; i < this.children.length; i++) {
+      const section = this.children[i].getSectionByPageIndex(pageIndex);
+      if (section) {
+        return section;
+      }
+    }
+    return undefined;
+  }
+
   static isHeaderElement(element: NehanElement): boolean {
     switch (element.tagName) {
       case "h1": case "h2": case "h3": case "h4": case "h5": case "h6":
