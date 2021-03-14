@@ -18,7 +18,14 @@ export class LayoutOutline {
   }
 
   public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
-    return this.rootSection.getSectionByPageIndex(pageIndex);
+    const children = this.rootSection.children;
+    for (let i = 0; i < children.length; i++) {
+      const section = children[i].getSectionByPageIndex(pageIndex);
+      if (section) {
+        return section;
+      }
+    }
+    return this.rootSection.pageIndex === pageIndex ? this.rootSection : undefined;
   }
 
   public acceptEvaluator(visitor: ILayoutOutlineEvaluator): HTMLElement {

@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.7.3, 2021/03/14
+==========================
+* Fixed getSectionByPageIndex for root section(prefer sub section).
+
 version 7.7.2, 2021/03/14
 ==========================
 o Added getSectionByPageIndex method to IFlowRootFormatContext, LayoutOutline, LayoutSection.
