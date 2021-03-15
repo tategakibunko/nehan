@@ -51,17 +51,20 @@ export class LayoutSection {
     return (!this.parent) ? "(root)" : "no title"
   }
 
-  public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
-    if (this.pageIndex === pageIndex) {
+  public getClosestSectionByPageIndex(pageIndex: number, last: LayoutSection): LayoutSection {
+    if (this.pageIndex >= pageIndex) {
       return this;
     }
+    let prev: LayoutSection = this;
     for (let i = 0; i < this.children.length; i++) {
-      const section = this.children[i].getSectionByPageIndex(pageIndex);
-      if (section) {
+      const child = this.children[i];
+      const section = child.getClosestSectionByPageIndex(pageIndex, prev);
+      if (section.pageIndex >= pageIndex) {
         return section;
       }
+      prev = section;
     }
-    return undefined;
+    return prev;
   }
 
   static isHeaderElement(element: NehanElement): boolean {

@@ -17,15 +17,18 @@ export class LayoutOutline {
     this.curSection = this.rootSection;
   }
 
-  public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
+  public getSectionByPageIndex(pageIndex: number): LayoutSection {
     const children = this.rootSection.children;
+    let prev: LayoutSection = this.rootSection;
     for (let i = 0; i < children.length; i++) {
-      const section = children[i].getSectionByPageIndex(pageIndex);
-      if (section) {
+      const child = children[i];
+      const section = child.getClosestSectionByPageIndex(pageIndex, prev);
+      if (section.pageIndex >= pageIndex) {
         return section;
       }
+      prev = section;
     }
-    return this.rootSection.pageIndex === pageIndex ? this.rootSection : undefined;
+    return prev;
   }
 
   public acceptEvaluator(visitor: ILayoutOutlineEvaluator): HTMLElement {
