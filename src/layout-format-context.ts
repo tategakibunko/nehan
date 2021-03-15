@@ -62,5 +62,5 @@ export interface IFlowRootFormatContext extends IFlowFormatContext {
   getAnchor: (name: string) => Anchor | undefined;
   getHeaderSection: (element: NehanElement) => LayoutSection | undefined;
   clearFloat: (clear: LogicalClear) => number;
-  getSectionByPageIndex: (pageIndex: number) => LayoutSection | undefined;
+  getSectionAt: (pageIndex: number) => LayoutSection;
 }

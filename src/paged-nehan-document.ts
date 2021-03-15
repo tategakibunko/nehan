@@ -101,8 +101,8 @@ export class PagedNehanDocument extends NehanDocument {
     return this.generator.context.flowRoot.createOutline(evaluator);
   }
 
-  public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
-    return this.generator.context.flowRoot.getSectionByPageIndex(pageIndex);
+  public getSectionAt(pageIndex: number): LayoutSection {
+    return this.generator.context.flowRoot.getSectionAt(pageIndex);
   }
 
   public render(options: PagedDocumentRenderOptions = {}): PagedNehanDocument {

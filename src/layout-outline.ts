@@ -17,7 +17,7 @@ export class LayoutOutline {
     this.curSection = this.rootSection;
   }
 
-  public getSectionByPageIndex(pageIndex: number): LayoutSection {
+  public getSectionAt(pageIndex: number): LayoutSection {
     const children = this.rootSection.children;
     let prev: LayoutSection = this.rootSection;
     for (let i = 0; i < children.length; i++) {

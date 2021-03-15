@@ -42,8 +42,8 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
     return this;
   }
 
-  public getSectionByPageIndex(pageIndex: number): LayoutSection | undefined {
-    return this.outline.getSectionByPageIndex(pageIndex);
+  public getSectionAt(pageIndex: number): LayoutSection {
+    return this.outline.getSectionAt(pageIndex);
   }
 
   // start-before position of this context from nearest flowRoot.
