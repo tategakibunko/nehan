@@ -10,3 +10,4 @@ debug
 *.txt
 *.code-workspace
 tsconfig.json
+.vscode/launch.json
