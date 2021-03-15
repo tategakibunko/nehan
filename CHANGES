@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.7.4, 2021/03/15
+==========================
+* Make getSectionByPageIndex always returns the closest section.
+
 version 7.7.3, 2021/03/14
 ==========================
 * Fixed getSectionByPageIndex for root section(prefer sub section).
