@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.8.1
+version 7.8.1, 2021/03/19
 ==========================
 o HoriCssEvaluator and VertCssEvaluator are merged into LogicalCssEvaluator.
 
