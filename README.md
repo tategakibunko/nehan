@@ -145,25 +145,23 @@ In following example, all elements that matches `.require-xx` will cause page-br
 ```typescript
 import { CssStyleSheet, DynamicStyleContext, CssDeclarationBlock } from 'nehan';
 
-function requiredExtent(ctx: DynamicStyleContext): CssDeclarationBlock | undefined {
-  const requiredSize = parseInt(ctx.selector.replace(/\.require-(\d+)/, (m, px) => px));
-  if(isNaN(requiredSize)){
-    return undefined;
-  }
-  if(!ctx.parentContext){
-    return undefined;
-  }
-  const restExtent = ctx.parentContext.restExtent;
-  if(restExtent >= requiredSize){
-    return undefined; // enough block size is left!
-  }
-  // restExtent < requiredSize(not enough block size left)
-  return {"page-break-before": "always"};
+function requiredExtent(requiredSize: number) {
+  return (ctx: DynamicStyleContext): CssDeclarationBlock | undefined => {
+    if (!ctx.parentContext) {
+      return undefined;
+    }
+    const restExtent = ctx.parentContext.restExtent;
+    if (restExtent >= requiredSize) {
+      return undefined; // enough block size is left!
+    }
+    // restExtent < requiredSize(not enough block size left)
+    return { "page-break-before": "always" };
+  };
 }
 
 const myStyleSheet = new CssStyleSheet({
   ".require-60": {
-    "!dynamic": (ctx: DynamicStyleContext) => requiredExtent(ctx)
+    "!dynamic": requiredExtent(60)
   }
 });
 ```
