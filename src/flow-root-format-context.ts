@@ -103,7 +103,6 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
       case "horizontal-tb":
         return new HoriLogicalNodeEvaluator(this, cssEvaluator, LogicalTextJustifier.instance);
       case "vertical-rl":
-        return new VertLogicalNodeEvaluator(this, cssEvaluator, LogicalTextJustifier.instance);
       case "vertical-lr":
         return new VertLogicalNodeEvaluator(this, cssEvaluator, LogicalTextJustifier.instance);
       default:
