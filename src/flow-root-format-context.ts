@@ -97,16 +97,15 @@ export class FlowRootFormatContext extends FlowFormatContext implements IFlowRoo
   }
 
   public createLogicalNodeEvaluator(): ILogicalNodeEvaluator {
-    const writingMode = WritingMode.load(this.env.element);
-    const cssEvaluator = new LogicalCssEvaluator(writingMode);
-    switch (writingMode.value) {
+    const cssEvaluator = new LogicalCssEvaluator(this.env.writingMode);
+    switch (this.env.writingMode.value) {
       case "horizontal-tb":
         return new HoriLogicalNodeEvaluator(this, cssEvaluator, LogicalTextJustifier.instance);
       case "vertical-rl":
       case "vertical-lr":
         return new VertLogicalNodeEvaluator(this, cssEvaluator, LogicalTextJustifier.instance);
       default:
-        throw new Error(`undefined writing mode: ${writingMode.value}`);
+        throw new Error(`undefined writing mode: ${this.env.writingMode.value}`);
     }
   }
 
