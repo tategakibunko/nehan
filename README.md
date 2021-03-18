@@ -158,7 +158,7 @@ function requiredExtent(ctx: DynamicStyleContext): CssDeclarationBlock | undefin
     return undefined; // enough block size is left!
   }
   // restExtent < requiredSize(not enough block size left)
-  return {"pageb-break-before": "always"};
+  return {"page-break-before": "always"};
 }
 
 const myStyleSheet = new CssStyleSheet({
