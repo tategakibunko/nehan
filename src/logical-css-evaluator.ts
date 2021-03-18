@@ -67,12 +67,56 @@ export class LogicalCssEvaluator implements ILogicalCssEvaluator {
     return css;
   }
 
+  private visitSizeHori(size: LogicalSize): NativeStyleMap {
+    const css = new NativeStyleMap();
+    css.set("width", size.measure + "px");
+    css.set("height", size.extent + "px");
+    return css;
+  }
+
+  private visitSizeVert(size: LogicalSize): NativeStyleMap {
+    const css = new NativeStyleMap();
+    css.set("width", size.extent + "px");
+    css.set("height", size.measure + "px");
+    return css;
+  }
+
   visitSize(size: LogicalSize): NativeStyleMap {
-    throw new Error("must be overrided");
+    if (this.writingMode.isTextHorizontal()) {
+      return this.visitSizeHori(size);
+    }
+    return this.visitSizeVert(size);
+  }
+
+  private visitPosHori(pos: LogicalCursorPos): NativeStyleMap {
+    const css = new NativeStyleMap();
+    css.set("top", pos.before + "px");
+    css.set("left", pos.start + "px");
+    return css;
+  }
+
+  private visitPosVertLtr(pos: LogicalCursorPos): NativeStyleMap {
+    const css = new NativeStyleMap();
+    css.set("top", pos.start + "px");
+    css.set("left", pos.before + "px");
+    return css;
+  }
+
+  private visitPosVertRtl(pos: LogicalCursorPos): NativeStyleMap {
+    const css = new NativeStyleMap();
+    css.set("top", pos.start + "px");
+    css.set("right", pos.before + "px");
+    return css;
   }
 
   visitPos(pos: LogicalCursorPos): NativeStyleMap {
-    throw new Error("must be overrided");
+    if (this.writingMode.isTextHorizontal()) {
+      return this.visitPosHori(pos);
+    }
+    if (this.writingMode.isVerticalRl()) {
+      return this.visitPosVertRtl(pos);
+    }
+    return this.visitPosVertLtr(pos);
   }
 
   // background-position is not layouting target of nehan,
@@ -143,39 +187,6 @@ export class LogicalCssEvaluator implements ILogicalCssEvaluator {
     if (pos.start !== undefined) {
       css.set(map.get("start"), pos.start + "px");
     }
-    return css;
-  }
-}
-
-export class VertCssEvaluator extends LogicalCssEvaluator {
-  visitSize(size: LogicalSize): NativeStyleMap {
-    const css = new NativeStyleMap();
-    css.set("width", size.extent + "px");
-    css.set("height", size.measure + "px");
-    return css;
-  }
-
-  visitPos(pos: LogicalCursorPos): NativeStyleMap {
-    const css = new NativeStyleMap();
-    const beforeProp = this.writingMode.isVerticalRl() ? "right" : "left";
-    css.set("top", pos.start + "px");
-    css.set(beforeProp, pos.before + "px");
-    return css;
-  }
-}
-
-export class HoriCssEvaluator extends LogicalCssEvaluator {
-  visitSize(size: LogicalSize): NativeStyleMap {
-    const css = new NativeStyleMap();
-    css.set("width", size.measure + "px");
-    css.set("height", size.extent + "px");
-    return css;
-  }
-
-  visitPos(pos: LogicalCursorPos): NativeStyleMap {
-    const css = new NativeStyleMap();
-    css.set("top", pos.before + "px");
-    css.set("left", pos.start + "px");
     return css;
   }
 }
