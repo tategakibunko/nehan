@@ -99,15 +99,7 @@ export class DynamicStyleUtils {
     return (ctx: DynamicStyleContext) => {
       let old_content = ctx.element.textContent;
       let new_content = fn_replace(old_content, ctx);
-      let doc = new DOMParser().parseFromString(new_content, "text/html");
-      if (!doc.body) {
-        return undefined;
-      }
-      ctx.element.childNodes = [];
-      let children = doc.body.childNodes, root = ctx.element.root;
-      for (let i = 0; i < children.length; i++) {
-        ctx.element.appendChild(new NehanElement(children[i], root));
-      }
+      ctx.element.innerHTML = new_content;
       return undefined;
     };
   }
