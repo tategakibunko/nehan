@@ -61,7 +61,8 @@ export namespace Config {
   export let defaultBodyMeasure = 640;
   export let defaultBodyExtent = 480;
   export let defaultLineHeight = 2.0;
-  export let defaultBorderColor = "rgba(0,0,0,0.4)";
+  export let defaultBorderColor = "transparent";
+  export let defaultTableBorderColor = "rgba(0,0,0,0.4)";
   export let defaultFloatMeasure = 100;
   export let defaultInlineBlockMeasure = 200;
 

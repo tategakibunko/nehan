@@ -454,7 +454,7 @@ export const UserAgentStyles: CssRules = {
     "display": "table",
     "border-collapse": "collapse", // 'separate' is not supported yet.
     "border-spacing": "2px",
-    "border-color": Config.defaultBorderColor,
+    "border-color": Config.defaultTableBorderColor,
     "border-width": "1px",
     "border-style": "solid",
     "margin-after": "1em",
@@ -471,6 +471,7 @@ export const UserAgentStyles: CssRules = {
     "vertical-align": "inherit",
     "border-width": "1px",
     "border-style": "solid",
+    "border-color": "inherit",
   },
   "template": {
   },
@@ -491,6 +492,7 @@ export const UserAgentStyles: CssRules = {
     "text-align": "center",
     "border-width": "1px",
     "border-style": "solid",
+    "border-color": "inherit",
   },
   "thead": {
     "display": "table-header-group",
