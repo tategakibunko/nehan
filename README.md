@@ -14,6 +14,8 @@ npm install nehan
 
 See [Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja) at Chrome Web Store.
 
+Or [nehan-player demo](https://tategakibunko.github.io/nehan-player#demo)
+
 ### How to use Nehan Reader
 
 1. Install [Nehan Reader](https://chrome.google.com/webstore/detail/nehan-reader/bebbekgiffjpgjlgkkhmlgheckolmdcf?hl=ja).
