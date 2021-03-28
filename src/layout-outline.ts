@@ -24,7 +24,7 @@ export class LayoutOutline {
       const child = children[i];
       const section = child.getClosestSectionByPageIndex(pageIndex, prev);
       if (section.pageIndex >= pageIndex) {
-        return section;
+        return prev;
       }
       prev = section;
     }
