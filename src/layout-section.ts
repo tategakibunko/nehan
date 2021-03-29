@@ -59,7 +59,10 @@ export class LayoutSection {
     for (let i = 0; i < this.children.length; i++) {
       const child = this.children[i];
       const section = child.getClosestSectionByPageIndex(pageIndex, prev);
-      if (section.pageIndex >= pageIndex) {
+      if (section.pageIndex === pageIndex) {
+        return section;
+      }
+      if (section.pageIndex > pageIndex) {
         return prev;
       }
       prev = section;
