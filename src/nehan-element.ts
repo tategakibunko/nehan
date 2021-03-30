@@ -113,6 +113,13 @@ export class NehanElement {
     CssLoader.loadAll(this);
   }
 
+  public get innerHTML(): string {
+    if (this.isTextElement()) {
+      return this.textContent;
+    }
+    return (this.$node as HTMLElement).innerHTML;
+  }
+
   public get className(): string {
     return this.classList.values().join(" ");
   }
