@@ -186,6 +186,12 @@ const myStyleSheet = new CssStyleSheet({
 });
 ```
 
+## Plugins
+
+- [nehan-katex](https://github.com/tategakibunko/nehan-katex)
+- [nehan-anchor](https://github.com/tategakibunko/nehan-anchor)
+- [nehan-highlight](https://github.com/tategakibunko/nehan-highlight)
+
 ## Development
 
 `npm run build` and library is generated in `dist` directory.
