@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.8.6
+==========================
+o Added U+00AB, U+00BB to dualCharTable.
+
 version 7.8.5, 2021/03/30
 ==========================
 o Added innerHTML(getter) for NehanElement.
