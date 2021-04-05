@@ -191,6 +191,7 @@ const myStyleSheet = new CssStyleSheet({
 - [nehan-katex](https://github.com/tategakibunko/nehan-katex)
 - [nehan-anchor](https://github.com/tategakibunko/nehan-anchor)
 - [nehan-highlight](https://github.com/tategakibunko/nehan-highlight)
+- [nehan-speech-border](https://github.com/tategakibunko/nehan-speech-border)
 
 ## Development
 
