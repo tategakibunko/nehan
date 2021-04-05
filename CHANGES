@@ -6,7 +6,7 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
-version 7.8.6
+version 7.8.6, 2021/04/05
 ==========================
 o Added U+00AB, U+00BB to dualCharTable.
 
