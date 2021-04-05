@@ -54,6 +54,10 @@ export class DualChar implements ICharacter {
     return this.info.hangEnable;
   }
 
+  public isSmall(): boolean {
+    return this.info.isSmall;
+  }
+
   public setMetrics(opts: {
     font: Font,
     isVertical: boolean;
@@ -64,15 +68,6 @@ export class DualChar implements ICharacter {
     if (this.kerning && this.isKernEnable()) {
       this.size.measure = Math.floor(opts.font.size / 2);
     }
-  }
-
-  // [Deprecated]
-  public setKerning(env: BoxEnv, enable: boolean) {
-    if (this.info.kernEnable) {
-      this.kerning = enable;
-      return;
-    }
-    console.warn("kerning is not allowed for this character:", this);
   }
 
   public toString(): string {

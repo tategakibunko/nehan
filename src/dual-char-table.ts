@@ -66,17 +66,6 @@ const dash: DualCharInfo = {
   isSmall: false
 };
 
-/*
-const rotatableDash: DualCharInfo = {
-  parenType: "none",
-  kinsokuPos: KinsokuPos.NONE,
-  kernEnable: false,
-  hangEnable: false,
-  rotatable: true,
-  isSmall: false
-}
-*/
-
 const colon: DualCharInfo = {
   parenType: "none",
   kinsokuPos: "none",
@@ -116,6 +105,8 @@ const dualCharTable: { [universalCharacterName: string]: DualCharInfo } = {
   "U+005D": kakkoEndHalf, // RIGHT SQUARE BRACKET
   "U+007B": kakkoStartHalf, // LEFT CURLY BRACKET
   "U+007D": kakkoEndHalf, // RIGHT CURLY BRACKET
+  "U+00AB": kakkoStartHalf, // LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+  "U+00BB": kakkoEndHalf, // RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
   "U+2014": dash, // EM DASH
   "U+2015": dash, // HORIZONTAL BAR
   "U+201C": kakkoStartHalf, // LEFT DOUBLE QUOTATION MARK
