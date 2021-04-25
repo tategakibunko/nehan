@@ -147,18 +147,4 @@ export class LogicalBoxEdge {
       before: this.padding.before
     };
   }
-
-  /*
-  public getCss(box: LogicalBox): NativeStyleMap {
-    let css = new NativeStyleMap();
-    this.padding.getCss(box).mergeTo(css);
-    // margin and border of root layout(<body> in general) are not targets of nehan layout.
-    // In other words, use native css.
-    if (!box.isRootBox()) {
-      this.border.getCss(box).mergeTo(css);
-      this.margin.getCss(box).mergeTo(css);
-    }
-    return css;
-  }
-  */
 }

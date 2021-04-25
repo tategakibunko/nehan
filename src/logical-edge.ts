@@ -135,12 +135,4 @@ export class LogicalEdgeSize extends LogicalEdge<number> {
   public get measure(): number {
     return this.start + this.end;
   }
-
-  /*
-  public getCss(box: LogicalBox): NativeStyleMap {
-    return this.getPhysicalEdge(box.writingMode).items.reduce((css, item) => {
-      return css.set(this.getPropByLogicalDirection(item.prop), item.value + "px");
-    }, new NativeStyleMap());
-  }
-  */
 }

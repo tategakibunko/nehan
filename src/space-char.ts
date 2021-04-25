@@ -3,7 +3,6 @@ import {
   LogicalSize,
   SpaceCharInfo,
   SpaceCharTable,
-  NativeStyleMap,
   Font,
   TextEmphaData,
   ILogicalNodeEvaluator,
@@ -52,12 +51,6 @@ export class SpaceChar implements ICharacter {
       return SpaceChar.charRefToStr(str);
     }
     return str;
-  }
-
-  public getCssVert(): NativeStyleMap {
-    let css = new NativeStyleMap();
-    css.set("height", this.size.measure + "px");
-    return css;
   }
 
   public setMetrics(opts: {

@@ -1,7 +1,6 @@
 import {
   ListStylePosition,
   ListStyleType,
-  NativeStyleMap,
   NehanElement,
   CssCascade,
   CssText,
@@ -33,18 +32,6 @@ export class ListStyle {
 
   public getMarkerText(index: number): string {
     return this.type_.getMarkerText(index);
-  }
-
-  public getCssListMarkerHori(): NativeStyleMap {
-    let css = new NativeStyleMap();
-    css.set("display", "inline-block");
-    return css;
-  }
-
-  public getCssListBodyHori(): NativeStyleMap {
-    let css = new NativeStyleMap();
-    css.set("display", "inline-block");
-    return css;
   }
 
   public insertMarkerText(element: NehanElement) {
