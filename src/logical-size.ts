@@ -108,25 +108,4 @@ export class LogicalSize {
   public acceptCssEvaluator(visitor: ILogicalCssEvaluator): NativeStyleMap {
     return visitor.visitSize(this);
   }
-
-  public getCss(isVert: boolean): NativeStyleMap {
-    if (isVert) {
-      return this.getCssVert();
-    }
-    return this.getCssHori();
-  }
-
-  public getCssVert(): NativeStyleMap {
-    const css = new NativeStyleMap();
-    css.set("width", this.extent + "px");
-    css.set("height", this.measure + "px");
-    return css;
-  }
-
-  public getCssHori(): NativeStyleMap {
-    const css = new NativeStyleMap();
-    css.set("width", this.measure + "px");
-    css.set("height", this.extent + "px");
-    return css;
-  }
 }
