@@ -17,11 +17,11 @@ export class LogicalSize {
   }
 
   static load(element: NehanElement): LogicalSize | null {
-    let measure = this.loadMeasure(element);
+    const measure = this.loadMeasure(element);
     if (measure === null) {
       return null;
     }
-    let extent = this.loadExtent(element);
+    const extent = this.loadExtent(element);
     if (extent === null) {
       return null;
     }
@@ -29,12 +29,12 @@ export class LogicalSize {
   }
 
   static loadMeasure(element: NehanElement): number | null {
-    let value = element.computedStyle.getPropertyValue("measure") || "auto";
+    const value = element.computedStyle.getPropertyValue("measure") || "auto";
     return (value === "auto") ? null : Utils.atoi(value);
   }
 
   static loadExtent(element: NehanElement): number | null {
-    let value = element.computedStyle.getPropertyValue("extent") || "auto";
+    const value = element.computedStyle.getPropertyValue("extent") || "auto";
     return (value === "auto") ? null : Utils.atoi(value);
   }
 
