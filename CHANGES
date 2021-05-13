@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.8.9, 2021/05/13
+==========================
+o Enabled emphasis style to dual-char which is not 'yakumono' strings.
+
 version 7.8.8, 2021/04/26
 ==========================
 o Added exports field to package.json.
