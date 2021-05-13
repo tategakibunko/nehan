@@ -1,5 +1,6 @@
 import {
   Config,
+  ICharacter,
   Char,
   SpaceChar,
   HalfChar,
@@ -48,11 +49,14 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return document.createTextNode(char.text);
   }
 
-  visitCharEmpha(char: Char, empha: TextEmphaData): HTMLElement | Node {
+  visitCharEmpha(char: ICharacter, empha: TextEmphaData): HTMLElement | Node {
     const node = document.createElement("div");
     const emphaNode = document.createElement("div");
     const textNode = document.createElement("div");
     textNode.appendChild(document.createTextNode(char.text));
+    if (char instanceof DualChar) {
+      textNode.style.writingMode = "vertical-rl";
+    }
     emphaNode.appendChild(document.createTextNode(empha.text));
     if (empha.scale < 1.0) {
       emphaNode.style.fontSize = String(empha.scale) + "em";

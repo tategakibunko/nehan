@@ -16,6 +16,7 @@ export class DualChar implements ICharacter {
   public kerning: boolean;
   public spacing: number;
   public charCount: number;
+  public empha?: TextEmphaData;
 
   public constructor(str: string, info: DualCharInfo) {
     this.text = str;
@@ -65,6 +66,7 @@ export class DualChar implements ICharacter {
   }) {
     this.size.measure = opts.font.size;
     this.size.extent = opts.font.size;
+    this.empha = opts.empha;
     if (this.kerning && this.isKernEnable()) {
       this.size.measure = Math.floor(opts.font.size / 2);
     }
@@ -75,6 +77,9 @@ export class DualChar implements ICharacter {
   }
 
   public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    if (this.empha && this.info.parenType === "none") {
+      return visitor.visitCharEmpha(this, this.empha);
+    }
     if (this.kerning) {
       return visitor.visitDualCharKern(this);
     }

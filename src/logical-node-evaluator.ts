@@ -1,4 +1,5 @@
 import {
+  ICharacter,
   Char,
   SpaceChar,
   HalfChar,
@@ -22,7 +23,7 @@ import {
 
 export interface ILogicalNodeEvaluator {
   visitChar: (char: Char) => HTMLElement | Node;
-  visitCharEmpha: (char: Char, emphaData: TextEmphaData) => HTMLElement | Node;
+  visitCharEmpha: (char: ICharacter, emphaData: TextEmphaData) => HTMLElement | Node;
   visitRefChar: (refChar: RefChar) => HTMLElement | Node;
   visitRefCharEmpha: (refChar: RefChar, emphaData: TextEmphaData) => HTMLElement | Node;
   visitSpaceChar: (spaceChar: SpaceChar) => HTMLElement | Node;

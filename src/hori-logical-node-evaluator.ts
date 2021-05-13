@@ -1,5 +1,6 @@
 import {
   Config,
+  ICharacter,
   Char,
   SpaceChar,
   HalfChar,
@@ -37,7 +38,7 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     return document.createTextNode(char.text);
   }
 
-  visitCharEmpha(char: Char, empha: TextEmphaData): HTMLElement | Node {
+  visitCharEmpha(char: ICharacter, empha: TextEmphaData): HTMLElement | Node {
     const node = document.createElement("div");
     const emphaNode = document.createElement("div");
     const textNode = document.createElement("div");
