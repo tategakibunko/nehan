@@ -77,6 +77,7 @@ export class DualChar implements ICharacter {
   }
 
   public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    // {HIRAGANA, KATAKANA} LETTER SMALL [A-O]
     if (this.empha && this.info.parenType === "none") {
       return visitor.visitCharEmpha(this, this.empha);
     }
