@@ -67,7 +67,7 @@ export class DualChar implements ICharacter {
     this.size.measure = opts.font.size;
     this.size.extent = opts.font.size;
     this.empha = opts.empha;
-    if (this.kerning && this.isKernEnable()) {
+    if (this.kerning && this.isKernEnable() || this.isSmall()) {
       this.size.measure = Math.floor(opts.font.size / 2);
     }
   }

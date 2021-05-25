@@ -193,7 +193,8 @@ const dualCharTable: { [universalCharacterName: string]: DualCharInfo } = {
   "U+FF61": kutoutenHalf, // HALFWIDTH IDEOGRAPHIC FULL STOP
   "U+FF62": kakkoStartHalf, // HALFWIDTH LEFT CORNER BRACKET
   "U+FF63": kakkoEndHalf,  // HALFWIDTH RIGHT CORNER BRACKET
-  "U+FF64": kutouten, // HALFWIDTH IDEOGRAPHIC COMMA
+  "U+FF64": kutoutenHalf, // HALFWIDTH IDEOGRAPHIC COMMA
+  "U+FF65": kutoutenHalf, // HALFWIDTH KATAKANA MIDDLE DOT
   "U+FF70": dash, // HALFWIDTH KATAKANA-HIRAGANA PROLONGED SOUND MARK
 };
 
