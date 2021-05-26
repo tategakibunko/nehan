@@ -6,9 +6,13 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.8.11, 2021/05/26
+==========================
+* Fix invalid justify spacing size.
+
 version 7.8.10, 2021/05/26
 ==========================
-o Fix metrics of U+FF64(HALFWIDTH IDEOGRAPHIC COMMA) and U+FF65(HALFWIDTH KATAKANA MIDDLE DOT).
+* Fix metrics of U+FF64(HALFWIDTH IDEOGRAPHIC COMMA) and U+FF65(HALFWIDTH KATAKANA MIDDLE DOT).
 
 version 7.8.9, 2021/05/13
 ==========================
