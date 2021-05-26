@@ -39,7 +39,7 @@ export class LogicalTextJustifier implements ILogicalTextJustifier {
     if (targetChars.length <= 1) {
       return;
     }
-    const charSpacingSize = spaceSize / (targetChars.length - 1);
+    const charSpacingSize = spaceSize / targetChars.length;
     if (charSpacingSize >= Config.maxJustifyGap) {
       // console.log("too large spacing size:", charSpacingSize);
       return;

@@ -81,7 +81,7 @@ const smallKana: DualCharInfo = {
   kernEnable: false,
   hangEnable: false,
   rotatable: false,
-  isSmall: true
+  isSmall: false,
 };
 
 const normal: DualCharInfo = {
