@@ -24,7 +24,7 @@ export class LogicalTextJustifier implements ILogicalTextJustifier {
         return chars.concat(this.getJustifyTargetChars(child.children));
       }
       return chars; // ignore ruby, re-inline, iblock etc
-    }, [] as ICharacter[]);
+    }, [] as ICharacter[]).slice(0, -1); // ignore final char
   }
 
   justify(line: LogicalLineNode) {
