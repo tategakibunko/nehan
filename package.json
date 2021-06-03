@@ -1,6 +1,6 @@
 {
   "name": "nehan",
-  "version": "7.8.12",
+  "version": "7.8.13",
   "description": "Html layout engine for paged-media written in Typescript",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
