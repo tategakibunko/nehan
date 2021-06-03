@@ -62,6 +62,9 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
       emphaNode.style.fontSize = String(empha.scale) + "em";
       emphaNode.style.paddingLeft = String(empha.scale / 2) + "em";
     }
+    if (char instanceof MixChar) {
+      emphaNode.style.marginLeft = "-1em";
+    }
     node.style.textAlign = "center";
     node.style.display = "flex";
     node.style.alignItems = "center";

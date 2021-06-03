@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.8.13, 2021/06/04
+==========================
+o Enabled text-emphasis to SmpUniChar, MixChar.
+
 version 7.8.12, 2021/05/28
 ==========================
 * Excluded character that is not target of justification.

@@ -13,6 +13,7 @@ export class MixChar implements ICharacter {
   public kerning: boolean;
   public spacing: number;
   public charCount: number;
+  public empha?: TextEmphaData;
 
   public constructor(str: string) {
     this.text = str;
@@ -32,6 +33,7 @@ export class MixChar implements ICharacter {
     } else {
       this.size.measure = Math.floor(opts.font.size * 1.25);
     }
+    this.empha = opts.empha;
     this.size.extent = opts.font.size;
 
   }
@@ -41,6 +43,9 @@ export class MixChar implements ICharacter {
   }
 
   public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    if (this.empha) {
+      return visitor.visitCharEmpha(this, this.empha);
+    }
     return visitor.visitMixChar(this);
   }
 }

@@ -41,6 +41,9 @@ export class SmpUniChar implements ICharacter {
   }
 
   public acceptEvaluator(visitor: ILogicalNodeEvaluator): HTMLElement | Node {
+    if (this.empha) {
+      return visitor.visitCharEmpha(this, this.empha);
+    }
     return visitor.visitSmpUniChar(this);
   }
 }
