@@ -159,6 +159,9 @@ export class HoriLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
     baseLineNode.style.left = (lineNode.linePos.start + lineNode.baseline.startOffset) + "px";
+    // [TODO]
+    // Fix scrollbars not to be visible when 'text-align:end' is used.
+    // Especially when it contains a line with <ruby> inside.
     baseLineNode.style.width = lineNode.size.measure + 2 * lineNode.env.font.size + "px"; // Prepare space for 'Bura-sagari'.
     baseLineNode.style.height = lineNode.baseline.size.extent + "px";
     baseLineNode.style.bottom = lineNode.baseline.blockOffset + "px";
