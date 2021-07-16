@@ -191,7 +191,8 @@ export class VertLogicalNodeEvaluator implements ILogicalNodeEvaluator {
     baseLineNode.className = "nehan-baseline";
     baseLineNode.style.position = "absolute";
     baseLineNode.style.top = (lineNode.linePos.start + lineNode.baseline.startOffset) + "px";
-    baseLineNode.style.height = "100%";
+    // baseLineNode.style.height = "100%";
+    baseLineNode.style.height = "auto"; // to prevent scroll-bar visible if 'text-align: end'.
     baseLineNode.style.width = lineNode.baseline.size.extent + "px";
     baseLineNode.style.left = lineNode.baseline.blockOffset + "px";
 
