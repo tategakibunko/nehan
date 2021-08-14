@@ -50,7 +50,7 @@
   "author": "Watanabe Masaki",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^26.0.20",
+    "@types/jest": "^27.0.1",
     "@types/node": "^16.3.1",
     "jest": "^27.0.6",
     "jest-canvas-mock": "^2.3.0",
