@@ -6,6 +6,10 @@ Mark "*": bug fixed.
 Mark "!": change that can break compatibility with older version
 ===============================================================================
 
+version 7.8.15, 2021/09/04
+==========================
+* Added @types/offscreencanvas to fix compilation errors.
+
 version 7.8.14, 2021/07/16
 ==========================
 * Fixed inline size of baseline so that scrollbars are not visible when 'text-align:end' is used.
