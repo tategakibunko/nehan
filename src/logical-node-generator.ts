@@ -108,9 +108,14 @@ export class LogicalNodeGenerator {
     // if element has id, register it's position as anchor.
     if (element.id) {
       const flowRoot = parentContext.flowRoot;
-      const anchor: Anchor = { name: element.id, element, pageIndex: -1 };
       // Note that strict pageIndex is not determined at this point, so we set -1 temporarily.
-      flowRoot.setAnchor(element.id, anchor);
+      const anchor: Anchor = { name: element.id, element, pageIndex: -1 };
+      // [FIXME]
+      // [Research Needed]
+      // Sometimes, IFlowRootFormatContext is not implemented to parentContext.flowRoot.
+      if (flowRoot.setAnchor) {
+        flowRoot.setAnchor(element.id, anchor);
+      }
     }
     if (ReplacedElement.isReplacedElement(element)) {
       const generator = new ReNodeGenerator(
