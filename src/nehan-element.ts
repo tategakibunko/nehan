@@ -143,7 +143,7 @@ export class NehanElement {
   }
 
   public get dataset(): DOMStringMap {
-    if (this.$node instanceof Element) {
+    if (this.$node instanceof HTMLElement) {
       return this.$node.dataset;
     }
     throw new Error("dataset is not defined(not HTMLElement)");
